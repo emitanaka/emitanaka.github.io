@@ -16,7 +16,7 @@ collections:
     categories: true
     categories_metadata: true
     authors_metadata: false
-    feed_iems_max: 20 # default
+    feed_items_max: 20 # default
     disqus: statistical-genetics
     share: [twitter, linkedin]
     subscribe: _subscribe.html
