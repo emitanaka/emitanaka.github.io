@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Emi Tanaka">
+<meta name="dcterms.date" content="2021-02-03">
+<meta name="description" content="Your analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved before the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.">
+
+<title>emi tanaka - Current state of R packages for the design of experiments</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/avatar.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-07SZXPNSJZ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
+</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../../assets/styles.css">
+<meta name="twitter:title" content="emi tanaka - Current state of R packages for the design of experiments">
+<meta name="twitter:description" content="Your analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved before the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.">
+<meta name="twitter:creator" content="@statsgen">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../../index.html">
+    <img src="../../images/avatar.png" alt="">
+    <span class="navbar-title">emi tanaka</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html">CV</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.qmd">Research</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html">Teaching</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html">Talks</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html">Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/statsgen"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<p>subscribe.html</p>
+</div></div>
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link active" data-scroll-target="#data-collection">Data collection</a>
+  <ul class="collapse">
+  <li><a href="#experimental-data" id="toc-experimental-data" class="nav-link" data-scroll-target="#experimental-data">Experimental data</a></li>
+  </ul></li>
+  <li><a href="#design-and-analysis-of-experiments" id="toc-design-and-analysis-of-experiments" class="nav-link" data-scroll-target="#design-and-analysis-of-experiments">Design and analysis of experiments</a>
+  <ul class="collapse">
+  <li><a href="#bigram-of-doe-package-titles-and-descriptions" id="toc-bigram-of-doe-package-titles-and-descriptions" class="nav-link" data-scroll-target="#bigram-of-doe-package-titles-and-descriptions">Bigram of DoE package titles and descriptions</a></li>
+  <li><a href="#network-of-doe-package-imports-and-dependencies" id="toc-network-of-doe-package-imports-and-dependencies" class="nav-link" data-scroll-target="#network-of-doe-package-imports-and-dependencies">Network of DoE package imports and dependencies</a></li>
+  <li><a href="#cran-download-logs" id="toc-cran-download-logs" class="nav-link" data-scroll-target="#cran-download-logs">CRAN download logs</a></li>
+  <li><a href="#top-5-doe-packages" id="toc-top-5-doe-packages" class="nav-link" data-scroll-target="#top-5-doe-packages">Top 5 DoE packages</a></li>
+  </ul></li>
+  <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R-packages</a>
+  <ul class="collapse">
+  <li><a href="#algdesign" id="toc-algdesign" class="nav-link" data-scroll-target="#algdesign"><code>AlgDesign</code></a></li>
+  <li><a href="#agricolae" id="toc-agricolae" class="nav-link" data-scroll-target="#agricolae"><code>agricolae</code></a></li>
+  <li><a href="#lhs" id="toc-lhs" class="nav-link" data-scroll-target="#lhs"><code>lhs</code></a></li>
+  <li><a href="#ez" id="toc-ez" class="nav-link" data-scroll-target="#ez"><code>ez</code></a></li>
+  <li><a href="#doe.base" id="toc-doe.base" class="nav-link" data-scroll-target="#doe.base"><code>DoE.base</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Current state of R packages for the design of experiments</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">experimental design</div>
+    <div class="quarto-category">R</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    <p>Your analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved <em>before</em> the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.</p>
+  </div>
+</div>
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <a href="https://emitanaka.org">Emi Tanaka</a> 
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Monash University
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 3, 2021</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-1_4724481b55bd02f5a7ee4c50ea073b08">
+<div class="toggle-code">
+<style type="text/css">
+.toggle-code {
+  display: none;
+}
+
+button {
+  border-radius: 10px;
+  color: var(--aside-color, rgba(0, 0, 0, 0.6));
+  border-color: var(--aside-color, rgba(0, 0, 0, 0.6));
+}
+
+.scroll-output {
+  height: 200px;
+  overflow-y: scroll!important;
+}
+</style>
+</div>
+</div>
+<aside>
+<p>
+<button onclick="showscript()">
+Click Me
+</button>
+to see all code in this article. You can also find the link to the source Rmd file at the footer.
+</p>
+</aside>
+<div class="cell" data-layout-align="center">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.8     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rvest'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:readr':
+
+    guess_encoding</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lubridate'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cranlogs)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'scales'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    discard</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pluralize)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'kableExtra'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    group_rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:lubridate':
+
+    %--%, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:purrr':
+
+    compose, simplify</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tidyr':
+
+    crossing</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tibble':
+
+    as_data_frame</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>myggtheme <span class="ot">&lt;-</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#f6e5ee"</span>),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>, <span class="at">size =</span> <span class="fl">0.7</span>),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.length =</span> <span class="fu">unit</span>(<span class="fl">1.4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>, <span class="at">size =</span> <span class="fl">0.7</span>),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">fill =</span> <span class="st">"#AD0059"</span>),</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"white"</span>),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"#79003e"</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/cran-titles_f39207395ca4110f2f3ee8adb82586c5">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Thanks to Dirk Eddelbuettel's answer on SO:</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://stackoverflow.com/questions/11560865/list-and-description-of-all-packages-in-cran-from-within-r</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span>  <span class="st">"https://cran.rstudio.com/web/packages/packages.rds"</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(url)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-2_e20bb5742f5b840627ba3db629388806">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>nanalysis <span class="ot">&lt;-</span> db <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(<span class="fu">tolower</span>(Title), <span class="st">"analysis"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>ndesign <span class="ot">&lt;-</span> db <span class="sc">%&gt;%</span> </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(<span class="fu">tolower</span>(Title), <span class="st">"design"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<section id="data-collection" class="level1">
+<h1>Data collection</h1>
+<p>As many know, it doesn’t matter how good your analytical tools is if your data are rubbish. This sentiment is often captured in the expression “garbage in, garbage out”. It’s something we all seem to know but there is still a tendency for many of us to place a greater focus on the analysis<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. This is perhaps all natural given that a potential for discovery is just so much more exciting than ensuring the quality of the collected data.</p>
+<p>So what is considered as good quality data? A lack of error in the data? Data containing enough range of variables and sample size for the downstream analysis? Giving an explicit definition of a good quality data is a fraught exercise, but if you <strong>know how the data were collected</strong> then you can better perform the <em>initial data analysis</em> <span class="citation" data-cites="Chatfield1985-yz">(<a href="#ref-Chatfield1985-yz" role="doc-biblioref">Chatfield 1985</a>)</span> to weed out (or fix) potential poor quality data. This step will likely get more value out of the data than fitting complex models to poor quality data.</p>
+<p>Better than knowing how the data were collected, if you can <em>design the collection of data</em> so that it’s optimised for the purpose of the analysis<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, then you can potentially get even a better value out of your data. Not all data collection starts with an explicit analytical plan though. Furthermore, you may have very little control of how the data are collected. Often these are <em>observational data</em> or making a secondary use of <em>experimental data</em>. This article will focus on data collection of an experiment where you have some control of the collection process.</p>
+<section id="experimental-data" class="level2">
+<h2 class="anchored" data-anchor-id="experimental-data">Experimental data</h2>
+<p>All experiments are conducted with some objective in mind. This could be that a scientist may wish to test their hypothesis, a manufacturer wants to know which manufacturing process is better or a researcher wants to understand some cause-and-effect relationships. A characteristic part of an experiment is that the experimenter has control over some explanatory variables. In a <em>comparative experiment</em>, the control is over the allocation of treatments to subjects. Designing an experiment in the statistics discipline usually focus on this allocation, although it’s important to keep in mind that there are other decision factors in an experiment.</p>
+<p>Data that are collected from experiments are what we refer to as <em>experimental data</em>. Because it was collected with some objective in mind followed by some data collection plan, experimental data are often thought of to be better quality than observational data. But then again if you can’t quantify the quality of data, you can’t really tell. Certain scientific claims (e.g.&nbsp;causation, better treatment) can only be substantiated by experiments and so experimental data is held to a higher standard in general.</p>
+</section>
+</section>
+<section id="design-and-analysis-of-experiments" class="level1">
+<h1>Design and analysis of experiments</h1>
+<div class="cell" data-layout-align="center" data-hash="cache/doe-cran_b289ffe2415fb119a04acf674a928a96">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dat_DoE <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">"https://cran.r-project.org/web/views/ExperimentalDesign.html"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>date_download <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>cran_names <span class="ot">&lt;-</span> <span class="fu">available.packages</span>(<span class="at">repos =</span> <span class="st">"https://cran.rstudio.com/"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="co"># it should be unique</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>doe_pkgs <span class="ot">&lt;-</span> dat_DoE <span class="sc">%&gt;%</span> </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="st">"li"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="st">"a"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  .[. <span class="sc">%in%</span> cran_names] <span class="sc">%&gt;%</span> </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>dat_survey <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">"https://cran.r-project.org/web/views/OfficialStatistics.html"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>survey_pkgs <span class="ot">&lt;-</span> dat_survey <span class="sc">%&gt;%</span> </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="st">"li"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_nodes</span>(<span class="st">"a"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_text</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  .[. <span class="sc">%in%</span> cran_names] <span class="sc">%&gt;%</span> </span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>There are all together 83 R-packages in the <a href="https://cran.r-project.org/web/views/ExperimentalDesign.html">CRAN Task View of Design of Experiments &amp; Analysis of Experimental Data</a> as of 2022-08-13.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> I’m going to refer these packages as <strong><em>DoE packages</em></strong>, although there are some packages in the mix that are more about the analysis of experimental data rather than the design of experiments and there are some packages that are missing in the list (e.g.&nbsp;<code>DeclareDesign</code>). The DoE packages make up about 0.5% of the 18,358 packages available in CRAN.</p>
+<p>The DoE packages don’t include survey design. These instead belong to the <a href="https://cran.r-project.org/web/views/OfficialStatistics.html">CRAN Task View of Official Statistics &amp; Survey Methodology</a> which contains 125 packages. While some surveys are part of an experimental study, most often they generate observational data.</p>
+<p>Below I have a number of different analysis for these DoE packages. If you push the button on the top right corner of this article, you can toggle the display for the code or alternatively you can have a look at the source Rmd document.</p>
+<section id="bigram-of-doe-package-titles-and-descriptions" class="level2">
+<h2 class="anchored" data-anchor-id="bigram-of-doe-package-titles-and-descriptions">Bigram of DoE package titles and descriptions</h2>
+<div class="cell" data-layout-align="center" data-hash="cache/bigram_84ccf4aa6b764cb980c60f05904ed9ed">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>stop_words_ext <span class="ot">&lt;-</span> <span class="fu">c</span>(stop_words<span class="sc">$</span>word, <span class="st">"doi"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>doe_db <span class="ot">&lt;-</span> db <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Package <span class="sc">%in%</span> doe_pkgs) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Description =</span> <span class="fu">str_replace_all</span>(Description, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Description =</span> <span class="fu">str_squish</span>(Description),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Title =</span> <span class="fu">str_replace_all</span>(Title, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>))</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>bigram_tab <span class="ot">&lt;-</span> <span class="cf">function</span>(data, col) {</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">%&gt;%</span> </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, {{col}}, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(word, <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">word1 =</span> <span class="fu">singularize</span>(word1),</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">word2 =</span> <span class="fu">singularize</span>(word2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># don't count the same bigram within the same package</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(Package, word1, word2) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>word1 <span class="sc">%in%</span> stop_words_ext,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span>word2 <span class="sc">%in%</span> stop_words_ext,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(word1, <span class="st">"^[0-9.]+$"</span>),</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">str_detect</span>(word2, <span class="st">"^[0-9.]+$"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word1, word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)  </span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/bigram-desc_5f66569291fdb07c34d162d16e40cf8d">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bigram_tab</span>(doe_db, Description) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">paste</span>(word1, word2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(word, n) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">"The bigram of the R-package _descriptions_ as provided in the DESCRIPTION file in CRAN."</span>, </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Bigram"</span>, <span class="st">"Count"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/bigram-title_e4b043b876e28343d3010c4548eb2a3c">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bigram_tab</span>(doe_db, Title) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">paste</span>(word1, word2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(word, n) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">"The bigram of the R-package _titles_ as provided in the DESCRIPTION file in CRAN."</span>, </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Bigram"</span>, <span class="st">"Count"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Table @ref(tab:bigram-title) shows the most common bigrams in the title of the DoE packages. It’s perhaps not surprising but the words “optimal design” and “experimental design” are the top. It’s also likely that the words “design of experiments” appears often but because this is a bigram (two consecutive words) so it doesn’t appear. You might then wonder if that’s the case words like “design of” or “of experiments” should make an appearance, however “of” is a stop word and these are filtered out otherwise unwanted bigrams come up on the top.</p>
+<p>There are couple of words like “clinical trial” and “dose finding” that suggests applications in medical experiments, as well as “microarray experiment” that suggests application in bioinformatics.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/bigram-title_081af0d14fda3ef38c8546658fdb4577">
+<div class="cell-output-display">
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>The bigram of the R-package _titles_ as provided in the DESCRIPTION file in CRAN.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Bigram </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> experimental design </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> optimal design </td>
+   <td style="text-align:right;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> clinical trial </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> dose finding </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sequential design </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> block design </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> microarray experiment </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>The title alone might be too succinct for text analysis so I also had a look at the most common bigrams in the description of the DoE packages as shown in Table @ref(tab:bigram-desc). The counts in Table @ref(tab:bigram-desc) (and also Table @ref(tab:bigram-title)) is across the DoE packages. To be more clear, even if the bigram is mentioned multiple times within the description, it’s only counted once per package. This removes the inflation of the counts due to one package mentioning the same bigram over and over again.</p>
+<p>Again not surprisingly “experimental design” and “optimal design” comes on top in the DoE package descriptions. The words “graphical user” and “user interface” implies that the trigram “graphical user interface” was probably common.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/bigram-desc_202383a8ff7542e3ecde0373579a6f4d">
+<div class="cell-output-display">
+
+<table class=" lightable-classic" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>The bigram of the R-package _descriptions_ as provided in the DESCRIPTION file in CRAN.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Bigram </th>
+   <th style="text-align:right;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> experimental design </td>
+   <td style="text-align:right;"> 7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> optimal design </td>
+   <td style="text-align:right;"> 7 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> block design </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> clinical trial </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> factorial design </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> graphical user </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> microarray experiment </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> user interface </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="network-of-doe-package-imports-and-dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="network-of-doe-package-imports-and-dependencies">Network of DoE package imports and dependencies</h2>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-3_96b8cb9ee5fb8894c681d0cf16d368f8">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>doe_imports <span class="ot">&lt;-</span> doe_db <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Depends =</span> <span class="fu">str_replace_all</span>(Depends, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Depends =</span> <span class="fu">str_replace_all</span>(Depends, <span class="fu">fixed</span>(<span class="st">"("</span>), <span class="st">" ("</span>),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Imports =</span> <span class="fu">str_replace_all</span>(Imports, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">" "</span>),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Imports =</span> <span class="fu">str_replace_all</span>(Imports, <span class="fu">fixed</span>(<span class="st">"("</span>), <span class="st">" ("</span>),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">imports =</span> <span class="fu">str_c</span>(Depends, Imports, <span class="at">sep =</span> <span class="st">","</span>),</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">imports =</span> <span class="fu">str_split</span>(imports, <span class="st">","</span>),</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">imports =</span> <span class="fu">map</span>(imports, <span class="sc">~</span>{</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">str_squish</span>(.x) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">word</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                      .[.<span class="sc">!=</span><span class="st">""</span>]}</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>           ),</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">imports_doe =</span> <span class="fu">map</span>(imports, <span class="sc">~</span>.x[.x <span class="sc">%in%</span> doe_pkgs])) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Package, imports_doe) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_longer</span>(imports_doe) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(imports_doe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">from =</span> imports_doe, <span class="at">to =</span> Package) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(from, to)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Figure @ref(fig:doe-network) shows the imports and dependency between the DoE packages. We can see here that <code>DoE.wrapper</code> imports a fair number of DoE packages that results in the major network cluster see in Figure @ref(fig:doe-network). <code>AlgDesign</code> and <code>DoE.base</code> are imported into four other DoE packages so form an important base in the DoE world.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/doe-network_52fc47ded26c03216e0f84afac9d319e">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">graph_from_data_frame</span>(doe_imports) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">'fr'</span>) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">start_cap =</span> <span class="fu">label_rect</span>(node1.name),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">end_cap =</span> <span class="fu">label_rect</span>(node2.name)), </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">2</span>, <span class="st">'mm'</span>)),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"#79003e"</span>) <span class="sc">+</span> </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"#79003e"</span>) <span class="sc">+</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#f6e5ee"</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">color =</span> <span class="st">"#79003e"</span>),</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>, <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>(ref:network) The network of imports and dependency among DoE packages alone. Each node represents a DoE package. DoE packages with no imports or dependency on other DoE packages are excluded. Each arrow represents the relationship between the packages such that the package on the tail is used by package on the head of the arrow.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/doe-network_88da89cc0bfeae084a3269d34fc5ca9c">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/doe-network-1.png" class="img-fluid figure-img" width="960"></p>
+<p></p><figcaption class="figure-caption">(ref:network)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cran-download-logs" class="level2">
+<h2 class="anchored" data-anchor-id="cran-download-logs">CRAN download logs</h2>
+<div class="cell" data-layout-align="center" data-hash="cache/cran-data_c156d6a8ccebe5d076347e6c17559b78">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>() <span class="sc">-</span> <span class="dv">2</span> <span class="co"># usually 1-2 days are not available yet</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> end <span class="sc">-</span> <span class="fu">years</span>(<span class="dv">5</span>) <span class="sc">+</span> <span class="fu">days</span>(<span class="dv">2</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>dldat <span class="ot">&lt;-</span> <span class="fu">cran_downloads</span>(doe_pkgs, <span class="at">from =</span> start, <span class="at">to =</span> end)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/download-hist_e41b286fef5ac00841a1e3fef5930dd0">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dldat <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(package) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(total)) <span class="sc">+</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">fill =</span> <span class="st">"#AD0059"</span>) <span class="sc">+</span> </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">label =</span> comma) <span class="sc">+</span> </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  myggtheme <span class="sc">+</span> </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">glue</span>(<span class="st">"Total download counts from {start} to {end}"</span>),</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of packages"</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Figure @ref(fig:download-hist) shows the distribution of the total download counts over the last 5 years<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> of the DoE packages. This graph doesn’t take into account that some DoE packages may only have been on CRAN in the last 5 years so the counts are in favour of DoE packages that’s been on CRAN longer.</p>
+<p>(ref:hist) Histogram of the total download count over last 5 years of the DoE packages.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/download-hist_7eb855d386c29493d7b6a14e247802f8">
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/download-hist-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">(ref:hist)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="top-5-doe-packages" class="level2">
+<h2 class="anchored" data-anchor-id="top-5-doe-packages">Top 5 DoE packages</h2>
+<div class="cell" data-layout-align="center" data-hash="cache/top5_a618f71090c20cb3a411e2b112d777cb">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ntop <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>top5sum_df <span class="ot">&lt;-</span> dldat <span class="sc">%&gt;%</span> </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(package) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> total, <span class="at">n =</span> ntop)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>top5 <span class="ot">&lt;-</span> top5sum_df <span class="sc">%&gt;%</span> </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(package) </span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>top5_df <span class="ot">&lt;-</span> dldat <span class="sc">%&gt;%</span> </span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(package <span class="sc">%in%</span> top5) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">package =</span> <span class="fu">fct_reorder</span>(package, count, <span class="cf">function</span>(x) <span class="sc">-</span><span class="fu">sum</span>(x))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>The top 5 downloaded DoE packages at the time of this writing are <code>AlgDesign</code>, <code>lhs</code>, <code>DiceDesign</code>, <code>DoE.base</code>, and <code>FrF2</code>. You can see the download counts in Figure @ref(fig:download-barplot).</p>
+<div class="cell" data-layout-align="center" data-hash="cache/download-barplot_cf60946d88e2fa575c99b17193c85a0a">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>top5sum_df <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">package =</span> <span class="fu">fct_reorder</span>(package, total)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(total, package)) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> package)) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">glue</span>(<span class="st">"Total downloads from {start} to {end}"</span>),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Package"</span>) <span class="sc">+</span> </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma, <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  myggtheme <span class="sc">+</span> </span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete_qualitative</span>(<span class="at">rev =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>(ref:barplot) The above barplot shows the total downloads of the top 5 downloaded DoE packages from the period 2017-08-13 to 2022-08-11.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/download-barplot_6a4acaf1e4a1098a5bcfc8f319b5b0a2">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
+"none")` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/download-barplot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">(ref:barplot)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can have a look at further examination of the top 5 DoE packages by looking at the daily download counts as shown in Figure @ref(fig:download-barplot). The download counts are the raw values and these include downloads by CRAN mirror and bots. There is a noticeable spike when there is an update to the CRAN package. This is partly because when there is a new version of the package, when you install other packages that depend or import it then R will prompt you to install the new version. This means that the download counts are inflated and to some extent you can artificially boost them by making regular CRAN updates. The <code>adjustedcranlogs</code> <span class="citation" data-cites="adjustedcranlogs">(<a href="#ref-adjustedcranlogs" role="doc-biblioref">Morgan-Wall 2017</a>)</span> makes a nice attempt to adjust the raw counts based on a certain heuristic. I didn’t use it since the adjustment is stochastic and I <a href="https://github.com/tylermorganwall/adjustedcranlogs/issues/6">appear to have hit a bug</a>.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/pkg-updates_55477ece477d4a50a82565d0549c4da6">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>pkg_url <span class="ot">&lt;-</span> <span class="st">"https://cran.r-project.org/web/packages/{pkg}/index.html"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>pkg_archive <span class="ot">&lt;-</span> <span class="st">"https://cran.r-project.org/src/contrib/Archive/{pkg}/"</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>pkg_updates <span class="ot">&lt;-</span> <span class="fu">map</span>(top5, <span class="cf">function</span>(pkg) {</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    last_update <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="fu">glue</span>(pkg_url)) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">html_table</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>      .[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(X1<span class="sc">==</span><span class="st">"Published:"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(X2) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ymd</span>()</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    archive_dates <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({ </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">read_html</span>(<span class="fu">glue</span>(pkg_archive)) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>          <span class="fu">html_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>          .[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">pull</span>(<span class="st">`</span><span class="at">Last modified</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>          <span class="fu">ymd_hm</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>          <span class="fu">as.Date</span>()</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>      }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>        <span class="cn">NULL</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(archive_dates, last_update)</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pkg_updates) <span class="ot">&lt;-</span> top5</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>updates <span class="ot">&lt;-</span> <span class="fu">unlist</span>(pkg_updates) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="st">"package"</span>, <span class="st">"update"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># unlist converts date to integers</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">update =</span> <span class="fu">as.Date</span>(update, <span class="at">origin =</span> <span class="st">"1970-01-01"</span>),</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>         <span class="co"># need to get rid of the numbers appended to pkg names</span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">package =</span> <span class="fu">str_extract</span>(package, <span class="fu">paste0</span>(top5, <span class="at">collapse=</span><span class="st">"|"</span>)),</span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">package =</span> <span class="fu">factor</span>(package, <span class="at">levels =</span> top5)) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(update, start, end))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/download-timeplot_dd8a50e8d31ede7a87233a416f1668cb">
+<div class="toggle-code">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top5_df, <span class="fu">aes</span>(date, count, <span class="at">color =</span> package)) <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add shadow lines</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">rename</span>(top5_df, <span class="at">package2 =</span> package), </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"gray"</span>, <span class="fu">aes</span>(<span class="at">group =</span> package2)) <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add date when package was updated</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> updates, <span class="fu">aes</span>(<span class="at">xintercept =</span> update),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"#79003e"</span>) <span class="sc">+</span> </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the trend line</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(package <span class="sc">~</span> .) <span class="sc">+</span> </span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"Top 5 downloaded DoE packages from {start} to {end}"</span>)) <span class="sc">+</span> </span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_discrete_qualitative</span>() <span class="sc">+</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  myggtheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>(ref:timeplot) The above plot shows the daily downloads of the top 5 downloaded DoE packages from the period 2017-08-13 to 2022-08-11. The vertical dotted bar corresponds to the date that a new version of the corresponding package was released on CRAN.</p>
+<div class="cell" data-layout-align="center" data-preview="true" data-hash="cache/download-timeplot_a51458fcfd5fe0b35099ec51c76fa5ff">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
+"none")` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis
+Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/download-timeplot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">(ref:timeplot)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="r-packages" class="level1 page-columns page-full">
+<h1>R-packages</h1>
+<p>Here we have a closer look at the functions of the top 5 downloaded DoE packages below ordered by their download counts.</p>
+<ol type="1">
+<li><strong><code>AlgDesign</code></strong> <a href="https://cran.r-project.org/web/packages/AlgDesign/index.html"><i class="fab fa-r-project"></i> CRAN</a> <a href="https://github.com/jvbraun/AlgDesign"><i class="fab fa-github"></i> GitHub</a> <i class="fas fa-book"></i> <span class="citation" data-cites="AlgDesign">Wheeler (<a href="#ref-AlgDesign" role="doc-biblioref">2019</a>)</span><br>
+<em>Algorithmic Experimental Design</em><br>
+Originally written by <i class="fas fa-user"></i> Bob Wheeler but <i class="fas fa-user"></i> Jerome Braun have taken over maintenance of the package.</li>
+<li><strong><code>agricolae</code></strong> <a href="https://cran.r-project.org/web/packages/agricolae/index.html"><i class="fab fa-r-project"></i> CRAN</a> <i class="fas fa-book"></i> <span class="citation" data-cites="agricolae">de Mendiburu (<a href="#ref-agricolae" role="doc-biblioref">2020</a>)</span><br>
+<em>Statistical Procedures for Agricultural Research</em><br>
+Written and maintained by <i class="fas fa-user"></i> Felipe de Mendiburu</li>
+<li><strong><code>lhs</code></strong> <a href="https://cran.r-project.org/web/packages/lhs/index.html"><i class="fab fa-r-project"></i> CRAN</a> <a href="https://github.com/bertcarnell/lhs"><i class="fab fa-github"></i> GitHub</a> <i class="fas fa-book"></i> <span class="citation" data-cites="lhs">Carnell (<a href="#ref-lhs" role="doc-biblioref">2020</a>)</span><br>
+<em>Latin Hypercube Samples</em><br>
+Written and maintained by <i class="fas fa-user"></i> Rob Carnell</li>
+<li><strong><code>ez</code></strong> <a href="https://cran.r-project.org/web/packages/ez/index.html"><i class="fab fa-r-project"></i> CRAN</a> <a href="https://github.com/mike-lawrence/ez"><i class="fab fa-github"></i> GitHub</a> <i class="fas fa-book"></i> <span class="citation" data-cites="ez">Lawrence (<a href="#ref-ez" role="doc-biblioref">2016</a>)</span><br>
+<em>Easy Analysis and Visualization of Factorial Experiments</em><br>
+Written and maintained by <i class="fas fa-user"></i> Michael A. Lawrence</li>
+<li><strong><code>DoE.base</code></strong> <a href="https://cran.r-project.org/web/packages/DoE.base/index.html"><i class="fab fa-r-project"></i> CRAN</a> <i class="fas fa-book"></i> <span class="citation" data-cites="DoE.base">Grömping (<a href="#ref-DoE.base" role="doc-biblioref">2018</a>)</span><br>
+<em>Full Factorials, Orthogonal Arrays and Base Utilities for DoE Packages</em><br>
+Written and maintained by <i class="fas fa-user"></i> Ulrike Groemping.</li>
+</ol>
+<aside>
+Interestingly these top 5 DoE packages have only <em>one active author</em>. Bob Wheeler doesn’t seem to actively contribute to <code>AlgDesign</code> any longer; and there are two contributors for <code>DoE.base</code> but are not listed as authors.
+</aside>
+<p>Before we look at the packages, let’s set a seed so we can reproduce the results.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-5_0896e2a221a9672bd4c58e96dff969f0">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2021</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="algdesign" class="level2">
+<h2 class="anchored" data-anchor-id="algdesign"><code>AlgDesign</code></h2>
+<p>To start off, we begin with the most downloaded DoE package, <code>AlgDesign</code>. The examples below are taken directly from the <a href="https://cran.r-project.org/web/packages/AlgDesign/vignettes/AlgDesign.pdf">vignette of the <code>AlgDesign</code> package</a>.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/algdesign_4afde1513d3d4ec5a2087680af450b60">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AlgDesign)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can create a balanced incomplete block design using the <code>optBlock</code> function. It’s using an optimal design framework where the default criterion is D criterion and the implied model is given in the first argument.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/algdesign-BIBD_c8a026d77b341a579995652104ac33b5">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>BIB <span class="ot">&lt;-</span> <span class="fu">optBlock</span>(<span class="sc">~</span> ., </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">withinData =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>), </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">blocksize =</span> <span class="fu">rep</span>(<span class="dv">3</span>, <span class="dv">7</span>))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>BIB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>$D
+[1] 0.08033556
+
+$diagonality
+[1] 0.692
+
+$Blocks
+$Blocks$B1
+  X1
+1  1
+3  3
+4  4
+
+$Blocks$B2
+  X1
+2  2
+4  4
+5  5
+
+$Blocks$B3
+  X1
+4  4
+6  6
+7  7
+
+$Blocks$B4
+  X1
+3  3
+5  5
+6  6
+
+$Blocks$B5
+  X1
+2  2
+3  3
+7  7
+
+$Blocks$B6
+  X1
+1  1
+2  2
+6  6
+
+$Blocks$B7
+  X1
+1  1
+5  5
+7  7
+
+
+$design
+   X1
+1   1
+3   3
+4   4
+2   2
+41  4
+5   5
+42  4
+6   6
+7   7
+31  3
+51  5
+61  6
+21  2
+32  3
+71  7
+11  1
+22  2
+62  6
+12  1
+52  5
+72  7
+
+$rows
+ [1] 1 3 4 2 4 5 4 6 7 3 5 6 2 3 7 1 2 6 1 5 7</code></pre>
+</div>
+</div>
+<p><code>AlgDesign</code> also includes helper functions to generate a factorial structure.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-6_37d477af94d3c8469f439ce7eaf2eb3d">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">gen.factorial</span>(<span class="dv">2</span>, <span class="dv">7</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>    X1 X2 X3 X4 X5 X6 X7
+1   -1 -1 -1 -1 -1 -1 -1
+2    1 -1 -1 -1 -1 -1 -1
+3   -1  1 -1 -1 -1 -1 -1
+4    1  1 -1 -1 -1 -1 -1
+5   -1 -1  1 -1 -1 -1 -1
+6    1 -1  1 -1 -1 -1 -1
+7   -1  1  1 -1 -1 -1 -1
+8    1  1  1 -1 -1 -1 -1
+9   -1 -1 -1  1 -1 -1 -1
+10   1 -1 -1  1 -1 -1 -1
+11  -1  1 -1  1 -1 -1 -1
+12   1  1 -1  1 -1 -1 -1
+13  -1 -1  1  1 -1 -1 -1
+14   1 -1  1  1 -1 -1 -1
+15  -1  1  1  1 -1 -1 -1
+16   1  1  1  1 -1 -1 -1
+17  -1 -1 -1 -1  1 -1 -1
+18   1 -1 -1 -1  1 -1 -1
+19  -1  1 -1 -1  1 -1 -1
+20   1  1 -1 -1  1 -1 -1
+21  -1 -1  1 -1  1 -1 -1
+22   1 -1  1 -1  1 -1 -1
+23  -1  1  1 -1  1 -1 -1
+24   1  1  1 -1  1 -1 -1
+25  -1 -1 -1  1  1 -1 -1
+26   1 -1 -1  1  1 -1 -1
+27  -1  1 -1  1  1 -1 -1
+28   1  1 -1  1  1 -1 -1
+29  -1 -1  1  1  1 -1 -1
+30   1 -1  1  1  1 -1 -1
+31  -1  1  1  1  1 -1 -1
+32   1  1  1  1  1 -1 -1
+33  -1 -1 -1 -1 -1  1 -1
+34   1 -1 -1 -1 -1  1 -1
+35  -1  1 -1 -1 -1  1 -1
+36   1  1 -1 -1 -1  1 -1
+37  -1 -1  1 -1 -1  1 -1
+38   1 -1  1 -1 -1  1 -1
+39  -1  1  1 -1 -1  1 -1
+40   1  1  1 -1 -1  1 -1
+41  -1 -1 -1  1 -1  1 -1
+42   1 -1 -1  1 -1  1 -1
+43  -1  1 -1  1 -1  1 -1
+44   1  1 -1  1 -1  1 -1
+45  -1 -1  1  1 -1  1 -1
+46   1 -1  1  1 -1  1 -1
+47  -1  1  1  1 -1  1 -1
+48   1  1  1  1 -1  1 -1
+49  -1 -1 -1 -1  1  1 -1
+50   1 -1 -1 -1  1  1 -1
+51  -1  1 -1 -1  1  1 -1
+52   1  1 -1 -1  1  1 -1
+53  -1 -1  1 -1  1  1 -1
+54   1 -1  1 -1  1  1 -1
+55  -1  1  1 -1  1  1 -1
+56   1  1  1 -1  1  1 -1
+57  -1 -1 -1  1  1  1 -1
+58   1 -1 -1  1  1  1 -1
+59  -1  1 -1  1  1  1 -1
+60   1  1 -1  1  1  1 -1
+61  -1 -1  1  1  1  1 -1
+62   1 -1  1  1  1  1 -1
+63  -1  1  1  1  1  1 -1
+64   1  1  1  1  1  1 -1
+65  -1 -1 -1 -1 -1 -1  1
+66   1 -1 -1 -1 -1 -1  1
+67  -1  1 -1 -1 -1 -1  1
+68   1  1 -1 -1 -1 -1  1
+69  -1 -1  1 -1 -1 -1  1
+70   1 -1  1 -1 -1 -1  1
+71  -1  1  1 -1 -1 -1  1
+72   1  1  1 -1 -1 -1  1
+73  -1 -1 -1  1 -1 -1  1
+74   1 -1 -1  1 -1 -1  1
+75  -1  1 -1  1 -1 -1  1
+76   1  1 -1  1 -1 -1  1
+77  -1 -1  1  1 -1 -1  1
+78   1 -1  1  1 -1 -1  1
+79  -1  1  1  1 -1 -1  1
+80   1  1  1  1 -1 -1  1
+81  -1 -1 -1 -1  1 -1  1
+82   1 -1 -1 -1  1 -1  1
+83  -1  1 -1 -1  1 -1  1
+84   1  1 -1 -1  1 -1  1
+85  -1 -1  1 -1  1 -1  1
+86   1 -1  1 -1  1 -1  1
+87  -1  1  1 -1  1 -1  1
+88   1  1  1 -1  1 -1  1
+89  -1 -1 -1  1  1 -1  1
+90   1 -1 -1  1  1 -1  1
+91  -1  1 -1  1  1 -1  1
+92   1  1 -1  1  1 -1  1
+93  -1 -1  1  1  1 -1  1
+94   1 -1  1  1  1 -1  1
+95  -1  1  1  1  1 -1  1
+96   1  1  1  1  1 -1  1
+97  -1 -1 -1 -1 -1  1  1
+98   1 -1 -1 -1 -1  1  1
+99  -1  1 -1 -1 -1  1  1
+100  1  1 -1 -1 -1  1  1
+101 -1 -1  1 -1 -1  1  1
+102  1 -1  1 -1 -1  1  1
+103 -1  1  1 -1 -1  1  1
+104  1  1  1 -1 -1  1  1
+105 -1 -1 -1  1 -1  1  1
+106  1 -1 -1  1 -1  1  1
+107 -1  1 -1  1 -1  1  1
+108  1  1 -1  1 -1  1  1
+109 -1 -1  1  1 -1  1  1
+110  1 -1  1  1 -1  1  1
+111 -1  1  1  1 -1  1  1
+112  1  1  1  1 -1  1  1
+113 -1 -1 -1 -1  1  1  1
+114  1 -1 -1 -1  1  1  1
+115 -1  1 -1 -1  1  1  1
+116  1  1 -1 -1  1  1  1
+117 -1 -1  1 -1  1  1  1
+118  1 -1  1 -1  1  1  1
+119 -1  1  1 -1  1  1  1
+120  1  1  1 -1  1  1  1
+121 -1 -1 -1  1  1  1  1
+122  1 -1 -1  1  1  1  1
+123 -1  1 -1  1  1  1  1
+124  1  1 -1  1  1  1  1
+125 -1 -1  1  1  1  1  1
+126  1 -1  1  1  1  1  1
+127 -1  1  1  1  1  1  1
+128  1  1  1  1  1  1  1</code></pre>
+</div>
+</div>
+<p>This can be an input to specify the design using another function, say with <code>optFederov</code> which uses Federov’s exchange algorithm to generate the design.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-7_cffea6d66189b29efc9c3688a61979ed">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>desF <span class="ot">&lt;-</span> <span class="fu">optFederov</span>(<span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> dat,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nTrials =</span> <span class="dv">32</span>,</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nRepeats =</span> <span class="dv">100</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>desF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>$D
+[1] 0.8867999
+
+$A
+[1] 1.296784
+
+$Ge
+[1] 0.412
+
+$Dea
+[1] 0.241
+
+$design
+    X1 X2 X3 X4 X5 X6 X7
+4    1  1 -1 -1 -1 -1 -1
+5   -1 -1  1 -1 -1 -1 -1
+10   1 -1 -1  1 -1 -1 -1
+11  -1  1 -1  1 -1 -1 -1
+16   1  1  1  1 -1 -1 -1
+17  -1 -1 -1 -1  1 -1 -1
+23  -1  1  1 -1  1 -1 -1
+28   1  1 -1  1  1 -1 -1
+30   1 -1  1  1  1 -1 -1
+33  -1 -1 -1 -1 -1  1 -1
+38   1 -1  1 -1 -1  1 -1
+44   1  1 -1  1 -1  1 -1
+50   1 -1 -1 -1  1  1 -1
+51  -1  1 -1 -1  1  1 -1
+56   1  1  1 -1  1  1 -1
+61  -1 -1  1  1  1  1 -1
+66   1 -1 -1 -1 -1 -1  1
+67  -1  1 -1 -1 -1 -1  1
+72   1  1  1 -1 -1 -1  1
+76   1  1 -1  1 -1 -1  1
+77  -1 -1  1  1 -1 -1  1
+84   1  1 -1 -1  1 -1  1
+86   1 -1  1 -1  1 -1  1
+90   1 -1 -1  1  1 -1  1
+95  -1  1  1  1  1 -1  1
+100  1  1 -1 -1 -1  1  1
+105 -1 -1 -1  1 -1  1  1
+110  1 -1  1  1 -1  1  1
+111 -1  1  1  1 -1  1  1
+117 -1 -1  1 -1  1  1  1
+123 -1  1 -1  1  1  1  1
+128  1  1  1  1  1  1  1
+
+$rows
+ [1]   4   5  10  11  16  17  23  28  30  33  38  44  50  51  56  61  66  67  72
+[20]  76  77  84  86  90  95 100 105 110 111 117 123 128</code></pre>
+</div>
+</div>
+<p>If you want to further randomise within blocks, you can pass the above result to <code>optBlock</code>.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-8_237a8f8d61e37bce952f6f639f7d6a5c">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>desFBlk <span class="ot">&lt;-</span> <span class="fu">optBlock</span>(<span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">withinData =</span> desF<span class="sc">$</span>design,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">blocksizes =</span> <span class="fu">rep</span>(<span class="dv">8</span>, <span class="dv">4</span>),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">nRepeats =</span> <span class="dv">20</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>desFBlk</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>$D
+[1] 0.8049815
+
+$diagonality
+[1] 0.836
+
+$Blocks
+$Blocks$B1
+    X1 X2 X3 X4 X5 X6 X7
+4    1  1 -1 -1 -1 -1 -1
+17  -1 -1 -1 -1  1 -1 -1
+23  -1  1  1 -1  1 -1 -1
+33  -1 -1 -1 -1 -1  1 -1
+77  -1 -1  1  1 -1 -1  1
+84   1  1 -1 -1  1 -1  1
+90   1 -1 -1  1  1 -1  1
+123 -1  1 -1  1  1  1  1
+
+$Blocks$B2
+    X1 X2 X3 X4 X5 X6 X7
+10   1 -1 -1  1 -1 -1 -1
+16   1  1  1  1 -1 -1 -1
+28   1  1 -1  1  1 -1 -1
+50   1 -1 -1 -1  1  1 -1
+61  -1 -1  1  1  1  1 -1
+67  -1  1 -1 -1 -1 -1  1
+86   1 -1  1 -1  1 -1  1
+100  1  1 -1 -1 -1  1  1
+
+$Blocks$B3
+    X1 X2 X3 X4 X5 X6 X7
+5   -1 -1  1 -1 -1 -1 -1
+11  -1  1 -1  1 -1 -1 -1
+30   1 -1  1  1  1 -1 -1
+44   1  1 -1  1 -1  1 -1
+56   1  1  1 -1  1  1 -1
+66   1 -1 -1 -1 -1 -1  1
+95  -1  1  1  1  1 -1  1
+110  1 -1  1  1 -1  1  1
+
+$Blocks$B4
+    X1 X2 X3 X4 X5 X6 X7
+38   1 -1  1 -1 -1  1 -1
+51  -1  1 -1 -1  1  1 -1
+72   1  1  1 -1 -1 -1  1
+76   1  1 -1  1 -1 -1  1
+105 -1 -1 -1  1 -1  1  1
+111 -1  1  1  1 -1  1  1
+117 -1 -1  1 -1  1  1  1
+128  1  1  1  1  1  1  1
+
+
+$design
+    X1 X2 X3 X4 X5 X6 X7
+4    1  1 -1 -1 -1 -1 -1
+17  -1 -1 -1 -1  1 -1 -1
+23  -1  1  1 -1  1 -1 -1
+33  -1 -1 -1 -1 -1  1 -1
+77  -1 -1  1  1 -1 -1  1
+84   1  1 -1 -1  1 -1  1
+90   1 -1 -1  1  1 -1  1
+123 -1  1 -1  1  1  1  1
+10   1 -1 -1  1 -1 -1 -1
+16   1  1  1  1 -1 -1 -1
+28   1  1 -1  1  1 -1 -1
+50   1 -1 -1 -1  1  1 -1
+61  -1 -1  1  1  1  1 -1
+67  -1  1 -1 -1 -1 -1  1
+86   1 -1  1 -1  1 -1  1
+100  1  1 -1 -1 -1  1  1
+5   -1 -1  1 -1 -1 -1 -1
+11  -1  1 -1  1 -1 -1 -1
+30   1 -1  1  1  1 -1 -1
+44   1  1 -1  1 -1  1 -1
+56   1  1  1 -1  1  1 -1
+66   1 -1 -1 -1 -1 -1  1
+95  -1  1  1  1  1 -1  1
+110  1 -1  1  1 -1  1  1
+38   1 -1  1 -1 -1  1 -1
+51  -1  1 -1 -1  1  1 -1
+72   1  1  1 -1 -1 -1  1
+76   1  1 -1  1 -1 -1  1
+105 -1 -1 -1  1 -1  1  1
+111 -1  1  1  1 -1  1  1
+117 -1 -1  1 -1  1  1  1
+128  1  1  1  1  1  1  1
+
+$rows
+ [1]   4  17  23  33  77  84  90 123  10  16  28  50  61  67  86 100   5  11  30
+[20]  44  56  66  95 110  38  51  72  76 105 111 117 128</code></pre>
+</div>
+</div>
+</section>
+<section id="agricolae" class="level2">
+<h2 class="anchored" data-anchor-id="agricolae"><code>agricolae</code></h2>
+<p><code>agricolae</code> is motivated by agricultural applications although the designs are applicable across a variety of fields.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-9_c860247cb092e2fe0575fbad61b40dac">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The functions to create the design all begin with the word “design.” and the names of the functions are remnant of the name of the experimental design. E.g. <code>design.rcbd</code> generates a Randomised Complete Block Design and <code>design.split</code> generates a Split Plot Design.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-10_da76cccb097ba5b9479bb4e10da7ec3d">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>(<span class="st">"package:agricolae"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_subset</span>(<span class="st">"^design."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "design.ab"      "design.alpha"   "design.bib"     "design.crd"    
+ [5] "design.cyclic"  "design.dau"     "design.graeco"  "design.lattice"
+ [9] "design.lsd"     "design.mat"     "design.rcbd"    "design.split"  
+[13] "design.strip"   "design.youden" </code></pre>
+</div>
+</div>
+<p>Rather than going through each of the functions, I’ll just show one. The command below generates a balanced incomplete block design with 7 treatments of block size 3. This the same design structure as the first example for <code>AlgDesign</code>. What do you think of the input and output?</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-11_dcf7606eec961b478252c1f5d585b864">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>trt <span class="ot">&lt;-</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>]</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">design.bib</span>(<span class="at">trt =</span> trt, <span class="at">k =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>
+Parameters BIB
+==============
+Lambda     : 1
+treatmeans : 7
+Block size : 3
+Blocks     : 7
+Replication: 3 
+
+Efficiency factor 0.7777778 
+
+&lt;&lt;&lt; Book &gt;&gt;&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>$parameters
+$parameters$design
+[1] "bib"
+
+$parameters$trt
+[1] "A" "B" "C" "D" "E" "F" "G"
+
+$parameters$k
+[1] 3
+
+$parameters$serie
+[1] 2
+
+$parameters$seed
+[1] 1804898417
+
+$parameters$kinds
+[1] "Super-Duper"
+
+
+$statistics
+       lambda treatmeans blockSize blocks r Efficiency
+values      1          7         3      7 3  0.7777778
+
+$sketch
+     [,1] [,2] [,3]
+[1,] "C"  "B"  "D" 
+[2,] "A"  "E"  "B" 
+[3,] "F"  "B"  "G" 
+[4,] "G"  "C"  "E" 
+[5,] "G"  "A"  "D" 
+[6,] "A"  "F"  "C" 
+[7,] "F"  "E"  "D" 
+
+$book
+   plots block trt
+1    101     1   C
+2    102     1   B
+3    103     1   D
+4    201     2   A
+5    202     2   E
+6    203     2   B
+7    301     3   F
+8    302     3   B
+9    303     3   G
+10   401     4   G
+11   402     4   C
+12   403     4   E
+13   501     5   G
+14   502     5   A
+15   503     5   D
+16   601     6   A
+17   602     6   F
+18   603     6   C
+19   701     7   F
+20   702     7   E
+21   703     7   D</code></pre>
+</div>
+</div>
+<p>More examples are given in the <a href="https://cran.r-project.org/web/packages/agricolae/vignettes/tutorial.pdf"><code>agricolae</code> tutorial</a>.</p>
+</section>
+<section id="lhs" class="level2">
+<h2 class="anchored" data-anchor-id="lhs"><code>lhs</code></h2>
+<p>The <code>lhs</code> package is completely different to the previous two packages. It implements methods for creating and augmenting Latin Hypercube Samples and Orthogonal Array Latin Hypercube Samples. The treatment variables here are the parameters and are continuous. In the example below, there are 10 parameters were 30 samples will be drawn from.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-12_cc1867f7f2895e69af193709d63df4fd">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lhs)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co"># a design with 30 samples from 10 parameters</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">randomLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>A</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>            [,1]       [,2]       [,3]       [,4]        [,5]       [,6]
+ [1,] 0.85115160 0.80153721 0.26562089 0.24240381 0.386617133 0.57523291
+ [2,] 0.03162770 0.11851068 0.20750833 0.22137816 0.737580563 0.37572590
+ [3,] 0.94326309 0.99286802 0.55167951 0.04431126 0.073908842 0.33729208
+ [4,] 0.15341898 0.23664814 0.45088836 0.02736497 0.276594703 0.77521524
+ [5,] 0.53987796 0.69129259 0.61068716 0.68112190 0.840092421 0.18545904
+ [6,] 0.34338962 0.91067411 0.50772141 0.46340514 0.543650700 0.04848456
+ [7,] 0.87984431 0.18530938 0.28391957 0.80767211 0.636091307 0.40499358
+ [8,] 0.74093451 0.94142899 0.47633881 0.93482745 0.101815507 0.83195048
+ [9,] 0.22679294 0.05950478 0.70384589 0.84840308 0.046119869 0.20549016
+[10,] 0.59543890 0.14230001 0.91973016 0.38743743 0.008173053 0.11180544
+[11,] 0.71222052 0.84574251 0.05719443 0.33460392 0.414795358 0.71230339
+[12,] 0.31313954 0.55023270 0.67189798 0.98743475 0.480147544 0.14900939
+[13,] 0.06589897 0.02727366 0.94372045 0.11200430 0.776188787 0.31845634
+[14,] 0.67856942 0.64694630 0.11695731 0.57667893 0.576669680 0.68236586
+[15,] 0.60779222 0.47346774 0.57803451 0.77359785 0.686925390 0.46043188
+[16,] 0.77869112 0.45967726 0.97082607 0.72001527 0.158727598 0.52748006
+[17,] 0.47753672 0.33965295 0.34264293 0.88078583 0.932636317 0.08469157
+[18,] 0.24829930 0.28054142 0.82863690 0.48987801 0.831406425 0.28007202
+[19,] 0.63438918 0.62665931 0.19339855 0.63126047 0.222550404 0.84219677
+[20,] 0.42615936 0.78697269 0.31122846 0.54731724 0.618925200 0.98370876
+[21,] 0.98558294 0.31283813 0.79937608 0.09708168 0.974254219 0.48614679
+[22,] 0.82272308 0.72620385 0.63409490 0.51439160 0.888309555 0.94892286
+[23,] 0.28216288 0.40678670 0.00747647 0.15786391 0.462001814 0.89070787
+[24,] 0.44293885 0.88759165 0.87593133 0.17614748 0.301809115 0.03273681
+[25,] 0.91903885 0.58769320 0.85344414 0.73340894 0.261399107 0.65831637
+[26,] 0.39749211 0.21531852 0.40155710 0.40795272 0.175926862 0.54073941
+[27,] 0.53326444 0.09494134 0.36906730 0.28462433 0.521423827 0.62613184
+[28,] 0.12780125 0.76041647 0.14450865 0.32753635 0.958334555 0.25256769
+[29,] 0.19956924 0.39260007 0.76646006 0.65147638 0.353769748 0.90342254
+[30,] 0.09115621 0.53145384 0.09544316 0.91317843 0.722981039 0.74109078
+            [,7]       [,8]       [,9]      [,10]
+ [1,] 0.64829514 0.30957145 0.56063376 0.58060694
+ [2,] 0.09386871 0.09460784 0.62699580 0.07496677
+ [3,] 0.14971910 0.02306924 0.12609065 0.18310414
+ [4,] 0.27273750 0.43275425 0.84548534 0.13991032
+ [5,] 0.57024842 0.83876578 0.94430739 0.55675175
+ [6,] 0.68468958 0.93462688 0.69388363 0.77296080
+ [7,] 0.22736413 0.49914901 0.63951785 0.29475412
+ [8,] 0.86262149 0.90864828 0.71549074 0.95154810
+ [9,] 0.82450164 0.34137614 0.35590469 0.33383492
+[10,] 0.99755568 0.77506400 0.90850387 0.04070513
+[11,] 0.51386141 0.51188486 0.74575618 0.47042600
+[12,] 0.62716610 0.60853776 0.19349115 0.85808318
+[13,] 0.36810057 0.68906398 0.48416759 0.10075997
+[14,] 0.46367072 0.53735362 0.97946521 0.53084746
+[15,] 0.79151449 0.39841726 0.16295411 0.32738380
+[16,] 0.73055037 0.10636268 0.45184454 0.60852297
+[17,] 0.11492100 0.64512714 0.26197028 0.87144705
+[18,] 0.90350371 0.27696270 0.41905694 0.25261507
+[19,] 0.41560144 0.73423244 0.01653787 0.01640204
+[20,] 0.54984313 0.26617569 0.32944947 0.20285318
+[21,] 0.73515250 0.59964083 0.87721937 0.82147435
+[22,] 0.89461948 0.05944528 0.27581653 0.97355201
+[23,] 0.95209334 0.17557806 0.57880924 0.65490041
+[24,] 0.35714952 0.82135876 0.80705301 0.91792197
+[25,] 0.31657015 0.44139011 0.39117389 0.72964052
+[26,] 0.03568867 0.88231315 0.53096409 0.45227701
+[27,] 0.18195056 0.23326926 0.79716759 0.42737304
+[28,] 0.48629095 0.72335715 0.07429013 0.67936824
+[29,] 0.03184096 0.15672156 0.06023826 0.73960757
+[30,] 0.23509647 0.98392432 0.20423196 0.38968498</code></pre>
+</div>
+</div>
+<p><code>lhs</code> provides a number of methods to find the optimal design each with their own criteria.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-13_770bf1a7d14cdbfc264319362fd8d090">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>A1 <span class="ot">&lt;-</span> <span class="fu">optimumLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>, <span class="at">maxSweeps =</span> <span class="dv">4</span>, <span class="at">eps =</span> <span class="fl">0.01</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>A2 <span class="ot">&lt;-</span> <span class="fu">maximinLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>, <span class="at">dup =</span> <span class="dv">5</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>A3 <span class="ot">&lt;-</span> <span class="fu">improvedLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>, <span class="at">dup =</span> <span class="dv">5</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>A4 <span class="ot">&lt;-</span> <span class="fu">geneticLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>, <span class="at">pop =</span> <span class="dv">1000</span>, <span class="at">gen =</span> <span class="dv">8</span>, <span class="at">pMut =</span> <span class="fl">0.1</span>, <span class="at">criterium =</span> <span class="st">"S"</span>)</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>A5 <span class="ot">&lt;-</span> <span class="fu">geneticLHS</span>(<span class="dv">30</span>, <span class="dv">10</span>, <span class="at">pop =</span> <span class="dv">1000</span>, <span class="at">gen =</span> <span class="dv">8</span>, <span class="at">pMut =</span> <span class="fl">0.1</span>, <span class="at">criterium =</span> <span class="st">"Maximin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ez" class="level2">
+<h2 class="anchored" data-anchor-id="ez"><code>ez</code></h2>
+<p>This is mainly focussed on the analysis of experimental data but some functions such as <code>ezDesign</code> is useful for viewing the experimental structure.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-14_131239d16ec23f053a61d08873e18e07">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ez)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ANT2)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ezPrecis</span>(ANT2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data frame dimensions: 5760 rows, 10 columns</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             type missing values      min         max
+subnum    numeric       0     20        1          20
+group      factor       0      2  Control   Treatment
+block     numeric       0      6        1           6
+trial      factor       0     48        1          48
+cue        factor       0      4     None     Spatial
+flank      factor       0      3  Neutral Incongruent
+location   factor       0      2     down          up
+direction  factor       0      2     left       right
+rt        numeric     144   5617 179.5972    657.6986
+error     numeric     144      3        0           1</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-15_dbc9fdb23306a84644235cdd7eec11d9">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ezDesign</span>(<span class="at">data =</span> ANT2,</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> trial, </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> subnum,</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">row =</span> block, </span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="doe.base" class="level2">
+<h2 class="anchored" data-anchor-id="doe.base"><code>DoE.base</code></h2>
+<p><code>DoE.base</code> provides utility functions for the special class <code>design</code> and as seen in Figure @ref(fig:doe-network), <code>DoE.base</code> is used by <a href="https://prof.beuth-hochschule.de/groemping/software/versuchsplanung/?print=232">four other DoE packages that is maintained also by Prof.&nbsp;Dr.&nbsp;Ulrike Grömping</a>.</p>
+<p><code>DoE.base</code> contains functions to generate factorial designs easily.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-16_6cdb8247d42c72e705ef792c1f1a0c0c">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DoE.base)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fac.design</span>(<span class="at">nlevels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">6</span>), </span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">blocks =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>creating full factorial with 216 runs ...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>   run.no run.no.std.rp Blocks A B C D E
+1       1        29.1.5      1 1 1 2 3 1
+2       2       89.1.15      1 1 1 2 2 3
+3       3      180.1.30      1 2 2 3 3 5
+4       4         4.1.2      1 2 2 1 1 1
+5       5       84.1.14      1 2 2 3 1 3
+6       6      160.1.28      1 2 2 1 2 5
+7       7      118.1.19      1 2 1 3 1 4
+8       8      186.1.31      1 2 1 2 1 6
+9       9       97.1.17      1 1 1 1 3 3
+10     10       92.1.16      1 2 2 2 2 3
+11     11      214.1.35      1 2 1 3 3 6
+12     12      194.1.33      1 2 1 1 2 6
+13     13        39.1.8      1 1 2 1 1 2
+14     14         1.1.1      1 1 1 1 1 1
+15     15      119.1.20      1 1 2 3 1 4
+16     16      127.1.22      1 1 2 2 2 4
+17     17      134.1.23      1 2 1 1 3 4
+18     18        58.1.9      1 2 1 3 2 2
+19     19      135.1.24      1 1 2 1 3 4
+20     20      149.1.25      1 1 1 2 1 5
+21     21       59.1.10      1 1 2 3 2 2
+22     22        38.1.7      1 2 1 1 1 2
+23     23       67.1.12      1 1 2 2 3 2
+24     24      195.1.34      1 1 2 1 2 6
+25     25        32.1.6      1 2 2 2 3 1
+26     26       66.1.11      1 2 1 2 3 2
+27     27      152.1.26      1 2 2 2 1 5
+28     28        21.1.3      1 1 1 3 2 1
+29     29      157.1.27      1 1 1 1 2 5
+30     30      215.1.36      1 1 2 3 3 6
+31     31      100.1.18      1 2 2 1 3 3
+32     32      187.1.32      1 1 2 2 1 6
+33     33      177.1.29      1 1 1 3 3 5
+34     34      126.1.21      1 2 1 2 2 4
+35     35       81.1.13      1 1 1 3 1 3
+36     36        24.1.4      1 2 2 3 2 1
+   run.no run.no.std.rp Blocks A B C D E
+37     37        16.2.4      2 2 2 1 2 1
+38     38      169.2.29      2 1 1 1 3 5
+39     39        43.2.8      2 1 2 2 1 2
+40     40      199.2.34      2 1 2 2 2 6
+41     41      104.2.18      2 2 2 2 3 3
+42     42      206.2.35      2 2 1 1 3 6
+43     43      131.2.22      2 1 2 3 2 4
+44     44      138.2.23      2 2 1 2 3 4
+45     45      172.2.30      2 2 2 1 3 5
+46     46      110.2.19      2 2 1 1 1 4
+47     47      161.2.27      2 1 1 2 2 5
+48     48         5.2.1      2 1 1 2 1 1
+49     49        42.2.7      2 2 1 2 1 2
+50     50       73.2.13      2 1 1 1 1 3
+51     51      191.2.32      2 1 2 3 1 6
+52     52       93.2.15      2 1 1 3 2 3
+53     53      156.2.26      2 2 2 3 1 5
+54     54       96.2.16      2 2 2 3 2 3
+55     55       51.2.10      2 1 2 1 2 2
+56     56      101.2.17      2 1 1 2 3 3
+57     57        13.2.3      2 1 1 1 2 1
+58     58      111.2.20      2 1 2 1 1 4
+59     59      130.2.21      2 2 1 3 2 4
+60     60       76.2.14      2 2 2 1 1 3
+61     61      198.2.33      2 2 1 2 2 6
+62     62      190.2.31      2 2 1 3 1 6
+63     63        33.2.5      2 1 1 3 3 1
+64     64      153.2.25      2 1 1 3 1 5
+65     65      164.2.28      2 2 2 2 2 5
+66     66        50.2.9      2 2 1 1 2 2
+67     67      207.2.36      2 1 2 1 3 6
+68     68       71.2.12      2 1 2 3 3 2
+69     69        36.2.6      2 2 2 3 3 1
+70     70         8.2.2      2 2 2 2 1 1
+71     71       70.2.11      2 2 1 3 3 2
+72     72      139.2.24      2 1 2 2 3 4
+    run.no run.no.std.rp Blocks A B C D E
+73      73       85.3.15      3 1 1 1 2 3
+74      74      105.3.17      3 1 1 3 3 3
+75      75        17.3.3      3 1 1 2 2 1
+76      76      211.3.36      3 1 2 2 3 6
+77      77      114.3.19      3 2 1 2 1 4
+78      78        47.3.8      3 1 2 3 1 2
+79      79       55.3.10      3 1 2 2 2 2
+80      80      182.3.31      3 2 1 1 1 6
+81      81      168.3.28      3 2 2 3 2 5
+82      82      165.3.27      3 1 1 3 2 5
+83      83      142.3.23      3 2 1 3 3 4
+84      84      145.3.25      3 1 1 1 1 5
+85      85       62.3.11      3 2 1 1 3 2
+86      86      148.3.26      3 2 2 1 1 5
+87      87      108.3.18      3 2 2 3 3 3
+88      88        25.3.5      3 1 1 1 3 1
+89      89         9.3.1      3 1 1 3 1 1
+90      90       77.3.13      3 1 1 2 1 3
+91      91      122.3.21      3 2 1 1 2 4
+92      92        12.3.2      3 2 2 3 1 1
+93      93        46.3.7      3 2 1 3 1 2
+94      94       88.3.16      3 2 2 1 2 3
+95      95        20.3.4      3 2 2 2 2 1
+96      96        54.3.9      3 2 1 2 2 2
+97      97      203.3.34      3 1 2 3 2 6
+98      98       80.3.14      3 2 2 2 1 3
+99      99      123.3.22      3 1 2 1 2 4
+100    100      173.3.29      3 1 1 2 3 5
+101    101        28.3.6      3 2 2 1 3 1
+102    102      176.3.30      3 2 2 2 3 5
+103    103      202.3.33      3 2 1 3 2 6
+104    104      115.3.20      3 1 2 2 1 4
+105    105      210.3.35      3 2 1 2 3 6
+106    106      183.3.32      3 1 2 1 1 6
+107    107       63.3.12      3 1 2 1 3 2
+108    108      143.3.24      3 1 2 3 3 4
+    run.no run.no.std.rp Blocks A B C D E
+109    109      179.4.30      4 1 2 3 3 5
+110    110      151.4.26      4 1 2 2 1 5
+111    111       60.4.10      4 2 2 3 2 2
+112    112        31.4.6      4 1 2 2 3 1
+113    113         3.4.2      4 1 2 1 1 1
+114    114        22.4.3      4 2 1 3 2 1
+115    115       99.4.18      4 1 2 1 3 3
+116    116        30.4.5      4 2 1 2 3 1
+117    117       68.4.12      4 2 2 2 3 2
+118    118      196.4.34      4 2 2 1 2 6
+119    119       90.4.15      4 2 1 2 2 3
+120    120        57.4.9      4 1 1 3 2 2
+121    121      158.4.27      4 2 1 1 2 5
+122    122      193.4.33      4 1 1 1 2 6
+123    123      136.4.24      4 2 2 1 3 4
+124    124       82.4.13      4 2 1 3 1 3
+125    125       65.4.11      4 1 1 2 3 2
+126    126        37.4.7      4 1 1 1 1 2
+127    127      120.4.20      4 2 2 3 1 4
+128    128      178.4.29      4 2 1 3 3 5
+129    129      128.4.22      4 2 2 2 2 4
+130    130      188.4.32      4 2 2 2 1 6
+131    131         2.4.1      4 2 1 1 1 1
+132    132       91.4.16      4 1 2 2 2 3
+133    133      185.4.31      4 1 1 2 1 6
+134    134      159.4.28      4 1 2 1 2 5
+135    135       98.4.17      4 2 1 1 3 3
+136    136        40.4.8      4 2 2 1 1 2
+137    137      150.4.25      4 2 1 2 1 5
+138    138      125.4.21      4 1 1 2 2 4
+139    139       83.4.14      4 1 2 3 1 3
+140    140      133.4.23      4 1 1 1 3 4
+141    141        23.4.4      4 1 2 3 2 1
+142    142      117.4.19      4 1 1 3 1 4
+143    143      216.4.36      4 2 2 3 3 6
+144    144      213.4.35      4 1 1 3 3 6
+    run.no run.no.std.rp Blocks A B C D E
+145    145      171.5.30      5 1 2 1 3 5
+146    146      102.5.17      5 2 1 2 3 3
+147    147      162.5.27      5 2 1 2 2 5
+148    148      112.5.20      5 2 2 1 1 4
+149    149      154.5.25      5 2 1 3 1 5
+150    150       74.5.13      5 2 1 1 1 3
+151    151      163.5.28      5 1 2 2 2 5
+152    152        15.5.4      5 1 2 1 2 1
+153    153       72.5.12      5 2 2 3 3 2
+154    154       95.5.16      5 1 2 3 2 3
+155    155      205.5.35      5 1 1 1 3 6
+156    156        35.5.6      5 1 2 3 3 1
+157    157         7.5.2      5 1 2 2 1 1
+158    158      129.5.21      5 1 1 3 2 4
+159    159         6.5.1      5 2 1 2 1 1
+160    160       75.5.14      5 1 2 1 1 3
+161    161      208.5.36      5 2 2 1 3 6
+162    162        14.5.3      5 2 1 1 2 1
+163    163       94.5.15      5 2 1 3 2 3
+164    164      132.5.22      5 2 2 3 2 4
+165    165        34.5.5      5 2 1 3 3 1
+166    166       69.5.11      5 1 1 3 3 2
+167    167      170.5.29      5 2 1 1 3 5
+168    168      137.5.23      5 1 1 2 3 4
+169    169       52.5.10      5 2 2 1 2 2
+170    170      155.5.26      5 1 2 3 1 5
+171    171        49.5.9      5 1 1 1 2 2
+172    172      200.5.34      5 2 2 2 2 6
+173    173        41.5.7      5 1 1 2 1 2
+174    174      192.5.32      5 2 2 3 1 6
+175    175        44.5.8      5 2 2 2 1 2
+176    176      140.5.24      5 2 2 2 3 4
+177    177      197.5.33      5 1 1 2 2 6
+178    178      109.5.19      5 1 1 1 1 4
+179    179      103.5.18      5 1 2 2 3 3
+180    180      189.5.31      5 1 1 3 1 6
+    run.no run.no.std.rp Blocks A B C D E
+181    181      106.6.17      6 2 1 3 3 3
+182    182      146.6.25      6 2 1 1 1 5
+183    183       79.6.14      6 1 2 2 1 3
+184    184        53.6.9      6 1 1 2 2 2
+185    185      209.6.35      6 1 1 2 3 6
+186    186       64.6.12      6 2 2 1 3 2
+187    187      166.6.27      6 2 1 3 2 5
+188    188        19.6.4      6 1 2 2 2 1
+189    189      204.6.34      6 2 2 3 2 6
+190    190        26.6.5      6 2 1 1 3 1
+191    191       78.6.13      6 2 1 2 1 3
+192    192       56.6.10      6 2 2 2 2 2
+193    193      181.6.31      6 1 1 1 1 6
+194    194      174.6.29      6 2 1 2 3 5
+195    195       87.6.16      6 1 2 1 2 3
+196    196        10.6.1      6 2 1 3 1 1
+197    197      212.6.36      6 2 2 2 3 6
+198    198      147.6.26      6 1 2 1 1 5
+199    199      107.6.18      6 1 2 3 3 3
+200    200        48.6.8      6 2 2 3 1 2
+201    201      116.6.20      6 2 2 2 1 4
+202    202       86.6.15      6 2 1 1 2 3
+203    203      184.6.32      6 2 2 1 1 6
+204    204        27.6.6      6 1 2 1 3 1
+205    205      124.6.22      6 2 2 1 2 4
+206    206      141.6.23      6 1 1 3 3 4
+207    207      201.6.33      6 1 1 3 2 6
+208    208        18.6.3      6 2 1 2 2 1
+209    209        45.6.7      6 1 1 3 1 2
+210    210      113.6.19      6 1 1 2 1 4
+211    211      167.6.28      6 1 2 3 2 5
+212    212      121.6.21      6 1 1 1 2 4
+213    213      144.6.24      6 2 2 3 3 4
+214    214       61.6.11      6 1 1 1 3 2
+215    215      175.6.30      6 1 2 2 3 5
+216    216        11.6.2      6 1 2 3 1 1
+class=design, type= full factorial.blocked 
+NOTE: columns run.no and run.no.std.rp  are annotation, 
+ not part of the data frame</code></pre>
+</div>
+</div>
+<p>It also contains functions to create orthogonal array designs.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-17_c758fd1ba6dc7de7795bfea0062c0438">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>des <span class="ot">&lt;-</span> <span class="fu">oa.design</span>(<span class="at">nlevels =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">8</span>), <span class="dv">8</span>))</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>des</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>   A B C D E F G H J
+1  1 2 1 2 2 1 2 1 6
+2  2 1 2 1 2 1 2 1 2
+3  2 1 1 2 2 1 1 2 4
+4  2 2 1 1 2 2 1 1 3
+5  1 1 1 1 2 2 2 2 5
+6  1 1 2 2 2 2 1 1 7
+7  1 2 1 2 1 2 1 2 2
+8  1 1 1 1 1 1 1 1 1
+9  1 2 2 1 2 1 1 2 8
+10 1 1 2 2 1 1 2 2 3
+11 2 1 2 1 1 2 1 2 6
+12 2 1 1 2 1 2 2 1 8
+13 2 2 2 2 1 1 1 1 5
+14 2 2 1 1 1 1 2 2 7
+15 1 2 2 1 1 2 2 1 4
+16 2 2 2 2 2 2 2 2 1
+class=design, type= oa </code></pre>
+</div>
+</div>
+<p>If you need to further randomise within a specified block, you can do this using <code>rerandomize.design</code>.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-18_18c89fe26ab63262f68854eb65d3c3d2">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rerandomize.design</span>(des, <span class="at">block =</span> <span class="st">"J"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="scroll-output"><code>  run.no run.no.std.rp J A B C D E F G H
+1      1         4.7.1 7 1 1 2 2 2 2 1 1
+2      2        13.7.2 7 2 2 1 1 1 1 2 2
+  run.no run.no.std.rp J A B C D E F G H
+3      3         7.4.1 4 1 2 2 1 1 2 2 1
+4      4        10.4.2 4 2 1 1 2 2 1 1 2
+  run.no run.no.std.rp J A B C D E F G H
+5      5        12.2.2 2 2 1 2 1 2 1 2 1
+6      6         5.2.1 2 1 2 1 2 1 2 1 2
+  run.no run.no.std.rp J A B C D E F G H
+7      7        11.6.2 6 2 1 2 1 1 2 1 2
+8      8         6.6.1 6 1 2 1 2 2 1 2 1
+   run.no run.no.std.rp J A B C D E F G H
+9       9         9.8.2 8 2 1 1 2 1 2 2 1
+10     10         8.8.1 8 1 2 2 1 2 1 1 2
+   run.no run.no.std.rp J A B C D E F G H
+11     11         3.3.1 3 1 1 2 2 1 1 2 2
+12     12        14.3.2 3 2 2 1 1 2 2 1 1
+   run.no run.no.std.rp J A B C D E F G H
+13     13        16.1.2 1 2 2 2 2 2 2 2 2
+14     14         1.1.1 1 1 1 1 1 1 1 1 1
+   run.no run.no.std.rp J A B C D E F G H
+15     15         2.5.1 5 1 1 1 1 2 2 2 2
+16     16        15.5.2 5 2 2 2 2 1 1 1 1
+class=design, type= oa.blocked 
+NOTE: columns run.no and run.no.std.rp  are annotation, 
+ not part of the data frame</code></pre>
+</div>
+</div>
+<p>So those were the top 5 DoE packages. The API of the packages are quite distinct. The object that it outputs can vary from a matrix to a list. DoE might be a dull area for many but it’s quite important for the downstream analysis. Perhaps if many of us talk more about it, it may help invigorate the area!</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-19_f7e0a9aa6b07fb3c87cffb453a727173">
+<script type="text/javascript">
+function showscript() {
+  var x = document.getElementsByClassName('toggle-code');
+  var n = x.length;
+  for (var i = 0; i < n; i++) {
+    var e = x[i];
+    if (e.style.display == "block") {
+      e.style.display = "none";
+    } else {
+      e.style.display = "block";
+    }
+  }
+}
+</script>
+</div>
+
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-lhs" class="csl-entry" role="doc-biblioentry">
+Carnell, Rob. 2020. <em>Lhs: Latin Hypercube Samples</em>. <a href="https://CRAN.R-project.org/package=lhs">https://CRAN.R-project.org/package=lhs</a>.
+</div>
+<div id="ref-Chatfield1985-yz" class="csl-entry" role="doc-biblioentry">
+Chatfield, C. 1985. <span>“The Initial Examination of Data.”</span> <em>Journal of the Royal Statistical Society. Series A</em> 148 (3): 214–53.
+</div>
+<div id="ref-agricolae" class="csl-entry" role="doc-biblioentry">
+de Mendiburu, Felipe. 2020. <em>Agricolae: Statistical Procedures for Agricultural Research</em>. <a href="https://CRAN.R-project.org/package=agricolae">https://CRAN.R-project.org/package=agricolae</a>.
+</div>
+<div id="ref-DoE.base" class="csl-entry" role="doc-biblioentry">
+Grömping, Ulrike. 2018. <span>“<span>R</span> Package <span class="nocase">DoE.base</span> for Factorial Experiments.”</span> <em>Journal of Statistical Software</em> 85 (5): 1–41. <a href="https://doi.org/10.18637/jss.v085.i05">https://doi.org/10.18637/jss.v085.i05</a>.
+</div>
+<div id="ref-ez" class="csl-entry" role="doc-biblioentry">
+Lawrence, Michael A. 2016. <em>Ez: Easy Analysis and Visualization of Factorial Experiments</em>. <a href="https://CRAN.R-project.org/package=ez">https://CRAN.R-project.org/package=ez</a>.
+</div>
+<div id="ref-adjustedcranlogs" class="csl-entry" role="doc-biblioentry">
+Morgan-Wall, Tyler. 2017. <em>Adjustedcranlogs: Remove Automated and Repeated Downloads from ’RStudio’ ’CRAN’ Download Logs</em>. <a href="https://CRAN.R-project.org/package=adjustedcranlogs">https://CRAN.R-project.org/package=adjustedcranlogs</a>.
+</div>
+<div id="ref-AlgDesign" class="csl-entry" role="doc-biblioentry">
+Wheeler, Bob. 2019. <em>AlgDesign: Algorithmic Experimental Design</em>. <a href="https://CRAN.R-project.org/package=AlgDesign">https://CRAN.R-project.org/package=AlgDesign</a>.
+</div>
+</div></section><section class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1" role="doc-endnote"><p>At least from my teaching experience, statistics subjects are primary about the analysis and most research grants I’ve seen are about an analytical method. The analytical focus is reflected also in the R packages; there are 1,884 R-packages on CRAN with the word “analysis” in the title as opposed to 283 R-packages with the word “design” in its title.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Keeping in mind though that your analysis plan may change once you actually have collected data. This is quite common in the analysis of plant breeding trials since some spatial variation only become apparent only after the data collection.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>I originally had a webscrapping error where I didn’t remove duplicate entries so numbers presented at <a href="https://emitanaka.org/slides/TokyoR2021/#32">TokyoR</a> and <a href="https://emitanaka.org/slides/SSA2020/#52">SSA Webinar</a> had the wrong numbers.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>As of 2022-08-13.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Monash University, Australia<br> © Copyright 2021-2022 Emi Tanaka</div>   
+    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">(</span></a><a href="#ref-statsgen" role="doc-biblioref"><strong>statsgen?</strong></a>)</div>
+  </div>
+</footer>
+<link rel="stylesheet" href="assets/syntax-highlight.css">
+<link rel="stylesheet" href="assets/fontawesome-free-6.1.1-web/css/all.min.css">
+<script src="assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+
+
+</body></html>

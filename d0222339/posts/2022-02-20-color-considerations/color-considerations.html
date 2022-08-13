@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Emi Tanaka">
+<meta name="dcterms.date" content="2022-02-20">
+<meta name="description" content="Checking the color blind friendliness of a number of qualitative palettes.">
+
+<title>emi tanaka - Colorblind checks for qualitative palettes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/avatar.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-07SZXPNSJZ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../assets/styles.css">
+<meta name="twitter:title" content="emi tanaka - Colorblind checks for qualitative palettes">
+<meta name="twitter:description" content="Checking the color blind friendliness of a number of qualitative palettes.">
+<meta name="twitter:creator" content="@statsgen">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../../index.html">
+    <img src="../../images/avatar.png" alt="">
+    <span class="navbar-title">emi tanaka</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html">CV</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html">Teaching</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html">Talks</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html">Blog</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/statsgen"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"><i class="bi bi-rss" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar"><div class="quarto-margin-header"><div class="margin-header-item">
+<p>subscribe.html</p>
+</div></div>
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Colorblind checks for qualitative palettes</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">color</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    <p>Checking the color blind friendliness of a number of qualitative palettes.</p>
+  </div>
+</div>
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <a href="https://emitanaka.org">Emi Tanaka</a> 
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Monash University
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 20, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<details>
+<summary>
+Function to generate plot for colorblind friendly check
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(farver)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>check_colorblindness <span class="ot">&lt;-</span> <span class="cf">function</span>(colors, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">label =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  ncolors <span class="ot">&lt;-</span> <span class="fu">length</span>(colors)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  nrow <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(ncolors <span class="sc">/</span> ncol)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  cond <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Original"</span>, <span class="st">"Deutan"</span>, <span class="st">"Protan"</span>, <span class="st">"Tritan"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  ncond <span class="ot">&lt;-</span> <span class="fu">length</span>(cond)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">color =</span> <span class="fu">c</span>(colors, <span class="fu">deutan</span>(colors), <span class="fu">protan</span>(colors), <span class="fu">tritan</span>(colors)),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">cond =</span> <span class="fu">rep</span>(cond, <span class="at">each =</span> ncolors),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>ncol, <span class="at">length.out =</span> ncolors), <span class="at">times =</span> ncond),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>nrow, <span class="at">each =</span> ncol)[<span class="dv">1</span><span class="sc">:</span>ncolors], <span class="at">times =</span> ncond)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">cond =</span> <span class="fu">factor</span>(cond, <span class="at">levels =</span> .env<span class="sc">$</span>cond))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(x, y, <span class="at">fill =</span> <span class="fu">I</span>(color))) <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">1.3</span>) <span class="sc">+</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>cond, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_reverse</span>()</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(label) {</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      g <span class="sc">+</span> <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> color, <span class="at">color =</span> <span class="fu">I</span>(label_col)), </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> <span class="cf">function</span>(data) data <span class="sc">%&gt;%</span> </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                <span class="fu">filter</span>(cond <span class="sc">==</span> <span class="st">"Original"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                <span class="fu">mutate</span>(<span class="at">hcl =</span> <span class="fu">decode_colour</span>(colors, <span class="at">to =</span> <span class="st">"hcl"</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">label_col =</span> <span class="fu">ifelse</span>(hcl[, <span class="st">"l"</span>] <span class="sc">&gt;</span> <span class="dv">50</span>, <span class="st">"black"</span>, <span class="st">"white"</span>)))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    g</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  } </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="cell-output-display">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Colors</th>
+<th style="text-align: right;"># of colors</th>
+<th style="text-align: left;">Palette</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:high-contrast">High contrast</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#FFFFFF, #DDAA33, #BB5566, #004488, #000000</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;"><img src="images/high-contrast-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:pale">Pale</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#BBCCEE, #CCEEFF, #CCDDAA, #EEEEBB, #FFCCCC, #DDDDDD</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;"><img src="images/pale-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:dark">Dark</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#222255, #225555, #225522, #666633, #663333, #555555</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;"><img src="images/dark-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:bright">Bright</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#4477AA, #66CCEE, #228833, #CCBB44, #EE6677, #AA3377, #BBBBBB</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;"><img src="images/bright-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:vibrant">Vibrant</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#0077BB, #33BBEE, #009988, #EE7733, #CC3311, #EE3377, #BBBBBB</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;"><img src="images/vibrant-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:medium-constrast">Medium constrast</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#FFFFFF, #EECC66, #EE99AA, #6699CC, #997700, #994455, #004488, #000000</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;"><img src="images/medium-constrast-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:okabe-ito">Okabe Ito</a></td>
+<td style="text-align: left;"><a href="https://jfly.uni-koeln.de/color/">Okabe Ito</a></td>
+<td style="text-align: left;">#E69F00, #56B4E9, #009E73, #F0E442, #0072B2, #D55E00, #CC79A7, #000000</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;"><img src="images/okabe-ito-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:light">Light</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#77AADD, #99DDFF, #44BB99, #BBCC33, #AAAA00, #EEDD88, #EE8866, #FFAABB, #DDDDDD</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;"><img src="images/light-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:muted">Muted</a></td>
+<td style="text-align: left;"><a href="https://personal.sron.nl/~pault/#sec:qualitative">Paul Tol</a></td>
+<td style="text-align: left;">#332288, #88CCEE, #44AA99, #117733, #999933, #DDCC77, #CC6677, #882255, #AA4499, #DDDDDD</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;"><img src="images/muted-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:safe">Safe</a></td>
+<td style="text-align: left;"><code>rcartocolor</code></td>
+<td style="text-align: left;">#88CCEE, #CC6677, #DDCC77, #117733, #332288, #AA4499, #44AA99, #999933, #882255, #661100, #6699CC, #888888</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;"><img src="images/safe-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="#fig:monash-primary">Monash primary</a></td>
+<td style="text-align: left;"><a href="https://www.monash.edu/__data/assets/pdf_file/0004/1656508/9.-Digital-Guidelines.pdf">Monash</a></td>
+<td style="text-align: left;">#006DAE, #000000, #FFFFFF, #5A5A5A, #969696, #E6E6E6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;"><img src="images/monash-primary-showcase-1.png" style="width:200px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="#fig:monash-secondary">Monash secondary</a></td>
+<td style="text-align: left;"><a href="https://www.monash.edu/__data/assets/pdf_file/0004/1656508/9.-Digital-Guidelines.pdf">Monash</a></td>
+<td style="text-align: left;">#027EB6, #746FB2, #9651A0, #C8008F, #ee64a4, #EE0220, #D93F00, #795549, #6F7C4D, #008A25</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;"><img src="images/monash-secondary-showcase-1.png" style="width:200px;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="r-code-for-easy-copying" class="level2">
+<h2 class="anchored" data-anchor-id="r-code-for-easy-copying">R code for easy copying</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>### High contrast 
+c("#FFFFFF", "#DDAA33", "#BB5566", "#004488", "#000000")
+
+### Pale 
+c("#BBCCEE", "#CCEEFF", "#CCDDAA", "#EEEEBB", "#FFCCCC", "#DDDDDD"
+)
+
+### Dark 
+c("#222255", "#225555", "#225522", "#666633", "#663333", "#555555"
+)
+
+### Bright 
+c("#4477AA", "#66CCEE", "#228833", "#CCBB44", "#EE6677", "#AA3377", 
+"#BBBBBB")
+
+### Vibrant 
+c("#0077BB", "#33BBEE", "#009988", "#EE7733", "#CC3311", "#EE3377", 
+"#BBBBBB")
+
+### Medium constrast 
+c("#FFFFFF", "#EECC66", "#EE99AA", "#6699CC", "#997700", "#994455", 
+"#004488", "#000000")
+
+### Okabe Ito 
+c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", 
+"#CC79A7", "#000000")
+
+### Light 
+c("#77AADD", "#99DDFF", "#44BB99", "#BBCC33", "#AAAA00", "#EEDD88", 
+"#EE8866", "#FFAABB", "#DDDDDD")
+
+### Muted 
+c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", 
+"#CC6677", "#882255", "#AA4499", "#DDDDDD")
+
+### Safe 
+c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288", "#AA4499", 
+"#44AA99", "#999933", "#882255", "#661100", "#6699CC", "#888888"
+)
+
+### Monash primary 
+c(blue = "#006DAE", black = "#000000", white = "#FFFFFF", gray80 = "#5A5A5A", 
+gray50 = "#969696", gray10 = "#E6E6E6")
+
+### Monash secondary 
+c(blue = "#027EB6", purple = "#746FB2", fuchsia = "#9651A0", 
+ruby = "#C8008F", pink = "#ee64a4", red = "#EE0220", orange = "#D93F00", 
+umber = "#795549", olive = "#6F7C4D", green = "#008A25")</code></pre>
+</div>
+</div>
+</section>
+<section id="closer-look" class="level2">
+<h2 class="anchored" data-anchor-id="closer-look">Closer look</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/high-contrast-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">High contrast palette: #FFFFFF, #DDAA33, #BB5566, #004488, #000000.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pale-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Pale palette: #BBCCEE, #CCEEFF, #CCDDAA, #EEEEBB, #FFCCCC, #DDDDDD.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/dark-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Dark palette: #222255, #225555, #225522, #666633, #663333, #555555.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/bright-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Bright palette: #4477AA, #66CCEE, #228833, #CCBB44, #EE6677, #AA3377, #BBBBBB.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/vibrant-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Vibrant palette: #0077BB, #33BBEE, #009988, #EE7733, #CC3311, #EE3377, #BBBBBB.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/medium-constrast-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Medium constrast palette: #FFFFFF, #EECC66, #EE99AA, #6699CC, #997700, #994455, #004488, #000000.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/okabe-ito-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Okabe Ito palette: #E69F00, #56B4E9, #009E73, #F0E442, #0072B2, #D55E00, #CC79A7, #000000.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/light-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Light palette: #77AADD, #99DDFF, #44BB99, #BBCC33, #AAAA00, #EEDD88, #EE8866, #FFAABB, #DDDDDD.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/muted-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Muted palette: #332288, #88CCEE, #44AA99, #117733, #999933, #DDCC77, #CC6677, #882255, #AA4499, #DDDDDD.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/safe-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Safe palette: #88CCEE, #CC6677, #DDCC77, #117733, #332288, #AA4499, #44AA99, #999933, #882255, #661100, #6699CC, #888888.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/monash-primary-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Monash primary palette: #006DAE, #000000, #FFFFFF, #5A5A5A, #969696, #E6E6E6.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/monash-secondary-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Monash secondary palette: #027EB6, #746FB2, #9651A0, #C8008F, #ee64a4, #EE0220, #D93F00, #795549, #6F7C4D, #008A25.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Monash University, Australia<br> © Copyright 2021-2022 Emi Tanaka</div>   
+    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br> <i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia</div>
+  </div>
+</footer>
+<link rel="stylesheet" href="assets/syntax-highlight.css">
+<link rel="stylesheet" href="assets/fontawesome-free-6.1.1-web/css/all.min.css">
+<script src="assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+
+
+</body></html>
