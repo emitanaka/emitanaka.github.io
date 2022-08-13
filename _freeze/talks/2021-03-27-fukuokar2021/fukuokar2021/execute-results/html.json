@@ -1,0 +1,16 @@
+{
+  "hash": "e3becbf58b3f0f7b7b2323eaa5c4dc48",
+  "result": {
+    "markdown": "---\ntitle: \"Visual Inference: 絵による推論\"\nHost: 17th Fukuoka R Meeting. \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 03-27-2021\nimage: cover.png\nurl: https://emitanaka.org/slides/FukuokaR2021\ncategories: [日本語, Visual Inference]\n---\n\n\n\nClick [here](https://emitanaka.org/slides/FukuokaR2021) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/FukuokaR2021#2\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [
+      "fukuokar2021_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

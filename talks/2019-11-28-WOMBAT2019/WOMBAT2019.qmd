@@ -1,0 +1,24 @@
+---
+title: "Software design, selection and estimation for latent variable models"
+abstract: |
+  Latent variable models (LVMs), including the special case of factor analysis when the responses are conditionally normally distributed, are gaining traction in many scientific fields owing to both their statistical and computational advantages as a means of dimension reduction for high-dimensional data. Model selection for LVMs has an additional striking twist: as the name suggests, the latent variables are unobserved and have to be estimated from the data. Therefore, we need to select both the order and the structure of the factor loadings. I introduce our method for order selection in LVMs, Ordered FActor Lasso (OFAL, Hui et al., 2018), which utilises penalised likelihood methods to encourage both element-wise and group-wise sparsity in the loadings. Specifically, I will show how the OFAL penalty exploits both the grouped and hierarchical nature of the loadings, thus providing a natural approach to order selection, while also circumventing the issue of identifiability without the use of an arbitrary constraint. Furthermore, I will discuss a computational algorithm for calculating the OFAL estimates based on a convenient reparameterisation of the penalty. In addition, I will discuss the design of application programming interface (API) to specify these latent variable models. 
+Host: WOMBAT 2019.
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+url: https://emitanaka.org/slides/WOMBAT2019
+image: cover.png
+date: 11-29-2019
+categories: [Latent Variable Model, Mixed Model]
+---
+
+
+
+Click [here](https://www.monash.edu/business/wombat2019) about WOMBAT2019.
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>
+

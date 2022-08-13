@@ -1,0 +1,32 @@
+---
+title: 'Advent of "Grammar": Bridging Statistics and Data Science for the Design of Experiments'
+abstract: |
+ Statistics is a valuable tool for almost all scientific fields and industry to make sense of their data, yet as a field we lag behind to remain relevant, getting superseded by the so-called data science. What differentiates statistics from data science? And how does the design of experiments fit in with data science?
+
+ In this webinar, I will talk about the concept of the "grammar" and the momentum it is gaining to make data analysis more accessible to a diverse group. I'll then present my prototype to the "grammar of experimental design" - a framework to construct the design of comparative experiments that cognitively enforces the experimental structure. I'll explain some principles behind this prototype, showcase how my developmental R-package edibble will work, and how I think it helps to bridge the gap between experimental design theory and practice for the wider community.
+Host: Statistical Society of Australia Webinar Series
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 11-27-2020
+url: https://emitanaka.org/slides/SSA2020
+image: cover.png
+categories: [Experimental Design]
+---
+
+::: callout-warning
+
+## Errata
+
+There was an error in my script (where duplicates were not removed) for the count for the number of R packages in CRAN Task View of Design of Experiments. The slides specify there are about 200 R-packages. After removing duplicates, there was about 100 R-packages. 
+
+:::
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>
+
+
+

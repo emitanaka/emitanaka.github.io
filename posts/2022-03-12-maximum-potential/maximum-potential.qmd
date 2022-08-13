@@ -1,0 +1,160 @@
+---
+title: "Maximum potential"
+description: "It's a tragedy when those who have talent don't get to fully express it because of the environment."
+date: 2022-03-12
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+categories: [life, outlier]
+---
+
+
+When I read books, I almost exclusively read non-fiction books only. One of the books that left a strong impression on me is "Outliers" by the journalist, Malcolm Gladwell, that I read back in 2016. The name of the book sound awfully statistical but it's definitely not like the statistic journal articles I read. 
+
+### Ice hockey talent
+
+In the beginning of the book, Gladwell presents a hockey player roster shown in Table \@ref(tab:hat-tigers). He asks to take a closer look at this roster. **Do you notice anything strange about the list?**
+
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(lubridate)
+theme_set(  theme(panel.background = element_rect(fill = NA),
+        panel.grid = element_line(color = "#f6e5ee"),
+        axis.text = element_text(color = "#79003e"),
+        axis.line = element_line(color = "#79003e", size = 0.7),
+        axis.ticks.length = unit(1.4, "mm"),
+        axis.ticks = element_line(color = "#79003e", size = 0.7),
+        axis.title = element_text(color = "#79003e", face = "bold"),
+        strip.background = element_rect(color = "#79003e",
+                                        fill = "#AD0059"),
+        strip.text = element_text(color = "white"),
+        plot.title.position = "plot",
+        plot.title = element_text(color = "#79003e", face = "bold")) )
+
+roster <- readRDS("roster.rds")
+mht2007 <- tribble(~No, ~Name, ~Pos, ~Shoots, ~Height, ~Weight, ~Birthdate, ~Hometown,
+        9, "Brennan Bosch", "C", "R", 5 + 8/12, 173, "14/02/1988", "Martensville, SK",
+        11, "Scott Wasden", "C", "R", 6 + 1/12, 188, "04/01/1988", "Westbank, BC",
+        12, "Colton Grant", "LW", "L", 5 + 9/12, 177, "20/03/1989", "Standard, AB",
+        14, "Darren Helm", "LW", "L", 6, 182, "21/01/1987", "St. Andrews, MB",
+        15, "Derek Dorsett", "RW", "L", 5 + 11/12, 178, "20/12/1986", "Kindersley, SK",
+        16, "Daine Todd", "C", "R", 5 + 10/12, 173, "10/01/1987", "Red Deer, AB",
+        17, "Tyler Swystun", "RW", "R", 5 + 11/12, 185, "15/01/1988", "Cochrane, AB",
+        19, "Matt Lowry", "C", "R", 6, 186, "02/03/1988", "Neepawa, MB",
+        20, "Kevin Undershute", "LW", "L", 6, 178, "12/04/1987", "Medicine Hat, AB",
+        21, "Jerrid Sauer", "RW", "R", 5 + 10/12, 196, "12/09/1987", "Medicine Hat, AB",
+        22, "Tyler Ennis", "C", "L", 5 + 9/12, 160, "06/10/1989", "Edmonton, AB",
+        23, "Jordan Hickmott", "C", "R", 6, 183, "11/04/1990", "Mission, BC",
+        25, "Jakub Rumpel", "RW", "R", 5 + 8/12, 166, "27/01/1987", "Hrnciarovce, SLO",
+        28, "Bretton Cameron", "C", "R", 5 + 11/12, 168, "26/01/1989", "Didsbury, AB",
+        36, "Chris Stevens", "LW", "L", 5 + 10/12, 197, "20/08/1986", "Dawson Creek, BC",
+        3, "Gord Baldwin", "D", "L", 6 + 5/12, 205, "01/03/1987", "Winnipeg, MB",
+        4, "David Schlemko", "D", "L", 6 + 1/12, 195, "07/05/1987", "Edmonton, AB",
+        5, "Trevor Glass", "D", "L", 6, 190, "22/01/1988", "Cochrane, AB",
+        10, "Kris Russell", "D", "L", 5 + 10/12, 177, "02/05/1987", "Caroline, AB",
+        18, "Michael Sauer", "D", "R", 6 + 3/12, 205, "07/08/1987", "Sartell, MN",
+        24, "Mark Isherwood", "D", "R", 6, 183, "31/01/1989", "Abbotsford, BC",
+        27, "Shayne Brown", "D", "L", 6 + 1/12, 198, "20/02/1989", "Stony Plain, AB",
+        29, "Jordan Bendfeld", "D", "R", 6 + 3/12, 230, "09/02/1988", "Leduc, AB",
+        31, "Ryan Holfeld", "G", "L", 5 + 11/12, 166, "29/06/1989", "LeRoy, SK",
+        33, "Matt Keetley", "G", "R", 6 + 2/12, 189, "27/04/1986", "Medicine Hat, AB") %>% 
+  mutate(Birthdate = as.Date(Birthdate, "%d/%m/%Y"))
+```
+
+```{r hat-tigers, echo = FALSE}
+mht2007 %>% 
+  knitr::kable(caption = "The player roster of the 2007 Medicine Hat Tigers (a Canadian hockey team). Do you notice anything unusual?") %>% 
+  kableExtra::kable_classic(full_width = FALSE)
+```
+
+<aside>
+
+Table \@ref(tab:hat-tigers) data is stored in object `mht2007`.
+
+```{r}
+print(mht2007, width = 30)
+```
+</aside>
+
+Did you notice anything unusual from the above table? If you didn't that's okay. Let's instead look at Figure \@ref(fig:mht-2007-bar) which shows the frequency of the birth month that the players are born. Now do you notice something?
+
+
+```{r feature-mht-2007-bar, fig.cap = "The barplot of the birth month of the Medicine Hat Tigers 2007 hockey players."}
+mht2007 %>% 
+  mutate(month = factor(month(Birthdate), levels = 1:12, labels = month.abb)) %>% 
+  ggplot(aes(month)) +
+  geom_bar(fill = "#79003e") +
+  scale_x_discrete(limits = month.abb) +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+Without doing any statistical tests, you probably can see from Figure \@ref(fig:mht-2007-bar) that there is an over-representation of players born in January. Gladwell postulates that this is a result of Canada's eligibility cut-off for age-class hockey being January 1st. To explain further, coaches in Canada start training selected children at the age of 9 or 10. In preadolescence, a few months of gap can show a big difference in physical maturity, so for children born in the same year, the coaches tend to select the ones born earlier in the year. These selected children then get many more practice than the children who are not selected, and what started as a frivolous difference due to the month you were born turns into a big difference in talent in future. 
+
+
+I wanted to validate the claim about the birth month so I searched and scraped the player data at Medicine Hot Tiger from https://tigershockey.com/roster/ using `RSelenium` and `rvest` packages. The resulting data is stored in the object `roster` which include the player information for the following games:
+
+```{r}
+roster %>% 
+  pull(WHL) %>% 
+  unique()
+```
+
+After removing duplicate records of the players that appear across multiple games, I plot the frequency of the birth month of the rostered Medicine Hat Tigers hockey players from 1996 to 2021 in Figure \@ref(fig:roster-bar). The frequency of players born in January are not strikingly over-represented with a larger sample size but it is noticeable that there are more players born in the first half of the year than second half of the year.
+
+
+```{r roster-bar, fig.cap = "The barplot of the birth month of the Medicine Hat Tigers hockey players from 1996 to 2021."}
+roster_unique <- roster %>% 
+  mutate(month = factor(month(DOB), levels = 1:12, labels = month.abb)) %>% 
+  distinct(Player, .keep_all = TRUE)
+
+ggplot(roster_unique, aes(month)) +
+  geom_bar(fill = "#79003e") +
+  scale_x_discrete(limits = month.abb) +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+If you are keen, you can do some statistical tests to confirm this assuming equal probability of a person being born in the first or second half of the year.
+
+```{r}
+birth_count <- roster_unique %>% 
+  mutate(first_half = month(DOB) < 7) %>% 
+  group_by(first_half) %>% 
+  count()
+
+birth_count
+```
+
+```{r}
+chisq.test(birth_count$n[1:2], p = c(0.5, 0.5))
+```
+
+
+
+### Changing the environment for your growth 
+
+You can extrapolate the ice hockey birth month scenario to other situations and Gladwell presents more examples of super successful ("outlier") men like Bill Gates, Eric Schmidt, Steve Jobs and so on, of how essential they were in the **_right place at the right time_**. Sadly, Gladwell didn't take the opportunity to discuss about "women outliers" or highlight an example about success based on sex, which very much like birth month is a random assignment beyond an individual's control, but can make a difference in one's career. 
+
+Gladwell's writing cemented the idea within me of the **importance of the environment** particularly when you are still young. E.g. if you are busy trying to find a safe place for you and your family because of the [Ukraine-Russia war](https://emitanaka.org/posts/2022-03-06-the-war/), you'll have little opportunity to do anything else _no matter how great of a talent you have_. 
+
+
+
+Those who are "successful" tend to be the ones who had the environment working in their favour earlier (if not most of the time) in their career. This is not to say they don't have talent or didn't work hard, but the **_tragedy_** in all this is that _those who have talent but didn't have the environment to achieve their maximum potential_. I can see the traces of my thought on twitter about changing the environment if it's not working for you creeping up every now and then. (Changing environments has costs though so I realise my advice doesn't work for everyone.)
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Yes this happens a lot. If you an ECR, it’s best to get out of that environment. You are young and it’s the best time to GROW. Surround yourself with people who are better in the skills you care about. If they are not in your workplace, go outside of workplace. Meetup, online</p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1103546291416555520?ref_src=twsrc%5Etfw">March 7, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">If you are the solo RSE or you don’t have anyone to talk deeply about the software engineering aspects, I don’t know if there will be motivation to stay in that kind of environment when you have other choices. (2/2)</p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1460964344305369093?ref_src=twsrc%5Etfw">November 17, 2021</a></blockquote>
+
+Above predicates on the goal of personal growth, but "success" ultimately comes in many forms. Personally, I feel frustrated when I feel that the environment gets in my way of my personal growth and this tends to drive me to change the environment. There's a limit to what you can change though, and there's a part of me that knows that I'm driving myself into a wall getting frustrated at every turn and I've got to chill. (I'm sorry if you're ever on the receiving end of my frustration - but hey maybe you deserve it!... I kid :P)
+
+
+### Changing the environment for others' growth 
+
+There's been a few times in my life where the upper management was quite bad that it was causing havoc for those under the management and there is widespread discontent. Every time this happens, I always think about how I _don't_ want to be like that upper management, but I equally fear that I am going to be, perhaps unknowingly, like that when I'm in the same position. So I occasionally remind myself that I shouldn't fault people, when you don't know what other things are driving the behaviour or decision. But I'm no saint, so I still have a long way to go though to be that understanding and I might poke fun of the situation in a passive-aggressive drawing 🎨 
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Fun to draw again 💃 <a href="https://t.co/3uHQLi8biA">pic.twitter.com/3uHQLi8biA</a></p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1097477768659386368?ref_src=twsrc%5Etfw">February 18, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Branding and management gone wrong. &quot;Precision Pen&quot; <a href="https://t.co/SVd6uyxrSr">pic.twitter.com/SVd6uyxrSr</a></p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1107182565796962309?ref_src=twsrc%5Etfw">March 17, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

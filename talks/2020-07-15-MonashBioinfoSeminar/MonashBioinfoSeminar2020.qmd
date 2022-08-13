@@ -1,0 +1,24 @@
+---
+title: 'Advent of "Grammar": Bridging Statistics and Data Science for Experimental Design'
+Host: Monash Bioinformatics Seminar
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+image: cover.png
+date: 07-15-2020
+url: https://emitanaka.org/slides/MonashBioinfo2020
+---
+
+::: callout-warning
+
+## Errata
+
+There was an error in my script (where duplicates were not removed) for the count for the number of R packages in CRAN Task View of Design of Experiments. The slides specify there are about 200 R-packages. After removing duplicates, there was about 100 R-packages. 
+
+:::
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>

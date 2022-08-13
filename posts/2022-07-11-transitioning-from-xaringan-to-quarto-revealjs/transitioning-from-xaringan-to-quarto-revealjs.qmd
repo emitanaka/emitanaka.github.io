@@ -1,0 +1,352 @@
+---
+title: "How to transition from xaringan to Quarto revealjs"
+description: |
+  This post shows a feature in xaringan slides (powered by remark.js) that is roughly equivalent in Quarto revealjs slides. 
+categories: [Quarto, xaringan, revealjs, remarkjs]
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 2022-07-11
+engine: knitr
+format:
+  html:
+    toc: true
+    toc_float: true
+---
+
+```{css, echo = FALSE}
+.revealjs, .xaringan {
+ padding: 5px;
+ font-size: 0.5em;
+ border-radius: 10px;
+ background-color: #006DAE;
+ color: white;
+}
+.xaringan {
+  background-color: #D93F00;
+}
+```
+
+# Background
+
+I first used the [`xaringan`](https://slides.yihui.org/xaringan/#1) R-package to make HTML slides in late 2016 when I saw [Yihui's tweet](https://twitter.com/xieyihui/status/808418548829847552) about it. It wasn't until the beginning of 2018 that I fully switched from Beamer/Powerpoint/Keynote^[I was never an `ioslides` or `revealjs` person (I have tried it but I didn't like it)] presentation slides  to using `xaringan`. Four years later, after over 120 `xaringan` slides^[Okay, I was surprised to count over 120 presentations but this includes all teaching slides too.] plus making a [whole theme](https://github.com/emitanaka/ninja-theme) for it, I started using [Quarto revealjs slides](https://quarto.org/docs/presentations/revealjs/) instead from the start of 2022. So far I've given 5 talks with Quarto revealjs slides and I'm using it to make slides for the foreseeable future.
+
+# Why?
+
+Unlike reports or other documents with statistical outputs, I'm not really fussed about what technology people use to make their slides -- the content and how you deliver it are far more important really -- so don't feel like you have to adopt these technology yourself. I for one won't be judging you if you present a powerpoint slide, although if you do data analysis in Excel, we probably can't be good friends^[exceptions apply to my family and existing friends]. 
+
+**Why HTML slides**
+
+HTML slides really shine when you have animation or interactive content. From a philosophical view though, customising HTML slides requires you to know HTML, CSS, and/or JS, so after doing this process so many times, I've come to be better in HTML/CSS/JS. Making lots of HTML slides doesn't guarantee you to become a good front-end web developer of course -- you still have to study, think and reflect to develop your front-end web dev skills.
+
+
+**Why Quarto revealjs slides**
+
+`xaringan` is actually using [remark.js](https://github.com/gnab/remark) to render the slides. The development of remark.js started to become stagnant from about 2018, with the main author not as actively working on it. In the meanwhile, reveal.js had an expanding, active community with some fancy features. The `revealjs` R-package that ported reveal.js to Rmd, however, was clunky to do any serious customisation. I chose to use `xaringan` instead because customisation was more straight-forward, but the primary reason was that the main author Yihui was developing it. 
+
+So why switch over to Quarto revealjs slides now? For me, this is because the Quarto team did a serious job implementing it and I figured out most of the equivalent features in `xaringan` for it. I share these below.
+
+
+# Features 
+
+## Making your own title slide
+
+Both `xaringan` and Quarto revealjs slides create a default title slide if you supply the `title` in the YAML. 
+
+[xaringan]{.xaringan}
+
+In `xaringan`,  you can disable this by using `seal: false`. 
+
+[Quarto revealjs]{.revealjs}
+
+For Quarto revealjs, replace the `title:` with `pagetitle:` in the YAML or alternatively do not include `title` in the YAML. The benefit of the former approach is that the metadata for the title is automatically created for you in the HTML output.
+
+```
+---
+pagetitle: "My title"
+---
+```
+
+## Starting a new slide
+
+[xaringan]{.xaringan}
+
+In `xaringan`, a new slide is started by separating the content with  `---` in a new line where care needs to be taken _not_ to have spaces after it. 
+
+[Quarto revealjs]{.revealjs}
+
+In Quarto revealjs slides, there are two primary ways to start a new slide:
+
+1. `---` just like in `xaringan` and 
+2. a first or second level header, i.e. a line starting with `# ` or `## `.
+
+## Shortcut for div and span with CSS classes
+
+[xaringan]{.xaringan}
+
+In `xaringan`, div element with content, say "My content.", and CSS class, say `myclass`, are created with 
+
+```md
+.myclass[
+My content.
+]
+```
+
+The above when processed by remark.js becomes:
+
+```html
+<div class="myclass">
+My content.
+</div>
+```
+Similary for span element, the shortcut in `xaringan` is:
+
+```
+.myclass[My content.]
+```
+which becomes 
+
+```html
+<span class="myclass">My content.</span>
+```
+
+The difference between the two being that there is a new line required before the `]` for the div element.
+
+[Quarto revealjs]{.revealjs}
+
+In Quarto revealjs slides, the shortcut for the div and span elements are (I believe) from [native Pandoc divs and spans](https://pandoc.org/MANUAL.html#divs-and-spans). This was actually one of the biggest reasons I wanted to switch from `xaringan`. All Rmd documents support Pandoc divs and spans **_except_** in `xaringan` where the markdown content is processed by remark.js instead of Pandoc. The lack of consistency even made me write [my own naive javascript to mimic Pandoc div and span](https://emitanaka.org/slides/ISIWSC2019/assets/pandoc.js) for `xaringan`, but I still wanted the native support.
+
+So you can create a div element in Quarto revealjs by:
+
+```
+::: myclass
+
+My content.
+
+:::
+```
+
+or equivalently,
+
+```
+::: {.myclass}
+
+My content.
+
+:::
+```
+
+In fact, it's not limited to CSS classes but ids as well. E.g. 
+
+```
+::: {#myid}
+
+My content.
+
+:::
+```
+
+is the same as 
+
+```html
+<div id="myid">
+My content.
+</div>
+```
+
+For a span element in Quarto revealjs,  it will be like below
+
+```
+[My content.]{.myclass}
+```
+
+where this is equivalent to below:
+
+```html
+<span class="myclass">My content.</span>
+```
+
+
+## Slide CSS classes
+
+[xaringan]{.xaringan}
+
+In `xaringan`, a CSS class maybe specified to the *whole* slide by:
+
+```
+class: myclass
+```
+
+I used this sometimes to define a slide with different background colors. 
+
+[Quarto revealjs]{.revealjs}
+
+The HTML layout for revealjs slides is actually quite different to the layout for remarkjs slides. I won't go into too much details this time, but the main thing is that a slide content is written within `<section></section>` and separate to this is a background element and other div (like footer and slide numbers). The latter elements are not nested within the slide itself, which makes the concept of applying the CSS class to the *whole* slide different in revealjs compared to `xaringan`/remarkjs.
+
+To apply a CSS class to a slide with no title, you can do below:
+
+```
+## {.myclass}
+```
+
+and if you have a title, just write the title first before defining the class like below:
+
+```
+## My title {.myclass}
+```
+
+If you want to apply it to the *slide background* then only specific attributes work, e.g. below changes the background color of the slide to red:
+
+```
+## {background-color="red"}
+```
+
+
+## Columns
+
+[xaringan]{.xaringan}
+
+If you used the default `xaringan`, you may have used `.left[]` and `.right[]` to make two columns. These actually are setting the attributes of the elements to `float: left;` and `float:right;`, respectively, with `width: 48%;`.  
+
+
+[Quarto revealjs]{.revealjs}
+
+
+For multiple columns in Quarto revealjs, you can set something like below to make two columns, one with 40% width and the other with 60% width. 
+
+```
+:::: {.columns}
+
+::: {.column width="40%"}
+Left column
+:::
+
+::: {.column width="60%"}
+Right column
+:::
+
+::::
+```
+
+You can find more details [here](https://quarto.org/docs/presentations/revealjs/#multiple-columns).
+
+## Incremental slides
+
+By incremental slides, I mean slides where you want to reveal the content of slide one at a time without rewriting separate slides with the same past content.
+
+[xaringan]{.xaringan}
+
+In `xaringan`, you can use `--`. You can also use `{{content}}` to specify where the new content after `--` will be inserted. E.g. 
+
+```
+Slide 1 
+
+--
+
+{{content}}
+
+This content will only appear in next slide below "Slide 1".
+
+--
+
+This content will appear on top of the last sentence but below "Slide 1".
+
+```
+
+[Quarto revealjs]{.revealjs}
+
+The `--` in `xaringan` is the same as the `. . . ` (three dots separated by spaces) in Quarto revealjs.
+
+```
+
+Slide 1 
+
+First content
+
+. . . 
+
+Second content after pause
+
+```
+
+
+A similar feat to `{{content}}` in `xaringan` can be achieved by using [fragments](https://quarto.org/docs/presentations/revealjs/advanced.html#fragments) in Quarto revealjs, like below:
+
+```
+
+Slide 1 
+
+::: {.fragment fragment-index=2}
+This content will appear on top of the last sentence but below "Slide 1".
+:::
+
+::: {.fragment fragment-index=1}
+This content will only appear in next slide below "Slide 1".
+:::
+
+```
+
+You can find more details [here](https://quarto.org/docs/presentations/revealjs/advanced.html#fragments) but the basic idea is that any HTML elements that have the class "fragment" will be incrementally shown and you can control the sequence of appearance by specifying the number for the attribute in `fragment-index`.
+
+This is of course painful to do if you have a list! For this, there is a special case where incremental lists can be specified by class "incremental" like below: 
+
+```
+::: {.incremental}
+- Task A
+- Task B
+:::
+```
+
+More details on incremental list can be found [here](https://quarto.org/docs/presentations/revealjs/#incremental-lists).
+
+
+## Slide names 
+
+[xaringan]{.xaringan}
+
+In `xaringan`, you can use the `name: myname` to set slide names which can then be referenced in other parts of the slides by say `[see here](#myname)`.
+
+
+[Quarto revealjs]{.revealjs}
+
+In Quarto revealjs, slides automatically have names that are transformed versions of the slide title (spaces replaced with `-`, lower cases, etc). But if you want to apply a custom name then you can pass define the attribute in the top level header of the slide:
+
+```
+## Slide Title {#myname}
+```
+
+
+## Uncounted slides
+
+[xaringan]{.xaringan}
+
+You can use `count: false` to not increment the slide number for particular slides.
+
+[Quarto revealjs]{.revealjs}
+
+In Quarto revealjs, you can choose to not count the slide by setting `visibility="uncounted"` in the top level header:
+
+```
+## Slide Title {visibility="uncounted"}
+```
+
+## Exclude slides 
+
+[xaringan]{.xaringan}
+
+You can use `exclude: true` to not increment the slide number for particular slides.
+
+[Quarto revealjs]{.revealjs}
+
+In Quarto revealjs, you can specify the attribute `visibility="hidden"` in the top level header for the slide:
+
+```
+## Slide Title {visibility="hidden"}
+```
+
+
+## Layouts and templates
+
+The `layout` and `template` feature allowed you to use the same layout in subsequent slides in `xaringan`/remark.js. I don't think there is an equivalent feature in Quarto revealjs for this. 

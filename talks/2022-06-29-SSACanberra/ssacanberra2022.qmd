@@ -1,0 +1,19 @@
+---
+title: "Current state and prospects of R-packages for the design of experiments"
+abstract: |
+  There is no doubt that without understanding how the data originated, you can draw satisfying answers from the data. As statisticians, we may not have much control or input over the data collection process with one exception: when the data are collected from experiments. Experimental data originate from a (hopefully) carefully crafted experimental design. A good experimental design can draw information with higher certainty from the data. Statistical software is important for us to reproducibly construct experimental designs, but it can also capture the intent behind its construction, which is important in the interpretation of the analysis of the experimental data it generated. In this talk, I will give an overview about the current state and prospects of R-packages for the design of experiments. I also introduce an object-oriented programming system, called the grammar of experimental designs, that is designed to specify experimental designs encapsulated in a cognitive framework and implemented as the edibble R-package.
+Host: Statistical Society of Australia Canberra Branch
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 06-29-2022
+image: cover.png
+url: https://emitanaka.org/slides/ssacanberra2022
+categories: [Experimental Design]
+---
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`" width="100%" height="450px"></iframe>

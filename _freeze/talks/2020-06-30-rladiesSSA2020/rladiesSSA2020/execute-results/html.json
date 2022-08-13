@@ -1,0 +1,14 @@
+{
+  "hash": "e4353ccee0b1e21df8b52e5529b5caf5",
+  "result": {
+    "markdown": "---\ntitle: \"Beyond Beamer: Modern and Dynamic Presentations with R Markdown\"\nabstract: |\n In many fields, scientific communications and publications are unimaginable without LaTeX. LaTeX, built on the TeX typesetting program, allows writing scientific documents with a markup language for structure and styling; capabilities for mathematical typesetting; ability to add cross-references and citations (though BibTeX or otherwise); and customisation through document classes, packages and macros. A particular LaTeX document class widely used for making presentation slides is Beamer. Beamer offers much of the same features as the original LaTeX in addition to special macros handy for presentation purposes and is used often by academics presenting mathematical content. Why then would we want another tool for presentation?\n\n In this tutorial talk, I will talk about the capabilities and benefits of using R Markdown to make presentation slides based on the `xaringan` R-package. If you have two monitors or an extra laptop/desktop computer, then you are encouraged to try some coding yourself as you follow along with the talk. \n\n Coding requirements: you will need to be familiar with R, have R and the xaringan & tidy verse R packages installed. It is preferable that you use RStudio IDE although not required. \nHost: |\n  Statistical Society of Australia NSW, Canberra Branches, R-Ladies Canberra, R-Ladies Sydney. \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\nurl: https://emitanaka.org/slides/rladiesSSA2020\nimage: cover.png\ndate: 06-30-2020\ncategories: [Skill, Service]\n---\n\n\n\nClick [here](https://emitanaka.org/slides/rladiesSSA2020) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/rladiesSSA2020#2\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

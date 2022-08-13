@@ -1,0 +1,210 @@
+---
+title: "edibble experimental design with sensory discrimination tests"
+description: |
+  Can Australians distinguish the true taste of Vegemite? Designing an experiment with sensory discrimination test using the `edibble` package. 
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+categories: [R, experimental design, edibble]
+date: 2022-07-30
+bibliography: ref.bib
+---
+
+
+
+This blog post attempts to describe the experimental design in **@Williams2021-pa** for **sensory discrimination test on vegemite** using the `edibble` R package. Detailed descriptions are provided in @Williams2021-pa and I only provide an abridged version in this blog, except where quoted.
+
+First, I load the packages needed. The `edibble` package is currently only available on GitHub at https://github.com/emitanaka/edibble with plans to submit to [CRAN](https://cran.r-project.org/) in the next couple of months.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(edibble)
+```
+
+<br>  
+
+There are **three types of sensory discrimination tests** that are used by sensory scientists Drs Ciarán Forde and Patrick O’Riordan in an experiment _**to see if a story about an alternative to vegemite could sharpen the taste buds and improve the discriminative abilities of Australian consumers**_. The three sensory discrimination tests are as described below in @Williams2021-pa:
+
+<blockquote>
+
+i. Triangle test. The consumer is presented with two samples of one product and one sample of the other and asked to pick the odd sample.
+ii. Paired preference test. The consumer is presented with a sample of the standard product and the alternative and asked ‘which sample do you prefer?’
+iii. Monadic ‘A not A’ test. Samples of the standard and alternative products are presented to the consumers in a sequential monadic order (one by one) and they are asked ‘is this your normal product?’
+</blockquote>
+
+These test are abbreviated as T, PP, and M, respectively. The experimental structure is briefly summarised below:
+
+* there are two versions of vegemite: normal (N) or spiked (S)
+* there are 168 consumers in total
+* half of the consumers tasted three pairs in the paired preference test and the other half tested two triplets in the triangle test
+* all consumers had six samples in the monadic test
+* experiment is conducted over 4 days
+* each consumer taste no more than 12 samples of vegemite 
+* logistics allow only 42 consumers per day
+* cover story (or lack there of) is shown based on the day
+* the broad structure of the experiment is shown in Table \@ref(tab:table1)
+
+
+```{r table1, echo = FALSE}
+tribble(~Day, ~`1`, ~`2`, ~`3`, ~`4`,
+        "Cover story", "no", "no", "yes", "yes",
+        "Test", "T, M", "PP, M", "T, M", "PP, M",
+        "Consumer", "1-42", "43-84", "85-126", "127-168") %>% 
+  knitr::kable(caption = "From @Williams2021-pa: broad structure of the vegemite experiment.")
+```
+
+The following is the experimental design description in @Williams2021-pa:
+
+<blockquote>
+
+Within this structure a number of design features were introduced:
+
+i. Test order. On each day half of the consumers took the sequence of monadic tests first and the other half after either the paired preference or triangle tests.
+ii. For the triangle test there are six possible triplets involving the two products (labelled N and S for normal and spiked vegemite respectively), namely: NNS, SNN, NSN, SSN, NSS and SNS. Two of these triplets were presented in sequence to each consumer and so an optimal row–column design was constructed for six treatments (triplets) in two rows (order of presentation) and 42 columns (consumers). The design generation package CycDesigN (http://www.vsni.co.uk/software/cycdesign/) was used to construct the layout. Furthermore the grouping option of the package was employed to ensure that each consumer sampled each product three times, that is, if the consumer received a triplet with two of the normal vegemite then the second triplet would contain two of the spiked vegemite. Separate randomisations of the design were used for 2 days.
+iii. For the paired preference test the normal vegemite in a pair can be presented either first or second. Hence an optimal row–column design was constructed for two treatments (pair order) in three rows (order of presentation) and 42 columns (consumers). Separate randomisations of the design were used for 2 days.
+iv. For the monadic test the six samples, three of each product (normal and spiked), were presented in a different sequential order to each consumer and so there was the chance to study the possibility of carryover effects from successive samples. CycDesigN was used to construct an optimal crossover design for two treatments (product type) in six periods (order of presentation) and 42 subjects (consumers). Separate randomisations of the design were used for 4 days.
+
+</blockquote>
+
+
+## Test order
+
+<blockquote>
+
+On each day half of the consumers took the sequence of monadic tests first and the other half after either the paired preference or triangle tests.
+
+</blockquote>
+
+Recall:
+
+* experiment is conducted over 4 days
+* logistics allow only 42 consumers per day
+* cover story (or lack there of) is shown based on the day
+
+
+At first I couldn't tell whether the cover story and the sensory tests (T and PP) were randomised or in systematic order, but in my communication with Emlyn Williams, he let me know it was randomised.
+
+
+```{r}
+set.seed(1)
+des1 <- design("sensory evalution") %>% 
+  set_units(day = 4,
+            consumer = nested_in(day, 42)) %>% 
+  set_trts(cover_story = c("yes", "no"),
+           test = c("T,M", "PP,M"),
+           test_first = c("T/PP", "M")) %>% 
+  allot_table(test:cover_story ~ day,
+                    test_first ~ consumer)
+
+
+des1
+```
+
+You can check the allocation of the cover story and test by nesting it by day:
+
+```{r}
+des1 %>% 
+  nest_by(day, cover_story, test)
+```
+
+
+## Triangle test
+
+<blockquote>
+For the triangle test there are six possible triplets involving the two products (labelled N and S for normal and spiked vegemite respectively), namely: NNS, SNN, NSN, SSN, NSS and SNS. Two of these triplets were presented in sequence to each consumer and so an optimal row–column design was constructed for six treatments (triplets) in two rows (order of presentation) and 42 columns (consumers)... if the consumer received a triplet with two of the normal vegemite then the second triplet would contain two of the spiked vegemite. Separate randomisations of the design were used for 2 days.
+</blockquote>
+
+Recall:
+
+* each consumer taste no more than 12 samples of vegemite 
+* logistics allow only 42 consumers per day
+
+As every consumer also does the monadic test which uses 6 samples, only 6 samples remain for the triangle test. The product lineups took me a while to figure it out -- the part that tripped me up was that the two lineups (out of NNS, SNN, NSN, SSN, NSS and SNS) that was presented to the consumer sequentially had to have the major product swapped, so you can't choose something like NNS and NSN because both lineups have the major product as N. This precludes from just two random selections from NNS, SNN, NSN, SSN, NSS and SNS, and requires a conditional randomisation.
+
+I decided to think of this as a two step process:
+
+1. choose the main product, and
+2. choose out of the sequences XXO, XOX and OXX where X denotes the major product.
+
+Since the product lineup is nested within the consumer, the major product allocation in `edibble` below automatically treats `consumer` as a block and in the assignment, it will try to ensure the major product is different in the two lineups for each consumer. 
+
+```{r des2}
+des2 <- design("triangle test") %>% 
+    set_units(day = c(1, 4),
+              consumer = nested_in(day, 42),
+              product_lineup = nested_in(consumer, 2)) %>% 
+    set_trts(major_product = c("spiked", "normal"),
+             sequence = c("XXO", "XOX", "OXX")) %>% 
+    allot_table(major_product ~ product_lineup,
+                     sequence ~ product_lineup)
+
+des2
+```
+
+I could alternatively design the above as a row-column design.
+
+
+```{r des2alt, fig.height = 20}
+des2alt <- design("triangle test") %>% 
+    set_units(day = c(1, 4),
+              consumer = nested_in(day, 42),
+              order = 2,
+              product_lineup = crossed_by(consumer, order)) %>% 
+    set_trts(major_product = c("spiked", "normal"),
+             sequence = c("XXO", "XOX", "OXX")) %>% 
+    allot_table(major_product ~ product_lineup,
+                     sequence ~ product_lineup)
+
+deggust::autoplot(des2alt)
+```
+
+## Paired test 
+
+<blockquote>
+For the paired preference test the normal vegemite in a pair can be presented either first or second. Hence an optimal row–column design was constructed for two treatments (pair order) in three rows (order of presentation) and 42 columns (consumers). Separate randomisations of the design were used for 2 days.
+</blockquote>
+
+```{r des3, fig.height = 20}
+des3 <- design("paired test") %>% 
+    set_units(day = c(2, 3),
+              consumer = nested_in(day, 42),
+              order = 3,
+              product_lineup = crossed_by(consumer, order)) %>% 
+    set_trts(product_order = c("SN", "NS")) %>% 
+    allot_table(product_order ~ product_lineup)
+
+deggust::autoplot(des3)
+```
+
+
+## Monadic test
+
+<blockquote>
+For the monadic test the six samples, three of each product (normal and spiked), were presented in a different sequential order to each consumer and so there was the chance to study the possibility of carryover effects from successive samples.
+</blockquote>
+
+
+```{r des4, fig.height = 20}
+des4 <- design("monadic test") %>% 
+    set_units(day = 4,
+              consumer = nested_in(day, 42),
+              order = 6,
+              product_lineup = crossed_by(consumer, order)) %>% 
+    set_trts(product = c("spiked", "normal")) %>% 
+    allot_table(product ~ product_lineup)
+
+options(deggust.nnode_max = Inf)
+deggust::autoplot(des4)
+```
+
+
+## Conclusion
+
+So you might be wondering if Australians can indeed distinguish the true taste of vegemite? Well this blog post is not about the analysis but the experimental design. A short analysis is provided, however, in @Williams2021-pa ... and the answer is yes Australians knows their vegemite 😉
+
+## Acknowldegement
+
+I want to thank Emyln for being so prompt in answering my questions about this experiment and providing the data (which I didn't end up using in this blog post), that was mistakenly missing in the initial publication but [available now on the website](https://onlinelibrary.wiley.com/doi/10.1111/anzs.12364).

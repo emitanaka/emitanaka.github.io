@@ -1,0 +1,18 @@
+---
+title: "An anthology of experimental designs"
+Host: Toronto Data Workshop
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 03-24-2022
+image: cover.png
+url: https://emitanaka.org/slides/toronto2022
+categories: [Experimental Design]
+---
+
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`" width="100%" height="450px"></iframe>

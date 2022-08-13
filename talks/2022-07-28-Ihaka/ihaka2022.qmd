@@ -1,0 +1,23 @@
+---
+title: "The genesis of experimentation"
+Host: Ihaka lecture 2022 series 
+abstract: |
+ Experiments are essential endeavours to understand the process or phenomena around us via the analysis of experimental data. However, as a precursor to any analysis, the importance of the design of experiment and the data collection process cannot be emphasised enough. There is no salvation for rubbish data, yet there is far more focus on the analysis of experimental data than any steps prior to the analysis. 
+ 
+ In this talk, I introduce the framework, called "the grammar of experimental designs", implemented as the edibble R-package that puts the focus on capturing the user's intention and understanding of the experimental structure to plan, design and simulate experiments. This approach differs considerably from standard, often recipe-driven, approaches and has potential to encourage users to reflect and revise designs tailored to their experimental need.
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 07-28-2022
+image: cover.png
+url: https://emitanaka.org/slides/Ihaka2022
+categories: [Experimental Design]
+---
+
+
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`" width="100%" height="450px"></iframe>

@@ -1,0 +1,53 @@
+---
+title: "Curriculum vitae"
+description: ""
+format:
+  html:
+    css: 
+      - assets/cv/css/aos.css
+      - assets/cv_custom.css
+    template: assets/cv/template.html 
+    include-after-body: 
+      text: |
+        <script src="/assets/cv/js/aos.js"></script>
+        <script>
+        AOS.init({
+          anchorPlacement: 'top-left',
+          duration: 1000,
+          offset: 120
+        });
+        </script>
+page-layout: article
+title-block-banner: true
+---
+
+
+
+<div id="canvas">
+
+
+```{r, child="../cv/cv.Rmd"}
+```
+
+</div>
+
+<a href="cv.pdf">
+<div class="download">
+<i class="fas fa-file-pdf"></i> Click here for the PDF version.
+</div>
+</a>
+
+
+
+```{r, include = FALSE}
+fs::dir_copy("../cv/css/", "assets/cv/css", overwrite = TRUE)
+fs::dir_copy("../cv/js/", "assets/cv/js", overwrite = TRUE)
+fs::file_copy("../cv/template.html", "assets/cv/", overwrite = TRUE)
+options(knitr.duplicate.label = "allow")
+rmarkdown::render("../cv/cv.Rmd", 
+                  output_file = "../cv/cv.html",
+                  knit_root_dir = "../cv/")
+pagedown::chrome_print("../cv/cv.html", 
+                       output = "cv.pdf")
+```
+

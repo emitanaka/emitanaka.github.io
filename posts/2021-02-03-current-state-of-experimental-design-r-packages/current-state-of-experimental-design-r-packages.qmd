@@ -1,0 +1,594 @@
+---
+title: "Current state of R packages for the design of experiments"
+description: |
+  Your analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved _before_ the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 2021-02-03
+bibliography: ref.bib
+categories: [experimental design, R]
+format:
+  html:
+    highlight: default
+    toc: true
+    toc_float: true
+---
+
+```{r knit-setup, include=FALSE}
+knitr::knit_hooks$set(toggle = function(before, options) {
+  if(options$toggle) {
+    ifelse(before, "<div class='toggle-code'>", "</div>")
+  }
+})
+
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      toggle = TRUE,
+                      cache = TRUE,
+                      cache.path = "cache/",
+                      fig.align = "center",
+                      fig.path = "figures/")
+
+```
+```{css, echo = FALSE}
+.toggle-code {
+  display: none;
+}
+
+button {
+  border-radius: 10px;
+  color: var(--aside-color, rgba(0, 0, 0, 0.6));
+  border-color: var(--aside-color, rgba(0, 0, 0, 0.6));
+}
+
+.scroll-output {
+  height: 200px;
+  overflow-y: scroll!important;
+}
+```
+
+
+<aside>
+<p><button onclick="showscript()">Click Me</button> to see all code in this article. You can also find the link to the source Rmd file at the footer.</p>
+  
+</aside>
+
+```{r setup, cache = FALSE}
+library(tidyverse)
+library(rvest)
+library(lubridate)
+library(cranlogs)
+library(glue)
+library(scales)
+library(colorspace)
+library(tidytext)
+library(pluralize)
+library(kableExtra)
+library(igraph)
+library(ggraph)
+
+myggtheme <- 
+  theme(panel.background = element_rect(fill = NA),
+        panel.grid = element_line(color = "#f6e5ee"),
+        axis.text = element_text(color = "#79003e"),
+        axis.line = element_line(color = "#79003e", size = 0.7),
+        axis.ticks.length = unit(1.4, "mm"),
+        axis.ticks = element_line(color = "#79003e", size = 0.7),
+        axis.title = element_text(color = "#79003e", face = "bold"),
+        strip.background = element_rect(color = "#79003e",
+                                        fill = "#AD0059"),
+        strip.text = element_text(color = "white"),
+        plot.title.position = "plot",
+        plot.title = element_text(color = "#79003e", face = "bold")) 
+```
+
+```{r cran-titles}
+# Thanks to Dirk Eddelbuettel's answer on SO:
+# https://stackoverflow.com/questions/11560865/list-and-description-of-all-packages-in-cran-from-within-r
+url <-  "https://cran.rstudio.com/web/packages/packages.rds"
+db <- readRDS(url(url)) %>% 
+  as.data.frame()
+```
+
+```{r}
+nanalysis <- db %>% 
+  filter(str_detect(tolower(Title), "analysis")) %>% 
+  nrow()
+
+ndesign <- db %>% 
+  filter(str_detect(tolower(Title), "design")) %>% 
+  nrow()
+```
+
+
+# Data collection
+
+As many know, it doesn't matter how good your analytical tools is if your data are rubbish. This sentiment is often captured in the expression "garbage in, garbage out". It's something we all seem to know but there is still a tendency for many of us to place a greater focus on the analysis^[At least from my teaching experience, statistics subjects are primary about the analysis and most research grants I've seen are about an analytical method. The analytical focus is reflected also in the R packages; there are `r comma(nanalysis)` R-packages on CRAN with the word "analysis" in the title as opposed to `r ndesign` R-packages with the word "design" in its title.]. This is perhaps all natural given that a potential for discovery is just so much more exciting than ensuring the quality of the collected data. 
+
+So what is considered as good quality data? A lack of error in the data? Data containing enough range of variables and sample size for the downstream analysis? Giving an explicit definition of a good quality data is a fraught exercise, but if you **know how the data were collected** then you can better perform the _initial data analysis_ [@Chatfield1985-yz] to weed out (or fix) potential poor quality data. This step will likely get more value out of the data than fitting complex models to poor quality data. 
+
+Better than knowing how the data were collected, if you can _design the collection of data_ so that it's optimised for the purpose of the analysis^[Keeping in mind though that your analysis plan may change once you actually have collected data. This is quite common in the analysis of plant breeding trials since some spatial variation only become apparent only after the data collection.], then you can potentially get even a better value out of your data. Not all data collection starts with an explicit analytical plan though. Furthermore, you may have very little control of how the data are collected. Often these are _observational data_ or making a secondary use of _experimental data_. This article will focus on data collection of an experiment where you have some control of the collection process.
+
+
+## Experimental data 
+
+All experiments are conducted with some objective in mind. This could be that a scientist may wish to test their hypothesis, a manufacturer wants to know which manufacturing process is better or a researcher wants to understand some cause-and-effect relationships. A characteristic part of an experiment is that the experimenter has control over some explanatory variables. In a _comparative experiment_, the control is over the allocation of treatments to subjects. Designing an experiment in the statistics discipline usually focus on this allocation, although it's important to keep in mind that there are other decision factors in an experiment. 
+
+Data that are collected from experiments are what we refer to as _experimental data_. Because it was collected with some objective in mind followed by some data collection plan, experimental data are often thought of to be better quality than observational data. But then again if you can't quantify the quality of data, you can't really tell. Certain scientific claims (e.g. causation, better treatment) can only be substantiated by experiments and so experimental data is held to a higher standard in general. 
+
+
+# Design and analysis of experiments
+
+
+
+```{r doe-cran, cache = TRUE}
+dat_DoE <- read_html("https://cran.r-project.org/web/views/ExperimentalDesign.html")
+date_download <- Sys.Date()
+cran_names <- available.packages(repos = "https://cran.rstudio.com/") %>% 
+  rownames() %>% 
+  unique() # it should be unique
+doe_pkgs <- dat_DoE %>% 
+  html_nodes("li") %>% 
+  html_nodes("a") %>% 
+  html_text() %>% 
+  .[. %in% cran_names] %>% 
+  unique()
+
+dat_survey <- read_html("https://cran.r-project.org/web/views/OfficialStatistics.html")
+survey_pkgs <- dat_survey %>% 
+  html_nodes("li") %>% 
+  html_nodes("a") %>% 
+  html_text() %>% 
+  .[. %in% cran_names] %>% 
+  unique()
+```
+
+
+There are all together `r length(doe_pkgs)` R-packages in the [CRAN Task View of Design of Experiments & Analysis of Experimental Data](https://cran.r-project.org/web/views/ExperimentalDesign.html) as of `r date_download`.^[I originally had a webscrapping error where I didn't remove duplicate entries so numbers presented at [TokyoR](https://emitanaka.org/slides/TokyoR2021/#32) and [SSA Webinar](https://emitanaka.org/slides/SSA2020/#52) had the wrong numbers.] I'm going to refer these packages as **_DoE packages_**, although there are some packages in the mix that are more about the analysis of experimental data rather than the design of experiments and there are some packages that are missing in the list (e.g. `DeclareDesign`). The DoE packages make up about `r round(length(doe_pkgs) / length(cran_names) * 100, 1)`% of the `r comma(length(cran_names))` packages available in CRAN.
+
+The DoE packages don't include survey design. These instead belong to the [CRAN Task View of Official Statistics & Survey Methodology](https://cran.r-project.org/web/views/OfficialStatistics.html) which contains  `r length(survey_pkgs)` packages. While some surveys are part of an experimental study, most often they generate observational data. 
+
+
+Below I have a number of different analysis for these DoE packages. If you push the button on the top right corner of this article, you can toggle the display for the code or alternatively you can have a look at the source Rmd document.
+
+## Bigram of DoE package titles and descriptions
+
+
+```{r bigram}
+stop_words_ext <- c(stop_words$word, "doi")
+
+doe_db <- db %>% 
+  filter(Package %in% doe_pkgs) %>% 
+  mutate(Description = str_replace_all(Description, "\n", " "),
+         Description = str_squish(Description),
+         Title = str_replace_all(Title, "\n", " "))
+
+bigram_tab <- function(data, col) {
+  data %>% 
+    unnest_tokens(word, {{col}}, token = "ngrams", n = 2) %>% 
+    separate(word, c("word1", "word2"), sep = " ") %>% 
+    mutate(word1 = singularize(word1),
+           word2 = singularize(word2)) %>% 
+    # don't count the same bigram within the same package
+    distinct(Package, word1, word2) %>% 
+    filter(!word1 %in% stop_words_ext,
+           !word2 %in% stop_words_ext,
+           !str_detect(word1, "^[0-9.]+$"),
+           !str_detect(word2, "^[0-9.]+$")) %>% 
+    count(word1, word2, sort = TRUE)  
+}
+```
+
+
+```{r bigram-desc, eval = FALSE}
+bigram_tab(doe_db, Description) %>% 
+  filter(n > 4) %>% 
+  mutate(word = paste(word1, word2)) %>% 
+  select(word, n) %>% 
+  kbl(caption = "The bigram of the R-package _descriptions_ as provided in the DESCRIPTION file in CRAN.", 
+               col.names = c("Bigram", "Count")) %>% 
+  kable_classic(full_width = FALSE)
+```
+
+
+```{r bigram-title, eval = FALSE}
+bigram_tab(doe_db, Title) %>% 
+  filter(n > 3) %>% 
+  mutate(word = paste(word1, word2)) %>% 
+  select(word, n) %>% 
+  kbl(caption = "The bigram of the R-package _titles_ as provided in the DESCRIPTION file in CRAN.", 
+               col.names = c("Bigram", "Count")) %>% 
+  kable_classic(full_width = FALSE)
+```
+
+Table \@ref(tab:bigram-title) shows the most common bigrams in the title of the DoE packages. It's perhaps not surprising but the words "optimal design" and "experimental design" are the top. It's also likely that the words "design of experiments" appears often but because this is a bigram (two consecutive words) so it doesn't appear. You might then wonder if that's the case words like "design of" or "of experiments" should make an appearance, however "of" is a stop word and these are filtered out otherwise unwanted bigrams come up on the top.
+
+There are couple of words like "clinical trial" and "dose finding" that suggests applications in medical experiments, as well as "microarray experiment" that suggests application in bioinformatics.  
+
+```{r bigram-title, echo = FALSE, toggle = FALSE}
+```
+
+The title alone might be too succinct for text analysis so I also had a look at the most common bigrams in the description of the DoE packages as shown in Table \@ref(tab:bigram-desc). The counts in Table \@ref(tab:bigram-desc) (and also Table \@ref(tab:bigram-title)) is across the DoE packages. To be more clear, even if the bigram is mentioned multiple times within the description, it's only counted once per package. This removes the inflation of the counts due to one package mentioning the same bigram over and over again.
+
+Again not surprisingly "experimental design" and "optimal design" comes on top in the DoE package descriptions. The words "graphical user" and "user interface" implies that the trigram "graphical user interface" was probably common. 
+
+```{r bigram-desc, echo = FALSE, toggle = FALSE}
+```
+
+## Network of DoE package imports and dependencies
+
+```{r}
+doe_imports <- doe_db %>% 
+  mutate(Depends = str_replace_all(Depends, "\n", " "),
+         Depends = str_replace_all(Depends, fixed("("), " ("),
+         Imports = str_replace_all(Imports, "\n", " "),
+         Imports = str_replace_all(Imports, fixed("("), " ("),
+         imports = str_c(Depends, Imports, sep = ","),
+         imports = str_split(imports, ","),
+         imports = map(imports, ~{
+                    str_squish(.x) %>% 
+                      word() %>% 
+                      .[.!=""]}
+           ),
+         imports_doe = map(imports, ~.x[.x %in% doe_pkgs])) %>% 
+  select(Package, imports_doe) %>% 
+  unnest_longer(imports_doe) %>% 
+  filter(!is.na(imports_doe)) %>% 
+  rename(from = imports_doe, to = Package) %>% 
+  select(from, to)
+```
+
+Figure \@ref(fig:doe-network) shows the imports and dependency between the DoE packages. We can see here that `DoE.wrapper` imports a fair number of DoE packages that results in the major network cluster see in Figure \@ref(fig:doe-network). `AlgDesign` and `DoE.base` are imported into four other DoE packages so form an important base in the DoE world.
+
+```{r doe-network, eval = FALSE}
+graph_from_data_frame(doe_imports) %>% 
+  ggraph(layout = 'fr') +
+  geom_edge_link(aes(start_cap = label_rect(node1.name),
+                     end_cap = label_rect(node2.name)), 
+                 arrow = arrow(length = unit(2, 'mm')),
+                 color = "#79003e") + 
+  geom_node_text(aes(label = name),
+                 color = "#79003e") +
+  theme(panel.background = element_rect(fill = "#f6e5ee",
+                                        color = "#79003e"),
+        plot.margin = margin(20, 20, 20, 20))
+```
+
+(ref:network) The network of imports and dependency among DoE packages alone. Each node represents a DoE package. DoE packages with no imports or dependency on other DoE packages are excluded. Each arrow represents the relationship between the packages such that the package on the tail is used by package on the head of the arrow.
+
+```{r doe-network, echo = FALSE, toggle = FALSE, fig.width = 10, fig.height = 4, fig.cap = "(ref:network)"}
+```
+
+
+## CRAN download logs
+
+```{r cran-data, cache = TRUE}
+end <- Sys.Date() - 2 # usually 1-2 days are not available yet
+start <- end - years(5) + days(2)
+dldat <- cran_downloads(doe_pkgs, from = start, to = end)
+```
+
+```{r download-hist, eval = FALSE}
+dldat %>% 
+    group_by(package) %>% 
+    summarise(total = sum(count)) %>%
+  ggplot(aes(total)) + 
+  geom_histogram(color = "white", fill = "#AD0059") + 
+  scale_x_log10(label = comma) + 
+  myggtheme + 
+  labs(x = glue("Total download counts from {start} to {end}"),
+       y = "Number of packages") +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+Figure \@ref(fig:download-hist) shows the distribution of the total download counts over the last 5 years^[As of `r date_download`.] of the DoE packages. This graph doesn't take into account that some DoE packages may only have been on CRAN in the last 5 years so the counts are in favour of DoE packages that's been on CRAN longer. 
+
+
+(ref:hist) Histogram of the total download count over last 5 years of the DoE packages.
+
+```{r download-hist, echo = FALSE, fig.cap = "(ref:hist)", toggle = FALSE}
+```
+
+## Top 5 DoE packages
+
+```{r top5}
+ntop <- 5
+
+top5sum_df <- dldat %>% 
+  group_by(package) %>% 
+  summarise(total = sum(count)) %>% 
+  ungroup() %>% 
+  slice_max(order_by = total, n = ntop)
+
+top5 <- top5sum_df %>% 
+  pull(package) 
+
+top5_df <- dldat %>% 
+  filter(package %in% top5) %>% 
+  mutate(package = fct_reorder(package, count, function(x) -sum(x))) 
+```
+
+
+The top 5 downloaded DoE packages at the time of this writing are `r knitr::combine_words(paste0("<code>", top5, "</code>"))`. You can see the download counts in Figure \@ref(fig:download-barplot).
+
+```{r download-barplot, eval = FALSE}
+top5sum_df %>% 
+  mutate(package = fct_reorder(package, total)) %>% 
+  ggplot(aes(total, package)) +
+  geom_col(aes(fill = package)) +
+  labs(x = glue("Total downloads from {start} to {end}"),
+       y = "Package") + 
+  scale_x_continuous(labels = comma, expand = c(0, 0)) +
+  myggtheme + 
+  scale_fill_discrete_qualitative(rev = TRUE) + 
+  guides(fill = FALSE)
+```
+
+
+
+(ref:barplot) The above barplot shows the total downloads of the top `r ntop` downloaded DoE packages from the period `r start` to `r end`.
+
+
+```{r download-barplot, echo = FALSE, fig.cap = "(ref:barplot)", toggle = FALSE}
+```
+
+We can have a look at further examination of the top 5 DoE packages by looking at the daily download counts as shown in Figure \@ref(fig:download-barplot). The download counts are the raw values and these include downloads by CRAN mirror and bots. There is a noticeable spike when there is an update to the CRAN package. This is partly because when there is a new version of the package, when you install other packages that depend or import it then R will prompt you to install the new version. This means that the download counts are inflated and to some extent you can artificially boost them by making regular CRAN updates. The `adjustedcranlogs` [@adjustedcranlogs] makes a nice attempt to adjust the raw counts based on a certain heuristic. I didn't use it since the adjustment is stochastic and I [appear to have hit a bug](https://github.com/tylermorganwall/adjustedcranlogs/issues/6). 
+
+
+```{r pkg-updates, cache = TRUE, dependson="doe-cran"}
+pkg_url <- "https://cran.r-project.org/web/packages/{pkg}/index.html"
+pkg_archive <- "https://cran.r-project.org/src/contrib/Archive/{pkg}/"
+pkg_updates <- map(top5, function(pkg) {
+    last_update <- read_html(glue(pkg_url)) %>% 
+      html_table() %>% 
+      .[[1]] %>% 
+      filter(X1=="Published:") %>% 
+      pull(X2) %>% 
+      ymd()
+      
+    archive_dates <- tryCatch({ 
+        read_html(glue(pkg_archive)) %>% 
+          html_table() %>%
+          .[[1]] %>% 
+          pull(`Last modified`) %>% 
+          ymd_hm() %>% 
+          na.omit() %>% 
+          as.Date()
+      }, error = function(e) {
+        NULL
+      })
+    c(archive_dates, last_update)
+  })
+names(pkg_updates) <- top5
+
+updates <- unlist(pkg_updates) %>% 
+  enframe("package", "update") %>% 
+  # unlist converts date to integers
+  mutate(update = as.Date(update, origin = "1970-01-01"),
+         # need to get rid of the numbers appended to pkg names
+         package = str_extract(package, paste0(top5, collapse="|")),
+         package = factor(package, levels = top5)) %>% 
+  filter(between(update, start, end))
+```
+
+
+```{r download-timeplot, eval = FALSE, dependson="top5"}
+ggplot(top5_df, aes(date, count, color = package)) +
+  # add shadow lines
+  geom_line(data = rename(top5_df, package2 = package), 
+            color = "gray", aes(group = package2)) +
+  # add date when package was updated
+  geom_vline(data = updates, aes(xintercept = update),
+             linetype = "dashed", color = "#79003e") + 
+  # the trend line
+  geom_line() +
+  scale_y_log10() +
+  facet_grid(package ~ .) + 
+  labs(title = glue("Top 5 downloaded DoE packages from {start} to {end}")) + 
+  scale_color_discrete_qualitative() +
+  guides(color = FALSE) +
+  myggtheme
+```
+
+(ref:timeplot) The above plot shows the daily downloads of the top `r ntop` downloaded DoE packages from the period `r start` to `r end`. The vertical dotted bar corresponds to the date that a new version of the corresponding package was released on CRAN. 
+
+```{r download-timeplot, fig.cap = "(ref:timeplot)", echo = FALSE, fig.height = 7, toggle = FALSE, preview = TRUE}
+```
+
+```{r, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(
+  toggle = FALSE,
+  class.output = "scroll-output"
+)
+```
+# R-packages
+
+Here we have a closer look at the functions of the top 5 downloaded DoE packages below ordered by their download counts.
+
+1. **`AlgDesign`** [<i class="fab fa-r-project"></i> CRAN](https://cran.r-project.org/web/packages/AlgDesign/index.html) [<i class="fab fa-github"></i> GitHub](https://github.com/jvbraun/AlgDesign)  <i class="fas fa-book"></i> @AlgDesign  
+*Algorithmic Experimental Design*  
+Originally written by <i class="fas fa-user"></i> Bob Wheeler but <i class="fas fa-user"></i> Jerome Braun have taken over maintenance of the package.
+1. **`agricolae`** [<i class="fab fa-r-project"></i> CRAN](https://cran.r-project.org/web/packages/agricolae/index.html)  <i class="fas fa-book"></i> @agricolae  
+*Statistical Procedures for Agricultural Research*  
+Written and maintained by <i class="fas fa-user"></i> Felipe de Mendiburu
+1. **`lhs`**  [<i class="fab fa-r-project"></i> CRAN](https://cran.r-project.org/web/packages/lhs/index.html) [<i class="fab fa-github"></i> GitHub](https://github.com/bertcarnell/lhs)  <i class="fas fa-book"></i> @lhs  
+*Latin Hypercube Samples*  
+Written and maintained by <i class="fas fa-user"></i> Rob Carnell
+1. **`ez`** [<i class="fab fa-r-project"></i> CRAN](https://cran.r-project.org/web/packages/ez/index.html) [<i class="fab fa-github"></i> GitHub](https://github.com/mike-lawrence/ez)  <i class="fas fa-book"></i> @ez  
+*Easy Analysis and Visualization of Factorial Experiments*  
+Written and maintained by <i class="fas fa-user"></i> Michael A. Lawrence
+1. **`DoE.base`** [<i class="fab fa-r-project"></i> CRAN](https://cran.r-project.org/web/packages/DoE.base/index.html)  <i class="fas fa-book"></i> @DoE.base   
+*Full Factorials, Orthogonal Arrays and Base Utilities for DoE Packages*  
+Written and maintained by <i class="fas fa-user"></i> Ulrike Groemping.
+
+<aside>
+Interestingly these top 5 DoE packages have only *one active author*. Bob Wheeler doesn't seem to actively contribute to `AlgDesign` any longer; and there are two contributors for `DoE.base` but are not listed as authors.
+</aside>
+
+
+Before we look at the packages, let's set a seed so we can reproduce the results.
+
+```{r}
+set.seed(2021)
+```
+
+
+
+## `AlgDesign`
+
+To start off, we begin with the most downloaded DoE package, `AlgDesign`. The examples below are taken directly from the [vignette of the `AlgDesign` package](https://cran.r-project.org/web/packages/AlgDesign/vignettes/AlgDesign.pdf).
+
+ 
+```{r algdesign}
+library(AlgDesign)
+```
+
+You can create a balanced incomplete block design using the `optBlock` function. It's using an optimal design framework where the default criterion is D criterion and the implied model is given in the first argument.
+
+```{r algdesign-BIBD}
+BIB <- optBlock(~ ., 
+                withinData = factor(1:7), 
+                blocksize = rep(3, 7))
+BIB
+```
+
+`AlgDesign` also includes helper functions to generate a factorial structure.
+
+```{r}
+dat <- gen.factorial(2, 7)
+dat
+```
+
+This can be an input to specify the design using another function, say with `optFederov` which uses Federov's exchange algorithm to generate the design.
+
+```{r}
+desF <- optFederov(~ .^2, 
+                   data = dat,
+                   nTrials = 32,
+                   nRepeats = 100)
+desF
+```
+
+If you want to further randomise within blocks, you can pass the above result to `optBlock`.
+
+```{r}
+desFBlk <- optBlock(~ .^2, 
+                    withinData = desF$design,
+                    blocksizes = rep(8, 4),
+                    nRepeats = 20)
+
+desFBlk
+```
+
+
+## `agricolae`
+
+`agricolae` is motivated by agricultural applications although the designs are applicable across a variety of fields.
+
+```{r, class.output = NULL}
+library(agricolae)
+```
+The functions to create the design all begin with the word "design." and the names of the functions are remnant of the name of the experimental design. E.g. `design.rcbd` generates a Randomised Complete Block Design and `design.split` generates a Split Plot Design.
+
+```{r, class.output = NULL}
+ls("package:agricolae") %>% 
+  str_subset("^design.")
+```
+
+Rather than going through each of the functions, I'll just show one. The command below generates a balanced incomplete block design with 7 treatments of block size 3. This the same design structure as the first example for `AlgDesign`. What do you think of the input and output?
+
+```{r}
+trt <- LETTERS[1:7]
+design.bib(trt = trt, k = 3)
+```
+
+
+More examples are given in the [`agricolae` tutorial](https://cran.r-project.org/web/packages/agricolae/vignettes/tutorial.pdf).
+
+## `lhs`
+
+The `lhs` package is completely different to the previous two packages. It implements methods for creating and augmenting Latin Hypercube Samples and Orthogonal Array Latin Hypercube Samples. The treatment variables here are the parameters and are continuous. In the example below, there are 10 parameters were 30 samples will be drawn from.
+
+```{r}
+library(lhs)
+# a design with 30 samples from 10 parameters
+A <- randomLHS(30, 10)
+A
+```
+
+`lhs` provides a number of methods to find the optimal design each with their own criteria.
+
+```{r}
+A1 <- optimumLHS(30, 10, maxSweeps = 4, eps = 0.01)
+A2 <- maximinLHS(30, 10, dup = 5)
+A3 <- improvedLHS(30, 10, dup = 5)
+A4 <- geneticLHS(30, 10, pop = 1000, gen = 8, pMut = 0.1, criterium = "S")
+A5 <- geneticLHS(30, 10, pop = 1000, gen = 8, pMut = 0.1, criterium = "Maximin")
+```
+
+## `ez`
+
+This is mainly focussed on the analysis of experimental data but some functions such as `ezDesign` is useful for viewing the experimental structure. 
+
+
+```{r, class.output = NULL}
+library(ez)
+data(ANT2)
+ezPrecis(ANT2)
+```
+
+```{r, fig.height = 10}
+ezDesign(data = ANT2,
+         x = trial, 
+         y = subnum,
+         row = block, 
+         col = group)
+```
+
+## `DoE.base`
+
+`DoE.base` provides utility functions for the special class `design` and as seen in Figure \@ref(fig:doe-network), `DoE.base` is used by [four other DoE packages that is maintained also by Prof. Dr. Ulrike Grömping](https://prof.beuth-hochschule.de/groemping/software/versuchsplanung/?print=232).
+
+`DoE.base` contains functions to generate factorial designs easily.
+
+```{r}
+library(DoE.base)
+fac.design(nlevels = c(2, 2, 3, 3, 6), 
+           blocks = 6)
+```
+
+It also contains functions to create orthogonal array designs.
+
+```{r}
+des <- oa.design(nlevels = c(rep(2, 8), 8))
+des
+```
+
+If you need to further randomise within a specified block, you can do this using `rerandomize.design`. 
+
+```{r}
+rerandomize.design(des, block = "J")
+```
+
+
+So those were the top 5 DoE packages. The API of the packages are quite distinct. The object that it outputs can vary from a matrix to a list. DoE might be a dull area for many but it's quite important for the downstream analysis. Perhaps if many of us talk more about it, it may help invigorate the area! 
+
+
+```{js, echo = FALSE}
+function showscript() {
+  var x = document.getElementsByClassName('toggle-code');
+  var n = x.length;
+  for (var i = 0; i < n; i++) {
+    var e = x[i];
+    if (e.style.display == "block") {
+      e.style.display = "none";
+    } else {
+      e.style.display = "block";
+    }
+  }
+}
+```
+

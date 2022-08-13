@@ -1,0 +1,94 @@
+---
+title: "simulate: proof of concept R-package"
+description: |
+  A proof of concept of parametric simulation framework to generate complex multivariate and multilevel data
+date: 2022-02-24
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+categories: [R, simulate]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+This blog post shows a proof of concept for a simulation framework, wrapped into (undocumented) R-package `simulate`. Let's take the `penguins` data from the `palmerpenguins` package as an example data. You can see the form of the data below if you're not familiar with it.
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(simulate)
+theme_set(theme_bw())
+set.seed(2022-02-24)
+str(penguins)
+
+```
+
+Let's now say you want to simulate a new response called `weight` which you assume is normally distributed where the mean is a function of species and variance is 10. We want to specify the mean separately by species such that Adelie, Chinstrap and Gentoo are 130kg, 200kg and 250kg respectively (These numbers are totally made up!!! And probably way heavey for a penguin?).
+
+```{r}
+sim1 <- penguins %>% 
+  simulate(weight = sim_normal(~species, 10) %>% 
+             params("mean", species = c("Adelie"    = 130,
+                                        "Chinstrap" = 200,
+                                        "Gentoo"    = 250)))
+```
+
+Let's visualise to see if the weight was simulated as expected:
+
+```{r sim1-plot}
+ggplot(sim1, aes(species, weight)) +
+  geom_violin() +
+  geom_boxplot(width = 0.1)
+```
+
+You can make other parameters, like the standard deviation, as a function of species as well.
+
+
+```{r}
+sim2 <- penguins %>% 
+  simulate(weight = sim_normal(~species, ~species) %>% 
+             params("mean", species = c("Adelie"    = 130,
+                                        "Chinstrap" = 200,
+                                        "Gentoo"    = 250)) %>% 
+             params("sd", species = c("Adelie"    = 10,
+                                      "Chinstrap" = 40,
+                                      "Gentoo"    = 100) ))
+```
+
+And here's the visualisation:
+
+```{r sim2-plot}
+ggplot(sim2, aes(species, weight)) +
+  geom_violin() +
+  geom_boxplot(width = 0.1)
+```
+
+Okay one more before I call it a night. `sim_form` is a fixed function structure here and I'm simulating weight as a mixture distribution -- the weight is either based on the sex or the species (perhaps simulating a situation where some genes aren't expressed more based on sex sometimes, and sometimes more based on species?? These simulations are just made up.)
+
+
+```{r}
+sim3 <- penguins %>% 
+  simulate(weight = sim_form(~p[1] * sex + p[2] * species) %>% 
+             params(species = c("Adelie"    = 130,
+                                "Chinstrap" = 200,
+                                "Gentoo"    = 250),
+                    # it can be unnamed as well
+                    sex = c(40, 200),
+                    # or specify a distribution
+                    p = sim_multinominal(1, c(0.2, 0.8))))
+```
+
+Note: the plot below is jittered so you can see all the points. 
+
+```{r sim3-plot}
+ggplot(sim3, aes(species, weight)) +
+  geom_jitter() + 
+  facet_grid(sex ~ species)
+```
+
+The multivariate part is not shown but a keen user may find how this is envisioned at the moment if you dig deep into the source code... Hint: there is a `.cor` function to feed in a correlation matrix. 

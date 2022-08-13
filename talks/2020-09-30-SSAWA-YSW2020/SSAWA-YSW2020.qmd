@@ -1,0 +1,16 @@
+---
+title: "What every young statistician should know: Developing your identity, networking and marketing"
+Host: Young Statistician Workshop for the Statistical Society of Australia Western Australia Branch
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+image: cover.png
+url: https://emitanaka.org/slides/YSW2020
+date: 09-30-2020
+---
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>

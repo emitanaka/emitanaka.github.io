@@ -1,0 +1,12 @@
+
+
+```{r {{gsub('_', '-', janitor::make_clean_names(palette_name))}}, fig.cap='{{paste0(palette_name, ' palette: ', paste(colors, collapse = ', '), '.')}}', fig.height = {{ceiling(length(colors)/3) * 2}}}
+# Remove this -- table is sufficient
+check_colorblindness(c({{paste(paste0("'", colors, "'"), collapse = ",")}}))
+```
+
+
+
+```{r {{paste0(gsub('_', '-', janitor::make_clean_names(palette_name)), "-showcase")}}, fig.show='hide', fig.height = 1.5, fig.width = {{0.5 * length(colors)}}}
+check_colorblindness(c({{paste(paste0("'", colors, "'"), collapse = ",")}}), ncol = {{length(colors)}}, label = FALSE)
+```

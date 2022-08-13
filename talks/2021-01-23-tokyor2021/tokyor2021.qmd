@@ -1,0 +1,25 @@
+---
+title: "Grammar of Experimental Design: 実験計画法の「文法」"
+Host: 89th Tokyo R Meeting. 
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 01-23-2021
+image: cover.png
+url: https://emitanaka.org/slides/TokyoR2021
+categories: [日本語, Experimental Design]
+---
+
+::: callout-warning
+
+## Errata
+
+There was an error in my script (where duplicates were not removed) for the count for the number of R packages in CRAN Task View of Design of Experiments. The slides specify there are about 200 R-packages. After removing duplicates, there was about 100 R-packages. 
+
+:::
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>

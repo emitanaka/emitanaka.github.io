@@ -1,0 +1,88 @@
+---
+title: "News"
+page-layout: article
+title-block-banner: true
+---
+
+```{css, echo = FALSE}
+.main {
+  font-size: 12pt;
+}
+h2 {
+  font-size: 18pt;
+}
+```
+
+
+::: {.grid}
+
+::: {.g-col-8 .main}
+
+## <i class="fas fa-newspaper"></i> Recent Publications
+
+* Tanaka & Amaliah (2022) Current state and prospects of R-packages for the design of experiments [<i class="fa-solid fa-file-pdf"></i>](https://arxiv.org/pdf/2206.07532) [<i class="fa-solid fa-file-circle-plus"></i>](https://arxiv.org/src/2206.07532v1/anc/supp.pdf) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/paper-DoE-review)
+* Statistical Society of Australia Victorian Branch Annual Report 2021 [<i class="fa-solid fa-file-pdf"></i>](https://www.statsoc.org.au/resources/Documents/Branch%20Folders/Victoria%20Branch/annual-report-2021.pdf)
+* Tanaka, Leung & Cook (2022) Commentary on “Visualization in Operations Management Research”: Incorporating Statistical Thinking into Visualization Practices for Decision Making in Operational Management. *INFORMS Journal on Data Science* [<i class="fa-solid fa-link"></i>](https://doi.org/10.1287/ijds.2021.0008) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/supp-visOM)
+* Cook, Reid & Tanaka (2021) The Foundation is Available for Thinking about Data Visualization Inferentially. *Harvard Data Science Review* [<i class="fa-solid fa-link"></i>](https://doi.org/10.1162/99608f92.8453435d)
+
+
+## <i class="fas fa-comment"></i> Upcoming talks
+
+<ul>
+```{r upcoming-talks, echo = FALSE, warning = FALSE, message = FALSE, results = "asis"}
+library(tidyverse)
+library(lubridate)
+library(glue)
+df <- read_csv("../cv/data/talks.csv") %>% 
+  mutate(date = dmy(date)) %>% 
+  arrange(date) %>% 
+  filter(date > Sys.Date(),
+         advertised=="yes") %>% 
+  select(date, title, host, url) 
+if(nrow(df)) {
+  glue_data(df, '<li>{title}<div style="font-size:0.8em;"><i>{host}</i></div><div class="date">{date} {url}</div></li>')
+} else {
+  cat("I have no advertised upcoming talks. Please feel free to [invite me](mailto:emi.tanaka@monash.edu) for a talk if I do something of your interest. You can find some of my past talks [here](https://emitanaka.org/talks.html).")
+}
+```
+</ul>
+
+## <i class="fas fa-users"></i> Statistical Society of Australia
+
+::: twitter-post
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to everyone who attended our AGM and March seminar event last week. We have the pleasure of introducing the SSA Vic Council of 2022 🎉 🎉 🎉 <a href="https://t.co/nrk3nR8Ir1">pic.twitter.com/nrk3nR8Ir1</a></p>&mdash; SSAVictoria (@SsaVictoria) <a href="https://twitter.com/SsaVictoria/status/1510851450645417994?ref_src=twsrc%5Etfw">April 4, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+:::
+
+
+<i class="fas fa-info-circle"></i> For more information see https://statsocaus.github.io/vic/
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IkLIcipBk5Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<i class="fab fa-slack"></i> To join the SSA Community Slack, see [here](https://statsocaus.github.io/vic/slack.html).
+
+
+## <i class="fab fa-r-project"></i> Hex stickers 
+I have now hex stickers for the `edibble` and `deggust` R packages. If you see me in-person, feel free to ask for it!
+
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">If you ever see me in-person, feel free to ask me for hex stickers for my R packages ☺️ <a href="https://t.co/4VXdv091IM">pic.twitter.com/4VXdv091IM</a></p>&mdash; Emi Tanaka 🌾 (@statsgen) <a href="https://twitter.com/statsgen/status/1410842537485471744?ref_src=twsrc%5Etfw">July 2, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+:::
+
+::: {.g-col-4}
+
+<a class="twitter-timeline" data-height="600" data-width="300"  href="https://twitter.com/statsgen?ref_src=twsrc%5Etfw">Tweets by statsgen</a>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<center>
+<a href="https://www.statsoc.org.au/DistinguishedPresentersAwardRecipients"><img src="images/ssa-digital-badge-2021.png" width="100%" style="max-width:250px;"></a>
+</center>
+
+:::
+
+:::

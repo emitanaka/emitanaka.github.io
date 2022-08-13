@@ -1,0 +1,21 @@
+---
+title: "Academic ranks"
+description: |
+   Different countries adopt a different system for academic ranks. This posts show a mapping of academic ranks across Australian, NZ, UK & North American systems.
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+date: 2022-06-30
+---
+
+
+Australia | Australia<br> (Research focussed) | New Zealand | North America | UK
+--- | --- | --- | --- | ---
+Associate Lecturer | Research Associate |  |  | Assistant Lecturer
+Lecturer | Research Fellow | Lecturer | Assistant Professor | Lecturer
+Senior Lecturer | Senior Research Fellow | Senior Lecturer<br> (+over the bar) |  Associate Professor  |  Senior Lecturer
+Associate Professor | Principal Research Fellow | Associate Professor | Professor | Reader/Principal Lecturer
+Professor | Professor |  Professor | Distinguished/Endowed Professor | Professor
+
+
+Information taken from these wikipedia articles: [Academic ranks in Australian and New Zealand](https://en.wikipedia.org/wiki/Academic_ranks_(Australia_and_New_Zealand)) and [Academic ranks in UK](https://en.wikipedia.org/wiki/Academic_ranks_in_the_United_Kingdom).

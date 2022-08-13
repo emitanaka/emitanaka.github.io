@@ -1,0 +1,16 @@
+{
+  "hash": "4e9d5f7b46b934b5d8e62a91ed101a52",
+  "result": {
+    "markdown": "---\ntitle: \"An anthology of experimental designs\"\nHost: Toronto Data Workshop\nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 03-24-2022\nimage: cover.png\nurl: https://emitanaka.org/slides/toronto2022\ncategories: [Experimental Design]\n---\n\n\n\nClick [here](https://emitanaka.org/slides/toronto2022) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/toronto2022\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [
+      "toronto2022_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

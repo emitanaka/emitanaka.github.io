@@ -1,0 +1,18 @@
+---
+title: "Visual Inference: 絵による推論"
+Host: 17th Fukuoka R Meeting. 
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 03-27-2021
+image: cover.png
+url: https://emitanaka.org/slides/FukuokaR2021
+categories: [日本語, Visual Inference]
+---
+
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>

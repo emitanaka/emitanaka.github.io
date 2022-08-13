@@ -1,0 +1,141 @@
+---
+title: "Colorblind checks for qualitative palettes"
+description: |
+  Checking the color blind friendliness of a number of qualitative palettes. 
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 2022-02-20
+categories: [R, color]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.width = 6,
+                      fig.path = "images/")
+library(colorspace)
+library(tidyverse)
+
+data <- tribble(~name, ~source, ~colors,
+                "High contrast", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#FFFFFF', "#DDAA33", "#BB5566",
+                                   "#004488", "#000000"),
+                "Pale", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#BBCCEE', '#CCEEFF', '#CCDDAA', 
+                          '#EEEEBB', '#FFCCCC', '#DDDDDD'),
+                "Dark", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#222255', '#225555', '#225522', 
+                          '#666633', '#663333', '#555555'),
+                "Bright", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#4477AA', '#66CCEE', '#228833', 
+                            '#CCBB44', '#EE6677', '#AA3377', 
+                            '#BBBBBB'),
+                "Vibrant", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#0077BB', '#33BBEE', '#009988',
+                             '#EE7733', '#CC3311', '#EE3377', 
+                             '#BBBBBB'),
+                "Medium constrast", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#FFFFFF', '#EECC66', "#EE99AA",
+                                      "#6699CC", "#997700", "#994455",
+                                      "#004488", "#000000"),
+                "Okabe Ito", "[Okabe Ito](https://jfly.uni-koeln.de/color/)", c("#E69F00", "#56B4E9", "#009E73", 
+                               "#F0E442", "#0072B2", "#D55E00", 
+                               "#CC79A7", "#000000"),
+                "Light", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#77AADD', '#99DDFF', '#44BB99', 
+                           '#BBCC33', '#AAAA00', '#EEDD88', 
+                           '#EE8866', '#FFAABB', '#DDDDDD'),
+                "Muted", "[Paul Tol](https://personal.sron.nl/~pault/#sec:qualitative)", c('#332288', '#88CCEE', '#44AA99', 
+                           '#117733', '#999933', '#DDCC77',
+                           '#CC6677', '#882255', '#AA4499', 
+                           '#DDDDDD'),
+                "Safe", "`rcartocolor`", c("#88CCEE", "#CC6677", "#DDCC77", 
+                          "#117733", "#332288", "#AA4499", 
+                          "#44AA99", "#999933", "#882255", 
+                          "#661100", "#6699CC", "#888888"),
+                "Monash primary", "[Monash](https://www.monash.edu/__data/assets/pdf_file/0004/1656508/9.-Digital-Guidelines.pdf)", monash::color_primary(),
+                "Monash secondary", "[Monash](https://www.monash.edu/__data/assets/pdf_file/0004/1656508/9.-Digital-Guidelines.pdf)", monash::color_secondary())
+
+
+
+
+
+chunk_name <- function(name) {
+  gsub("_", "-", janitor::make_clean_names(name)) 
+}
+```
+
+<details><summary>Function to generate plot for colorblind friendly check</summary>
+
+
+
+```{r colorblind-check, echo = TRUE}
+library(ggplot2)
+library(farver)
+library(colorspace)
+check_colorblindness <- function(colors, ncol = 3, label = TRUE) {
+  ncolors <- length(colors)
+  nrow <- ceiling(ncolors / ncol)
+  cond <- c("Original", "Deutan", "Protan", "Tritan")
+  ncond <- length(cond)
+  
+  df <- data.frame(color = c(colors, deutan(colors), protan(colors), tritan(colors)),
+                   cond = rep(cond, each = ncolors),
+                   x = rep(rep(1:ncol, length.out = ncolors), times = ncond),
+                   y = rep(rep(1:nrow, each = ncol)[1:ncolors], times = ncond)) %>% 
+    mutate(cond = factor(cond, levels = .env$cond))
+  
+  
+  g <- ggplot(df, aes(x, y, fill = I(color))) +
+    geom_tile(color = "black", size = 1.3) +
+    theme_void() +
+    coord_equal() +
+    facet_wrap(~cond, ncol = 2) +
+    scale_y_reverse()
+  
+  if(label) {
+      g + geom_text(aes(label = color, color = I(label_col)), 
+              data = function(data) data %>% 
+                filter(cond == "Original") %>% 
+                mutate(hcl = decode_colour(colors, to = "hcl"),
+                       label_col = ifelse(hcl[, "l"] > 50, "black", "white")))
+  } else {
+    g
+  } 
+}
+```
+
+</details>
+
+
+```{r}
+#| output: asis
+data %>% 
+  mutate(ncols = lengths(colors),
+         palette = glue::glue("<img src='images/{chunk_name(name)}-showcase-1.png' style='width:200px;'>"),
+         name = glue::glue("[{name}](#fig:{chunk_name(name)})")
+         ) %>% 
+  knitr::kable(escape = FALSE, format = "simple",
+               col.names = c("Name", "Source", "Colors", "# of colors", "Palette")) 
+```
+
+
+```{r, results = "asis"}
+out <- map2_chr(data$colors, data$name,
+            ~knitr::knit_expand("_chunk-palette-template.Rmd", 
+                   colors = .x, 
+                   palette_name = .y))
+```
+
+
+
+## R code for easy copying
+
+
+```{r}
+walk2(data$colors, data$name, ~{
+  cat(paste("###", .y), "\n")
+  dput(.x)
+  cat("\n")
+  })
+```
+
+## Closer look
+
+`r knitr::knit(text = out)`

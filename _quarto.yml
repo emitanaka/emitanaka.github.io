@@ -1,0 +1,58 @@
+project:
+  type: website
+
+website:
+  title: "emi tanaka"
+  site-url: https://emitanaka.org
+  margin-header: subscribe.html
+  favicon: images/avatar.png
+  twitter-card:
+    creator: "@statsgen"
+  description: |
+    Emi Tanaka's website and blog that mainly features about
+    statistics, data science, R and academia.
+  google-analytics: "G-07SZXPNSJZ"
+  search: true
+  navbar:
+    background: primary
+    foreground: secondary
+    logo: "images/avatar.png"
+    left:
+      - text: Home
+        href: index.qmd
+      - text: CV
+        href: cv.qmd
+      - text: Teaching
+        href: teaching.qmd
+      - talks.qmd
+      - blog.qmd
+      - about.qmd
+    right:
+      - icon: twitter
+        href: https://twitter.com/statsgen
+      - icon: rss
+        href: index.xml
+  page-footer:
+    left: |
+      <b>Dr. Emi Tanaka</b> <br>
+      Senior Lecturer in Statistics<br>
+      Monash University, Australia<br>
+      © Copyright 2021-2022 Emi Tanaka
+    right: |
+      <i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen">@statsgen</a> on Twitter <br>
+      <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br>
+      <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br>
+      <i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia
+
+    border: true
+    background: primary
+format:
+  html:
+    theme: assets/theme.scss
+    css: assets/styles.css
+    include-after: |
+      <link rel="stylesheet" href="assets/syntax-highlight.css">
+      <link rel="stylesheet" href="assets/fontawesome-free-6.1.1-web/css/all.min.css">
+      <script src="assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+

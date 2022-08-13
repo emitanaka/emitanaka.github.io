@@ -1,0 +1,17 @@
+---
+title: "Constructing and visualising experimental designs with the edibble R-package"
+Host: Queensland Department of Agriculture and Fisheries Biometry Workshop 
+author:
+  - name: Emi Tanaka
+    url: https://emitanaka.org
+    affiliation: Monash University
+    affiliation_url: https://numbat.space/
+date: 05-20-2021
+image: cover.png
+url: https://emitanaka.org/slides/DAF2021/edibble
+categories: [Experimental Design]
+---
+
+Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
+
+<iframe src="`r rmarkdown::metadata$url`#2" width="100%" height="450px"></iframe>
