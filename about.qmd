@@ -34,7 +34,7 @@ format:
 :::
 
 
-I'm a senior lecturer (in the [Australian system](https://emitanaka.org/posts/2022-06-30-academic-ranks/)) in statistics at the [Department of Econometrics and Business Statistics, Monash University, Melbourne, Australia](https://www.monash.edu/business/ebs) and part of the [NUMBATs group](https://numbat.space/). 
+I'm a Senior Lecturer (in the [Australian system](https://emitanaka.org/posts/2022-06-30-academic-ranks/)) in Statistics at the [Department of Econometrics and Business Statistics, Monash University, Melbourne, Australia](https://www.monash.edu/business/ebs) and part of the [NUMBATs group](https://numbat.space/). 
 
 My **research interests** are:
 
