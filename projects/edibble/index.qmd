@@ -1,0 +1,18 @@
+---
+title: "**edibble**: An R-package to construct designs using the grammar of experimental designs"
+author: "Emi Tanaka"
+image: https://github.com/emitanaka/edibble/raw/master/man/figures/logo.png
+---
+
+
+You can install this package from [CRAN](https://cran.r-project.org/web/packages/edibble/index.html):
+
+```r 
+install.packages("edibble")
+```
+
+And the development version on [GitHub](https://github.com/emitanaka/edibble):
+
+```r
+remotes::install_github("emitanaka/edibble")
+```

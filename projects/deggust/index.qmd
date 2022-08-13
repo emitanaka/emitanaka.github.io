@@ -1,0 +1,14 @@
+---
+title: "**deggust**: An R-package to visualise edibble designs as ggplot graphics"
+author: "Emi Tanaka"
+image: https://github.com/emitanaka/deggust/raw/main/man/figures/logo.png
+---
+
+
+
+
+The development version on [GitHub](https://github.com/emitanaka/deggust) can be installed with:
+
+```r
+remotes::install_github("emitanaka/deggust")
+```

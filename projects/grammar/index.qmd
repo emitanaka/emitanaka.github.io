@@ -1,0 +1,7 @@
+---
+title: The Grammar of Experimental Designs
+author: "Emi Tanaka"
+image: preview.jpeg
+---
+
+The work-in-progress can be foun [here](https://emitanaka.org/edibble-book).
