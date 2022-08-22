@@ -2,21 +2,14 @@
 title: "News"
 page-layout: article
 title-block-banner: true
+format:
+  html:
+    css: assets/index.css
 ---
 
-```{css, echo = FALSE}
-.main {
-  font-size: 12pt;
-}
-h2 {
-  font-size: 18pt;
-}
-```
 
 
-::: {.grid}
-
-::: {.g-col-8 .main}
+::: {.main style="width:60%; float: left;"}
 
 ## <i class="fas fa-newspaper"></i> Recent Publications
 
@@ -24,6 +17,17 @@ h2 {
 * Statistical Society of Australia Victorian Branch Annual Report 2021 [<i class="fa-solid fa-file-pdf"></i>](https://www.statsoc.org.au/resources/Documents/Branch%20Folders/Victoria%20Branch/annual-report-2021.pdf)
 * Tanaka, Leung & Cook (2022) Commentary on “Visualization in Operations Management Research”: Incorporating Statistical Thinking into Visualization Practices for Decision Making in Operational Management. *INFORMS Journal on Data Science* [<i class="fa-solid fa-link"></i>](https://doi.org/10.1287/ijds.2021.0008) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/supp-visOM)
 * Cook, Reid & Tanaka (2021) The Foundation is Available for Thinking about Data Visualization Inferentially. *Harvard Data Science Review* [<i class="fa-solid fa-link"></i>](https://doi.org/10.1162/99608f92.8453435d)
+
+
+## <i class="fas fa-video"></i> Latest talks
+
+You can watch some of my latest talks from below:
+
+* **The genesis of experimentation** (organised by Paul Murrell as part of Ihaka Lecture Series) [<i class="fab fa-youtube"></i>](https://www.youtube.com/watch?v=05eUR0BZwio) [<i class="fas fa-link"></i>](https://emitanaka.org/slides/Ihaka2022/) [<i class="fab fa-github"></i>](https://github.com/emitanaka/talks/tree/master/Ihaka2022)
+* **An anthology of experimental designs** (organised by Rohan Alexander as part of Toronto Data Workshop) [<i class="fab fa-youtube"></i>](https://www.youtube.com/watch?v=sFdZb89Th9g) [<i class="fas fa-link"></i>](https://emitanaka.org/slides/toronto2022) [<i class="fab fa-github"></i>](https://github.com/emitanaka/talks/tree/master/Toronto2022)
+* **Constructing experimental designs with the edibble R-package** (organised by Fazel Almasi with funding from Intellectual Climate Fund La Trobe University) [<i class="fas fa-play-circle"></i>](https://doi.org/10.26181/6194952b80356) [<i class="fas fa-link"></i>](https://emitanaka.org/slides/stats4bio2021/edibble/)
+* **Visualising experimental designs with the edibble and deggust R-packages** (organised by Fazel Almasi with funding from Intellectual Climate Fund La Trobe University) [<i class="fas fa-play-circle"></i>](https://doi.org/10.26181/6192f76029618) [<i class="fas fa-link"></i>](https://emitanaka.org/slides/stats4bio2021/deggust/)
+
 
 
 ## <i class="fas fa-comment"></i> Upcoming talks
@@ -49,11 +53,8 @@ if(nrow(df)) {
 
 ## <i class="fas fa-users"></i> Statistical Society of Australia
 
-::: twitter-post
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to everyone who attended our AGM and March seminar event last week. We have the pleasure of introducing the SSA Vic Council of 2022 🎉 🎉 🎉 <a href="https://t.co/nrk3nR8Ir1">pic.twitter.com/nrk3nR8Ir1</a></p>&mdash; SSAVictoria (@SsaVictoria) <a href="https://twitter.com/SsaVictoria/status/1510851450645417994?ref_src=twsrc%5Etfw">April 4, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-:::
 
 
 <i class="fas fa-info-circle"></i> For more information see https://statsocaus.github.io/vic/
@@ -73,7 +74,7 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 
 :::
 
-::: {.g-col-4}
+::: {style="width:40%; float: right;padding-left: 20px;"}
 
 <a class="twitter-timeline" data-height="600" data-width="300"  href="https://twitter.com/statsgen?ref_src=twsrc%5Etfw">Tweets by statsgen</a>
 
@@ -85,4 +86,3 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 
 :::
 
-:::

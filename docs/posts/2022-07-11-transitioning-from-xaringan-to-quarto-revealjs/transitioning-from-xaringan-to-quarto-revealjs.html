@@ -270,7 +270,20 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 
 </header>
 
-<p><code>{css, echo = FALSE} .revealjs, .xaringan {  padding: 5px;  font-size: 0.5em;  border-radius: 10px;  background-color: #006DAE;  color: white; } .xaringan {   background-color: #D93F00; }</code></p>
+<div class="cell">
+<style type="text/css">
+.revealjs, .xaringan {
+ padding: 5px;
+ font-size: 0.5em;
+ border-radius: 10px;
+ background-color: #006DAE;
+ color: white;
+}
+.xaringan {
+  background-color: #D93F00;
+}
+</style>
+</div>
 <section id="background" class="level1">
 <h1>Background</h1>
 <p>I first used the <a href="https://slides.yihui.org/xaringan/#1"><code>xaringan</code></a> R-package to make HTML slides in late 2016 when I saw <a href="https://twitter.com/xieyihui/status/808418548829847552">Yihui’s tweet</a> about it. It wasn’t until the beginning of 2018 that I fully switched from Beamer/Powerpoint/Keynote<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> presentation slides to using <code>xaringan</code>. Four years later, after over 120 <code>xaringan</code> slides<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> plus making a <a href="https://github.com/emitanaka/ninja-theme">whole theme</a> for it, I started using <a href="https://quarto.org/docs/presentations/revealjs/">Quarto revealjs slides</a> instead from the start of 2022. So far I’ve given 5 talks with Quarto revealjs slides and I’m using it to make slides for the foreseeable future.</p>

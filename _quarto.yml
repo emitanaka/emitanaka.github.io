@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "emi tanaka"
@@ -45,7 +46,6 @@ website:
       <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br>
       <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br>
       <i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia
-
     border: true
     background: primary
 format:
