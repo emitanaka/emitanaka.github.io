@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://emitanaka.org/index.html</loc>
-    <lastmod>2022-08-22T01:27:03.227Z</lastmod>
+    <lastmod>2022-08-27T11:43:37.421Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/posts/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html</loc>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://emitanaka.org/blog.html</loc>
-    <lastmod>2022-08-22T01:08:45.133Z</lastmod>
+    <lastmod>2022-09-01T23:41:48.471Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/projects/grammar/index.html</loc>
@@ -75,5 +75,21 @@
   <url>
     <loc>https://emitanaka.org/talks.html</loc>
     <lastmod>2022-08-22T01:08:55.908Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/cv.html</loc>
+    <lastmod>2022-08-27T11:43:50.352Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/posts/2022-02-20-color-considerations/color-considerations.html</loc>
+    <lastmod>2022-09-01T23:41:51.570Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/posts/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html</loc>
+    <lastmod>2022-09-01T23:38:29.094Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/posts/2022-01-16-anime-titles/anime-titles.html</loc>
+    <lastmod>2022-09-01T23:36:14.033Z</lastmod>
   </url>
 </urlset>

@@ -11,7 +11,7 @@
 <description>Emi Tanaka's website and blog that mainly features about
 statistics, data science, R and academia.
 </description>
-<generator>quarto-1.0.38</generator>
+<generator>quarto-1.1.132</generator>
 <lastBuildDate>Fri, 29 Jul 2022 14:00:00 GMT</lastBuildDate>
 <item>
   <title>edibble experimental design with sensory discrimination tests</title>
@@ -137,8 +137,7 @@ statistics, data science, R and academia.
  8      day1  consumer8          yes      T,M       M   
  9      day1  consumer9          yes      T,M       M   
 10      day1  consumer10         yes      T,M       M   
-# … with 158 more rows
-# ℹ Use `print(n = ...)` to see more rows</code></pre>
+# … with 158 more rows</code></pre>
 </div>
 </div>
 <p>You can check the allocation of the cover story and test by nesting it by day:</p>
@@ -200,8 +199,7 @@ For the triangle test there are six possible triplets involving the two products
  8         1  consumer4 product_lineup8         normal      XOX
  9         1  consumer5 product_lineup9         normal      OXX
 10         1  consumer5 product_lineup10        spiked      XOX
-# … with 158 more rows
-# ℹ Use `print(n = ...)` to see more rows</code></pre>
+# … with 158 more rows</code></pre>
 </div>
 </div>
 <p>I could alternatively design the above as a row-column design.</p>
@@ -3941,142 +3939,6 @@ end
   <title>My Travel Schedule 2019: Building an interactive visualisation as twitter card</title>
   <dc:creator>Emi Tanaka</dc:creator>
   <link>https://emitanaka.org/posts/travel2019/travel2019.html</link>
-  <description><![CDATA[ 
-
-
-
-<div class="cell">
-
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="htmlwidget-f0e6141a0168770abd8e" style="width:100%;height:225px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f0e6141a0168770abd8e">{"x":{"url":"travel2019_files/figure-html//widgets/widget_travelschedule.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
-<p><br> Hovering over the above graph will show you more details. This year I have a fair bit of travel scheduled including:</p>
-<ul>
-<li>Eco Sta 2019 at Taichung, Taiwan,</li>
-<li>ISI WSC 2019 at Kuala Lumpur, Malaysia,</li>
-<li>YSC 2019 at Canberra, Australia, and</li>
-<li>Biometrics by the Botanic Garden 2019 at Adelaide, Australia.</li>
-</ul>
-<p>If you happen to be going to the same conference as myself, do get in touch and maybe you can pay for my taxi? :) (I forgot to put it in my budget …)</p>
-<p>The code to make the above graph is shown below. This post benefit largely from this post <a href="https://datatitian.com/how-to-turn-your-ggplot2-visualization-into-an-interactive-tweet/">here</a> to turn <code>plotly</code> output into interactive twitter card.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(tsibble)</span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;">library</span>(googlesheets4)</span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;">library</span>(highcharter)</span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;">library</span>(widgetframe)</span>
-<span id="cb1-6"></span>
-<span id="cb1-7"><span class="co" style="color: #5E5E5E;"># get the data</span></span>
-<span id="cb1-8">date_range <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">tibble</span>(</span>
-<span id="cb1-9">  <span class="at" style="color: #657422;">Dates =</span> <span class="fu" style="color: #4758AB;">as.Date</span>(<span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"06/03/2019"</span>, <span class="st" style="color: #20794D;">"12/31/2019"</span>), <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"%m/%d/%Y"</span>),</span>
-<span id="cb1-10">  <span class="at" style="color: #657422;">Location =</span> <span class="st" style="color: #20794D;">"Sydney, Australia"</span></span>
-<span id="cb1-11">) <span class="co" style="color: #5E5E5E;"># the start to end for schedule show</span></span>
-<span id="cb1-12">travel_df <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">read_sheet</span>(<span class="st" style="color: #20794D;">"1T7aH5PzQghU0htnqOjzzEyfe0qdWs_L-1Ybu9PX-rYY"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-13">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
-<span id="cb1-14">    <span class="at" style="color: #657422;">Start =</span> <span class="fu" style="color: #4758AB;">as.Date</span>(Start, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"%m/%d/%Y"</span>),</span>
-<span id="cb1-15">    <span class="at" style="color: #657422;">End =</span> <span class="fu" style="color: #4758AB;">as.Date</span>(End, <span class="at" style="color: #657422;">format =</span> <span class="st" style="color: #20794D;">"%m/%d/%Y"</span>)</span>
-<span id="cb1-16">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-17">  <span class="fu" style="color: #4758AB;">pivot_longer</span>(Start<span class="sc" style="color: #5E5E5E;">:</span>End, <span class="at" style="color: #657422;">names_to =</span> <span class="st" style="color: #20794D;">"Time"</span>, <span class="at" style="color: #657422;">values_to =</span> <span class="st" style="color: #20794D;">"Dates"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-18">  <span class="fu" style="color: #4758AB;">as_tsibble</span>(<span class="at" style="color: #657422;">key =</span> Event, <span class="at" style="color: #657422;">index =</span> Dates) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-19">  <span class="fu" style="color: #4758AB;">fill_gaps</span>(<span class="at" style="color: #657422;">Time =</span> <span class="st" style="color: #20794D;">"Between"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-20">  <span class="fu" style="color: #4758AB;">group_by</span>(Event) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-21">  <span class="fu" style="color: #4758AB;">fill</span>(FullEvent, URL, Location, What, <span class="at" style="color: #657422;">.direction =</span> <span class="st" style="color: #20794D;">"down"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-22">  <span class="fu" style="color: #4758AB;">ungroup</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span> <span class="co" style="color: #5E5E5E;"># this part feels clumsy.. probably better way to do this</span></span>
-<span id="cb1-23">  <span class="fu" style="color: #4758AB;">bind_rows</span>(date_range) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-24">  <span class="fu" style="color: #4758AB;">as_tibble</span>() <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-25">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">Key =</span> <span class="st" style="color: #20794D;">"All"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-26">  <span class="fu" style="color: #4758AB;">as_tsibble</span>(<span class="at" style="color: #657422;">key =</span> Key, <span class="at" style="color: #657422;">index =</span> Dates) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-27">  <span class="fu" style="color: #4758AB;">fill_gaps</span>(<span class="at" style="color: #657422;">Location =</span> <span class="st" style="color: #20794D;">"Sydney, Australia"</span>, <span class="at" style="color: #657422;">Event =</span> <span class="st" style="color: #20794D;">""</span>, <span class="at" style="color: #657422;">What =</span> <span class="st" style="color: #20794D;">""</span>, <span class="at" style="color: #657422;">FullEvent =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-28">  <span class="fu" style="color: #4758AB;">mutate</span>(</span>
-<span id="cb1-29">    <span class="at" style="color: #657422;">Day =</span> <span class="fu" style="color: #4758AB;">substring</span>(<span class="fu" style="color: #4758AB;">weekdays</span>(Dates), <span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">3</span>),</span>
-<span id="cb1-30">    <span class="at" style="color: #657422;">Week =</span> lubridate<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">isoweek</span>(Dates)</span>
-<span id="cb1-31">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb1-32">  <span class="fu" style="color: #4758AB;">filter</span>(Week <span class="sc" style="color: #5E5E5E;">!=</span> <span class="dv" style="color: #AD0000;">1</span>)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">fntltp <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">JS</span>(<span class="st" style="color: #20794D;">"function(){</span></span>
-<span id="cb2-2"><span class="st" style="color: #20794D;">              return '&lt;b style=</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">color:#DC5084</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">&gt;' + this.point.event + '&lt;/b&gt;&lt;br&gt;&lt;span style=</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">font-size:0.7em</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">&gt;' +  this.series.yAxis.categories[this.point.y] + ', ' +</span></span>
-<span id="cb2-3"><span class="st" style="color: #20794D;">             this.point.date + '&lt;/span&gt;&lt;br&gt;&lt;span style=</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">font-size:0.7em</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">&gt;' + this.point.name + '&lt;/span&gt;&lt;br&gt;&lt;span style=</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">font-size:0.7em;color:#FFFFCC</span><span class="sc" style="color: #5E5E5E;">\"</span><span class="st" style="color: #20794D;">&gt;' + this.point.what + '&lt;/span&gt;&lt;br&gt;'+ this.point.loc;</span></span>
-<span id="cb2-4"><span class="st" style="color: #20794D;">             }"</span>)</span>
-<span id="cb2-5"></span>
-<span id="cb2-6">hcout <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">hchart</span>(travel_df, <span class="st" style="color: #20794D;">"heatmap"</span>, <span class="fu" style="color: #4758AB;">hcaes</span>(</span>
-<span id="cb2-7">  <span class="at" style="color: #657422;">x =</span> <span class="fu" style="color: #4758AB;">factor</span>(Week),</span>
-<span id="cb2-8">  <span class="at" style="color: #657422;">y =</span> <span class="fu" style="color: #4758AB;">factor</span>(Day, <span class="at" style="color: #657422;">levels =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Sun"</span>, <span class="st" style="color: #20794D;">"Sat"</span>, <span class="st" style="color: #20794D;">"Fri"</span>, <span class="st" style="color: #20794D;">"Thu"</span>, <span class="st" style="color: #20794D;">"Wed"</span>, <span class="st" style="color: #20794D;">"Tue"</span>, <span class="st" style="color: #20794D;">"Mon"</span>)),</span>
-<span id="cb2-9">  <span class="at" style="color: #657422;">group =</span> Location,</span>
-<span id="cb2-10">  <span class="at" style="color: #657422;">loc =</span> Location,</span>
-<span id="cb2-11">  <span class="at" style="color: #657422;">event =</span> Event,</span>
-<span id="cb2-12">  <span class="at" style="color: #657422;">what =</span> What,</span>
-<span id="cb2-13">  <span class="at" style="color: #657422;">name =</span> FullEvent,</span>
-<span id="cb2-14">  <span class="at" style="color: #657422;">date =</span> Dates</span>
-<span id="cb2-15">),</span>
-<span id="cb2-16"><span class="at" style="color: #657422;">style =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">fontSize =</span> <span class="st" style="color: #20794D;">"2em"</span>, <span class="at" style="color: #657422;">fontFamily =</span> <span class="st" style="color: #20794D;">"Helvetica"</span>)</span>
-<span id="cb2-17">) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-18">  <span class="fu" style="color: #4758AB;">hc_tooltip</span>(<span class="at" style="color: #657422;">formatter =</span> fntltp) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-19">  <span class="co" style="color: #5E5E5E;"># hc_tooltip(crosshairs=TRUE, pointFormat = "y: {point.y}&lt;br&gt;x: {point.x}") %&gt;%</span></span>
-<span id="cb2-20">  <span class="fu" style="color: #4758AB;">hc_title</span>(<span class="at" style="color: #657422;">text =</span> <span class="st" style="color: #20794D;">"My 2019 Travel Schedule"</span>, <span class="at" style="color: #657422;">style =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">fontWeight =</span> <span class="st" style="color: #20794D;">"bold"</span>)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-21">  <span class="fu" style="color: #4758AB;">hc_subtitle</span>(<span class="at" style="color: #657422;">text =</span> <span class="st" style="color: #20794D;">"Hover over the tile to see more information"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-22">  <span class="fu" style="color: #4758AB;">hc_size</span>(<span class="at" style="color: #657422;">height =</span> <span class="dv" style="color: #AD0000;">225</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-23">  <span class="fu" style="color: #4758AB;">hc_legend</span>(<span class="at" style="color: #657422;">enabled =</span> <span class="cn" style="color: #8f5902;">FALSE</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-24">  <span class="fu" style="color: #4758AB;">hc_yAxis</span>(<span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-25">  <span class="fu" style="color: #4758AB;">hc_xAxis</span>(</span>
-<span id="cb2-26">    <span class="at" style="color: #657422;">title =</span> <span class="st" style="color: #20794D;">""</span>, <span class="at" style="color: #657422;">categories =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="st" style="color: #20794D;">"Jun"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Jul"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Aug"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Sep"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Oct"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Nov"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">"Dec"</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>, <span class="st" style="color: #20794D;">""</span>),</span>
-<span id="cb2-27">    <span class="at" style="color: #657422;">endOnTick =</span> <span class="cn" style="color: #8f5902;">FALSE</span></span>
-<span id="cb2-28">  ) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-29">  <span class="fu" style="color: #4758AB;">hc_add_theme</span>(<span class="fu" style="color: #4758AB;">hc_theme_538</span>()) <span class="sc" style="color: #5E5E5E;">%&gt;%</span></span>
-<span id="cb2-30">  <span class="fu" style="color: #4758AB;">hc_plotOptions</span>(<span class="at" style="color: #657422;">heatmap =</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">borderColor =</span> <span class="st" style="color: #20794D;">"black"</span>, <span class="at" style="color: #657422;">borderWidth =</span> <span class="dv" style="color: #AD0000;">1</span>))</span>
-<span id="cb2-31"></span>
-<span id="cb2-32"><span class="fu" style="color: #4758AB;">frameWidget</span>(hcout)</span></code></pre></div>
-</div>
-
-
-
- ]]></description>
-  <category>visualisation</category>
-  <category>interactive</category>
-  <guid>https://emitanaka.org/posts/travel2019/travel2019.html</guid>
-  <pubDate>Mon, 25 Mar 2019 13:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Making a Hexagon Sticker</title>
-  <dc:creator>Emi Tanaka</dc:creator>
-  <link>https://emitanaka.org/posts/hexsticker/hexsticker.html</link>
-  <description><![CDATA[ 
-
-
-
-<p><img src="https://emitanaka.org/posts/hexsticker/https:/user-images.githubusercontent.com/7620319/38168572-71e4543e-3593-11e8-9487-9c6c484b896a.png" height="120px" style="width:120px!important" align="right"> Making hexagon stickers have become popular for R-packages with the range of packages associated with RStudio, such as <code>ggplot2</code>, <code>knitr</code>, <code>devtools</code> and so on, having its <a href="https://www.rstudio.com/products/rpackages/">own hex stickers</a>.</p>
-<p>This trend even spanned a R-package <code>hexSticker</code> that can be found <a href="https://github.com/GuangchuangYu/hexSticker">here</a>.</p>
-<section id="powerpoint-template-for-hex-stickers" class="level2">
-<h2 class="anchored" data-anchor-id="powerpoint-template-for-hex-stickers">Powerpoint template for hex stickers</h2>
-<p>For the sticker that I made for my R-package <a href="https://github.com/emitanaka/shinycustomloader"><code>shinycustomloader</code></a>, I found it easier, partly due to its long name, to use powerpoint to manipulate the image and create a semi-circular text. It took longer than what I had hoped to get the hexagon shape right. You may like to save your own time by <strong>downloading my powerpoint template</strong> <a href="hexsticker.pptx">here</a> as a base to make your own.</p>
-<p>The dimensions were set, as it is in <code>hexSticker</code>, so that you can print it according to http://hexb.in/sticker.html.</p>
-</section>
-<section id="using-copyright-images-in-hex-stickers" class="level2">
-<h2 class="anchored" data-anchor-id="using-copyright-images-in-hex-stickers">Using copyright images in hex stickers</h2>
-<p>It’s worth noting about copyright of images since you may like to use images in your hex sticker. If you created the image on your own then the copyright in general will rest with you and there is no problem. If you borrow images from others, you may need to provide attribution depending on their license permission.</p>
-<p>In hex stickers, you don’t really have a room to add citations so you may like to use those that require no attribution. For free ones, you can find these using sites such as <a href="https://www.flickr.com/creativecommons/">flickr</a> under Public Domain works (CC0).</p>
-<p>It is a bit painful to consider copyright issues but it is important to give due credit, acknowledgement, attribution etc to the creator of the work. I’ve gone to great lengths at times to search for CC0 images or have paid for work. Afterall, creative work is valuable and should be properly rewarded.</p>
-<p><strong>UPDATE 22/06</strong> My sticker arrived! They are pretty good quality! I also got 16 which is more than the 10 sample they said on the website <i class="fa-solid fa-face-smile"></i></p>
-<p><img src="https://emitanaka.org/posts/hexsticker/hexsticker.gif" width="400px"></p>
-<p>These are from sticker mule. If you sign up with referral code <a href="https://www.stickermule.com/au/unlock?ref_id=9651301701">here</a>, both you and I will get some credit. You are, of course, welcomed to just go directly to the site to make the purchase.</p>
-<p><a href="https://www.stickermule.com/au/unlock?ref_id=9651301701&amp;utm_content=728x90&amp;utm_medium=embed&amp;utm_source=invite" target="_blank"><img alt="Custom Stickers, Die Cut Stickers, Bumper Stickers - Sticker Mule" border="0" height="90" src="https://emitanaka.org/posts/hexsticker/https:/res.cloudinary.com/print-bear/image/upload/v1531752798/banners/stickermule-invite-friends-large.jpg" width="728"></a></p>
-<p><strong>UPDATE 20/06/2021</strong> When ordering an R-package hex sticker from <a href="https://www.stickermule.com/">sticker mule</a>, I choose Stickers &gt; Die cut stickers &gt; Custom dimension of 1.73” x 1.99”.</p>
-
-
-</section>
-
- ]]></description>
-  <category>fun</category>
-  <guid>https://emitanaka.org/posts/hexsticker/hexsticker.html</guid>
-  <pubDate>Thu, 05 Apr 2018 14:00:00 GMT</pubDate>
-  <media:content url="https://emitanaka.org/posts/hexsticker/featured.png" medium="image" type="image/png" height="159" width="144"/>
-</item>
-</channel>
-</rss>
   <description><![CDATA[ 
 
 
