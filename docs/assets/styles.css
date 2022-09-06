@@ -1,1 +1,5 @@
-
+.navbar-brand > img {
+  max-height: 24px;
+  width: auto;
+  padding-right:; 4px;
+}

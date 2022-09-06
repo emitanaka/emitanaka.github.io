@@ -1,24 +1,5 @@
 [
   {
-    "listing": "/blog.html",
-    "items": [
-      "/posts/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
-      "/posts/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
-      "/posts/2022-06-30-academic-ranks/academic-ranks.html",
-      "/posts/2022-04-27-new-beginnings/new-beginnings.html",
-      "/posts/2022-03-12-maximum-potential/maximum-potential.html",
-      "/posts/2022-03-06-the-war/the-war.html",
-      "/posts/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
-      "/posts/2022-02-20-color-considerations/color-considerations.html",
-      "/posts/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
-      "/posts/2022-01-16-anime-titles/anime-titles.html",
-      "/posts/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
-      "/posts/2021-01-29-uml-seq-diag/uml-seq-diag.html",
-      "/posts/travel2019/travel2019.html",
-      "/posts/hexsticker/hexsticker.html"
-    ]
-  },
-  {
     "listing": "/research.html",
     "items": [
       "/projects/grammar/index.html",
@@ -40,6 +21,25 @@
       "/talks/2020-07-15-MonashBioinfoSeminar/MonashBioinfoSeminar2020.html",
       "/talks/2020-06-30-rladiesSSA2020/rladiesSSA2020.html",
       "/talks/2019-11-28-WOMBAT2019/WOMBAT2019.html"
+    ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
+      "/posts/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
+      "/posts/2022-06-30-academic-ranks/academic-ranks.html",
+      "/posts/2022-04-27-new-beginnings/new-beginnings.html",
+      "/posts/2022-03-12-maximum-potential/maximum-potential.html",
+      "/posts/2022-03-06-the-war/the-war.html",
+      "/posts/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
+      "/posts/2022-02-20-color-considerations/color-considerations.html",
+      "/posts/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
+      "/posts/2022-01-16-anime-titles/anime-titles.html",
+      "/posts/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
+      "/posts/2021-01-29-uml-seq-diag/uml-seq-diag.html",
+      "/posts/travel2019/travel2019.html",
+      "/posts/hexsticker/hexsticker.html"
     ]
   }
 ]
