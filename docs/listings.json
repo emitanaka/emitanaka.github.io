@@ -1,14 +1,14 @@
 [
   {
-    "listing": "/research.html",
+    "listing": "/research/index.html",
     "items": [
-      "/projects/grammar/index.html",
-      "/projects/edibble/index.html",
-      "/projects/deggust/index.html"
+      "/research/grammar/index.html",
+      "/research/edibble/index.html",
+      "/research/deggust/index.html"
     ]
   },
   {
-    "listing": "/talks.html",
+    "listing": "/talks/index.html",
     "items": [
       "/talks/2022-07-28-Ihaka/ihaka2022.html",
       "/talks/2022-06-29-SSACanberra/ssacanberra2022.html",
@@ -24,22 +24,23 @@
     ]
   },
   {
-    "listing": "/blog.html",
+    "listing": "/blog/index.html",
     "items": [
-      "/posts/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
-      "/posts/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
-      "/posts/2022-06-30-academic-ranks/academic-ranks.html",
-      "/posts/2022-04-27-new-beginnings/new-beginnings.html",
-      "/posts/2022-03-12-maximum-potential/maximum-potential.html",
-      "/posts/2022-03-06-the-war/the-war.html",
-      "/posts/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
-      "/posts/2022-02-20-color-considerations/color-considerations.html",
-      "/posts/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
-      "/posts/2022-01-16-anime-titles/anime-titles.html",
-      "/posts/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
-      "/posts/2021-01-29-uml-seq-diag/uml-seq-diag.html",
-      "/posts/travel2019/travel2019.html",
-      "/posts/hexsticker/hexsticker.html"
+      "/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
+      "/blog/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
+      "/blog/2022-06-30-academic-ranks/academic-ranks.html",
+      "/blog/2022-04-27-new-beginnings/new-beginnings.html",
+      "/blog/2022-03-12-maximum-potential/maximum-potential.html",
+      "/blog/2022-03-06-the-war/the-war.html",
+      "/blog/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
+      "/blog/2022-02-20-color-considerations/color-considerations.html",
+      "/blog/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
+      "/blog/2022-01-16-anime-titles/anime-titles.knit.html",
+      "/blog/2022-01-16-anime-titles/anime-titles.html",
+      "/blog/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
+      "/blog/2021-01-29-uml-seq-diag/uml-seq-diag.html",
+      "/blog/travel2019/travel2019.html",
+      "/blog/hexsticker/hexsticker.html"
     ]
   }
 ]

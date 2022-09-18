@@ -1,0 +1,14 @@
+{
+  "hash": "97f64bf7e6e037e188c760d2dd34586d",
+  "result": {
+    "markdown": "---\ntitle: \"**edibble**: An R-package to construct designs using the grammar of experimental designs\"\nauthor: \"Emi Tanaka\"\nimage: https://github.com/emitanaka/edibble/raw/master/man/figures/logo.png\n---\n\n\n\nYou can install this package from [CRAN](https://cran.r-project.org/web/packages/edibble/index.html):\n\n```r \ninstall.packages(\"edibble\")\n```\n\nAnd the development version on [GitHub](https://github.com/emitanaka/edibble):\n\n```r\nremotes::install_github(\"emitanaka/edibble\")\n```\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

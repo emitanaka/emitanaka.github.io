@@ -85,4 +85,3 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 </center>
 
 :::
-

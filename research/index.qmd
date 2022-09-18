@@ -1,0 +1,16 @@
+---
+title: "Research Projects"
+listing:
+  contents: .
+  sort: "date desc"
+  type: grid
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  fields: [image, title]
+  grid-columns: 3
+  image-align: left
+  image-height: "100%"
+page-layout: full
+title-block-banner: true
+---

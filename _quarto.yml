@@ -24,11 +24,11 @@ website:
       - text: CV
         href: cv.qmd
       - text: Research
-        href: research.qmd
+        href: research/index.qmd
       - text: Teaching
-        href: teaching.qmd
-      - talks.qmd
-      - blog.qmd
+        href: teaching/index.qmd
+      - talks/index.qmd
+      - blog/index.qmd
       - about.qmd
     right:
       - icon: twitter
