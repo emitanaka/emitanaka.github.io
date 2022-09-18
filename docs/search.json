@@ -28,6 +28,20 @@
     "text": "remotes::install_github(\"emitanaka/deggust\")"
   },
   {
+    "objectID": "teaching.html",
+    "href": "teaching.html",
+    "title": "Teaching + Workshop",
+    "section": "",
+    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%).\n\n\nWorkshop\n\n\nData Wrangling with R  Last hosted by the Statistical Society of Australia NSW Branch at 1/12/20\n\n\nData Visualisation with R  Last hosted by the Statistical Society of Australia VIC Branch at 11/11/20\n\n\nTidyverse and R Markdown Workshop  Last hosted by the International Biometrics Society Australasia Region at 1/12/19\n\n\nR Package & R Markdown Workshop  Last hosted by the Statistical Society of Australia VIC Branch at 19/11/19\n\n\nStatistical Methods for Omics Assisted Breeding  Last hosted by the Univeristy of Tokyo at 12/11/18\n\n\n\nData Visualisation in R \n\n\nIntroduction to ASReml-R \n\n\nFactor Analytic Model \n\n\nSpatial Analysis of Crop Field Trials \n\n\nExperimental Design"
+  },
+  {
+    "objectID": "talks.html",
+    "href": "talks.html",
+    "title": "Talks",
+    "section": "",
+    "text": "Host\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nJul 28, 2022\n\n\n\n\n\n\nHost\n\n\nIhaka lecture 2022 series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nJun 29, 2022\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia Canberra Branch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nMar 24, 2022\n\n\n\n\n\n\nHost\n\n\nToronto Data Workshop\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nMay 20, 2021\n\n\n\n\n\n\nHost\n\n\nQueensland Department of Agriculture and Fisheries Biometry Workshop\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n日本語\n\n\nVisual Inference\n\n\n\n\nMar 27, 2021\n\n\n\n\n\n\nHost\n\n\n17th Fukuoka R Meeting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n日本語\n\n\nExperimental Design\n\n\n\n\nJan 23, 2021\n\n\n\n\n\n\nHost\n\n\n89th Tokyo R Meeting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nNov 27, 2020\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia Webinar Series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSep 30, 2020\n\n\n\n\n\n\nHost\n\n\nYoung Statistician Workshop for the Statistical Society of Australia Western Australia Branch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJul 15, 2020\n\n\n\n\n\n\nHost\n\n\nMonash Bioinformatics Seminar\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSkill\n\n\nService\n\n\n\n\nJun 30, 2020\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia NSW, Canberra Branches, R-Ladies Canberra, R-Ladies Sydney.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLatent Variable Model\n\n\nMixed Model\n\n\n\n\nNov 29, 2019\n\n\n\n\n\n\nHost\n\n\nWOMBAT 2019.\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "talks/2020-09-30-SSAWA-YSW2020/SSAWA-YSW2020.html",
     "href": "talks/2020-09-30-SSAWA-YSW2020/SSAWA-YSW2020.html",
     "title": "What every young statistician should know: Developing your identity, networking and marketing",

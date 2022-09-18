@@ -46,7 +46,7 @@ df <- read_csv("../cv/data/talks.csv") %>%
 if(nrow(df)) {
   glue_data(df, '<li>{title}<div style="font-size:0.8em;"><i>{host}</i></div><div class="date">{date} {url}</div></li>')
 } else {
-  cat("I have no advertised upcoming talks. Please feel free to [invite me](mailto:emi.tanaka@monash.edu) for a talk if I do something of your interest. You can find some of my past talks [here](https://emitanaka.org/talks.html).")
+  cat("I have no advertised upcoming talks. Please feel free to [invite me](mailto:emi.tanaka@monash.edu) for a talk if I do something of your interest. You can find some of my past talks [here](https://emitanaka.org/talks/).")
 }
 ```
 </ul>
