@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.0.38">
+<meta name="generator" content="quarto-1.1.132">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,10 +11,15 @@
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
 </style>
 
 
@@ -78,10 +83,14 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <a class="navbar-brand" href="./index.html">
-    <img src="./images/avatar.png" alt="">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/avatar.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">emi tanaka</span>
-  </a>
+    </a>
+  </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -186,6 +195,13 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="upcoming-talks"><i class="fas fa-comment"></i> Upcoming talks</h2>
 <ul>
 <p>I have no advertised upcoming talks. Please feel free to <a href="mailto:emi.tanaka@monash.edu">invite me</a> for a talk if I do something of your interest. You can find some of my past talks <a href="https://emitanaka.org/talks/">here</a>.</p>
+</ul>
+</section>
+<section id="upcoming-workshops" class="level2">
+<h2 class="anchored" data-anchor-id="upcoming-workshops"><i class="fas fa-comment"></i> Upcoming workshops</h2>
+<ul>
+<li><strong>Data Visualisation with R</strong>, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST <a href="https://aasc2022.netlify.app/news/workshop-datavis/"><i class="fas fa-info-circle"></i></a> <a href="https://aasc2022.netlify.app/registration/"><i class="fas fa-user-plus"></i></a></li>
+<li><strong>Effective Data Visualisation with R</strong>, online Tue 6th Dec 9AM-12PM AEST <a href="https://numbats.github.io/WOMBAT2022/tutorial/emi.html"><i class="fas fa-info-circle"></i></a> <a href="https://www.trybooking.com/events/landing?eid=958263&amp;"><i class="fas fa-user-plus"></i></a></li>
 </ul>
 </section>
 <section id="statistical-society-of-australia" class="level2">
@@ -294,7 +310,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
