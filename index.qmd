@@ -51,6 +51,8 @@ if(nrow(df)) {
 ```
 </ul>
 
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sabbatical approved 😊 It will be my first time in Canada so please say hi if you see me 👋 <a href="https://t.co/J3Ypadoij6">pic.twitter.com/J3Ypadoij6</a></p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1575010066545057794?ref_src=twsrc%5Etfw">September 28, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 ## <i class="fas fa-comment"></i> Upcoming workshops
 
 * **Data Visualisation with R**, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST [<i class="fas fa-info-circle"></i>](https://aasc2022.netlify.app/news/workshop-datavis/) [<i class="fas fa-user-plus"></i>](https://aasc2022.netlify.app/registration/)
