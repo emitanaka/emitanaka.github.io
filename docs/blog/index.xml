@@ -12,7 +12,141 @@
 statistics, data science, R and academia.
 </description>
 <generator>quarto-1.0.38</generator>
-<lastBuildDate>Fri, 29 Jul 2022 14:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 14 Oct 2022 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>Affective colors in data visualisation</title>
+  <dc:creator>Emi Tanaka</dc:creator>
+  <link>https://emitanaka.org/blog/2022-10-15-affective-colors/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p><span class="citation" data-cites="Bartram2017-nd">Bartram, Patra, and Stone (2017)</span> conducted an experiment where participants were required to select 5 colors from a pool of available colors to make a <strong>5 color palette</strong> for a <strong>bar plot</strong> or <strong>map</strong> on a white background based on a set of emotive words, specifically “calm”, “disturbing”, “exciting”, “negative”, “playful”, “positive”, “serious” and “trustworthy”. The result of this experiment presented in their paper is shown in table below.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>affect</th>
+<th>frequency plot</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>calm</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/calm.png" width="40%"></td>
+</tr>
+<tr class="even">
+<td>disturbing</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/disturbing.png" width="40%"></td>
+</tr>
+<tr class="odd">
+<td>exciting</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/exciting.png" width="40%"></td>
+</tr>
+<tr class="even">
+<td>negative</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/negative.png" width="40%"></td>
+</tr>
+<tr class="odd">
+<td>playful</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/playful.png" width="40%"></td>
+</tr>
+<tr class="even">
+<td>positive</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/positive.png" width="40%"></td>
+</tr>
+<tr class="odd">
+<td>serious</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/serious.png" width="40%"></td>
+</tr>
+<tr class="even">
+<td>trustworthy</td>
+<td><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/trustworthy.png" width="40%"></td>
+</tr>
+</tbody>
+</table>
+<p>The paper is quite interesting but I actually couldn’t find the list of colors for each affect! So below is my simple analysis where I read in the image of the frequency plot, convert the colors to hex colors and remove white background to get the frequency of the colors. I plot then the top 10 colors for each affect.</p>
+<div class="cell" data-hash="index_cache/html/setup_a7660e52d989f61dcf03b8079f06cac3">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(png)</span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;"># reads it as an 3d array where first two dimensions are</span></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;"># the location on the image </span></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;"># last dimension contains 4 columns which are r, g, b, alpha</span></span>
+<span id="cb1-6">imgs <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">list</span>(<span class="at" style="color: #657422;">calm =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"calm.png"</span>),</span>
+<span id="cb1-7">             <span class="at" style="color: #657422;">disturbing =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"disturbing.png"</span>),</span>
+<span id="cb1-8">             <span class="at" style="color: #657422;">exciting =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"exciting.png"</span>),</span>
+<span id="cb1-9">             <span class="at" style="color: #657422;">negative =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"negative.png"</span>),</span>
+<span id="cb1-10">             <span class="at" style="color: #657422;">playful =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"playful.png"</span>),</span>
+<span id="cb1-11">             <span class="at" style="color: #657422;">positive =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"positive.png"</span>),</span>
+<span id="cb1-12">             <span class="at" style="color: #657422;">serious =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"serious.png"</span>),</span>
+<span id="cb1-13">             <span class="at" style="color: #657422;">trustworthy =</span> <span class="fu" style="color: #4758AB;">readPNG</span>(<span class="st" style="color: #20794D;">"trustworthy.png"</span>))</span>
+<span id="cb1-14"></span>
+<span id="cb1-15">dims <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">map</span>(imgs, dim)</span>
+<span id="cb1-16"><span class="co" style="color: #5E5E5E;"># convert array to a matrix</span></span>
+<span id="cb1-17">mats <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">imap</span>(imgs, <span class="sc" style="color: #5E5E5E;">~</span><span class="fu" style="color: #4758AB;">matrix</span>(.x, <span class="fu" style="color: #4758AB;">prod</span>(dims[[.y]][<span class="dv" style="color: #AD0000;">1</span><span class="sc" style="color: #5E5E5E;">:</span><span class="dv" style="color: #AD0000;">2</span>]), dims[[.y]][<span class="dv" style="color: #AD0000;">3</span>]))</span>
+<span id="cb1-18"></span>
+<span id="cb1-19"><span class="co" style="color: #5E5E5E;"># get the frequency of colors as a data frame</span></span>
+<span id="cb1-20">colors <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">imap_dfr</span>(mats, <span class="sc" style="color: #5E5E5E;">~</span>{</span>
+<span id="cb1-21">                  res <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">rgb</span>(.x[, <span class="dv" style="color: #AD0000;">1</span>], .x[, <span class="dv" style="color: #AD0000;">2</span>], .x[, <span class="dv" style="color: #AD0000;">3</span>], .x[, <span class="dv" style="color: #AD0000;">4</span>])</span>
+<span id="cb1-22">                  <span class="fu" style="color: #4758AB;">data.frame</span>(<span class="at" style="color: #657422;">color =</span> res[res<span class="sc" style="color: #5E5E5E;">!=</span><span class="st" style="color: #20794D;">"#FFFFFFFF"</span>]) </span>
+<span id="cb1-23">                }, <span class="at" style="color: #657422;">.id =</span> <span class="st" style="color: #20794D;">"affect"</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb1-24">  <span class="fu" style="color: #4758AB;">count</span>(affect, color) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb1-25">  <span class="fu" style="color: #4758AB;">group_by</span>(affect) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb1-26">  <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">prop =</span> n <span class="sc" style="color: #5E5E5E;">/</span> <span class="fu" style="color: #4758AB;">sum</span>(n))</span></code></pre></div>
+</div>
+<div class="cell" data-hash="index_cache/html/plot-colors_6b0e9cd9f495bba243731658d244e76b">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;">walk</span>(<span class="fu" style="color: #4758AB;">names</span>(imgs), <span class="sc" style="color: #5E5E5E;">~</span>{</span>
+<span id="cb2-2">  g <span class="ot" style="color: #003B4F;">&lt;-</span> colors <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb2-3">    <span class="fu" style="color: #4758AB;">filter</span>(affect <span class="sc" style="color: #5E5E5E;">==</span> .x) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb2-4">    <span class="fu" style="color: #4758AB;">slice_max</span>(prop, <span class="at" style="color: #657422;">n =</span> <span class="dv" style="color: #AD0000;">10</span>) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb2-5">    <span class="fu" style="color: #4758AB;">mutate</span>(<span class="at" style="color: #657422;">color =</span> <span class="fu" style="color: #4758AB;">fct_reorder</span>(color, prop)) <span class="sc" style="color: #5E5E5E;">%&gt;%</span> </span>
+<span id="cb2-6">    <span class="fu" style="color: #4758AB;">ggplot</span>(<span class="fu" style="color: #4758AB;">aes</span>(prop, color)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb2-7">      <span class="fu" style="color: #4758AB;">geom_col</span>(<span class="fu" style="color: #4758AB;">aes</span>(<span class="at" style="color: #657422;">fill =</span> <span class="fu" style="color: #4758AB;">I</span>(color)), <span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"black"</span>) <span class="sc" style="color: #5E5E5E;">+</span> </span>
+<span id="cb2-8">      <span class="fu" style="color: #4758AB;">labs</span>(<span class="at" style="color: #657422;">title =</span> .x, <span class="at" style="color: #657422;">x =</span> <span class="st" style="color: #20794D;">"Proportion"</span>, <span class="at" style="color: #657422;">y =</span> <span class="st" style="color: #20794D;">""</span>) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb2-9">      <span class="fu" style="color: #4758AB;">scale_x_continuous</span>(<span class="at" style="color: #657422;">expand =</span> <span class="fu" style="color: #4758AB;">c</span>(<span class="fl" style="color: #AD0000;">0.01</span>, <span class="dv" style="color: #AD0000;">0</span>)) <span class="sc" style="color: #5E5E5E;">+</span></span>
+<span id="cb2-10">      <span class="fu" style="color: #4758AB;">theme</span>(<span class="at" style="color: #657422;">text =</span> <span class="fu" style="color: #4758AB;">element_text</span>(<span class="at" style="color: #657422;">size =</span> <span class="dv" style="color: #AD0000;">14</span>),</span>
+<span id="cb2-11">            <span class="at" style="color: #657422;">panel.background =</span> <span class="fu" style="color: #4758AB;">element_blank</span>(),</span>
+<span id="cb2-12">            <span class="at" style="color: #657422;">panel.grid.major.x =</span> <span class="fu" style="color: #4758AB;">element_line</span>(<span class="at" style="color: #657422;">color =</span> <span class="st" style="color: #20794D;">"grey"</span>, <span class="at" style="color: #657422;">linetype =</span> <span class="st" style="color: #20794D;">"dashed"</span>),</span>
+<span id="cb2-13">            <span class="at" style="color: #657422;">axis.ticks.length =</span> <span class="fu" style="color: #4758AB;">unit</span>(<span class="dv" style="color: #AD0000;">0</span>, <span class="st" style="color: #20794D;">"mm"</span>))</span>
+<span id="cb2-14">  <span class="fu" style="color: #4758AB;">print</span>(g)</span>
+<span id="cb2-15">})</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="https://emitanaka.org/blog/2022-10-15-affective-colors/index_files/figure-html/plot-colors-8.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Bartram2017-nd" class="csl-entry">
+Bartram, Lyn, Abhisekh Patra, and Maureen Stone. 2017. <span>“Affective Color in Visualization.”</span> In <em>Proceedings of the 2017 <span>CHI</span> Conference on Human Factors in Computing Systems</em>, 1364–74. CHI ’17. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/3025453.3026041">https://doi.org/10.1145/3025453.3026041</a>.
+</div>
+</div></section></div> ]]></description>
+  <category>color</category>
+  <guid>https://emitanaka.org/blog/2022-10-15-affective-colors/index.html</guid>
+  <pubDate>Fri, 14 Oct 2022 13:00:00 GMT</pubDate>
+</item>
 <item>
   <title>edibble experimental design with sensory discrimination tests</title>
   <dc:creator>Emi Tanaka</dc:creator>

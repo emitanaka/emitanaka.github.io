@@ -43,6 +43,7 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/2022-10-15-affective-colors/index.html",
       "/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
       "/blog/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
       "/blog/2022-06-30-academic-ranks/academic-ranks.html",
