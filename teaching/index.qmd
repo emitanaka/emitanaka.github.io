@@ -1,7 +1,5 @@
 ---
-title: "Teaching + Workshop"
-description: |
-  This section contains the list of my workshops and teaching.
+title: "Teaching"
 page-layout: article
 title-block-banner: true
 ---
@@ -13,10 +11,30 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE)
 ```
 
+```{css, echo = FALSE}
+div.callout-important.callout {
+  border-left-color: #ad0059;
+  background-color: #f5e1eb;
+}
 
-<br>
+.callout-caption-container {
+  color: #ad0059;
+  padding-bottom: 10px;
+}
+```
 
-# Teaching
+
+::: {.callout-important icon=false appearance="simple"}
+
+## <i class="fas fa-poll"></i> Do you use my teaching materials?
+
+If yes, it would be awesome if you could fill out [this very short survey](https://docs.google.com/forms/d/e/1FAIpQLSdVnpDphyWnBeMw21Rs8vMySi5RGYN7kQh_VHU6rT83t8CDbA/viewform?usp=sf_link) for me to get statistics of its use!
+
+
+:::
+
+
+## Teaching
 
 At Monash University, I teach or develop:
 
@@ -34,7 +52,21 @@ In the past I have taught:
 and tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for *MATH1013 Mathematical Modelling* (50%).
 
 
-# Workshop
+## Workshop
+
+::: {.callout-important icon=false appearance="simple"}
+
+## <i class="fas fa-chalkboard-teacher"></i> Upcoming workshops
+
+
+* **Data Visualisation with R**, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST [<i class="fas fa-info-circle"></i>](https://aasc2022.netlify.app/news/workshop-datavis/) [<i class="fas fa-user-plus"></i>](https://aasc2022.netlify.app/registration/)
+* **Effective Data Visualisation with R**, online Tue 6th Dec 9AM-12PM AEST [<i class="fas fa-info-circle"></i>](https://numbats.github.io/WOMBAT2022/tutorial/emi.html) [<i class="fas fa-user-plus"></i>](https://www.trybooking.com/events/landing?eid=958263&)
+
+*All proceeds go to supporting my research activities.*
+
+:::
+
+
 
 <ul>
 ```{r, results="asis"}

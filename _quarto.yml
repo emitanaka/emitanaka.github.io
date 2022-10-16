@@ -26,7 +26,7 @@ website:
       - text: Research
         href: research/index.qmd
       - text: Teaching
-        href: teaching.qmd
+        href: teaching/index.qmd
       - talks/index.qmd
       - blog/index.qmd
       - about.qmd

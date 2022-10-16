@@ -506,9 +506,9 @@
   {
     "objectID": "teaching/index.html",
     "href": "teaching/index.html",
-    "title": "Teaching + Workshop",
+    "title": "Teaching",
     "section": "",
-    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%).\n\n\nWorkshop\n\n\nData Wrangling with R  Last hosted by the Statistical Society of Australia NSW Branch at 1/12/20\n\n\nData Visualisation with R  Last hosted by the Statistical Society of Australia VIC Branch at 11/11/20\n\n\nTidyverse and R Markdown Workshop  Last hosted by the International Biometrics Society Australasia Region at 1/12/19\n\n\nR Package & R Markdown Workshop  Last hosted by the Statistical Society of Australia VIC Branch at 19/11/19\n\n\nStatistical Methods for Omics Assisted Breeding  Last hosted by the Univeristy of Tokyo at 12/11/18\n\n\n\nData Visualisation in R \n\n\nIntroduction to ASReml-R \n\n\nFactor Analytic Model \n\n\nSpatial Analysis of Crop Field Trials \n\n\nExperimental Design"
+    "text": "At Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%)."
   },
   {
     "objectID": "cv.html",
@@ -565,5 +565,19 @@
     "title": "News",
     "section": " Hex stickers",
     "text": "Hex stickers\nI have now hex stickers for the edibble and deggust R packages. If you see me in-person, feel free to ask for it!\n\n\nIf you ever see me in-person, feel free to ask me for hex stickers for my R packages ☺️ pic.twitter.com/4VXdv091IM\n\n— Emi Tanaka 🌾 (@statsgen) July 2, 2021"
+  },
+  {
+    "objectID": "teaching/index.html#workshop",
+    "href": "teaching/index.html#workshop",
+    "title": "Teaching",
+    "section": "Workshop",
+    "text": "Workshop\n\n\n\n\n\n\n Upcoming workshops\n\n\n\n\nData Visualisation with R, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST  \nEffective Data Visualisation with R, online Tue 6th Dec 9AM-12PM AEST  \n\nAll proceeds go to supporting my research activities.\n\n\n\n\nData Wrangling with R  Last hosted by the Statistical Society of Australia NSW Branch at 1/12/20\n\n\nData Visualisation with R  Last hosted by the Statistical Society of Australia VIC Branch at 11/11/20\n\n\nTidyverse and R Markdown Workshop  Last hosted by the International Biometrics Society Australasia Region at 1/12/19\n\n\nR Package & R Markdown Workshop  Last hosted by the Statistical Society of Australia VIC Branch at 19/11/19\n\n\nStatistical Methods for Omics Assisted Breeding  Last hosted by the Univeristy of Tokyo at 12/11/18\n\n\n\nData Visualisation in R \n\n\nIntroduction to ASReml-R \n\n\nFactor Analytic Model \n\n\nSpatial Analysis of Crop Field Trials \n\n\nExperimental Design"
+  },
+  {
+    "objectID": "teaching/index.html#teaching",
+    "href": "teaching/index.html#teaching",
+    "title": "Teaching",
+    "section": "Teaching",
+    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%)."
   }
 ]
