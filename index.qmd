@@ -5,11 +5,15 @@ title-block-banner: true
 format:
   html:
     css: assets/index.css
+    page-layout: article
 ---
 
 
 
-::: {.main style="width:60%; float: left;"}
+::: grid
+
+
+::: {.g-col-12 .g-col-md-6}
 
 ## <i class="fas fa-newspaper"></i> Recent Publications
 
@@ -58,6 +62,8 @@ if(nrow(df)) {
 * **Data Visualisation with R**, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST [<i class="fas fa-info-circle"></i>](https://aasc2022.netlify.app/news/workshop-datavis/) [<i class="fas fa-user-plus"></i>](https://aasc2022.netlify.app/registration/)
 * **Effective Data Visualisation with R**, online Tue 6th Dec 9AM-12PM AEST [<i class="fas fa-info-circle"></i>](https://numbats.github.io/WOMBAT2022/tutorial/emi.html) [<i class="fas fa-user-plus"></i>](https://www.trybooking.com/events/landing?eid=958263&)
 
+*All proceeds go to supporting my research activities.*
+
 
 ## <i class="fas fa-users"></i> Statistical Society of Australia
 
@@ -65,7 +71,7 @@ if(nrow(df)) {
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to everyone who attended our AGM and March seminar event last week. We have the pleasure of introducing the SSA Vic Council of 2022 🎉 🎉 🎉 <a href="https://t.co/nrk3nR8Ir1">pic.twitter.com/nrk3nR8Ir1</a></p>&mdash; SSAVictoria (@SsaVictoria) <a href="https://twitter.com/SsaVictoria/status/1510851450645417994?ref_src=twsrc%5Etfw">April 4, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-<i class="fas fa-info-circle"></i> For more information see https://statsocaus.github.io/vic/
+<i class="fas fa-info-circle"></i> For more information see [https://statsocaus.github.io/vic/](https://statsocaus.github.io/vic/)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/IkLIcipBk5Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -78,11 +84,9 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">If you ever see me in-person, feel free to ask me for hex stickers for my R packages ☺️ <a href="https://t.co/4VXdv091IM">pic.twitter.com/4VXdv091IM</a></p>&mdash; Emi Tanaka 🌾 (@statsgen) <a href="https://twitter.com/statsgen/status/1410842537485471744?ref_src=twsrc%5Etfw">July 2, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-
-
 :::
 
-::: {style="width:40%; float: right;padding-left: 20px;"}
+::: {.g-col-12 .g-col-md-4}
 
 <a class="twitter-timeline" data-height="600" data-width="300"  href="https://twitter.com/statsgen?ref_src=twsrc%5Etfw">Tweets by statsgen</a>
 
@@ -93,3 +97,9 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 </center>
 
 :::
+
+
+:::
+
+
+
