@@ -44,10 +44,13 @@ fs::dir_copy("../cv/css/", "assets/cv/css", overwrite = TRUE)
 fs::dir_copy("../cv/js/", "assets/cv/js", overwrite = TRUE)
 fs::file_copy("../cv/template.html", "assets/cv/", overwrite = TRUE)
 options(knitr.duplicate.label = "allow")
-rmarkdown::render("../cv/cv.Rmd", 
-                  output_file = "../cv/cv.html",
-                  knit_root_dir = "../cv/")
-pagedown::chrome_print("../cv/cv.html", 
-                       output = "cv.pdf")
+mdate <- as.Date(file.info("cv.pdf")$mtime)
+if(mdate!=Sys.Date()) {
+  rmarkdown::render("../cv/cv.Rmd", 
+                    output_file = "../cv/cv.html",
+                    knit_root_dir = "../cv/")
+  pagedown::chrome_print("../cv/cv.html", 
+                         output = "cv.pdf")
+}
 ```
 

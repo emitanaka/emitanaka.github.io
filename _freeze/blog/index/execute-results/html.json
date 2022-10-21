@@ -1,0 +1,14 @@
+{
+  "hash": "05de7bd3846640ae80e2d03dd9134cef",
+  "result": {
+    "markdown": "---\ntitle: \"Blog\"\nlisting:\n  contents: .\n  sort: \"date desc\"\n  type: default\n  categories: true\n  sort-ui: false\n  filter-ui: false\n  feed: true\npage-layout: full\ntitle-block-banner: true\nmargin-header: ../subscribe.html\nengine: knitr\n---\n\n::: {.cell}\n<style type=\"text/css\">\n.quarto-title-meta {\n  display: none!important;\n}\n</style>\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

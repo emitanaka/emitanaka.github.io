@@ -10,6 +10,15 @@ listing:
   feed: true
 page-layout: full
 title-block-banner: true
+margin-header: ../subscribe.html
+engine: knitr
 ---
 
+
+
+```{css, echo = FALSE}
+.quarto-title-meta {
+  display: none!important;
+}
+```
 

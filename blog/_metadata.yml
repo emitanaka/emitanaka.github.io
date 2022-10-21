@@ -6,3 +6,9 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: false
+
+format:
+  html:
+    template-partials:
+      - ../title-metadata.html
+

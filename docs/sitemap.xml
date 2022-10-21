@@ -2,158 +2,150 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://emitanaka.org/research/grammar/index.html</loc>
-    <lastmod>2022-09-18T23:11:51.864Z</lastmod>
+    <lastmod>2022-10-21T23:39:56.409Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/research/edibble/index.html</loc>
-    <lastmod>2022-09-18T23:11:52.843Z</lastmod>
+    <lastmod>2022-10-21T23:39:57.287Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/research/index.html</loc>
-    <lastmod>2022-10-16T06:53:06.542Z</lastmod>
+    <lastmod>2022-10-21T23:44:58.392Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/research/deggust/index.html</loc>
-    <lastmod>2022-09-18T23:11:53.981Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/teaching.html</loc>
-    <lastmod>2022-10-16T06:53:12.651Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/talks.html</loc>
-    <lastmod>2022-09-18T23:12:05.488Z</lastmod>
+    <lastmod>2022-10-21T23:39:58.362Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2020-09-30-SSAWA-YSW2020/SSAWA-YSW2020.html</loc>
-    <lastmod>2022-09-18T23:12:06.041Z</lastmod>
+    <lastmod>2022-10-21T23:39:58.799Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2019-11-28-WOMBAT2019/WOMBAT2019.html</loc>
-    <lastmod>2022-09-18T23:12:06.666Z</lastmod>
+    <lastmod>2022-10-21T23:39:59.346Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2022-07-28-Ihaka/ihaka2022.html</loc>
-    <lastmod>2022-09-18T23:12:07.265Z</lastmod>
+    <lastmod>2022-10-21T23:39:59.892Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2021-05-19-DAF/DAF2021.html</loc>
-    <lastmod>2022-09-18T23:12:07.767Z</lastmod>
+    <lastmod>2022-10-21T23:40:00.452Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2021-03-27-fukuokar2021/fukuokar2021.html</loc>
-    <lastmod>2022-09-18T23:12:08.380Z</lastmod>
+    <lastmod>2022-10-21T23:40:00.929Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2022-06-29-SSACanberra/ssacanberra2022.html</loc>
-    <lastmod>2022-09-18T23:12:08.993Z</lastmod>
+    <lastmod>2022-10-21T23:40:01.536Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/index.html</loc>
-    <lastmod>2022-10-16T07:04:35.104Z</lastmod>
+    <lastmod>2022-10-21T23:40:02.371Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2021-01-23-tokyor2021/tokyor2021.html</loc>
-    <lastmod>2022-09-18T23:12:10.057Z</lastmod>
+    <lastmod>2022-10-21T23:40:02.942Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2020-11-27-SSAWebinar2020/ssawebinar2020.html</loc>
-    <lastmod>2022-09-18T23:12:10.545Z</lastmod>
+    <lastmod>2022-10-21T23:40:03.478Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2020-07-15-MonashBioinfoSeminar/MonashBioinfoSeminar2020.html</loc>
-    <lastmod>2022-09-18T23:12:11.026Z</lastmod>
+    <lastmod>2022-10-21T23:40:03.931Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2022-03-24-toronto2022/toronto2022.html</loc>
-    <lastmod>2022-09-18T23:12:11.488Z</lastmod>
+    <lastmod>2022-10-21T23:40:04.444Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/talks/2020-06-30-rladiesSSA2020/rladiesSSA2020.html</loc>
-    <lastmod>2022-09-18T23:12:11.963Z</lastmod>
+    <lastmod>2022-10-21T23:40:05.018Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/index.html</loc>
-    <lastmod>2022-10-16T07:22:19.871Z</lastmod>
+    <lastmod>2022-10-21T23:45:09.284Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2021-01-29-uml-seq-diag/uml-seq-diag.html</loc>
-    <lastmod>2022-09-18T23:12:30.446Z</lastmod>
+    <lastmod>2022-10-21T23:40:29.357Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html</loc>
-    <lastmod>2022-09-18T23:12:31.358Z</lastmod>
+    <lastmod>2022-10-21T23:40:30.122Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-03-12-maximum-potential/maximum-potential.html</loc>
-    <lastmod>2022-09-18T23:12:32.165Z</lastmod>
+    <lastmod>2022-10-21T23:40:30.920Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-04-27-new-beginnings/new-beginnings.html</loc>
-    <lastmod>2022-09-18T23:12:32.849Z</lastmod>
+    <lastmod>2022-10-21T23:40:31.527Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-02-20-color-considerations/color-considerations.html</loc>
-    <lastmod>2022-09-18T23:12:33.581Z</lastmod>
+    <lastmod>2022-10-21T23:40:32.232Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html</loc>
-    <lastmod>2022-09-18T23:12:34.432Z</lastmod>
+    <lastmod>2022-10-21T23:40:33.116Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-01-16-anime-titles/anime-titles.knit.html</loc>
-    <lastmod>2022-09-18T23:12:35.161Z</lastmod>
+    <lastmod>2022-10-21T23:40:33.788Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-01-16-anime-titles/anime-titles.html</loc>
-    <lastmod>2022-09-18T23:12:35.997Z</lastmod>
+    <lastmod>2022-10-21T23:40:34.450Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/index.html</loc>
-    <lastmod>2022-10-16T07:05:47.339Z</lastmod>
+    <lastmod>2022-10-21T23:44:17.176Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html</loc>
-    <lastmod>2022-09-18T23:12:38.670Z</lastmod>
+    <lastmod>2022-10-21T23:40:36.600Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-03-06-the-war/the-war.html</loc>
-    <lastmod>2022-09-18T23:12:39.125Z</lastmod>
+    <lastmod>2022-10-21T23:40:36.969Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html</loc>
-    <lastmod>2022-09-18T23:12:39.922Z</lastmod>
+    <lastmod>2022-10-21T23:40:37.631Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-06-30-academic-ranks/academic-ranks.html</loc>
-    <lastmod>2022-09-18T23:12:40.354Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html</loc>
-    <lastmod>2022-09-18T23:12:41.306Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/blog/hexsticker/hexsticker.html</loc>
-    <lastmod>2022-09-18T23:12:41.791Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/blog/travel2019/travel2019.html</loc>
-    <lastmod>2022-09-18T23:12:42.876Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/about.html</loc>
-    <lastmod>2022-09-18T23:12:54.514Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/teaching/index.html</loc>
-    <lastmod>2022-10-16T07:56:17.382Z</lastmod>
-  </url>
-  <url>
-    <loc>https://emitanaka.org/cv.html</loc>
-    <lastmod>2022-10-16T06:53:01.402Z</lastmod>
+    <lastmod>2022-10-21T23:40:37.970Z</lastmod>
   </url>
   <url>
     <loc>https://emitanaka.org/blog/2022-10-15-affective-colors/index.html</loc>
-    <lastmod>2022-10-15T08:52:37.189Z</lastmod>
+    <lastmod>2022-10-21T23:41:55.999Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html</loc>
+    <lastmod>2022-10-21T23:42:34.489Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/blog/hexsticker/hexsticker.html</loc>
+    <lastmod>2022-10-21T23:40:39.741Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/blog/travel2019/travel2019.html</loc>
+    <lastmod>2022-10-21T23:40:40.504Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/about.html</loc>
+    <lastmod>2022-10-21T23:44:51.309Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/teaching/index.html</loc>
+    <lastmod>2022-10-21T23:44:52.884Z</lastmod>
+  </url>
+  <url>
+    <loc>https://emitanaka.org/cv.html</loc>
+    <lastmod>2022-10-21T23:45:01.302Z</lastmod>
   </url>
 </urlset>

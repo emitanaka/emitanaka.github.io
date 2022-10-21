@@ -28,20 +28,6 @@
     "text": "remotes::install_github(\"emitanaka/deggust\")"
   },
   {
-    "objectID": "teaching.html",
-    "href": "teaching.html",
-    "title": "Teaching + Workshop",
-    "section": "",
-    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%).\n\n\nWorkshop\n\n\nData Wrangling with R  Last hosted by the Statistical Society of Australia NSW Branch at 1/12/20\n\n\nData Visualisation with R  Last hosted by the Statistical Society of Australia VIC Branch at 11/11/20\n\n\nTidyverse and R Markdown Workshop  Last hosted by the International Biometrics Society Australasia Region at 1/12/19\n\n\nR Package & R Markdown Workshop  Last hosted by the Statistical Society of Australia VIC Branch at 19/11/19\n\n\nStatistical Methods for Omics Assisted Breeding  Last hosted by the Univeristy of Tokyo at 12/11/18\n\n\n\nData Visualisation in R \n\n\nIntroduction to ASReml-R \n\n\nFactor Analytic Model \n\n\nSpatial Analysis of Crop Field Trials \n\n\nExperimental Design"
-  },
-  {
-    "objectID": "talks.html",
-    "href": "talks.html",
-    "title": "Talks",
-    "section": "",
-    "text": "Host\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nJul 28, 2022\n\n\n\n\n\n\nHost\n\n\nIhaka lecture 2022 series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nJun 29, 2022\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia Canberra Branch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nMar 24, 2022\n\n\n\n\n\n\nHost\n\n\nToronto Data Workshop\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nMay 20, 2021\n\n\n\n\n\n\nHost\n\n\nQueensland Department of Agriculture and Fisheries Biometry Workshop\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n日本語\n\n\nVisual Inference\n\n\n\n\nMar 27, 2021\n\n\n\n\n\n\nHost\n\n\n17th Fukuoka R Meeting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n日本語\n\n\nExperimental Design\n\n\n\n\nJan 23, 2021\n\n\n\n\n\n\nHost\n\n\n89th Tokyo R Meeting.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExperimental Design\n\n\n\n\nNov 27, 2020\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia Webinar Series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSep 30, 2020\n\n\n\n\n\n\nHost\n\n\nYoung Statistician Workshop for the Statistical Society of Australia Western Australia Branch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nJul 15, 2020\n\n\n\n\n\n\nHost\n\n\nMonash Bioinformatics Seminar\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSkill\n\n\nService\n\n\n\n\nJun 30, 2020\n\n\n\n\n\n\nHost\n\n\nStatistical Society of Australia NSW, Canberra Branches, R-Ladies Canberra, R-Ladies Sydney.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLatent Variable Model\n\n\nMixed Model\n\n\n\n\nNov 29, 2019\n\n\n\n\n\n\nHost\n\n\nWOMBAT 2019.\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "talks/2020-09-30-SSAWA-YSW2020/SSAWA-YSW2020.html",
     "href": "talks/2020-09-30-SSAWA-YSW2020/SSAWA-YSW2020.html",
     "title": "What every young statistician should know: Developing your identity, networking and marketing",
@@ -319,7 +305,7 @@
     "href": "blog/index.html",
     "title": "Blog",
     "section": "",
-    "text": "color\n\n\n\n\nThis post extracts the colors and its frequency distribution from an experiment where participants were required to make a five color palette based on certain set of emotions.\n\n\n\n\n\n\nOct 15, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nR\n\n\nexperimental design\n\n\nedibble\n\n\n\n\nCan Australians distinguish the true taste of Vegemite? Designing an experiment with sensory discrimination test using the edibble package.\n\n\n\n\n\n\nJul 30, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto\n\n\nxaringan\n\n\nrevealjs\n\n\nremarkjs\n\n\n\n\nThis post shows a feature in xaringan slides (powered by remark.js) that is roughly equivalent in Quarto revealjs slides.\n\n\n\n\n\n\nJul 11, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDifferent countries adopt a different system for academic ranks. This posts show a mapping of academic ranks across Australian, NZ, UK & North American systems.\n\n\n\n\n\n\nJun 30, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlife\n\n\n\n\n🎉\n\n\n\n\n\n\nApr 27, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlife\n\n\noutlier\n\n\n\n\nIt’s a tragedy when those who have talent don’t get to fully express it because of the environment.\n\n\n\n\n\n\nMar 12, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlife\n\n\n\n\nWhat good is in a war?\n\n\n\n\n\n\nMar 6, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nR\n\n\nsimulate\n\n\n\n\nA proof of concept of parametric simulation framework to generate complex multivariate and multilevel data\n\n\n\n\n\n\nFeb 24, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nR\n\n\ncolor\n\n\n\n\nChecking the color blind friendliness of a number of qualitative palettes.\n\n\n\n\n\n\nFeb 20, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nR\n\n\nprogramming\n\n\n\n\nChallenges and solutions for creating functions to manipulate arrays in R when the number of dimensions is unknown.\n\n\n\n\n\n\nJan 18, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nanime\n\n\nR\n\n\n\n\nA quick exploratory analysis on the length of anime titles.\n\n\n\n\n\n\nJan 16, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nanime\n\n\nR\n\n\n\n\nA quick exploratory analysis on the length of anime titles.\n\n\n\n\n\n\nJan 16, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexperimental design\n\n\nR\n\n\n\n\nYour analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved before the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.\n\n\n\n\n\n\nFeb 3, 2021\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvisualisation\n\n\ndiagram\n\n\n\n\nSearch for the way to draw a UML sequence diagram.\n\n\n\n\n\n\nJan 29, 2021\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvisualisation\n\n\ninteractive\n\n\n\n\nMaking an interactive schedule heat map with interactive twitter card display.\n\n\n\n\n\n\nMar 26, 2019\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\nfun\n\n\n\n\nMaking hexagon stickers have become popular for R-packages with the range of packages associated with RStudio, such as ggplot2, knitr, devtools and so on, having its own hex stickers. For the sticker that I made for my R-package I found it easier, partly due to its long name, to use powerpoint to manipulate the image and create a semi-circular text.\n\n\n\n\n\n\nApr 6, 2018\n\n\nEmi Tanaka\n\n\n\n\n\n\nNo matching items"
+    "text": "Affective colors in data visualisation\n\n\n\n\n\n\n\ncolor\n\n\n\n\nThis post extracts the colors and its frequency distribution from an experiment where participants were required to make a five color palette based on certain set of emotions.\n\n\n\n\n\n\nOct 15, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nedibble experimental design with sensory discrimination tests\n\n\n\n\n\n\n\nR\n\n\nexperimental design\n\n\nedibble\n\n\n\n\nCan Australians distinguish the true taste of Vegemite? Designing an experiment with sensory discrimination test using the edibble package.\n\n\n\n\n\n\nJul 30, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHow to transition from xaringan to Quarto revealjs\n\n\n\n\n\n\n\nQuarto\n\n\nxaringan\n\n\nrevealjs\n\n\nremarkjs\n\n\n\n\nThis post shows a feature in xaringan slides (powered by remark.js) that is roughly equivalent in Quarto revealjs slides.\n\n\n\n\n\n\nJul 11, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAcademic ranks\n\n\n\n\n\nDifferent countries adopt a different system for academic ranks. This posts show a mapping of academic ranks across Australian, NZ, UK & North American systems.\n\n\n\n\n\n\nJun 30, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTo new beginnings\n\n\n\n\n\n\n\nlife\n\n\n\n\n🎉\n\n\n\n\n\n\nApr 27, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMaximum potential\n\n\n\n\n\n\n\nlife\n\n\noutlier\n\n\n\n\nIt’s a tragedy when those who have talent don’t get to fully express it because of the environment.\n\n\n\n\n\n\nMar 12, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWar\n\n\n\n\n\n\n\nlife\n\n\n\n\nWhat good is in a war?\n\n\n\n\n\n\nMar 6, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsimulate: proof of concept R-package\n\n\n\n\n\n\n\nR\n\n\nsimulate\n\n\n\n\nA proof of concept of parametric simulation framework to generate complex multivariate and multilevel data\n\n\n\n\n\n\nFeb 24, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nColorblind checks for qualitative palettes\n\n\n\n\n\n\n\nR\n\n\ncolor\n\n\n\n\nChecking the color blind friendliness of a number of qualitative palettes.\n\n\n\n\n\n\nFeb 20, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\nManipulating arrays with dynamic dimensions in R\n\n\n\n\n\n\n\nR\n\n\nprogramming\n\n\n\n\nChallenges and solutions for creating functions to manipulate arrays in R when the number of dimensions is unknown.\n\n\n\n\n\n\nJan 18, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\nAre anime titles getting longer?\n\n\n\n\n\n\n\nanime\n\n\nR\n\n\n\n\nA quick exploratory analysis on the length of anime titles.\n\n\n\n\n\n\nJan 16, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAre anime titles getting longer?\n\n\n\n\n\n\n\nanime\n\n\nR\n\n\n\n\nA quick exploratory analysis on the length of anime titles.\n\n\n\n\n\n\nJan 16, 2022\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCurrent state of R packages for the design of experiments\n\n\n\n\n\n\n\nexperimental design\n\n\nR\n\n\n\n\nYour analytical toolkit matters very little if the data are no good. Ideally you want to know to how the data were collected before delving into the analysis of the data; better yet, get involved before the collection of data and design its collection. In this post I explore some of the top downloaded R packages for the design of experiments and analysis of experimental data.\n\n\n\n\n\n\nFeb 3, 2021\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDrawing a UML Sequence Diagram\n\n\n\n\n\n\n\nvisualisation\n\n\ndiagram\n\n\n\n\nSearch for the way to draw a UML sequence diagram.\n\n\n\n\n\n\nJan 29, 2021\n\n\nEmi Tanaka\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Travel Schedule 2019: Building an interactive visualisation as twitter card\n\n\n\n\n\n\n\nvisualisation\n\n\ninteractive\n\n\n\n\nMaking an interactive schedule heat map with interactive twitter card display.\n\n\n\n\n\n\nMar 26, 2019\n\n\nEmi Tanaka\n\n\n\n\n\n\n  \n\n\n\n\nMaking a Hexagon Sticker\n\n\n\n\n\n\n\nfun\n\n\n\n\nMaking hexagon stickers have become popular for R-packages with the range of packages associated with RStudio, such as ggplot2, knitr, devtools and so on, having its own hex stickers. For the sticker that I made for my R-package I found it easier, partly due to its long name, to use powerpoint to manipulate the image and create a semi-circular text.\n\n\n\n\n\n\nApr 6, 2018\n\n\nEmi Tanaka\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html#experimental-data",
@@ -413,6 +399,13 @@
     "text": "Information taken from these wikipedia articles: Academic ranks in Australian and New Zealand and Academic ranks in UK."
   },
   {
+    "objectID": "blog/2022-10-15-affective-colors/index.html",
+    "href": "blog/2022-10-15-affective-colors/index.html",
+    "title": "Affective colors in data visualisation",
+    "section": "",
+    "text": "affect\nfrequency plot\n\n\n\n\ncalm\n\n\n\ndisturbing\n\n\n\nexciting\n\n\n\nnegative\n\n\n\nplayful\n\n\n\npositive\n\n\n\nserious\n\n\n\ntrustworthy\n\n\n\n\nThe paper is quite interesting but I actually couldn’t find the list of colors for each affect! So below is my simple analysis where I read in the image of the frequency plot, convert the colors to hex colors and remove white background to get the frequency of the colors. I plot then the top 10 colors for each affect.\n\nlibrary(tidyverse)\nlibrary(png)\n# reads it as an 3d array where first two dimensions are\n# the location on the image \n# last dimension contains 4 columns which are r, g, b, alpha\nimgs <- list(calm = readPNG(\"calm.png\"),\n             disturbing = readPNG(\"disturbing.png\"),\n             exciting = readPNG(\"exciting.png\"),\n             negative = readPNG(\"negative.png\"),\n             playful = readPNG(\"playful.png\"),\n             positive = readPNG(\"positive.png\"),\n             serious = readPNG(\"serious.png\"),\n             trustworthy = readPNG(\"trustworthy.png\"))\n\ndims <- map(imgs, dim)\n# convert array to a matrix\nmats <- imap(imgs, ~matrix(.x, prod(dims[[.y]][1:2]), dims[[.y]][3]))\n\n# get the frequency of colors as a data frame\ncolors <- imap_dfr(mats, ~{\n                  res <- rgb(.x[, 1], .x[, 2], .x[, 3], .x[, 4])\n                  data.frame(color = res[res!=\"#FFFFFFFF\"]) \n                }, .id = \"affect\") %>% \n  count(affect, color) %>% \n  group_by(affect) %>% \n  mutate(prop = n / sum(n))\n\n\nwalk(names(imgs), ~{\n  g <- colors %>% \n    filter(affect == .x) %>% \n    slice_max(prop, n = 10) %>% \n    mutate(color = fct_reorder(color, prop)) %>% \n    ggplot(aes(prop, color)) +\n      geom_col(aes(fill = I(color)), color = \"black\") + \n      labs(title = .x, x = \"Proportion\", y = \"\") +\n      scale_x_continuous(expand = c(0.01, 0)) +\n      theme(text = element_text(size = 14),\n            panel.background = element_blank(),\n            panel.grid.major.x = element_line(color = \"grey\", linetype = \"dashed\"),\n            axis.ticks.length = unit(0, \"mm\"))\n  print(g)\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReferences\n\nBartram, Lyn, Abhisekh Patra, and Maureen Stone. 2017. “Affective Color in Visualization.” In Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems, 1364–74. CHI ’17. New York, NY, USA: Association for Computing Machinery. https://doi.org/10.1145/3025453.3026041."
+  },
+  {
     "objectID": "blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
     "href": "blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
     "title": "edibble experimental design with sensory discrimination tests",
@@ -504,67 +497,11 @@
     "text": "Contact\n\n\n\n\n\n\nstatsgen\n\n\n\nemitanaka\n\n\n\nemi.tanaka@monash.edu\n\n\n\nMonash University29 Ancora Imparo WayEducation Building 6 Room 341Clayton campus, VIC 3800Australia\n\n\n\n\n\nPlease note that I will not respond to emails if I cannot identify who you are (i.e. not anonymous and has affiliation)."
   },
   {
-    "objectID": "teaching/index.html",
-    "href": "teaching/index.html",
+    "objectID": "teaching/index.html#teaching",
+    "href": "teaching/index.html#teaching",
     "title": "Teaching",
-    "section": "",
-    "text": "At Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%)."
-  },
-  {
-    "objectID": "cv.html",
-    "href": "cv.html",
-    "title": "emi tanaka",
-    "section": "",
-    "text": "Click here for the PDF version."
-  },
-  {
-    "objectID": "blog/2022-10-15-affective-colors/index.html",
-    "href": "blog/2022-10-15-affective-colors/index.html",
-    "title": "Affective colors in data visualisation",
-    "section": "",
-    "text": "affect\nfrequency plot\n\n\n\n\ncalm\n\n\n\ndisturbing\n\n\n\nexciting\n\n\n\nnegative\n\n\n\nplayful\n\n\n\npositive\n\n\n\nserious\n\n\n\ntrustworthy\n\n\n\n\nThe paper is quite interesting but I actually couldn’t find the list of colors for each affect! So below is my simple analysis where I read in the image of the frequency plot, convert the colors to hex colors and remove white background to get the frequency of the colors. I plot then the top 10 colors for each affect.\n\nlibrary(tidyverse)\nlibrary(png)\n# reads it as an 3d array where first two dimensions are\n# the location on the image \n# last dimension contains 4 columns which are r, g, b, alpha\nimgs <- list(calm = readPNG(\"calm.png\"),\n             disturbing = readPNG(\"disturbing.png\"),\n             exciting = readPNG(\"exciting.png\"),\n             negative = readPNG(\"negative.png\"),\n             playful = readPNG(\"playful.png\"),\n             positive = readPNG(\"positive.png\"),\n             serious = readPNG(\"serious.png\"),\n             trustworthy = readPNG(\"trustworthy.png\"))\n\ndims <- map(imgs, dim)\n# convert array to a matrix\nmats <- imap(imgs, ~matrix(.x, prod(dims[[.y]][1:2]), dims[[.y]][3]))\n\n# get the frequency of colors as a data frame\ncolors <- imap_dfr(mats, ~{\n                  res <- rgb(.x[, 1], .x[, 2], .x[, 3], .x[, 4])\n                  data.frame(color = res[res!=\"#FFFFFFFF\"]) \n                }, .id = \"affect\") %>% \n  count(affect, color) %>% \n  group_by(affect) %>% \n  mutate(prop = n / sum(n))\n\n\nwalk(names(imgs), ~{\n  g <- colors %>% \n    filter(affect == .x) %>% \n    slice_max(prop, n = 10) %>% \n    mutate(color = fct_reorder(color, prop)) %>% \n    ggplot(aes(prop, color)) +\n      geom_col(aes(fill = I(color)), color = \"black\") + \n      labs(title = .x, x = \"Proportion\", y = \"\") +\n      scale_x_continuous(expand = c(0.01, 0)) +\n      theme(text = element_text(size = 14),\n            panel.background = element_blank(),\n            panel.grid.major.x = element_line(color = \"grey\", linetype = \"dashed\"),\n            axis.ticks.length = unit(0, \"mm\"))\n  print(g)\n})\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReferences\n\nBartram, Lyn, Abhisekh Patra, and Maureen Stone. 2017. “Affective Color in Visualization.” In Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems, 1364–74. CHI ’17. New York, NY, USA: Association for Computing Machinery. https://doi.org/10.1145/3025453.3026041."
-  },
-  {
-    "objectID": "index.html#recent-publications",
-    "href": "index.html#recent-publications",
-    "title": "News",
-    "section": " Recent Publications",
-    "text": "Recent Publications\n\nTanaka & Amaliah (2022) Current state and prospects of R-packages for the design of experiments   \nStatistical Society of Australia Victorian Branch Annual Report 2021 \nTanaka, Leung & Cook (2022) Commentary on “Visualization in Operations Management Research”: Incorporating Statistical Thinking into Visualization Practices for Decision Making in Operational Management. INFORMS Journal on Data Science  \nCook, Reid & Tanaka (2021) The Foundation is Available for Thinking about Data Visualization Inferentially. Harvard Data Science Review"
-  },
-  {
-    "objectID": "index.html#latest-talks",
-    "href": "index.html#latest-talks",
-    "title": "News",
-    "section": " Latest talks",
-    "text": "Latest talks\nYou can watch some of my latest talks from below:\n\nThe genesis of experimentation (organised by Paul Murrell as part of Ihaka Lecture Series)   \nAn anthology of experimental designs (organised by Rohan Alexander as part of Toronto Data Workshop)   \nConstructing experimental designs with the edibble R-package (organised by Fazel Almasi with funding from Intellectual Climate Fund La Trobe University)  \nVisualising experimental designs with the edibble and deggust R-packages (organised by Fazel Almasi with funding from Intellectual Climate Fund La Trobe University)"
-  },
-  {
-    "objectID": "index.html#upcoming-talks",
-    "href": "index.html#upcoming-talks",
-    "title": "News",
-    "section": " Upcoming talks",
-    "text": "Upcoming talks\n\nI have no advertised upcoming talks. Please feel free to invite me for a talk if I do something of your interest. You can find some of my past talks here.\n\n\n\nSabbatical approved 😊 It will be my first time in Canada so please say hi if you see me 👋 pic.twitter.com/J3Ypadoij6\n\n— Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) September 28, 2022"
-  },
-  {
-    "objectID": "index.html#upcoming-workshops",
-    "href": "index.html#upcoming-workshops",
-    "title": "News",
-    "section": " Upcoming workshops",
-    "text": "Upcoming workshops\n\nData Visualisation with R, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST  \nEffective Data Visualisation with R, online Tue 6th Dec 9AM-12PM AEST"
-  },
-  {
-    "objectID": "index.html#statistical-society-of-australia",
-    "href": "index.html#statistical-society-of-australia",
-    "title": "News",
-    "section": " Statistical Society of Australia",
-    "text": "Statistical Society of Australia\n\n\nThanks to everyone who attended our AGM and March seminar event last week. We have the pleasure of introducing the SSA Vic Council of 2022 🎉 🎉 🎉 pic.twitter.com/nrk3nR8Ir1\n\n— SSAVictoria (@SsaVictoria) April 4, 2022\n\n\n For more information see https://statsocaus.github.io/vic/\n\n\n To join the SSA Community Slack, see here."
-  },
-  {
-    "objectID": "index.html#hex-stickers",
-    "href": "index.html#hex-stickers",
-    "title": "News",
-    "section": " Hex stickers",
-    "text": "Hex stickers\nI have now hex stickers for the edibble and deggust R packages. If you see me in-person, feel free to ask for it!\n\n\nIf you ever see me in-person, feel free to ask me for hex stickers for my R packages ☺️ pic.twitter.com/4VXdv091IM\n\n— Emi Tanaka 🌾 (@statsgen) July 2, 2021"
+    "section": "Teaching",
+    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%)."
   },
   {
     "objectID": "teaching/index.html#workshop",
@@ -574,10 +511,10 @@
     "text": "Workshop\n\n\n\n\n\n\n Upcoming workshops\n\n\n\n\nData Visualisation with R, in-person only at Inverloch, Victoria, Mon 28th Nov 9AM-4.30PM AEST  \nEffective Data Visualisation with R, online Tue 6th Dec 9AM-12PM AEST  \n\nAll proceeds go to supporting my research activities.\n\n\n\n\nData Wrangling with R  Last hosted by the Statistical Society of Australia NSW Branch at 1/12/20\n\n\nData Visualisation with R  Last hosted by the Statistical Society of Australia VIC Branch at 11/11/20\n\n\nTidyverse and R Markdown Workshop  Last hosted by the International Biometrics Society Australasia Region at 1/12/19\n\n\nR Package & R Markdown Workshop  Last hosted by the Statistical Society of Australia VIC Branch at 19/11/19\n\n\nStatistical Methods for Omics Assisted Breeding  Last hosted by the Univeristy of Tokyo at 12/11/18\n\n\n\nData Visualisation in R \n\n\nIntroduction to ASReml-R \n\n\nFactor Analytic Model \n\n\nSpatial Analysis of Crop Field Trials \n\n\nExperimental Design"
   },
   {
-    "objectID": "teaching/index.html#teaching",
-    "href": "teaching/index.html#teaching",
-    "title": "Teaching",
-    "section": "Teaching",
-    "text": "Teaching\nAt Monash University, I teach or develop:\n\nETC5512 Wild Caught Data (25%)\nETC5523 Communicating with Data (100%)\nIntroduction to R materials\n\nIn the past I have taught:\n\nETC5521 Exploratory Data Analysis (50%) at Monash University,\nSTAT5002 Introduction to Statistics (50%) at The University of Sydney,\nSTAT3012 Applied Linear Models (75%) at The University of Sydney,\nSTAT906 Experimental Design (100%) at the University of Wollongong,\n\nand tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for MATH1013 Mathematical Modelling (50%)."
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "emi tanaka",
+    "section": "",
+    "text": "Click here for the PDF version."
   }
 ]
