@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.235">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Emi Tanaka">
+<meta name="dcterms.date" content="2022-12-12">
+<meta name="description" content="The content of this blog post is originally published in the Biometric Bulletin (2022) Volume 39 Issue 4.">
+
+<title>emi tanaka - Getting the most out of your experimental data with design</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/avatar.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-07SZXPNSJZ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../assets/styles.css">
+<meta name="twitter:title" content="emi tanaka - Getting the most out of your experimental data with design">
+<meta name="twitter:description" content="The content of this blog post is originally published in the Biometric Bulletin (2022) Volume 39 Issue 4.">
+<meta name="twitter:creator" content="@statsgen">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/avatar.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">emi tanaka</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html">
+ <span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research/index.html">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/index.html">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks/index.html">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/statsgen"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Getting the most out of your experimental data with design</h1>
+</div>
+
+<div>
+  <div class="description">
+    The content of this blog post is originally published in the Biometric Bulletin (2022) Volume 39 Issue 4.
+  </div>
+</div>
+
+<style>
+.quarto-title-meta {
+  background-color: #f5e1eb;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  color: #ad0059;
+}
+.quarto-title-meta a {
+  color: #ad0059!important;
+}
+</style>
+<div class="quarto-title-meta">
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading"></div>
+
+    <div class="quarto-title-meta-contents">
+    Emi Tanaka 
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Monash University
+          </p>
+      </div>
+    </div>
+
+
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 12, 2022</p>
+    </div>
+  </div>
+  
+  
+  </div>
+
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Experimental data are hallmarks of proving or disproving theories or hypotheses. Not all experimental data are of equal value however; the design of experiment and the execution to collect data greatly shape its downstream value. The seminal book by <span class="citation" data-cites="Fisher1935-qc">Fisher (<a href="#ref-Fisher1935-qc" role="doc-biblioref">1935</a>)</span> outline the importance of randomisation, replication and (statistical) control in experimental designs motivated primary by agricultural field trials. <span class="citation" data-cites="Fisher1935-qc">Fisher (<a href="#ref-Fisher1935-qc" role="doc-biblioref">1935</a>)</span> also introduce special cases of row-column designs, such as Latin Square and Graeco-Latin Square designs, factorial designs and the analysis of experimental data using analysis of variance (ANOVA), <span class="math inline">\(t\)</span>-test, <span class="math inline">\(\chi^2\)</span>-test and other tests of significance. <span class="citation" data-cites="Montgomery2001-gh">Montgomery (<a href="#ref-Montgomery2001-gh" role="doc-biblioref">2001</a>)</span>, <span class="citation" data-cites="Box2005-yj">Box, Stuart Hunter, and Hunter (<a href="#ref-Box2005-yj" role="doc-biblioref">2005</a>)</span>, and <span class="citation" data-cites="Hinkelmann2005-jq">Hinkelmann and Kempthorne (<a href="#ref-Hinkelmann2005-jq" role="doc-biblioref">2005</a>)</span> are classical textbooks in experimental designs taught in many courses in experimental design. Many of these textbooks, and the teaching of experimental designs, I would argue is focussed on statistical aspects, but in practice, the primary problem in carrying out an experiment is actually centered on human aspects. Consider the following simplified scenario:</p>
+<ul>
+<li>the <strong>domain expert</strong> wants an experiment to validate their hypothesis and needs a statistician to design the experiment;</li>
+<li>the <strong>statistician</strong> elicits the experimental aim and structure from the domain expert and then design the experiment accounting appropriately for statistical issues and practical constraints;</li>
+<li>the <strong>technician</strong> carries out the experimental protocol as directed by the experimental design generated by the statistician and enter the data; and then</li>
+<li>the <strong>analyst</strong> (who may or may not be the same person as the statistician) interprets the experimental aim and design to appropriately analyse the data.</li>
+</ul>
+<p>How many people were involved in this experiment? Notice that we are reliant on communication between people, who likely have different discipline backgrounds, to transfer the correct information in order to successfully carry out the experiment. We know human communication is fraught with challenges; <strong><em>misunderstandings are common, not the exception</em></strong>. The unwritten assumption in experimental designs is that all parties involved in the experiment completely understood each other – the statistician understood all the intricacies that the domain expert knows that may affect the experimental outcome, and the technician will carry out the experiment exactly as the design of experiment with no possible error. This assumption is in contrary to what we know about human communication; human communication is a noisy process. What then can we do to mitigate errors in the process?</p>
+</section>
+<section id="the-grammar-of-experimental-designs" class="level2">
+<h2 class="anchored" data-anchor-id="the-grammar-of-experimental-designs">The grammar of experimental designs</h2>
+<p>The so-called “The Grammar of Experimental Designs” is the title of my work-in-progress book found at <a href="https://emitanaka.org/edibble-book">emitanaka.org/edibble-book</a>. More details can be found in the book, but briefly, the <strong>grammar of experimental designs</strong> is an object oriented programming system designed to capture elements of the origin of an experimental data encapsulated in a cognitive framework. It is an attempt to standardise the computational description of experimental components by fundamental terms so we are not lost in domain-specific jargon.</p>
+<p>The motivation of the grammar of experimental designs is best explained by an analogy to the “grammar of graphics” <span class="citation" data-cites="Wilkinson2005-oz">(<a href="#ref-Wilkinson2005-oz" role="doc-biblioref">Wilkinson 2005</a>)</span> with its most popular implementation as ggplot2 <span class="citation" data-cites="Wickham2016-yg">(<a href="#ref-Wickham2016-yg" role="doc-biblioref">Wickham 2016</a>)</span> in the R language <span class="citation" data-cites="Rstats">(<a href="#ref-Rstats" role="doc-biblioref">R Core Team 2021</a>)</span>. When we specify a plot, we can specify using a complete recipe. For example, the functions <code>barplot()</code> and <code>pie()</code> create a barplot and a pie chart, respectively, in the base R language – these functions are for a single purpose, nothing more.</p>
+<div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">duty =</span> <span class="fu">c</span>(<span class="st">"teaching"</span>, <span class="st">"research"</span>, <span class="st">"admin"</span>),</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">percentage =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">20</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(data<span class="sc">$</span>percentage, <span class="at">names.arg =</span> data<span class="sc">$</span>duty)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pie</span>(data<span class="sc">$</span>percentage, <span class="at">labels =</span> data<span class="sc">$</span>duty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="2022-10-23-edibble-for-biometrics-bulletin_files/figure-html/plot-base-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="2022-10-23-edibble-for-biometrics-bulletin_files/figure-html/plot-base-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>When we specify plots using ggplot2, the system requires users to <em>specify components of the plot</em>, not the full plot. This not only gives greater control over the construction of the plot but it encourages the user to think about the relationship between data to plot elements. For example, below we create the pie chart and barplot using ggplot2. The first specification in ggplot2 is to initiate the object by <code>ggplot()</code> where the user can specify the data and the mapping of variable to plot aesthetic, then the user can append a layer like <code>geom_col()</code> to create a barplot. To construct a pie chart in ggplot2, the user must transform the default Cartesian coordinate system to a polar coordinate along one of the axis.</p>
+<div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> duty, <span class="at">y =</span> percentage)) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># pie chart</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> percentage, <span class="at">fill =</span> duty)) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="st">"y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="2022-10-23-edibble-for-biometrics-bulletin_files/figure-html/plot-ggplot2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="2022-10-23-edibble-for-biometrics-bulletin_files/figure-html/plot-ggplot2-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>The ggplot2 system has a steep learning curve, however, the mastery of the system allows users to easily create a variety of plots. In a similar vein, the grammar of experimental designs is a system to construct experimental designs by experimental components – the users don’t need to specify the complete design but build up the experimental design by its basic components, like experimental units and treatments, giving them the flexibility in their thinking and specifciation of the experimental structure. The easiest way to grasp the grammar of experimental design is to see examples of its implementation as shown next.</p>
+</section>
+<section id="constructing-experimental-designs-with-the-edibble-r-package" class="level2">
+<h2 class="anchored" data-anchor-id="constructing-experimental-designs-with-the-edibble-r-package">Constructing experimental designs with the <strong>edibble</strong> R package</h2>
+<p>The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at <a href="https://github.com/emitanaka/edibble">github.com/emitanaka/edibble</a> and can be installed as below. ::: {.cell}</p>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># installing from CRAN</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"edibble"</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># OR for the developmental version</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>) </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"emitanaka/edibble"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>:::</p>
+<section id="package-name" class="level3">
+<h3 class="anchored" data-anchor-id="package-name">Package name</h3>
+<p>The name of the package, edibble, stands for the <strong>e</strong>xperimental <strong>d</strong>esign table or t<strong>ibble</strong> for those that are familiar with tidyverse <span class="citation" data-cites="Wickham2019-mj">(<a href="#ref-Wickham2019-mj" role="doc-biblioref">Wickham et al. 2019</a>)</span>. I often see people misspell it as eddible or edible (latter probably due to autocorrect), so I want to emphasise that is is edibble, i.e.&nbsp;one d and two b.</p>
+<p>The package name itself relates to the aim of what it tries to produce, i.e.&nbsp;a table where columns specifies the unit and treatment factors in the experimental design and rows specify the characteristics of the observational unit, including the allocated treatment.</p>
+</section>
+<section id="example-usage" class="level3">
+<h3 class="anchored" data-anchor-id="example-usage">Example usage</h3>
+<p>Let’s suppose that we want to create a randomised complete block design (RCBD) with 6 blocks with 3 plots in each block to test 3 wheat varieties, labelled A, B and C. As not all of you may know what a RCBD is, to describe it more explicitly, the treatments (in this case the 3 wheat varieties) are randomly allocated to one of the plot (experimental unit) within a block; only one treatment level can be assigned to each plot; and each treatment level must appear exactly once in each block. The specification of this design in the edibble system is shown below and can be interpreted as follows:</p>
+<ul>
+<li>Line 1: load the library,</li>
+<li>Line 2: set the seed to ensure replication of the randomised design,</li>
+<li>Line 3: initialise the design object,</li>
+<li>Line 4-5: set the unit factors, namely 6 blocks and 3 plots nested in each block,</li>
+<li>Line 6: set the treatment factor, variety, with 3 levels (A, B, and C),</li>
+<li>Line 7: specify the high-level treatment to unit allocation,</li>
+<li>Line 8: assign the treatment randomly, and</li>
+<li>Line 9: the design specification is complete, now convert the result to a table.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(edibble)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">set.seed</span>(<span class="dv">2022</span>) </span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">design</span>(<span class="st">"Randomised Complete Block Design"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">set_units</span>(<span class="at">block =</span> <span class="dv">6</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>            <span class="at">plot =</span> <span class="fu">nested_in</span>(block, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">set_trts</span>(<span class="at">variety =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="fu">allot_trts</span>(variety <span class="sc">~</span> plot) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="fu">assign_trts</span>(<span class="st">"random"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">serve_table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Randomised Complete Block Design 
+# An edibble: 18 x 3
+       block       plot  variety
+   &lt;unit(6)&gt; &lt;unit(18)&gt; &lt;trt(3)&gt;
+ 1    block1     plot1         A
+ 2    block1     plot2         B
+ 3    block1     plot3         C
+ 4    block2     plot4         A
+ 5    block2     plot5         B
+ 6    block2     plot6         C
+ 7    block3     plot7         A
+ 8    block3     plot8         C
+ 9    block3     plot9         B
+10    block4     plot10        C
+11    block4     plot11        B
+12    block4     plot12        A
+13    block5     plot13        B
+14    block5     plot14        C
+15    block5     plot15        A
+16    block6     plot16        C
+17    block6     plot17        B
+18    block6     plot18        A</code></pre>
+</div>
+</div>
+<p>Above table output shows the resulting allocation of the treatment to units, e.g.&nbsp;from the first row we see that first plot in the first block is assigned variety A.</p>
+<p>Now consider the design specified below. How is this different to above?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">design</span>(<span class="st">"Do exam type matter?"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">set_units</span>(<span class="at">school =</span> <span class="dv">6</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>            <span class="at">student =</span> <span class="fu">nested_in</span>(school, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">set_trts</span>(<span class="at">exam =</span> <span class="fu">c</span>(<span class="st">"Oral"</span>, <span class="st">"Written"</span>, <span class="st">"Computer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="fu">allot_trts</span>(exam <span class="sc">~</span> school) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="fu">assign_trts</span>(<span class="st">"random"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="fu">serve_table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Do exam type matter? 
+# An edibble: 18 x 3
+      school    student     exam
+   &lt;unit(6)&gt; &lt;unit(18)&gt; &lt;trt(3)&gt;
+ 1   school1  student1  Oral    
+ 2   school1  student2  Oral    
+ 3   school1  student3  Oral    
+ 4   school2  student4  Computer
+ 5   school2  student5  Computer
+ 6   school2  student6  Computer
+ 7   school3  student7  Oral    
+ 8   school3  student8  Oral    
+ 9   school3  student9  Oral    
+10   school4  student10 Written 
+11   school4  student11 Written 
+12   school4  student12 Written 
+13   school5  student13 Computer
+14   school5  student14 Computer
+15   school5  student15 Computer
+16   school6  student16 Written 
+17   school6  student17 Written 
+18   school6  student18 Written </code></pre>
+</div>
+</div>
+<p>First, you may have noticed that the experimental factors are named differently. The names that you enter in <code>set_units()</code> and <code>set_trts()</code> are not fixed by the system – the user may enter the name that is appropriate for their experimental context. These are just simply labels but it captures the valuable experimental context. In fact, the unit structure is exactly the same as the previous experiment! But it’s easy to see that the first experiment is a wheat variety trial but the second experiment is comparing the exam type across schools.</p>
+<p>Second, aside from labels, you may have noticed everything is the same as the previous experiment except line 5. The treatment (exam type) are randomly allocated to schools, not individual students within a school. You can see this in the resulting table output – each school gets only one type of exam. The resulting design is in fact called a completely randomised design. Here, the experimental units are the schools and the intended observational units are the students.</p>
+<p>You may think the edibble system is only for balanced designs (where there is equal number of units within a block), but you can easily specify unbalanced designs as shown in line 3-5 below where there are two blocks (labelled I and II) where block I has 3 plots and block II has 6 plots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">design</span>(<span class="st">"Unbalanced design"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">set_units</span>(<span class="at">block =</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3"></a>            <span class="at">plot =</span> <span class="fu">nested_in</span>(block, </span>
+<span id="cb8-4"><a href="#cb8-4"></a>                              <span class="st">"I"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>                             <span class="st">"II"</span> <span class="sc">~</span> <span class="dv">6</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="fu">set_trts</span>(<span class="at">variety =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="fu">allot_trts</span>(variety <span class="sc">~</span> plot) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="fu">assign_trts</span>(<span class="st">"random"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="fu">serve_table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Unbalanced design 
+# An edibble: 9 x 3
+      block      plot  variety
+  &lt;unit(2)&gt; &lt;unit(9)&gt; &lt;trt(3)&gt;
+1        I      plot1        B
+2        I      plot2        A
+3        I      plot3        C
+4        II     plot4        C
+5        II     plot5        A
+6        II     plot6        B
+7        II     plot7        C
+8        II     plot8        B
+9        II     plot9        A</code></pre>
+</div>
+</div>
+<p>There are more features in the edibble system. These features include setting responses using <code>set_rcrds()</code>, simulating responses with <code>simulate_rcrds()</code> (experimental only), and setting expectation of responses <code>expect_rcrds()</code>, e.g.&nbsp;when values should be positive numbers only. The latter allows files to be encoded with data validation rules, e.g.&nbsp;<code>export_design()</code> outputs the edibble table as an Excel file where values outside of expectation cannot be entered by exploiting Excel’s data validation system.</p>
+<p>The edibble system has been designed so that developers can extend the system. If the <code>assign_trts()</code> is not suitable, then you can replace this with an alternative one. Likewise, if an Excel output is not desired then you can replace the exporting system with another system. The system exposes its components as modular functions to allow extensibility. The caveat of the edibble system is that there is a steep learning curve for both the user and the developer – but mastery of the grammar should help you flexibly specify a variety of experimental designs and deepen your thinking about the experimental design.</p>
+</section>
+</section>
+<section id="recipe-experimental-designs" class="level2">
+<h2 class="anchored" data-anchor-id="recipe-experimental-designs">Recipe experimental designs</h2>
+<blockquote class="blockquote">
+<p>“Good design considers units and treatments first, and then allocates treatments to units. It does not choose from a menu of named designs.” – <span class="citation" data-cites="Bailey2008-gw">Bailey (<a href="#ref-Bailey2008-gw" role="doc-biblioref">2008</a>)</span></p>
+</blockquote>
+<p>I highly discourage the use of named experimental designs, but I acknowledge that the literature is littered with them. The compromise I have made is to include a set of functions that are prefixed with <code>menu_</code>. For example, below <code>menu_rcbd()</code> shows the code to generate a RCBD with 3 treatments and 6 blocks. If you must take this approach, I suggest that you copy the output code and replace the generic factor names with what is appropriate in the context of your own experiment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">menu_rcbd</span>(<span class="at">t =</span> <span class="dv">3</span>, <span class="at">r =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>design("Randomised Complete Block Design") %&gt;%
+  set_units(block = 6,
+            unit = nested_in(block, 3)) %&gt;%
+  set_trts(trt = 3) %&gt;%
+  allot_trts(trt ~ unit) %&gt;%
+  assign_trts("random", seed = 424) %&gt;%
+  serve_table()</code></pre>
+</div>
+</div>
+<p>If you want to actually see a table output then you can <code>takeout()</code> any named design (on the menu). Say below <code>menu_lsd()</code> shows the code for generating a Latin Square design; the <code>takeout()</code> of this design on the menu shows the table output of the Latin Square design with 4 treatments.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">takeout</span>(<span class="fu">menu_lsd</span>(<span class="at">t =</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>design("Latin Square Design") %&gt;%
+  set_units(row = 4,
+            col = 4,
+            unit = crossed_by(row, col)) %&gt;%
+  set_trts(trt = 4) %&gt;%
+  allot_trts(trt ~ unit) %&gt;%
+  assign_trts("random", seed = 794) %&gt;%
+  serve_table() 
+
+# Latin Square Design 
+# An edibble: 16 x 4
+         row       col       unit      trt
+ * &lt;unit(4)&gt; &lt;unit(4)&gt; &lt;unit(16)&gt; &lt;trt(4)&gt;
+ 1      row1      col1     unit1      trt1
+ 2      row2      col1     unit2      trt3
+ 3      row3      col1     unit3      trt4
+ 4      row4      col1     unit4      trt2
+ 5      row1      col2     unit5      trt4
+ 6      row2      col2     unit6      trt2
+ 7      row3      col2     unit7      trt1
+ 8      row4      col2     unit8      trt3
+ 9      row1      col3     unit9      trt3
+10      row2      col3     unit10     trt4
+11      row3      col3     unit11     trt2
+12      row4      col3     unit12     trt1
+13      row1      col4     unit13     trt2
+14      row2      col4     unit14     trt1
+15      row3      col4     unit15     trt3
+16      row4      col4     unit16     trt4</code></pre>
+</div>
+</div>
+<p>The full list of available named experimental designs can be found in the <a href="https://emitanaka.org/edibble-book/cookbook.html">Cookbook chapter in The Grammar of Experimental Designs book</a>.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The design of an experiment is, without a doubt, of critical importance in the advancement of our knowledge. In fact, a good experimental design and well executed collection of data can eliminate or reduce the necessity of certain statistical analysis. The use of experimental designs in practice are arguably propagated by statistical software and interested readers can see <span class="citation" data-cites="tanaka2022">Tanaka and Amaliah (<a href="#ref-tanaka2022" role="doc-biblioref">2022</a>)</span> for a review of popular R packages in experimental design. The edibble R package is an attempt to specify designs by a paradigm that is flexible, yet human-centered. By building designs based on its components, users are required to think about the ingredients that make up the composition of the experimental structure – this system design I would hope translates to higher order thinking about experimental designs.</p>
+<p>This article did not touch on much about optimal, adaptive, model-based nor domain-specific designs. The scope of work in the design of experiments is large and substantial work remain to bridge the gap between the principles and practice of experimental designs. Too often, teaching of experimental design is overshadowed by the analysis of experimental data and to get the most out of experimental data, we should remember that experimental context is invaluable in the design and no analysis can extract information from rubbish data.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-Bailey2008-gw" class="csl-entry" role="doc-biblioentry">
+Bailey, Rosemary. 2008. <em>Design of Comparative Experiments</em>. Cambridge University Press.
+</div>
+<div id="ref-Box2005-yj" class="csl-entry" role="doc-biblioentry">
+Box, George E P, J Stuart Hunter, and William G Hunter. 2005. <em>Statistics for Experimenters: An Introduction to Design, Data Analysis, and Model Building</em>. 2nd ed. John Wiley &amp; Sons, Inc.
+</div>
+<div id="ref-Fisher1935-qc" class="csl-entry" role="doc-biblioentry">
+Fisher, Ronald Aylmer. 1935. <em>The Design of Experiments</em>. Oliver; Boyd.
+</div>
+<div id="ref-Hinkelmann2005-jq" class="csl-entry" role="doc-biblioentry">
+Hinkelmann, Klaus, and Oscar Kempthorne. 2005. <em>Design and Analysis of Experiments</em>. 2nd ed. Vol. 1. Wiley Blackwell.
+</div>
+<div id="ref-Montgomery2001-gh" class="csl-entry" role="doc-biblioentry">
+Montgomery, Doulgas C. 2001. <em>Design and Analysis of Experiments</em>. 5th ed. John Wiley &amp; Sons, Inc.
+</div>
+<div id="ref-Rstats" class="csl-entry" role="doc-biblioentry">
+R Core Team. 2021. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-tanaka2022" class="csl-entry" role="doc-biblioentry">
+Tanaka, Emi, and Dewi Amaliah. 2022. <span>“<span class="nocase">Current state and prospects of R-packages for the design of experiments</span>.”</span> arXiv. <a href="https://doi.org/10.48550/ARXIV.2206.07532">https://doi.org/10.48550/ARXIV.2206.07532</a>.
+</div>
+<div id="ref-Wickham2016-yg" class="csl-entry" role="doc-biblioentry">
+Wickham, Hadley. 2016. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York.
+</div>
+<div id="ref-Wickham2019-mj" class="csl-entry" role="doc-biblioentry">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’agostino McGowan, Romain Francois, Garrett Grolemund, et al. 2019. <span>“Welcome to the Tidyverse.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686.
+</div>
+<div id="ref-Wilkinson2005-oz" class="csl-entry" role="doc-biblioentry">
+Wilkinson, Leland. 2005. <em>The Grammar of Graphics</em>. 2nd ed. Springer.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Monash University, Australia<br> © Copyright 2021-2022 Emi Tanaka</div>   
+    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">(</span></a><a href="#ref-statsgen" role="doc-biblioref"><strong>statsgen?</strong></a>)</div>
+  </div>
+</footer>
+<link rel="stylesheet" href="../../assets/syntax-highlight.css">
+<link rel="stylesheet" href="../../assets/fontawesome-free-6.1.1-web/css/all.min.css">
+<script src="../../assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+
+
+</body></html>
