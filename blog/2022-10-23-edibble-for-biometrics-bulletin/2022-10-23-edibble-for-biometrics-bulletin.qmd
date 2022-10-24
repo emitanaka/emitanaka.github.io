@@ -1,0 +1,16 @@
+---
+title: "Getting the most out of your experimental data with design"
+description: "The content of this blog post is originally published in the Biometric Bulletin (2022) Volume 39 Issue 4."
+author: Emi Tanaka
+institute: Monash University
+date: "12/12/2022"
+draft: true
+bibliography: ref.bib
+output-file: index.html
+---
+
+
+```{r}
+#| child: "_biometrics-bulletin-39-4.qmd"
+```
+
