@@ -20,10 +20,6 @@ div.sourceCode {
   font-family: monospace;
 }
 
-pre > code.sourceCode > span {
-    color: #eaeaea;
-}
-
 .reveal pre.sourceCode code {
   background-color: #181818;
   color: #eaeaea;
