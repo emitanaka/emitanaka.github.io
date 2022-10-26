@@ -68,10 +68,14 @@
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <a class="navbar-brand" href="./index.html">
-    <img src="./images/avatar.png" alt="">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/avatar.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">emi tanaka</span>
-  </a>
+    </a>
+  </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -151,7 +155,7 @@
 </ul>
 <div id="disclaimer">
 <p>This resume was made with the R package <a href="https://github.com/rstudio/pagedown"><strong>pagedown</strong></a>.</p>
-<p>Last updated on 2022-10-22.</p>
+<p>Last updated on 2022-10-26.</p>
 </div>
 </section>
 </div>
@@ -286,7 +290,7 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 </li>
 </ol>
 <div data-aos="fade-in">
-<p><span style="font-size:0.7rem">Citation counts are sourced from Google Scholar at 2022-10-22.</span></p>
+<p><span style="font-size:0.7rem">Citation counts are sourced from Google Scholar at 2022-10-26.</span></p>
 </div>
 <p><br></p>
 <section id="software" class="level2" data-aos="zoom-out-right">
@@ -341,7 +345,7 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> xaringan
 <div class="software-body">
-<p>An R package for creating slideshows with remark.js through R Markdown. <br> <i>Contributor. My contribution is the adaptation of the ninja-theme shown in the Documentation. GitHub stars:<span style="font-weight:400;"> 1383 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/yihui/xaringan <br> <i class="fas fa-link"></i> Documentation: https://github.com/emitanaka/ninja-theme</p>
+<p>An R package for creating slideshows with remark.js through R Markdown. <br> <i>Contributor. My contribution is the adaptation of the ninja-theme shown in the Documentation. GitHub stars:<span style="font-weight:400;"> 1384 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/yihui/xaringan <br> <i class="fas fa-link"></i> Documentation: https://github.com/emitanaka/ninja-theme</p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
@@ -898,23 +902,6 @@ $554,188
 </div>
 <div class="timeline-card" data-aos="fade-in" data-aos-delay="300">
 <div class="timeline-head">
-Associate Partnership Analytics for the Australian Grains Industry
-</div>
-<div class="timeline-body" style="font-size:0.8rem;">
-<i>Lead Applicant</i><br>
-<div>
-Associate Partnership Analytics for the Australian Grains Industr <br> <span style="font-weight:400;"> Grains Research and Development Corporation </span><br>
-<div class="timeline-date">
-2022
-</div>
-<div>
-$1,327,312
-</div>
-</div>
-</div>
-</div>
-<div class="timeline-card" data-aos="fade-in" data-aos-delay="300">
-<div class="timeline-head">
 Distinguished Presenter’s Award
 </div>
 <div class="timeline-body" style="font-size:0.8rem;">
@@ -1158,7 +1145,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
