@@ -71,10 +71,12 @@ GitHubCalendar(".calendar", "emitanaka", { responsive: true });
 
 ```{r, echo = FALSE}
 df <- data.frame(what = c('<i class="fab fa-twitter"></i>',
+                          '<i class="fab fa-mastodon"></i>',
                            '<i class="fab fa-github"></i>',
                            '<i class="fas fa-envelope"></i>',
                            '<i class="fas fa-map-marker-alt"></i>'),
                  where = c("[statsgen](https://twitter.com/statsgen)",
+                           '<a rel="me" href="https://fosstodon.org/@emitanaka">emitanaka@fosstodon.org</a>',
                            "[emitanaka](https://github.com/emitanaka)",
                            "[emi.tanaka@monash.edu](mailto:emi.tanaka@monash.edu)",
                            "Monash University<br>29 Ancora Imparo Way<br>Education Building 6 Room 341<br>Clayton campus, VIC 3800<br>Australia"))
