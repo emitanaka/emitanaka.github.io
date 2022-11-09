@@ -103,3 +103,5 @@ I have now hex stickers for the `edibble` and `deggust` R packages. If you see m
 
 
 
+<a rel="me" href="https://aus.social/@emitanaka"></a>
+<a rel="me" href="https://fosstodon.org/@emitanaka"></a>
