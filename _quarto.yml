@@ -6,8 +6,6 @@ website:
   title: "emi tanaka"
   site-url: https://emitanaka.org
   favicon: images/avatar.png
-  twitter-card:
-    creator: "@statsgen"
   description: |
     Emi Tanaka's website and blog that mainly features about
     statistics, data science, R and academia.

@@ -3,7 +3,7 @@ title: "Towards an unified language in experimental designs"
 Host: Australian Data Science Network Inaugral Conference 
 abstract: |
  Experimental data are hallmarks of scientific evidence to prove or disprove theories or hypotheses. Multiple people with different expertise are typically involved in planning and executing experiments but rarely is the communication easy or seamless, especially across people from different domains, yet we predicate on the assumption that misapprehensions will be somehow sorted out. This assumption leaves the success of an experiment at the mercy of the interpersonal communication skills of people involved. Rather than leaving the success of an experiment to serendipity, I propose a novel framework to robustify the workflow of the construction of experimental designs that encourages users to deliberate on understanding the experimental structure. This framework, called "the grammar of experimental designs", considers an object oriented system to encapsulate the experimental structure in a cognitive programming approach. I demonstrate this approach using the R packages, edibble and deggust. 
-output-file: index.html
+#output-file: index.html
 author:
   - name: Emi Tanaka
     url: https://emitanaka.org

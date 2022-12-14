@@ -1,0 +1,14 @@
+{
+  "hash": "61cdc4c57bd502ff16911015f08c1e9e",
+  "result": {
+    "markdown": "---\ntitle: \"Automated visualisation of experimental designs\"\nHost: \"Australasian Applied Statistics Conference 2022\"\nabstract: |\n As those in the forefront of statistical consulting would well know, communication with the domain expert is of paramount importance in the construction of a valid experimental design. This communication can be better enhanced by the use of visualisation of the experimental design layout that allows all parties to assess understanding and clarify structure for the desired experimental design. There is, however, a friction to the manual construction of this visual representation.  In this talk, I extend the \"the grammar of experimental designs\" system in the edibble R-package to automate construction of the visualisation object; this system is implemented as the deggust R-package.  \noutput-file: index.html\nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 11-29-2022\nimage: cover.png\nurl: https://emitanaka.org/slides/AASC2022\ncategories: [Experimental Design, Visualisation]\n---\n\n\n\n\nClick [here](https://emitanaka.org/slides/AASC2022) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/AASC2022\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

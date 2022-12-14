@@ -17,6 +17,8 @@ format:
 
 ## <i class="fas fa-newspaper"></i> Recent Publications
 
+
+* Tanaka (2022) Getting the most out of your experimental data with design. *Biometric Bulletin* 39 (4) [<i class="fas fa-link"></i>](https://www.biometricsociety.org/publications/biometric-bulletin)
 * Tanaka & Amaliah (2022) Current state and prospects of R-packages for the design of experiments [<i class="fa-solid fa-file-pdf"></i>](https://arxiv.org/pdf/2206.07532) [<i class="fa-solid fa-file-circle-plus"></i>](https://arxiv.org/src/2206.07532v1/anc/supp.pdf) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/paper-DoE-review)
 * Statistical Society of Australia Victorian Branch Annual Report 2021 [<i class="fa-solid fa-file-pdf"></i>](https://www.statsoc.org.au/resources/Documents/Branch%20Folders/Victoria%20Branch/annual-report-2021.pdf)
 * Tanaka, Leung & Cook (2022) Commentary on “Visualization in Operations Management Research”: Incorporating Statistical Thinking into Visualization Practices for Decision Making in Operational Management. *INFORMS Journal on Data Science* [<i class="fa-solid fa-link"></i>](https://doi.org/10.1287/ijds.2021.0008) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/supp-visOM)

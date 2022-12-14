@@ -3,7 +3,7 @@ title: "Automated visualisation of experimental designs"
 Host: "Australasian Applied Statistics Conference 2022"
 abstract: |
  As those in the forefront of statistical consulting would well know, communication with the domain expert is of paramount importance in the construction of a valid experimental design. This communication can be better enhanced by the use of visualisation of the experimental design layout that allows all parties to assess understanding and clarify structure for the desired experimental design. There is, however, a friction to the manual construction of this visual representation.  In this talk, I extend the "the grammar of experimental designs" system in the edibble R-package to automate construction of the visualisation object; this system is implemented as the deggust R-package.  
-output-file: index.html
+#output-file: index.html
 author:
   - name: Emi Tanaka
     url: https://emitanaka.org
