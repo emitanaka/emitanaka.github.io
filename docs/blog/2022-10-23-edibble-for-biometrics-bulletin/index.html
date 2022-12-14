@@ -330,13 +330,14 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 </section>
 <section id="constructing-experimental-designs-with-the-edibble-r-package" class="level2">
 <h2 class="anchored" data-anchor-id="constructing-experimental-designs-with-the-edibble-r-package">Constructing experimental designs with the <strong>edibble</strong> R package</h2>
-<p>The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at <a href="https://github.com/emitanaka/edibble">github.com/emitanaka/edibble</a> and can be installed as below. ::: {.cell}</p>
+<p>The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at <a href="https://github.com/emitanaka/edibble">github.com/emitanaka/edibble</a> and can be installed as below.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># installing from CRAN</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"edibble"</span>) </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># OR for the developmental version</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>) </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"emitanaka/edibble"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>:::</p>
+</div>
 <section id="package-name" class="level3">
 <h3 class="anchored" data-anchor-id="package-name">Package name</h3>
 <p>The name of the package, edibble, stands for the <strong>e</strong>xperimental <strong>d</strong>esign table or t<strong>ibble</strong> for those that are familiar with tidyverse <span class="citation" data-cites="Wickham2019-mj">(<a href="#ref-Wickham2019-mj" role="doc-biblioref">Wickham et al. 2019</a>)</span>. I often see people misspell it as eddible or edible (latter probably due to autocorrect), so I want to emphasise that is is edibble, i.e.&nbsp;one d and two b.</p>

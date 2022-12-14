@@ -55,6 +55,8 @@ The ggplot2 system has a steep learning curve, however, the mastery of the syste
 ## Constructing experimental designs with the **edibble** R package
 
 The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at [github.com/emitanaka/edibble](https://github.com/emitanaka/edibble) and can be installed as below.
+
+
 ```{r}
 #| eval: false
 # installing from CRAN
