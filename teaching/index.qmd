@@ -38,13 +38,14 @@ If yes, it would be awesome if you could fill out [this very short survey](https
 
 At Monash University, I teach or develop:
 
-  * [**ETC5512 Wild Caught Data**](https://wcd.numbat.space/) (25%)
-  * [**ETC5523 Communicating with Data**](https://cwd.numbat.space/) (100%)
-  * [**Introduction to R** materials](https://learnr.numbat.space/)
+* **ETC3250/5250 Introduction to Machine Learning** (100%)
 
-In the past I have taught:
+In the past I have taught or developed:
 
 * [**ETC5521 Exploratory Data Analysis**](https://eda.numbat.space/) (50%) at Monash University,
+* [**ETC5512 Wild Caught Data**](https://wcd.numbat.space/) (25%) at Monash University,
+* [**ETC5523 Communicating with Data**](https://cwd.numbat.space/) (100%) at Monash University,
+* [**Introduction to R** materials](https://learnr.numbat.space/),
 * **STAT5002 Introduction to Statistics** (50%) at The University of Sydney,
 * **STAT3012 Applied Linear Models** (75%) at The University of Sydney,
 * **STAT906 Experimental Design** (100%) at the University of Wollongong,
