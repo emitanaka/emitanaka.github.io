@@ -38,7 +38,7 @@ If yes, it would be awesome if you could fill out [this very short survey](https
 
 At Monash University, I teach or develop:
 
-* **ETC3250/5250 Introduction to Machine Learning** (100%)
+* [**ETC3250/5250 Introduction to Machine Learning**](https://emitanaka.org/iml/) (100%)
 
 In the past I have taught or developed:
 
@@ -47,10 +47,13 @@ In the past I have taught or developed:
 * [**ETC5523 Communicating with Data**](https://cwd.numbat.space/) (100%) at Monash University,
 * [**Introduction to R** materials](https://learnr.numbat.space/),
 * **STAT5002 Introduction to Statistics** (50%) at The University of Sydney,
-* **STAT3012 Applied Linear Models** (75%) at The University of Sydney,
+* **STAT3012 Applied Linear Models** (100%) at The University of Sydney,
 * **STAT906 Experimental Design** (100%) at the University of Wollongong,
+* **MATH1013 Mathematical Modelling** (50%) at The University of Sydney,  
+* **MATH1005 Statistics** (100%) at The University of Sydney,
 
-and tutored various mathematics and statistics courses at The Univeristy of Sydney including lecturing for *MATH1013 Mathematical Modelling* (50%).
+
+and tutored various mathematics and statistics courses.
 
 
 ## Workshop
