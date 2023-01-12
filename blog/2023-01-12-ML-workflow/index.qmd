@@ -1,0 +1,15 @@
+---
+title: "Machine learning workflow with tidymodels"
+description: "This blog post describes the workflow associated with building machine learning models and how the suite of packages in `tidymodels` fits in the workflow process."
+author: Emi Tanaka
+institute: Monash University
+date: "01/12/2023"
+draft: true
+#output-file: index.html
+---
+
+
+![Machine learning data workflow.](ml-data-workflow.svg){#fig-ml-data-workflow}
+
+
+![Machine learning evaluation workflow.](ml-evaluation-workflow.svg){#fig-ml-eval-workflow}

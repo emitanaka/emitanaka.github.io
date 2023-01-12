@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="505 -21 632 391" width="632" height="391">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="24" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Arial" font-size="24" panose-1="2 11 7 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="104.98047" slope="0" x-height="518.5547" cap-height="715.8203" ascent="905.2734" descent="-211.91406" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Arial-BoldMT"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 6 6" markerWidth="6" markerHeight="6" color="black">
+      <g>
+        <path d="M 3.7333333 0 L 0 0 M 0 -1.4 L 3.7333333 0 L 0 1.4" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Arial" font-size="24" panose-1="2 11 6 4 2 2 2 2 2 4" units-per-em="1000" underline-position="-105.95703" underline-thickness="73.24219" slope="0" x-height="518.5547" cap-height="716.3086" ascent="905.2734" descent="-211.91406" font-weight="400">
+      <font-face-src>
+        <font-face-name name="ArialMT"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.17.5\n2023-01-10 23:22:14 +0000</metadata>
+  <g id="multi-model-workflow" stroke-opacity="1" stroke="none" fill-opacity="1" fill="none" stroke-dasharray="none">
+    <title>multi-model-workflow</title>
+    <g id="multi-model-workflow_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_15">
+        <path d="M 509.875 -18.125 L 654.875 -18.125 C 655.9796 -18.125 656.875 -17.22957 656.875 -16.125 L 656.875 56.875 C 656.875 57.97957 655.9796 58.875 654.875 58.875 L 509.875 58.875 C 508.77043 58.875 507.875 57.97957 507.875 56.875 L 507.875 -16.125 C 507.875 -17.22957 508.77043 -18.125 509.875 -18.125 Z" fill="black"/>
+        <path d="M 509.875 -18.125 L 654.875 -18.125 C 655.9796 -18.125 656.875 -17.22957 656.875 -16.125 L 656.875 56.875 C 656.875 57.97957 655.9796 58.875 654.875 58.875 L 509.875 58.875 C 508.77043 58.875 507.875 57.97957 507.875 56.875 L 507.875 -16.125 C 507.875 -17.22957 508.77043 -18.125 509.875 -18.125 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(512.875 -8.296997)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="14.156" y="23">Candidate </tspan>
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="5.684" y="51.672">ML model 1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_14">
+        <path d="M 721.875 127.375 L 876.875 127.375 C 877.9796 127.375 878.875 128.27043 878.875 129.375 L 878.875 206.875 C 878.875 207.97957 877.9796 208.875 876.875 208.875 L 721.875 208.875 C 720.7704 208.875 719.875 207.97957 719.875 206.875 L 719.875 129.375 C 719.875 128.27043 720.7704 127.375 721.875 127.375 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(724.875 139.453)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="black" x="5.152" y="23">Evaluate and </tspan>
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="black" x="25.384" y="51.672">diagnose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <path d="M 1009.875 359.425 L 1009.875 297.825 C 1009.875 293.5746 1037.707 290.125 1072 290.125 C 1106.293 290.125 1134.125 293.5746 1134.125 297.825 L 1134.125 359.425 C 1134.125 363.6754 1106.293 367.125 1072 367.125 C 1037.707 367.125 1009.875 363.6754 1009.875 359.425 M 1009.875 297.825 C 1009.875 302.0754 1037.707 305.525 1072 305.525 C 1106.293 305.525 1134.125 302.0754 1134.125 297.825" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(1014.875 318.139)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="black" x="5.801" y="23">New data</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <text transform="translate(878.2621 1.875)" fill="black">
+          <tspan font-family="Arial" font-size="24" font-weight="700" fill="black" x="0" y="22">…</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <path d="M 735.7054 295.875 L 867.3304 295.875 C 868.4349 295.875 869.3304 296.77043 869.3304 297.875 L 869.3304 359.375 C 869.3304 360.47957 868.4349 361.375 867.3304 361.375 L 735.7054 361.375 C 734.6008 361.375 733.7054 360.47957 733.7054 359.375 L 733.7054 297.875 C 733.7054 296.77043 734.6008 295.875 735.7054 295.875 Z" fill="black"/>
+        <path d="M 735.7054 295.875 L 867.3304 295.875 C 868.4349 295.875 869.3304 296.77043 869.3304 297.875 L 869.3304 359.375 C 869.3304 360.47957 868.4349 361.375 867.3304 361.375 L 735.7054 361.375 C 734.6008 361.375 733.7054 360.47957 733.7054 359.375 L 733.7054 297.875 C 733.7054 296.77043 734.6008 295.875 735.7054 295.875 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(738.7054 299.953)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="17.0205" y="23">Final ML </tspan>
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="29.4645" y="51.672">model</tspan>
+        </text>
+      </g>
+      <g id="Line_10">
+        <line x1="871.3304" y1="328.625" x2="991.975" y2="328.625" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_9">
+        <rect x="907.7996" y="309.73242" width="67.375" height="37.785156" fill="white"/>
+        <text transform="translate(912.7996 314.73242)" fill="black">
+          <tspan font-family="Arial" font-size="24" font-weight="400" fill="black" x="0" y="22">apply</tspan>
+        </text>
+      </g>
+      <g id="Line_8">
+        <line x1="641.8572" y1="60.875" x2="723.4454" y2="116.4264" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_7">
+        <line x1="799.9458" y1="210.875" x2="800.8416" y2="277.97642" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_6">
+        <rect x="764.1235" y="231.33437" width="72.69531" height="37.785156" fill="white"/>
+        <text transform="translate(769.1235 236.33437)" fill="black">
+          <tspan font-family="Arial" font-size="24" font-weight="400" fill="black" x="0" y="22">select</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <path d="M 689.8188 -18.125 L 834.8188 -18.125 C 835.9234 -18.125 836.8188 -17.22957 836.8188 -16.125 L 836.8188 56.875 C 836.8188 57.97957 835.9234 58.875 834.8188 58.875 L 689.8188 58.875 C 688.7142 58.875 687.8188 57.97957 687.8188 56.875 L 687.8188 -16.125 C 687.8188 -17.22957 688.7142 -18.125 689.8188 -18.125 Z" fill="black"/>
+        <path d="M 689.8188 -18.125 L 834.8188 -18.125 C 835.9234 -18.125 836.8188 -17.22957 836.8188 -16.125 L 836.8188 56.875 C 836.8188 57.97957 835.9234 58.875 834.8188 58.875 L 689.8188 58.875 C 688.7142 58.875 687.8188 57.97957 687.8188 56.875 L 687.8188 -16.125 C 687.8188 -17.22957 688.7142 -18.125 689.8188 -18.125 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(692.8188 -8.296997)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="14.156" y="23">Candidate </tspan>
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="5.684" y="51.672">ML model 2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <path d="M 958.875 -18.125 L 1103.875 -18.125 C 1104.9796 -18.125 1105.875 -17.22957 1105.875 -16.125 L 1105.875 56.875 C 1105.875 57.97957 1104.9796 58.875 1103.875 58.875 L 958.875 58.875 C 957.7704 58.875 956.875 57.97957 956.875 56.875 L 956.875 -16.125 C 956.875 -17.22957 957.7704 -18.125 958.875 -18.125 Z" fill="black"/>
+        <path d="M 958.875 -18.125 L 1103.875 -18.125 C 1104.9796 -18.125 1105.875 -17.22957 1105.875 -16.125 L 1105.875 56.875 C 1105.875 57.97957 1104.9796 58.875 1103.875 58.875 L 958.875 58.875 C 957.7704 58.875 956.875 57.97957 956.875 56.875 L 956.875 -16.125 C 956.875 -17.22957 957.7704 -18.125 958.875 -18.125 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+        <text transform="translate(961.875 -8.296997)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="14.156" y="23">Candidate </tspan>
+          <tspan font-family="Helvetica Neue" font-size="24" font-weight="400" fill="white" x="4.352" y="51.672">ML model K</tspan>
+        </text>
+      </g>
+      <g id="Line_3">
+        <line x1="772.4763" y1="60.875" x2="784.7852" y2="109.95265" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_2">
+        <line x1="967.7811" y1="60.875" x2="879.9131" y2="116.834" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+</svg>
