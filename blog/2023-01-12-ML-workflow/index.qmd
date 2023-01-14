@@ -13,3 +13,6 @@ draft: true
 
 
 ![Machine learning evaluation workflow.](ml-evaluation-workflow.svg){#fig-ml-eval-workflow}
+
+
+![Cross validation scheme.](cross-validation-workflow.png){#fig-cv-scheme}
