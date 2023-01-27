@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="265 184 998 529" width="998" height="529">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 8 3 0 0 0 9 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="975.0061" descent="-216.99524" font-weight="700">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue-Bold"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Helvetica Neue" font-size="12" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.17.5\n2023-01-27 07:20:17 +0000</metadata>
+  <g id="classification-table" stroke-dasharray="none" stroke="none" fill="none" stroke-opacity="1" fill-opacity="1">
+    <title>classification-table</title>
+    <g id="classification-table_Layer_1">
+      <title>Layer 1</title>
+      <g id="Group_34">
+        <g id="Graphic_42">
+          <rect x="695.1974" y="384.66667" width="173.3026" height="71.33333" fill="#009051"/>
+          <rect x="695.1974" y="384.66667" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(700.1974 410.6013)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="16.755299" y="16">True negative (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">TN</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_41">
+          <rect x="348.5922" y="384.66667" width="173.3026" height="71.33333" fill="white"/>
+          <rect x="348.5922" y="384.66667" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(353.5922 400.8692)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="37.8033" y="16">Negative (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">N</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="44.4833" y="35.46411">= </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="35.46411">FP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="35.46411">TN</tspan>
+          </text>
+        </g>
+        <g id="Graphic_40">
+          <rect x="521.8948" y="384.66667" width="173.3026" height="71.33333" fill="#ff9300"/>
+          <rect x="521.8948" y="384.66667" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(526.8948 403.4333)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="16.315299" y="16">False positive (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">FP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="51.6513" y="30.46411">Type I error</tspan>
+          </text>
+        </g>
+        <g id="Graphic_39">
+          <rect x="695.1974" y="313.33333" width="173.3026" height="71.33333" fill="#ff2600"/>
+          <rect x="695.1974" y="313.33333" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(700.1974 332.09995)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="13.203299" y="16">False negative (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">FN</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="50.0973" y="30.46411">Type II error</tspan>
+          </text>
+        </g>
+        <g id="Graphic_38">
+          <rect x="348.5922" y="313.33333" width="173.3026" height="71.33333" fill="white"/>
+          <rect x="348.5922" y="313.33333" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(353.5922 329.5359)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="41.8033" y="16">Positive (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">P</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="44.4833" y="35.46411">= </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="35.46411">TP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="35.46411">FN</tspan>
+          </text>
+        </g>
+        <g id="Graphic_37">
+          <rect x="521.8948" y="313.33333" width="173.3026" height="71.33333" fill="#68bc36"/>
+          <rect x="521.8948" y="313.33333" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(526.8948 339.26794)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="19.867299" y="16">True positive (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">TP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+          </text>
+        </g>
+        <g id="Graphic_36">
+          <rect x="695.1974" y="242" width="173.3026" height="71.33333" fill="white"/>
+          <rect x="695.1974" y="242" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(700.1974 258.20256)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="32.4673" y="16">Negative (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">PN</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="43.8913" y="35.46411">= </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="35.46411">FN</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="35.46411">TN</tspan>
+          </text>
+        </g>
+        <g id="Graphic_35">
+          <rect x="521.8948" y="242" width="173.3026" height="71.33333" fill="white"/>
+          <rect x="521.8948" y="242" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(526.8948 258.20256)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="36.4673" y="16">Positive (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">PP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="45.0753" y="35.46411">= </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="35.46411">TP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="35.46411">FP</tspan>
+          </text>
+        </g>
+        <g id="Graphic_33">
+          <rect x="348.5922" y="242" width="173.3026" height="71.33333" fill="#666"/>
+          <rect x="348.5922" y="242" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(353.5922 258.20256)" fill="white">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="13.491299" y="16">Total population (</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="white" y="16">n</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" y="16">)</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="5.0912985" y="35.46411">=</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="35.46411">TP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" y="35.46411">+</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="35.46411">FN </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" y="35.46411">+</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="35.46411">FP</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" y="35.46411">+</tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> </tspan>
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="35.46411">TN</tspan>
+          </text>
+        </g>
+      </g>
+      <g id="Graphic_43">
+        <rect x="266.0922" y="313.33333" width="82.5" height="142.66667" fill="#333"/>
+        <rect x="266.0922" y="313.33333" width="82.5" height="142.66667" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(271.0922 366.21867)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="13.73" y="15">Actual </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="3.058" y="33.448">condition</tspan>
+        </text>
+      </g>
+      <g id="Graphic_44">
+        <rect x="522" y="184.5" width="346.5" height="57.5" fill="#333"/>
+        <rect x="522" y="184.5" width="346.5" height="57.5" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(527 204.026)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="98.458" y="15">Predicted condition</tspan>
+        </text>
+      </g>
+      <g id="Graphic_47">
+        <rect x="868.5" y="313.33333" width="187" height="71.33333" fill="white"/>
+        <rect x="868.5" y="313.33333" width="187" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(873.5 329.5359)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.94" y="16">True positive rate (</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">TPR</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="34.3" y="35.46411">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="35.46411">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="35.46411">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="35.46411">FN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_48">
+        <rect x="868.5" y="384.66667" width="187" height="71.33333" fill="white"/>
+        <rect x="868.5" y="384.66667" width="187" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(873.5 400.8692)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="1.388" y="16">False positive rate (</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">FPR</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="34.444" y="35.46411">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="35.46411">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="35.46411">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="35.46411">TN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="35.46411">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_49">
+        <rect x="522.8948" y="314.33333" width="173.3026" height="71.33333" fill="#68bc36"/>
+        <rect x="522.8948" y="314.33333" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(527.8948 340.26794)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="19.867299" y="16">True positive (</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="16">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="16">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_50">
+        <rect x="522.8948" y="591" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="522.8948" y="591" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(527.8948 607.7106)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.1713" y="15">Accuracy</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="28.3393" y="34.448">= (</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="34.448">TN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">) / </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="black" y="34.448">n</tspan>
+        </text>
+      </g>
+      <g id="Graphic_51">
+        <rect x="522" y="470" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="522" y="470" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(527 486.7106)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="10.099299" y="15">False discovery rate</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="28.1873" y="34.448">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="34.448">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="34.448">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_52">
+        <rect x="782" y="503" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="782" y="503" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(787 519.7106)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.7633" y="15">Precision</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="28.0433" y="34.448">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="34.448">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_53">
+        <rect x="955.3026" y="503" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="955.3026" y="503" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(960.3026 519.7106)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="59.7313" y="15">Recall</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="27.4513" y="34.448">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="34.448">FN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_54">
+        <rect x="858.5" y="640.3333" width="210" height="71.33333" fill="white"/>
+        <rect x="858.5" y="640.3333" width="210" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(863.5 648.328)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="90.96" y="15">F1</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="16.096" y="33.448">= 2 (Precision x Recall)/</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31.8" y="51.895996">(Precision + Recall)</tspan>
+        </text>
+      </g>
+      <g id="Line_55">
+        <line x1="893.2843" y1="574.3333" x2="933.2409" y2="632.1873" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_56">
+        <line x1="1021.5787" y1="574.3333" x2="988.7859" y2="631.7371" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_57">
+        <text transform="translate(927.25 589.5)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="10.246" y="11">Harmonic </tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="21.352" y="25.336">mean</tspan>
+        </text>
+      </g>
+      <g id="Graphic_58">
+        <rect x="1088.5" y="313.33333" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="1088.5" y="313.33333" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1093.5 330.04395)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="45.3553" y="15">Sensitivity</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="27.4513" y="34.448">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#68bc36" y="34.448">TP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff2600" y="34.448">FN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_59">
+        <rect x="1088.5" y="384.66667" width="173.3026" height="71.33333" fill="white"/>
+        <rect x="1088.5" y="384.66667" width="173.3026" height="71.33333" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1093.5 401.3773)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="44.6193" y="15">Specificity</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="26.8593" y="34.448">= </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="34.448">TN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">/(</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#ff9300" y="34.448">FP</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448"> + </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="700" fill="#009051" y="34.448">TN</tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" y="34.448">)</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
