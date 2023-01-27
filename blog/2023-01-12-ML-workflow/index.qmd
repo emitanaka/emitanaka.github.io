@@ -16,3 +16,8 @@ draft: true
 
 
 ![Cross validation scheme.](cross-validation-workflow.png){#fig-cv-scheme}
+
+![](ml-data-workflow-with-tools.png)
+
+![](classification-table.svg)
+
