@@ -36,6 +36,8 @@ format:
 
 I'm a Senior Lecturer (in the [Australian system](https://emitanaka.org/posts/2022-06-30-academic-ranks/)) in Statistics at the [Department of Econometrics and Business Statistics, Monash University, Melbourne, Australia](https://www.monash.edu/business/ebs) and part of the [NUMBATs group](https://numbat.space/). 
 
+From July 2023, I will be part of the [Biological Data Science Institute](https://bdsi.anu.edu.au/) with affiliation also at the [Research School of Finance, Actuarial Studies and Statistics](https://rsfas.anu.edu.au/) at the Australian National University. Please contact me using my new work email address at [emi.tanaka@anu.edu.au](mailto:emi.tanaka@anu.edu.au).
+
 My **research interests** are:
 
 * [Experimental design]{.highlight-color}
@@ -78,7 +80,7 @@ df <- data.frame(what = c('<i class="fab fa-twitter"></i>',
                  where = c("[statsgen](https://twitter.com/statsgen)",
                            '<a rel="me" href="https://fosstodon.org/@emitanaka">emitanaka@fosstodon.org</a>',
                            "[emitanaka](https://github.com/emitanaka)",
-                           "[emi.tanaka@monash.edu](mailto:emi.tanaka@monash.edu)",
+                           "[emi.tanaka@monash.edu](mailto:emi.tanaka@monash.edu) / [emi.tanaka@anu.edu.au](mailto:emi.tanaka@anu.edu.au)",
                            "Monash University<br>29 Ancora Imparo Way<br>Education Building 6 Room 341<br>Clayton campus, VIC 3800<br>Australia"))
 knitr::kable(df, col.names = c("", ""), escape = FALSE)
 ```

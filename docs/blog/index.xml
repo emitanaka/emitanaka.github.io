@@ -8,10 +8,10 @@
 <title>emi tanaka</title>
 <link>https://emitanaka.org/blog/index.html</link>
 <atom:link href="https://emitanaka.org/blog/index.xml" rel="self" type="application/rss+xml"/>
-<description>Emi Tanaka's website and blog that mainly features about
+<description>Emi Tanaka&#39;s website and blog that mainly features about
 statistics, data science, R and academia.
 </description>
-<generator>quarto-1.1.132</generator>
+<generator>quarto-1.2.280</generator>
 <lastBuildDate>Sun, 11 Dec 2022 13:00:00 GMT</lastBuildDate>
 <item>
   <title>Getting the most out of your experimental data with design</title>
@@ -78,13 +78,14 @@ statistics, data science, R and academia.
 </section>
 <section id="constructing-experimental-designs-with-the-edibble-r-package" class="level2">
 <h2 class="anchored" data-anchor-id="constructing-experimental-designs-with-the-edibble-r-package">Constructing experimental designs with the <strong>edibble</strong> R package</h2>
-<p>The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at <a href="https://github.com/emitanaka/edibble">github.com/emitanaka/edibble</a> and can be installed as below. ::: {.cell}</p>
+<p>The edibble package is a system in the R language to facilitate the design of comparative experiments based on the grammar of experimental designs. The package is available on Comprehensive R Arhive Network (CRAN) with the developmental version available at <a href="https://github.com/emitanaka/edibble">github.com/emitanaka/edibble</a> and can be installed as below.</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;"># installing from CRAN</span></span>
 <span id="cb3-2"><span class="fu" style="color: #4758AB;">install.packages</span>(<span class="st" style="color: #20794D;">"edibble"</span>) </span>
 <span id="cb3-3"><span class="co" style="color: #5E5E5E;"># OR for the developmental version</span></span>
 <span id="cb3-4"><span class="fu" style="color: #4758AB;">install.packages</span>(<span class="st" style="color: #20794D;">"remotes"</span>) </span>
 <span id="cb3-5">remotes<span class="sc" style="color: #5E5E5E;">::</span><span class="fu" style="color: #4758AB;">install_github</span>(<span class="st" style="color: #20794D;">"emitanaka/edibble"</span>) </span></code></pre></div>
-<p>:::</p>
+</div>
 <section id="package-name" class="level3">
 <h3 class="anchored" data-anchor-id="package-name">Package name</h3>
 <p>The name of the package, edibble, stands for the <strong>e</strong>xperimental <strong>d</strong>esign table or t<strong>ibble</strong> for those that are familiar with tidyverse <span class="citation" data-cites="Wickham2019-mj">(Wickham et al. 2019)</span>. I often see people misspell it as eddible or edible (latter probably due to autocorrect), so I want to emphasise that is is edibble, i.e.&nbsp;one d and two b.</p>
