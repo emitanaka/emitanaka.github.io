@@ -1,0 +1,89 @@
+---
+title: "Final lecture at Monash University"
+description: "All the teaching materials I developed at Monash University."
+author: Emi Tanaka
+institute: Monash University
+date: "2023/05/27"
+---
+
+Since I started working at the Department of Econometrics and Business Statistics, Monash University in January 2020, I developed and taught across **4 units**, totalling development of **36 unique 2-hour lectures**, and developed an **online resource** on top of **slide templates** and **utility scripts**. The 3 units (_Wild-Caught Data_, _Exploratory Data Analysis_, and _Communicating with Data_) I taught were brand new units for the Master of Business Analytics and there were no past materials that I can leverage. The difficulty was compounded by the fact that my training was in classical statistics and almost all topics that I taught was actually never something I ever formally learnt. Needless to say it has been an absolutely exhausting time period! As much as I'm proud for surviving it, I hope to never repeat the experience again. I sacrificed a large quality of my life (particularly in 2020) just to finish developing my teaching materials. Fortunately or not, the series of lockdowns in Melbourne aided in giving me more time to focus on the development. 
+
+Teaching _Introduction to Machine Learning_ was the highlight of all the teaching for me. Not only did I enjoy teaching the content but it was also the first time I got to teach in-person at Monash after 3 years (gasp!). Shout out to the students who got up early each week for the Monday 9am lecture despite how cold it has become! 
+
+I ended my last lecture (shown below) at Monash with the wrap-up for the Introduction to Machine Learning unit featuring the varied datasets and toolkits that was demonstrated in the unit. This would be the final lecture of the year for me but also the final lecture for me at Monash. From July 2023, I will be joining the Biological Data Science Institute at Australian National University. As much as I enjoy teaching enthusiastic students and recognise the importance in training the next-generation, I hope I get more time to focus on research. 
+
+
+<iframe width="600px" src="../../teaching/monash-iml/2023/lecture-12B.html" height="337.5px" style="border: 1px solid black;"></iframe>
+
+
+So what did I develop? Below is the full list.
+
+
+### Introduction to Machine Learning
+
+- [Overview](../../teaching/monash-iml/2023/lecture-01.html) 
+- [Non-parametric regression](../../teaching/monash-iml/2023/lecture-02A.html) 
+- [Variable selection](../../teaching/monash-iml/2023/lecture-02B.html)   
+- [Resampling](../../teaching/monash-iml/2023/lecture-03A.html) 
+- [Regularisation](../../teaching/monash-iml/2023/lecture-03B.html)   
+- [Logistic regression](../../teaching/monash-iml/2023/lecture-04A.html)  
+- [Discriminant analysis](../../teaching/monash-iml/2023/lecture-04B.html) 
+- [Decision trees](../../teaching/monash-iml/2023/lecture-05.html)  
+- [Tree ensemble methods](../../teaching/monash-iml/2023/lecture-06.html)   
+- [k-nearest neighbours](../../teaching/monash-iml/2023/lecture-07.html)   
+- [Dimension reduction](../../teaching/monash-iml/2023/lecture-08.html)   
+- [Clustering](../../teaching/monash-iml/2023/lecture-09.html)   
+- [Support vector machines](../../teaching/monash-iml/2023/lecture-10.html)  
+- [Neural network Part I](../../teaching/monash-iml/2023/lecture-11.html)  
+- [Neural network Part II](../../teaching/monash-iml/2023/lecture-12A.html)   
+- [Wrap-up](../../teaching/monash-iml/2023/lecture-12B.html)   
+
+
+
+### Communicating with Data
+
+- [Basic communication theory and practice](../../teaching/monash-cwd/2022/lecture-01.html)    
+- [Introduction to web technologies](../../teaching/monash-cwd/2022/lecture-02.html)     
+- [Communicating data with interactive web apps](../../teaching/monash-cwd/2022/lecture-03.html) 
+- [Data storytelling on the web](../../teaching/monash-cwd/2022/lecture-04.html)   
+- [Statistical model outputs](../../teaching/monash-cwd/2022/lecture-05A.html)     
+- [Data tables](../../teaching/monash-cwd/2022/lecture-05B.html)      
+- [Effective data visualisation](../../teaching/monash-cwd/2022/lecture-06.html)      
+- [Captivating statistical ](../../teaching/monash-cwd/2022/lecture-07.html)     
+- [Clearly communicating with code](../../teaching/monash-cwd/2022/lecture-08.html) 
+- [Stylishly communicating with code](../../teaching/monash-cwd/2022/lecture-09.html) 
+- [Narrative](../../teaching/monash-cwd/2022/lecture-10.html)      
+- [Visual](../../teaching/monash-cwd/2022/lecture-11.html)      
+- [Interactive](../../teaching/monash-cwd/2022/lecture-12.html)      
+
+### Wild-Caught Data
+
+- [Synthetic and Simulated Data](../../teaching/monash-wcd/2020/week08-PISA.html#2)
+- [The Language of Designed Experiments](../../teaching/monash-wcd/2020/week09-DoE.html#2) 
+- [Introduction to Data Collection Methods](../../teaching/monash-wcd/2021/lecture-01.html#2)
+- [Australian Census](../../teaching/monash-wcd/2022/lecture-04.html#2)
+- [Australian Election](../../teaching/monash-wcd/2022/lecture-05.html#2) 
+- [Combining Australian Census and Election Data](../../teaching/monash-wcd/2022/lecture-06.html#2)  
+
+### Exploratory Data Analysis
+
+- [Initial data analysis](../../teaching/monash-eda/ida.html)
+- [Single variable](../../teaching/monash-eda/single-variable.html)  
+- [Comparisons](../../teaching/monash-eda/comparisons.html)   
+- [Model diagnostics](../../teaching/monash-eda/model-diagnostics.html) 
+- [Visual inference Part I](../../teaching/monash-eda/visual-inference-part1.html) 
+- [Visual inference Part II](../../teaching/monash-eda/visual-inference-part2.html)
+
+### Templates and utility scripts
+
+- [`monash` R-package](https://github.com/numbats/monash) that includes the templates for the teaching slides.
+- Various utility scripts that automated certain teaching tasks.
+
+### Learn R 
+
+
+- [https://learnr.numbat.space/](https://learnr.numbat.space/)
+
+<iframe src="https://learnr.numbat.space/" width="600px" height="450px" style="border: 1px solid black;">
+
+

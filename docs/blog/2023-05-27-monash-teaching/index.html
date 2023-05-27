@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Emi Tanaka">
+<meta name="dcterms.date" content="2023-05-27">
+<meta name="description" content="All the teaching materials I developed at Monash University.">
+
+<title>emi tanaka – Final lecture at Monash University</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/avatar.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-07SZXPNSJZ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../assets/styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/avatar.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">emi tanaka</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html">
+ <span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research/index.html">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/index.html">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks/index.html">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/statsgen"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Final lecture at Monash University</h1>
+</div>
+
+<div>
+  <div class="description">
+    All the teaching materials I developed at Monash University.
+  </div>
+</div>
+
+<style>
+.quarto-title-meta {
+  background-color: #f5e1eb;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  color: #ad0059;
+}
+.quarto-title-meta a {
+  color: #ad0059!important;
+}
+</style>
+<div class="quarto-title-meta">
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+
+    <div class="quarto-title-meta-contents">
+    Emi Tanaka 
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Monash University
+          </p>
+      </div>
+    </div>
+
+
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 27, 2023</p>
+    </div>
+  </div>
+  
+  
+  </div>
+
+
+</header>
+
+<p>Since I started working at the Department of Econometrics and Business Statistics, Monash University in January 2020, I developed and taught across <strong>4 units</strong>, totalling development of <strong>36 unique 2-hour lectures</strong>, and developed an <strong>online resource</strong> on top of <strong>slide templates</strong> and <strong>utility scripts</strong>. The 3 units (<em>Wild-Caught Data</em>, <em>Exploratory Data Analysis</em>, and <em>Communicating with Data</em>) I taught were brand new units for the Master of Business Analytics and there were no past materials that I can leverage. The difficulty was compounded by the fact that my training was in classical statistics and almost all topics that I taught was actually never something I ever formally learnt. Needless to say it has been an absolutely exhausting time period! As much as I’m proud for surviving it, I hope to never repeat the experience again. I sacrificed a large quality of my life (particularly in 2020) just to finish developing my teaching materials. Fortunately or not, the series of lockdowns in Melbourne aided in giving me more time to focus on the development.</p>
+<p>Teaching <em>Introduction to Machine Learning</em> was the highlight of all the teaching for me. Not only did I enjoy teaching the content but it was also the first time I got to teach in-person at Monash after 3 years (gasp!). Shout out to the students who got up early each week for the Monday 9am lecture despite how cold it has become!</p>
+<p>I ended my last lecture (shown below) at Monash with the wrap-up for the Introduction to Machine Learning unit featuring the varied datasets and toolkits that was demonstrated in the unit. This would be the final lecture of the year for me but also the final lecture for me at Monash. From July 2023, I will be joining the Biological Data Science Institute at Australian National University. As much as I enjoy teaching enthusiastic students and recognise the importance in training the next-generation, I hope I get more time to focus on research.</p>
+<iframe width="600px" src="../../teaching/monash-iml/2023/lecture-12B.html" height="337.5px" style="border: 1px solid black;">
+</iframe>
+<p>So what did I develop? Below is the full list.</p>
+<section id="introduction-to-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-to-machine-learning">Introduction to Machine Learning</h3>
+<ul>
+<li><a href="../../teaching/monash-iml/2023/lecture-01.html">Overview</a></li>
+<li><a href="../../teaching/monash-iml/2023/lecture-02A.html">Non-parametric regression</a></li>
+<li><a href="../../teaching/monash-iml/2023/lecture-02B.html">Variable selection</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-03A.html">Resampling</a></li>
+<li><a href="../../teaching/monash-iml/2023/lecture-03B.html">Regularisation</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-04A.html">Logistic regression</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-04B.html">Discriminant analysis</a></li>
+<li><a href="../../teaching/monash-iml/2023/lecture-05.html">Decision trees</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-06.html">Tree ensemble methods</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-07.html">k-nearest neighbours</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-08.html">Dimension reduction</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-09.html">Clustering</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-10.html">Support vector machines</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-11.html">Neural network Part I</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-12A.html">Neural network Part II</a><br>
+</li>
+<li><a href="../../teaching/monash-iml/2023/lecture-12B.html">Wrap-up</a></li>
+</ul>
+</section>
+<section id="communicating-with-data" class="level3">
+<h3 class="anchored" data-anchor-id="communicating-with-data">Communicating with Data</h3>
+<ul>
+<li><a href="../../teaching/monash-cwd/2022/lecture-01.html">Basic communication theory and practice</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-02.html">Introduction to web technologies</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-03.html">Communicating data with interactive web apps</a></li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-04.html">Data storytelling on the web</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-05A.html">Statistical model outputs</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-05B.html">Data tables</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-06.html">Effective data visualisation</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-07.html">Captivating statistical</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-08.html">Clearly communicating with code</a></li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-09.html">Stylishly communicating with code</a></li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-10.html">Narrative</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-11.html">Visual</a><br>
+</li>
+<li><a href="../../teaching/monash-cwd/2022/lecture-12.html">Interactive</a></li>
+</ul>
+</section>
+<section id="wild-caught-data" class="level3">
+<h3 class="anchored" data-anchor-id="wild-caught-data">Wild-Caught Data</h3>
+<ul>
+<li><a href="../../teaching/monash-wcd/2020/week08-PISA.html#2">Synthetic and Simulated Data</a></li>
+<li><a href="../../teaching/monash-wcd/2020/week09-DoE.html#2">The Language of Designed Experiments</a></li>
+<li><a href="../../teaching/monash-wcd/2021/lecture-01.html#2">Introduction to Data Collection Methods</a></li>
+<li><a href="../../teaching/monash-wcd/2022/lecture-04.html#2">Australian Census</a></li>
+<li><a href="../../teaching/monash-wcd/2022/lecture-05.html#2">Australian Election</a></li>
+<li><a href="../../teaching/monash-wcd/2022/lecture-06.html#2">Combining Australian Census and Election Data</a></li>
+</ul>
+</section>
+<section id="exploratory-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h3>
+<ul>
+<li><a href="../../teaching/monash-eda/ida.html">Initial data analysis</a></li>
+<li><a href="../../teaching/monash-eda/single-variable.html">Single variable</a><br>
+</li>
+<li><a href="../../teaching/monash-eda/comparisons.html">Comparisons</a><br>
+</li>
+<li><a href="../../teaching/monash-eda/model-diagnostics.html">Model diagnostics</a></li>
+<li><a href="../../teaching/monash-eda/visual-inference-part1.html">Visual inference Part I</a></li>
+<li><a href="../../teaching/monash-eda/visual-inference-part2.html">Visual inference Part II</a></li>
+</ul>
+</section>
+<section id="templates-and-utility-scripts" class="level3">
+<h3 class="anchored" data-anchor-id="templates-and-utility-scripts">Templates and utility scripts</h3>
+<ul>
+<li><a href="https://github.com/numbats/monash"><code>monash</code> R-package</a> that includes the templates for the teaching slides.</li>
+<li>Various utility scripts that automated certain teaching tasks.</li>
+</ul>
+</section>
+<section id="learn-r" class="level3">
+<h3 class="anchored" data-anchor-id="learn-r">Learn R</h3>
+<ul>
+<li><a href="https://learnr.numbat.space/">https://learnr.numbat.space/</a></li>
+</ul>
+<iframe src="https://learnr.numbat.space/" width="600px" height="450px" style="border: 1px solid black;">
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden" data-render-id="quarto-int-sidebar-title">emi tanaka</span> <span class="hidden" data-render-id="quarto-int-navbar-title">emi tanaka</span> <span class="hidden" data-render-id="quarto-int-navbar:Home">Home</span> <span class="hidden" data-render-id="quarto-int-navbar:CV">CV</span> <span class="hidden" data-render-id="quarto-int-navbar:Research">Research</span> <span class="hidden" data-render-id="quarto-int-navbar:Teaching">Teaching</span> <span class="hidden" data-render-id="quarto-int-navbar:Talks">Talks</span> <span class="hidden" data-render-id="quarto-int-navbar:Blog">Blog</span> <span class="hidden" data-render-id="quarto-int-navbar:About">About</span> <span class="hidden" data-render-id="footer-left"><b>Dr. Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Monash University, Australia<br> © Copyright 2021-2023 Emi Tanaka</span> <span class="hidden" data-render-id="footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br> <i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia</span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden" data-render-id="quarto-metatitle">emi tanaka - Final lecture at Monash University</span> <span class="hidden" data-render-id="quarto-twittercardtitle">emi tanaka - Final lecture at Monash University</span> <span class="hidden" data-render-id="quarto-ogcardtitle">emi tanaka - Final lecture at Monash University</span> <span class="hidden" data-render-id="quarto-metasitename">emi tanaka</span></p>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id = "quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <div class='footer-contents'><b>Dr. Emi Tanaka</b> <br>
+Senior Lecturer in Statistics<br>
+Monash University, Australia<br>
+© Copyright 2021-2023 Emi Tanaka
+</div>  
+    </div>   
+    <div class="nav-footer-right">
+      <div class='footer-contents'><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen">@statsgen</a> on Twitter <br>
+<i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br>
+<i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br>
+<i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia
+</div>  
+    </div>
+  </div>
+</footer>
+<link rel="stylesheet" href="/assets/syntax-highlight.css">
+<link rel="stylesheet" href="/assets/fontawesome-free-6.1.1-web/css/all.min.css">
+<script src="/assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+</body>
+
+</html></iframe></section></main></div></body></html>
