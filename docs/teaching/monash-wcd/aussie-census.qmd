@@ -1,0 +1,25 @@
+---
+title: Australian Census
+date: 2022-03-22
+format: html
+html: 'monash-wcd/2022/lecture-04.html#2'
+pdf: 'monash-wcd/2022/lecture-04.pdf'
+---
+
+```{r}
+#| echo: false
+htmllink <- gsub("monash-wcd/", "", rmarkdown::metadata$html)
+```
+
+
+This was taught as part of the lecture for the Wild-Caught Data.
+
+<a href='`r htmllink`'><i class="fa-solid fa-link"></i></a>
+
+
+
+
+<iframe width="600px" src="`r htmllink`" height="337.5px" style="border: 1px solid black;"></iframe>
+
+
+

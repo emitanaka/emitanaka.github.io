@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5512: Wild Caught Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.11/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/emi.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-06.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5512: Wild Caught Data]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Combining Australian census and election data&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6
+
+&lt;br&gt;
+
+]
+
+
+
+---
+
+class: center middle bg-gray
+
+
+.aim-box.tl.w-70[
+Today you will:
+
+- look at the ABS geographical boundaries for the 2016 census
+- integrate data from different sources (census and election) to make exploratory inferences
+]
+
+---
+
+
+# Recall &lt;i class="fas fa-database"&gt;&lt;/i&gt; 2019 Federal Election Data
+
+.f6[
+
+```r
+library(tidyverse)
+library(sf)
+*aec_map &lt;- read_sf(here::here("data/vic-july-2018-esri/E_AUGFN3_region.shp"))
+*votes &lt;- read_csv("https://results.aec.gov.au/24310/Website/Downloads/HouseDopByDivisionDownload-24310.csv", skip = 1)
+
+winners_fix &lt;- votes %&gt;% 
+  mutate(DivisionNm = ifelse(DivisionNm=="McEwen", "Mcewen", DivisionNm)) %&gt;% 
+  filter(Elected=="Y" &amp; CountNumber==0 &amp; CalculationType=="Preference Count") %&gt;% # get the winner
+  right_join(aec_map, by = c("DivisionNm" = "Elect_div")) # join the data
+
+auscolours &lt;- c("ALP" = "#DE3533", "LNP" = "#ADD8E6", "KAP" = "#8B0000", "GVIC" = "#10C25B", "XEN" = "#ff6300", 
+                "LP" = "#0047AB", "NP" = "#0a9cca", "IND" = "#000000")
+
+ggplot(winners_fix) + 
+  geom_sf(aes(fill = PartyAb, geometry = geometry)) +
+  scale_fill_manual(values = auscolours)
+```
+
+]
+
+.flex[
+.w-50[
+&lt;img src="images/lecture-06/aec-map-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50[
+
+There are two sources of data:
+
+1. Electoral boundary
+2. The votes for candidates in each electorate
+
+]
+]
+
+
+---
+
+# Recall &lt;i class="fas fa-database"&gt;&lt;/i&gt; 2016 ABS Census Data
+
+* DataPacks &lt;i class="fas fa-download"&gt;&lt;/i&gt; https://datapacks.censusdata.abs.gov.au/datapacks/
+* GeoPackages &lt;i class="fas fa-download"&gt;&lt;/i&gt; https://datapacks.censusdata.abs.gov.au/geopackages/
+
+&lt;img src="images/lecture-07/datapack-download.png" width = "70%"/&gt;
+---
+
+
+class: transition
+
+# ABS Census 2016
+
+# GeoPackages
+
+---
+
+# GeoPackage
+
+.blockquote[
+A **GeoPackage** (GPKG) is an open, non-proprietary, platform-independent and standards-based data format for geographic information system implemented as a SQLite database container. Defined by the **Open Geospatial Consortium** (OGC) with the backing of the US military and published in 2014, GeoPackage has seen widespread support from various government, commercial, and open source organizations.
+
+.right[
+&amp;mdash; Wikipedia
+]
+]
+
+&lt;br&gt;
+
+Recall: OGC also defines the WKT
+
+---
+
+# ABS GeoPackage
+
+.info-box[
+&lt;i class="fas fa-download"&gt;&lt;/i&gt; https://datapacks.censusdata.abs.gov.au/geopackages/
+
+1. Victoria
+2. Employment, Income and Unpaid Work (EIUW)
+3. EIUW GeoPackage A
+]
+
+* **Or use the [`strayr`](https://github.com/runapp-aus/strayr) package!** We'll use the one from the ABS website instead.
+
+
+.f4.overflow-scroll.h-40[
+
+
+```r
+geopath &lt;- here::here("data/Geopackage_2016_EIUWA_for_VIC/census2016_eiuwa_vic_short.gpkg")
+st_layers(geopath)
+```
+
+```
+## Driver: GPKG 
+## Available layers:
+##                          layer_name geometry_type features fields
+## 1    census2016_eiuwa_vic_ced_short                     39    489
+## 2  census2016_eiuwa_vic_gccsa_short                      4    489
+## 3    census2016_eiuwa_vic_lga_short                     82    489
+## 4    census2016_eiuwa_vic_poa_short                    698    489
+## 5     census2016_eiuwa_vic_ra_short                      6    489
+## 6    census2016_eiuwa_vic_sa1_short                  14073    489
+## 7    census2016_eiuwa_vic_sa2_short                    464    489
+## 8    census2016_eiuwa_vic_sa3_short                     68    489
+## 9    census2016_eiuwa_vic_sa4_short                     19    489
+## 10   census2016_eiuwa_vic_sed_short                     90    489
+## 11   census2016_eiuwa_vic_sos_short                      6    489
+## 12  census2016_eiuwa_vic_sosr_short                     12    489
+## 13   census2016_eiuwa_vic_ssc_short                   2931    489
+## 14   census2016_eiuwa_vic_ste_short                      1    489
+## 15   census2016_eiuwa_vic_sua_short                     22    489
+## 16   census2016_eiuwa_vic_ucl_short                    353    489
+```
+]
+---
+
+# The Australian Statistical Geography Standard (ASGS)
+
+.center[
+&lt;img src="images/lecture-08/acgs-structures.png" width="75%"&gt;
+
+]
+
+---
+
+# The number of regions for each layer
+
+.f5[
+
+```r
+st_layers(geopath) %&gt;% 
+  # make it into a data.frame first
+  tibble(!!!.) %&gt;% 
+  # then you can the dplyr operations 
+  dplyr::arrange(features) 
+```
+
+```
+## # A tibble: 16 × 5
+##    name                             geomtype  driver features fields
+##    &lt;chr&gt;                            &lt;list&gt;    &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+##  1 census2016_eiuwa_vic_ste_short   &lt;chr [1]&gt; GPKG          1    489
+##  2 census2016_eiuwa_vic_gccsa_short &lt;chr [1]&gt; GPKG          4    489
+##  3 census2016_eiuwa_vic_ra_short    &lt;chr [1]&gt; GPKG          6    489
+##  4 census2016_eiuwa_vic_sos_short   &lt;chr [1]&gt; GPKG          6    489
+##  5 census2016_eiuwa_vic_sosr_short  &lt;chr [1]&gt; GPKG         12    489
+##  6 census2016_eiuwa_vic_sa4_short   &lt;chr [1]&gt; GPKG         19    489
+##  7 census2016_eiuwa_vic_sua_short   &lt;chr [1]&gt; GPKG         22    489
+##  8 census2016_eiuwa_vic_ced_short   &lt;chr [1]&gt; GPKG         39    489
+##  9 census2016_eiuwa_vic_sa3_short   &lt;chr [1]&gt; GPKG         68    489
+## 10 census2016_eiuwa_vic_lga_short   &lt;chr [1]&gt; GPKG         82    489
+## 11 census2016_eiuwa_vic_sed_short   &lt;chr [1]&gt; GPKG         90    489
+## 12 census2016_eiuwa_vic_ucl_short   &lt;chr [1]&gt; GPKG        353    489
+## 13 census2016_eiuwa_vic_sa2_short   &lt;chr [1]&gt; GPKG        464    489
+## 14 census2016_eiuwa_vic_poa_short   &lt;chr [1]&gt; GPKG        698    489
+## 15 census2016_eiuwa_vic_ssc_short   &lt;chr [1]&gt; GPKG       2931    489
+## 16 census2016_eiuwa_vic_sa1_short   &lt;chr [1]&gt; GPKG      14073    489
+```
+
+]
+
+---
+
+# &lt;i class="fas fa-search-dollar"&gt;&lt;/i&gt; Data in the layer
+
+.f5.overflow-scroll.h-90[
+
+```r
+vicmap_ste &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sa1_short") 
+vicmap_ste$geom
+```
+
+```
+## Geometry set for 14073 features  (with 4 geometries empty)
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 140.9617 ymin: -39.15919 xmax: 149.9763 ymax: -33.98043
+## Geodetic CRS:  GDA94
+## First 5 geometries:
+```
+
+```r
+str(vicmap_ste)
+```
+
+```
+## sf [14,073 × 490] (S3: sf/tbl_df/tbl/data.frame)
+##  $ sa1_7digitcode_2016          : chr [1:14073] "2145523" "2111727" "2104305" "2128614" ...
+##  $ Median_age_persons           : num [1:14073] 35 26 45 39 43 43 38 48 35 54 ...
+##  $ Median_mortgage_repay_monthly: num [1:14073] 1419 2134 2167 1517 2600 ...
+##  $ Median_tot_prsnl_inc_weekly  : num [1:14073] 659 403 672 671 763 477 595 586 521 445 ...
+##  $ Median_rent_weekly           : num [1:14073] 350 462 340 250 400 312 418 215 280 150 ...
+##  $ Median_tot_fam_inc_weekly    : num [1:14073] 1640 1624 1906 1542 2437 ...
+##  $ Average_num_psns_per_bedroom : num [1:14073] 0.8 1 0.8 0.8 0.8 0.8 0.8 0.7 0.8 0.8 ...
+##  $ Median_tot_hhd_inc_weekly    : num [1:14073] 1525 1031 1805 1279 1906 ...
+##  $ Average_household_size       : num [1:14073] 2.7 2.1 2.8 2.5 2.7 3 2.7 2.1 2.4 1.8 ...
+##  $ M_Neg_Nil_income_15_19_yrs   : num [1:14073] 9 7 8 6 6 0 3 0 3 3 ...
+##  $ M_Neg_Nil_income_20_24_yrs   : num [1:14073] 0 6 0 0 0 0 4 0 4 0 ...
+##  $ M_Neg_Nil_income_25_34_yrs   : num [1:14073] 0 5 0 0 0 0 0 0 3 0 ...
+##  $ M_Neg_Nil_income_35_44_yrs   : num [1:14073] 0 4 0 0 0 0 0 0 0 0 ...
+##  $ M_Neg_Nil_income_45_54_yrs   : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_Neg_Nil_income_55_64_yrs   : num [1:14073] 0 3 3 0 0 0 0 0 0 0 ...
+##  $ M_Neg_Nil_income_65_74_yrs   : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_Neg_Nil_income_75_84_yrs   : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_Negtve_Nil_incme_85_yrs_ovr: num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_Neg_Nil_income_Tot         : num [1:14073] 11 25 14 7 11 8 14 4 10 7 ...
+##  $ M_1_149_15_19_yrs            : num [1:14073] 0 0 0 3 9 0 3 4 3 0 ...
+##  $ M_1_149_20_24_yrs            : num [1:14073] 0 3 0 0 0 0 3 4 0 0 ...
+##  $ M_1_149_25_34_yrs            : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_35_44_yrs            : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_45_54_yrs            : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_55_64_yrs            : num [1:14073] 0 0 0 3 0 0 0 0 0 0 ...
+##  $ M_1_149_65_74_yrs            : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_75_84_yrs            : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_85ov                 : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1_149_Tot                  : num [1:14073] 3 3 3 9 8 0 6 5 5 0 ...
+##  $ M_150_299_15_19_yrs          : num [1:14073] 0 0 3 0 0 0 0 0 0 0 ...
+##  $ M_150_299_20_24_yrs          : num [1:14073] 0 10 0 0 4 0 0 0 0 0 ...
+##  $ M_150_299_25_34_yrs          : num [1:14073] 3 3 0 0 0 0 3 0 0 0 ...
+##  $ M_150_299_35_44_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_150_299_45_54_yrs          : num [1:14073] 0 0 0 0 4 3 0 3 0 0 ...
+##  $ M_150_299_55_64_yrs          : num [1:14073] 0 0 0 0 0 0 3 0 0 0 ...
+##  $ M_150_299_65_74_yrs          : num [1:14073] 4 0 0 0 3 4 0 0 0 0 ...
+##  $ M_150_299_75_84_yrs          : num [1:14073] 0 0 0 3 0 0 3 0 0 0 ...
+##  $ M_150_299_85ov               : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_150_299_Tot                : num [1:14073] 10 12 11 5 9 7 11 7 10 8 ...
+##  $ M_300_399_15_19_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_300_399_20_24_yrs          : num [1:14073] 0 9 0 0 0 0 0 0 0 3 ...
+##  $ M_300_399_25_34_yrs          : num [1:14073] 0 4 0 3 0 0 0 0 0 0 ...
+##  $ M_300_399_35_44_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_300_399_45_54_yrs          : num [1:14073] 0 3 3 0 0 0 3 0 0 0 ...
+##  $ M_300_399_55_64_yrs          : num [1:14073] 0 0 0 0 3 0 0 0 0 3 ...
+##  $ M_300_399_65_74_yrs          : num [1:14073] 0 0 7 3 6 4 0 11 0 5 ...
+##  $ M_300_399_75_84_yrs          : num [1:14073] 0 0 0 0 0 3 0 4 3 3 ...
+##  $ M_300_399_85ov               : num [1:14073] 0 0 0 0 3 0 0 0 0 3 ...
+##  $ M_300_399_Tot                : num [1:14073] 3 16 7 7 15 9 3 16 6 20 ...
+##  $ M_400_499_15_19_yrs          : num [1:14073] 3 0 0 0 0 0 0 0 0 0 ...
+##  $ M_400_499_20_24_yrs          : num [1:14073] 0 0 0 3 0 0 0 0 0 0 ...
+##  $ M_400_499_25_34_yrs          : num [1:14073] 3 0 0 0 0 0 3 0 0 0 ...
+##  $ M_400_499_35_44_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_400_499_45_54_yrs          : num [1:14073] 0 0 0 0 0 0 3 3 0 0 ...
+##  $ M_400_499_55_64_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 3 3 ...
+##  $ M_400_499_65_74_yrs          : num [1:14073] 0 3 0 3 0 0 3 0 0 3 ...
+##  $ M_400_499_75_84_yrs          : num [1:14073] 0 0 0 3 0 0 0 0 3 0 ...
+##  $ M_400_499_85ov               : num [1:14073] 0 0 0 0 0 0 0 0 4 0 ...
+##  $ M_400_499_Tot                : num [1:14073] 11 10 4 10 3 3 16 9 14 12 ...
+##  $ M_500_649_15_19_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_500_649_20_24_yrs          : num [1:14073] 7 3 0 3 0 0 0 0 0 0 ...
+##  $ M_500_649_25_34_yrs          : num [1:14073] 0 8 0 0 0 0 0 0 0 0 ...
+##  $ M_500_649_35_44_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 3 0 ...
+##  $ M_500_649_45_54_yrs          : num [1:14073] 3 0 0 0 4 0 0 0 0 0 ...
+##  $ M_500_649_55_64_yrs          : num [1:14073] 3 0 3 0 0 3 0 0 0 0 ...
+##  $ M_500_649_65_74_yrs          : num [1:14073] 0 0 3 0 0 0 0 3 0 0 ...
+##  $ M_500_649_75_84_yrs          : num [1:14073] 0 0 0 0 0 0 0 5 0 0 ...
+##  $ M_500_649_85ov               : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_500_649_Tot                : num [1:14073] 8 18 13 12 7 9 11 13 3 3 ...
+##  $ M_650_799_15_19_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_650_799_20_24_yrs          : num [1:14073] 0 4 3 3 0 0 0 0 0 0 ...
+##  $ M_650_799_25_34_yrs          : num [1:14073] 5 0 0 4 0 3 3 3 3 0 ...
+##  $ M_650_799_35_44_yrs          : num [1:14073] 7 3 4 0 0 3 3 3 0 0 ...
+##  $ M_650_799_45_54_yrs          : num [1:14073] 8 0 5 0 0 0 0 0 0 0 ...
+##  $ M_650_799_55_64_yrs          : num [1:14073] 4 0 0 4 3 3 0 4 0 0 ...
+##  $ M_650_799_65_74_yrs          : num [1:14073] 0 0 4 6 0 3 0 0 0 0 ...
+##  $ M_650_799_75_84_yrs          : num [1:14073] 0 0 0 0 3 0 0 0 0 0 ...
+##  $ M_650_799_85ov               : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_650_799_Tot                : num [1:14073] 20 8 13 17 10 12 9 14 6 6 ...
+##  $ M_800_999_15_19_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_800_999_20_24_yrs          : num [1:14073] 0 3 0 0 0 0 0 0 0 3 ...
+##  $ M_800_999_25_34_yrs          : num [1:14073] 7 3 0 6 3 0 3 0 4 0 ...
+##  $ M_800_999_35_44_yrs          : num [1:14073] 6 0 3 5 0 0 3 0 0 0 ...
+##  $ M_800_999_45_54_yrs          : num [1:14073] 0 0 3 9 0 3 0 0 0 3 ...
+##  $ M_800_999_55_64_yrs          : num [1:14073] 3 0 3 3 0 0 0 3 3 0 ...
+##  $ M_800_999_65_74_yrs          : num [1:14073] 0 0 0 0 0 5 0 0 0 0 ...
+##  $ M_800_999_75_84_yrs          : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_800_999_85ov               : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_800_999_Tot                : num [1:14073] 17 9 14 22 5 16 4 14 13 9 ...
+##  $ M_1000_1249_15_19_yrs        : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1000_1249_20_24_yrs        : num [1:14073] 0 3 0 0 3 0 0 0 0 0 ...
+##  $ M_1000_1249_25_34_yrs        : num [1:14073] 0 8 0 3 3 4 4 3 9 3 ...
+##  $ M_1000_1249_35_44_yrs        : num [1:14073] 3 0 9 8 0 0 8 0 4 0 ...
+##  $ M_1000_1249_45_54_yrs        : num [1:14073] 3 0 4 7 3 3 4 3 3 3 ...
+##  $ M_1000_1249_55_64_yrs        : num [1:14073] 3 0 7 5 0 3 0 0 0 0 ...
+##  $ M_1000_1249_65_74_yrs        : num [1:14073] 0 0 0 0 0 5 0 0 0 0 ...
+##  $ M_1000_1249_75_84_yrs        : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1000_1249_85ov             : num [1:14073] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ M_1000_1249_Tot              : num [1:14073] 13 13 14 30 18 13 12 7 14 4 ...
+##   [list output truncated]
+##  - attr(*, "sf_column")= chr "geom"
+##  - attr(*, "agr")= Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA NA NA NA NA NA ...
+##   ..- attr(*, "names")= chr [1:489] "sa1_7digitcode_2016" "Median_age_persons" "Median_mortgage_repay_monthly" "Median_tot_prsnl_inc_weekly" ...
+```
+
+]
+
+
+---
+
+name: ste
+
+# State or Territory (STE)
+
+
+```r
+vicmap_ste &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_ste_short") 
+ggplot(vicmap_ste) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-ste-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_ste)
+```
+
+```
+## [1] 1
+```
+
+
+---
+
+name: gccsa
+
+# Greater Capital City Statistical Areas (GCCSA)
+
+* Each region with variable population
+
+
+```r
+vicmap_gccsa &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_gccsa_short")
+ggplot(vicmap_gccsa) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-gccsa-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_gccsa)
+```
+
+```
+## [1] 4
+```
+
+---
+
+name: sos
+
+# Section of State (SOS)
+
+* Major urban, other urban, bounded locally &amp; rural balance
+
+
+```r
+vicmap_sos &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sos_short")
+ggplot(vicmap_sos) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sos-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sos)
+```
+
+```
+## [1] 6
+```
+
+---
+
+name: ra
+
+# Remoteness Areas (RA)
+
+
+```r
+vicmap_ra &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_ra_short")
+ggplot(vicmap_ra) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-ra-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_ra)
+```
+
+```
+## [1] 6
+```
+
+---
+
+name: sosr
+
+# Section of State Ranges (SOSR)
+
+
+```r
+vicmap_sosr &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sosr_short")
+ggplot(vicmap_sosr) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sosr-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sosr)
+```
+
+```
+## [1] 12
+```
+
+---
+
+name: sa4
+
+# Statistical Area Level 4 (SA4)
+
+* Each region with population of 100,000 - 500,000
+
+
+```r
+vicmap_sa4 &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sa4_short")
+ggplot(vicmap_sa4) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sa4-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sa4)
+```
+
+```
+## [1] 19
+```
+
+
+
+---
+
+name: sua
+
+# Significant Urban Areas (SUA)
+
+
+```r
+vicmap_sua &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sua_short")
+ggplot(vicmap_sua) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sua-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sua)
+```
+
+```
+## [1] 22
+```
+
+---
+
+name: ced
+
+# Commonwealth Electoral Division (CED)
+
+
+
+```r
+vicmap_ced &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_ced_short")
+ggplot(vicmap_ced) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-ced-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_ced)
+```
+
+```
+## [1] 39
+```
+---
+
+name: sa3
+
+# Statistical Area Level 3 (SA3)
+
+* Each region with population of 30,000 - 130,000
+
+
+```r
+vicmap_sa3 &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sa3_short") 
+ggplot(vicmap_sa3) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sa3-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sa3)
+```
+
+```
+## [1] 68
+```
+---
+
+name: lga
+
+# Local Government Area (LGA)
+
+
+
+```r
+vicmap_lga &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_lga_short")
+ggplot(vicmap_lga) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-lga-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_lga)
+```
+
+```
+## [1] 82
+```
+
+---
+
+name: sed
+
+# State Electoral Division (SED)
+
+
+```r
+vicmap_sed &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sed_short") 
+ggplot(vicmap_sed) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sed-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sed)
+```
+
+```
+## [1] 90
+```
+---
+
+# Urban Centres and Localities (UCL)
+
+
+```r
+vicmap_ucl &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_ucl_short")
+ggplot(vicmap_ucl) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons)) 
+```
+
+&lt;img src="images/lecture-06/map-ucl-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_ucl)
+```
+
+```
+## [1] 353
+```
+
+---
+
+name: sa2
+
+# Statistical Area Level 2 (SA2)
+
+* Each region with populations in the range of 3,000-25,000
+
+
+```r
+vicmap_sa2 &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sa2_short")
+ggplot(vicmap_sa2) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sa2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sa2)
+```
+
+```
+## [1] 464
+```
+
+---
+
+name: poa
+
+# Postal Areas (POA)
+
+
+```r
+vicmap_poa &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_poa_short")
+ggplot(vicmap_poa) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-poa-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_poa)
+```
+
+```
+## [1] 698
+```
+
+---
+
+name: ssc
+
+# State Suburbs (SSC)
+
+
+```r
+vicmap_ssc &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_ssc_short") 
+ggplot(vicmap_ssc) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-ssc-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_ssc)
+```
+
+```
+## [1] 2931
+```
+
+
+---
+
+name: sa1
+
+# Statistical Area Level 1 (SA1)
+
+* Each region with a population of range 200-800
+
+
+```r
+vicmap_sa1 &lt;- read_sf(geopath, layer = "census2016_eiuwa_vic_sa1_short")
+ggplot(vicmap_sa1) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+```
+
+&lt;img src="images/lecture-06/map-sa1-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+```r
+nrow(vicmap_sa1)
+```
+
+```
+## [1] 14073
+```
+
+---
+
+class: transition
+
+
+# Electorate boundary &lt;br&gt;vs &lt;br&gt;Census boundary
+
+🎯 Estimate a median age for an electorate 
+
+
+
+---
+
+# Comparing SED 2016 and electorates divisions 2019
+
+.f4[See [here](https://wcd.numbat.space/lectures/lecture-05.html#35) for  `winners_fix` data was.]
+
+
+```r
+ggplot(winners_fix) + 
+  geom_sf(data = vicmap_sed, aes(geometry = geom, fill = Median_age_persons), 
+          alpha = 1, color = "white", size = 2) +
+  geom_sf(aes(geometry = geometry), 
+          fill = "transparent", color = "red") +
+  coord_sf(xlim = c(144.95, 145.24), ylim = c(-38.05, -37.85))
+```
+
+&lt;img src="images/lecture-06/zoomed-map-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[1]
+
+
+.flex[
+.w-50[
+.f5[
+
+```r
+electorate &lt;- winners_fix %&gt;% 
+  filter(DivisionNm=="Hotham")
+
+*sed_intersect &lt;- vicmap_sed %&gt;%
+*           filter(st_intersects(geom,
+*                                electorate$geometry,
+*                                sparse = FALSE)[,1])
+
+
+ggplot(electorate, aes(geometry = geometry)) +
+  geom_sf() +
+  geom_sf_text(aes(label = DivisionNm)) +
+  geom_sf(data = sed_intersect,
+          aes(geometry = geom),
+          color = "red", fill = "transparent") + 
+  geom_sf_text(data = sed_intersect,
+            aes(label = sed_code_2016, 
+                geometry = geom),
+            color = "red") 
+```
+
+
+
+]
+
+* There are 10 SED regions that intersect with Hotham electorate.
+
+
+]
+.w-50[
+&lt;img src="images/lecture-06/district-map-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[2]
+
+.flex[
+.w-60[
+.f5[
+
+
+```r
+*sed_intersect2 &lt;- sed_intersect %&gt;%
+* mutate(geometry = st_intersection(geom, electorate$geometry),
+*        perc_area = 100 * st_area(geometry) / st_area(geom),
+*        perc_area = as.numeric(perc_area))  %&gt;%
+* filter(perc_area &gt; 5)
+
+ggplot(sed_intersect2, aes(geometry = geometry)) +
+  geom_sf(data = electorate) +
+  geom_sf_text(data = electorate,
+               aes(label = DivisionNm)) +
+  geom_sf(color = "red", aes(fill = Median_age_persons)) +
+  geom_sf_text(aes(
+    label = glue::glue("{sed_code_2016}
+                        ({scales::comma(perc_area, 1)}%, {Median_age_persons})")),
+    color = "red") +
+  theme(legend.position = "bottom")
+```
+
+]
+
+* There are 5 SED areas with at least 5% intersection with the electoral area.
+* **How would you characterise the median age for Hotham?**
+]
+.w-40[
+&lt;img src="images/lecture-06/district-map2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[3]
+
+.flex[
+.w-40[
+&lt;img src="images/lecture-06/district-map2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-60.f5[
+**Strategy 1**
+
+
+```r
+sort(sed_intersect2$Median_age_persons)
+```
+
+```
+## [1] 32 35 39 40 40
+```
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 2**
+
+
+```r
+mean(sed_intersect2$Median_age_persons)
+```
+
+```
+## [1] 37.2
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+
+```r
+weighted.mean(sed_intersect2$Median_age_persons, 
+              sed_intersect2$perc_area)
+```
+
+```
+## [1] 36.35205
+```
+
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[4]
+
+.flex[
+.w-50[
+.f5[
+
+```r
+*sa1_intersect &lt;- vicmap_sa1 %&gt;%
+            filter(st_intersects(geom, 
+                                 electorate$geometry, 
+                                 sparse = FALSE)[,1]) 
+sa1_intersect2 &lt;- sa1_intersect %&gt;% 
+  mutate(geometry = st_intersection(geom, electorate$geometry), 
+         perc_area = 100 * st_area(geometry) / st_area(geom), 
+*        perc_area = as.numeric(perc_area))  %&gt;%
+  filter(perc_area &gt; 5) 
+
+ggplot(sa1_intersect) +
+  geom_sf(color = "red", 
+          aes(fill = Median_age_persons,
+              geometry = geom)) +       
+  geom_sf(data = electorate, color = "white", size = 2,
+          fill = "transparent",
+          aes(geometry = geometry)) +
+  theme(legend.position = "bottom")
+```
+]]
+
+.w-50[
+&lt;img src="images/lecture-06/sa1-intersect-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[5]
+
+.flex[
+.w-40[
+&lt;img src="images/lecture-06/sa1-intersect-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-60.f5[
+**Strategy 1**
+
+
+```r
+fivenum(sa1_intersect2$Median_age_persons)
+```
+
+```
+## [1]  0 34 38 42 82
+```
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 2**
+
+
+```r
+mean(sa1_intersect2$Median_age_persons)
+```
+
+```
+## [1] 37.38235
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+
+```r
+weighted.mean(sa1_intersect2$Median_age_persons, sa1_intersect2$perc_area)
+```
+
+```
+## [1] 37.35034
+```
+
+{{content}}
+
+--
+
+**Strategy 4**
+
+
+```r
+ggplot(sa1_intersect2, aes(x = Median_age_persons)) +
+  geom_histogram(binwidth = 1)
+```
+
+&lt;img src="images/lecture-06/sa1-region-histogram-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Closer look 🕵️ Zero median age
+
+.flex[
+.w-50[
+
+```r
+sa1_intersect2 %&gt;% 
+  filter(Median_age_persons==0) %&gt;% 
+  ggplot() + 
+  geom_sf() + 
+  geom_sf(data = electorate, color = "red",
+          fill = "transparent",
+          aes(geometry = geometry))
+```
+
+&lt;img src="images/lecture-06/strange-result-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-50[
+&lt;center&gt;
+&lt;img src="images/lecture-08/2018-vic-hotham-detailed-map.jpg" width = "100%"/&gt;
+&lt;/center&gt;
+
+]
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[6]
+
+.flex[
+.w-40.f5[
+
+## Before
+
+**Strategy 1**
+
+
+```r
+fivenum(sa1_intersect2$Median_age_persons)
+```
+
+```
+## [1]  0 34 38 42 82
+```
+
+**Strategy 2**
+
+
+```r
+mean(sa1_intersect2$Median_age_persons)
+```
+
+```
+## [1] 37.38235
+```
+
+**Strategy 3**
+
+
+```r
+weighted.mean(sa1_intersect2$Median_age_persons, sa1_intersect2$perc_area)
+```
+
+```
+## [1] 37.35034
+```
+]
+.w-60.f5.pl3[
+
+## After
+
+
+```r
+sa1_intersect3 &lt;- sa1_intersect2 %&gt;% 
+  filter(Median_age_persons != 0)
+```
+
+
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 1**
+
+
+```r
+fivenum(sa1_intersect3$Median_age_persons)
+```
+
+```
+## [1] 20 34 38 42 82
+```
+
+{{content}}
+
+--
+
+**Strategy 2**
+
+
+```r
+mean(sa1_intersect3$Median_age_persons)
+```
+
+```
+## [1] 38.61266
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+
+```r
+weighted.mean(sa1_intersect3$Median_age_persons, sa1_intersect3$perc_area)
+```
+
+```
+## [1] 38.58491
+```
+
+
+
+---
+
+# Dorling Cartogram 
+
+
+```r
+sa1_intersect4 &lt;- sa1_intersect %&gt;% 
+  mutate(centroid = st_centroid(geom))
+ggplot(sa1_intersect4) +
+  geom_sf(data = electorate,
+          aes(geometry = geometry), size = 2, fill = "grey60") +
+  geom_sf(aes(geometry = centroid, color = Median_age_persons),
+          size = 0.5, shape = 3) +
+  scale_color_viridis_c(name = "Median age", option = "magma")
+```
+
+&lt;img src="images/lecture-06/zoomed-map-income-dorling-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[7]
+
+
+.flex[
+.w-50.f5.pr3[
+
+```r
+sa1_intersect5 &lt;- sa1_intersect4 %&gt;% 
+  filter(st_intersects(centroid, 
+                       electorate$geometry, 
+                       sparse = FALSE)[,1],
+         Median_age_persons!=0)
+```
+
+**Strategy 1**
+
+
+```r
+fivenum(sa1_intersect5$Median_age_persons)
+```
+
+```
+## [1] 20 34 38 42 82
+```
+
+**Strategy 2**
+
+
+```r
+mean(sa1_intersect5$Median_age_persons)
+```
+
+```
+## [1] 38.58015
+```
+
+**Strategy 4**
+
+
+```r
+ggplot(sa1_intersect5, aes(x = Median_age_persons)) +
+  geom_histogram(binwidth = 1)
+```
+
+&lt;img src="images/lecture-06/sa1-region-histogram2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+]
+.w-60[
+
+{{content}}
+
+
+]]
+
+--
+
+&lt;div class="idea-box"&gt;
+&lt;ul&gt;
+&lt;li&gt;There are many ways to characterise an electorate.&lt;/li&gt;
+&lt;li&gt;Estimates of median age of an electorate is more consistent using SA1 map data than SED map data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+
+---
+
+class: bg-gray middle center
+
+.idea-box.tl.w-70[
+
+## Summary
+
+* We looked at mapping the 2016 census boundaries and projected a summary of the census variable (i.e. median age) onto a 2019 electoral district
+
+
+]
+
+.info-box.tl.w-70[
+Read [Forbes, Cook &amp; Hyndman (2020) Spatial modelling of the two-party preferred vote in Australian federal elections: 2001–2016. *Australian &amp; New Zealand Journal of Statisitcs*. ](https://onlinelibrary.wiley.com/doi/abs/10.1111/anzs.12292) for a more sophisticated approach to studying the census variables and election results together.
+]
+
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6
+
+&lt;br&gt;
+
+]
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

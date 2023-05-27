@@ -1,0 +1,842 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Tree ensemble methods"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 6"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 6"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Tree ensemble methods*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+library(tidyverse)
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+## Decision trees
+
+- Often a single tree suffer from **high variance**, but *low bias*.
+- This means that your fitted tree may be quite different if you fit to subsets of the data, say. 
+
+```{r rpart-fits}
+#| code-fold: true
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+set.seed(1)
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis = factor(diagnosis, levels = c("M", "B"))) %>% 
+  janitor::clean_names() %>% 
+  select(-x33, -id)
+n <- nrow(cancer)
+index1 <- sample(1:n, size = n/2, replace = FALSE)
+index2 <- setdiff(1:n, index1)
+fit1 <- rpart(diagnosis ~ ., data = cancer[index1, ], method = "class")
+fit2 <- rpart(diagnosis ~ ., data = cancer[index2, ], method = "class")
+```
+::: flex
+
+::: {.w-50 .fragment}
+
+```{r plot-tree1}
+#| echo: false
+#| fig-height: 3.5
+rpart.plot(fit1, main = "Subset data 1")
+```
+
+
+:::
+
+::: {.w-50 .pl3 .fragment}
+
+```{r plot-tree2}
+#| echo: false
+#| fig-height: 3.5
+rpart.plot(fit2, main = "Subset data 2")
+```
+
+
+:::
+:::
+
+
+
+
+
+## Ensemble methods 
+
+
+::: incremental
+
+- **Ensemble methods** combine predictions from multiple models.
+- The idea is that the combining results from multiple models _can_ (but not always) result in a **_better predictive performance than a single model_** by "averaging out" the individual weaknesses (i.e. errors).
+- These aggregation generally **_reduces the variance_**. 
+- However, the aggregation process often **_loses the interpretation_** of the single models. 
+
+
+:::
+
+
+## Tree ensemble methods 
+
+::: incremental
+
+- Some well-known tree ensemble methods include:
+  - [**Bagging**]{.monash-blue}: combining predictions based on bootstrap samples.
+  - [**Random forests**]{.monash-blue}: combining predictions based on bagging and random subset selection of predictors. 
+  - [**Boosting**]{.monash-blue}: combining predictions from models sequentially fit to residuals from previous fit.
+
+:::
+
+
+# Bagging {background-color="#006DAE" .mcenter}
+
+
+## Bagging ensemble learning
+
+
+
+- **Bootstrap aggregating**, or [**bagging**]{.monash-blue} for short, is an ensemble learning method that combines predictions from trees to bootstrapped data. 
+
+. . . 
+
+- Recall boostrap involves resampling observations _with replacement_.
+
+```{r boostrap-examples}
+#| echo: false
+#| fig-height: 4
+#| fig-width: 14
+#| code-line-numbers: "|5"
+set.seed(1)
+IDdata <- expand_grid(col = 1:10, row = 10:1) %>% 
+  mutate(id = n():1)
+
+map_dfr(1:5, ~{
+  IDdata %>% 
+    slice_sample(n = nrow(.), replace = TRUE) %>% 
+    group_by(id) %>% 
+    summarise(n = n(), row = unique(row), col = unique(col)) %>% 
+    mutate(i = paste("Bootstrap", .x))
+}) %>% 
+  ggplot(aes(row, col)) +
+  geom_tile(color = "black", 
+            linewidth = 1,
+            aes(fill = factor(n))) +
+  geom_text(aes(label = id), size = 3) +
+  facet_wrap(~i, nrow = 1) + 
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm"),
+        panel.grid = element_blank()) +
+  labs(fill = "Replicate") +
+  colorspace::scale_fill_discrete_sequential()
+```
+
+
+
+
+## Trees for boostrapped data
+
+```{r insurance}
+insurance <- read_csv("https://emitanaka.org/iml/data/insurance.csv") %>% 
+  mutate(across(where(is.character), as.factor))
+
+boostrap_tree <- function() {
+  insurance %>% 
+    slice_sample(n = nrow(.), replace = TRUE) %>% # bootstrapping
+    rpart(charges ~ ., data = .)
+}
+```
+
+::: flex
+::: {.w-50 .fragment}
+
+```{r bagtree1}
+rpart.plot(boostrap_tree())
+```
+
+
+:::
+::: {.w-50 .pl3 .fragment}
+
+```{r bagtree2}
+rpart.plot(boostrap_tree())
+```
+
+
+:::
+:::
+
+. . . 
+
+- Note that the tree structures are similar here!
+
+## Drawback of bagging
+
+::: incremental
+
+
+- In bagging we sample **_across observations_**. 
+- The **same predictors are used across trees**, resulting typically in a **similar tree structure** if there are any underlying strong relationships.
+- So even though the model building processes are independent, **the trees are often highly correlated**. 
+- It can also be **costly to compute** if data includes large number of predictors as each bagged tree is constructed based on all predictors.
+
+:::
+
+
+
+
+# Random forestss {background-color="#006DAE" .mcenter}
+
+
+
+## Random forests
+
+::: incremental
+
+- **Random forest** overcomes the drawback of bagging by sampling _across observations **and variables**_.
+- This approach reduces the correlation between trees, and thus reducing variance. 
+- It only considers subsets of predictors for each tree so it's faster to compute. 
+
+:::
+
+
+## Trees for random forest
+
+```{r insurance-rf}
+#| code-line-numbers: "|7|8|7-8"
+set.seed(2023)
+p <- ncol(insurance) - 1 # = 6
+yindex <- which(names(insurance)=="charges")
+m <- floor(sqrt(p)) # = 2
+random_tree <- function() {
+  data <- insurance %>% 
+    slice_sample(n = nrow(.), replace = TRUE) %>% # observation bootstrapping
+    select(charges, sample(setdiff(1:(p + 1), yindex), size = m)) # sample subset of features
+  print(colnames(data))
+  rpart(charges ~ ., data = data)
+}
+```
+
+::: flex
+::: {.w-50 .fragment}
+
+```{r rf1}
+rpart.plot(random_tree())
+```
+
+
+:::
+::: {.w-50 .pl3 .fragment}
+
+```{r rf2}
+rpart.plot(random_tree())
+```
+
+
+:::
+:::
+
+
+
+
+
+
+# Boosting {background-color="#006DAE" .mcenter}
+
+## From random forests to boosting
+
+* Random forests build an ensemble of deep independent trees.
+* **Boosted trees** build an ensemble of shallow trees **_in sequence_** with each tree learning and improving on the previous one.
+
+<center>
+<img src="images/2880px-Ensemble_Boosting.svg.png" height="400px">
+</center>
+
+::: aside 
+
+Image from [wikipedia](https://en.wikipedia.org/wiki/Boosting_(machine_learning)#/media/File:Ensemble_Boosting.svg).
+
+:::
+
+
+## Boosting for regression trees <i class='fas fa-tree'></i> first tree 
+
+- Suppose we fit a (shallow) regression tree, $T^1$, to $y_1, y_2, \dots, y_n$ for the set of predictors $\boldsymbol{x}_1, \boldsymbol{x}_2, \dots, \boldsymbol{x}_p$.
+
+```{r boost-tree1}
+T1 <- rpart(charges ~ ., data = insurance, maxdepth = 1, cp = 0)
+rpart.plot(T1)
+```
+
+## Boosting for regression trees <i class='fas fa-database'></i> first tree
+
+- We denote 
+  - $\hat{y}_i^1$ as the prediction (or fitted value) for the $i$-th observation from $T^1$,
+  - $r_i^1 = y_i - \lambda\hat{y}_i^1$ as the residual of $T^1$ for the $i$-th observation, 
+  - $\lambda$ is the **shrinkage parameter** (e.g. $\lambda = 0.1$ slows the learning rate).
+  
+```{r boosting-res1}
+#| fig-height: 2
+pred1 <- predict(T1)
+lambda <- 1
+res1 <- insurance$charges - lambda * pred1
+ggplot(tibble(res1), aes(res1)) + geom_histogram()
+```
+
+
+
+## Boosting for regression trees <i class='fas fa-tree'></i> second tree 
+
+- We then use $r_1^1, r_2^1, \dots, r_n^1$ as your "response" data to fit the next tree, $T^2$, using the same set of predictors $\boldsymbol{x}_1, \boldsymbol{x}_2, \dots, \boldsymbol{x}_p$.
+
+```{r boosting-tree2}
+T2 <- rpart(res1 ~ . - charges, data = insurance, maxdepth = 1, cp = 0)
+rpart.plot(T2)
+```
+
+## Boosting for regression trees <i class='fas fa-database'></i> second tree
+
+- The prediction of $r_i^1$ from $T^2$ is denoted as $\hat{r}_i^1$.
+- The predicted value of $y_i$ from $T^2$ is then given as $\hat{y}_i^2 = \hat{y}_i^1 + \hat{r}_i^1$.
+
+```{r boosting-reg2}
+#| fig-height: 3
+pred2 <- predict(T2)
+res2 <- insurance$charges - lambda * (pred1 + pred2)
+ggplot(tibble(res2), aes(res2)) + geom_histogram()
+```
+
+## Boosting for regression trees <i class='fas fa-tree'></i> third tree 
+
+
+```{r boosting-tree3}
+#| fig-height: 2
+T3 <- rpart(res2 ~ . - charges, data = insurance, maxdepth = 1, cp = 0)
+rpart.plot(T3)
+```
+
+
+```{r boosting-reg3}
+#| fig-height: 2.5
+pred3 <- predict(T3)
+res3 <- insurance$charges - lambda * (pred1 + pred2 + pred3)
+ggplot(tibble(res3), aes(res3)) + geom_histogram()
+```
+
+## Boosting for regression trees <i class='fas fa-tree'></i> fourth tree 
+
+
+```{r boosting-tree4}
+#| fig-height: 2
+T4 <- rpart(res3 ~ . - charges, data = insurance, maxdepth = 1, cp = 0)
+rpart.plot(T4)
+```
+
+
+```{r boosting-reg4}
+#| fig-height: 2.5
+pred4 <- predict(T4)
+res4 <- insurance$charges - lambda * (pred1 + pred2 + pred3 + pred4)
+ggplot(tibble(res4), aes(res4)) + geom_histogram()
+```
+
+## Boosting for regression trees <i class='fas fa-tree'></i> fifth tree 
+
+
+```{r boosting-tree5}
+#| fig-height: 2
+T5 <- rpart(res4 ~ . - charges, data = insurance, maxdepth = 1, cp = 0)
+rpart.plot(T5)
+```
+
+
+```{r boosting-reg5}
+#| fig-height: 2.5
+pred5 <- predict(T5)
+res5 <- insurance$charges - lambda * (pred1 + pred2 + pred3 + pred4 + pred5)
+ggplot(tibble(res5), aes(res5)) + geom_histogram()
+```
+
+## Boosting for regression trees <i class='fas fa-tree'></i> hundredth tree {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+```{r boosting-reg100}
+#| fig-height: 3
+res <- list(); Ts <- list(); pred_total <- rep(0, nrow(insurance)); J <- 100
+for(i in 1:J) {
+  res[[i]] <- insurance$charges - lambda * pred_total
+  Ts[[i]] <- rpart(res[[i]] ~ . - charges, data = insurance, maxdepth = 1, cp = 0)
+  pred_total <- pred_total + predict(Ts[[i]])
+}
+ggplot(tibble(res = res[[J]]), aes(res)) + geom_histogram()
+```
+
+```{r boosting-alltrees}
+#| echo: false
+#| fig-width: 20
+#| fig-height: 20
+par(mfrow = c(10, 10))
+for(i in 1:J) rpart.plot(Ts[[i]], main = paste0("T", i))
+```
+
+## Boosting 
+
+- We repeat this iteration $J$ times. 
+- Each iteration (tree) increases accuracy a little but too many iterations result in _overfitting_.
+- Smaller $\lambda$ slows the learning rate. 
+- Each tree is shallow -- if the tree has only one split, it is called a **stump**. 
+
+
+# Other ensemble tree methods {background-color="#006DAE" .mcenter}
+
+
+
+
+## Adaptive boosting
+
+::: incremental
+
+- Adaptive boosting, or  **AdaBoost**, is a type of boosting method where data for successive iterations of trees are based on weighted data.
+- There is a higher weight put on observations that were wrongly classified or has large error. 
+- AdaBoost can be considered as a _**special case of (extreme) gradient boosting**_.
+
+:::
+
+## Gradient boosting
+
+::: incremental
+
+- Gradient boosting involves a **loss function**, $L(y_i|f_m)$ where $\hat{y}_i^m = f_m(\boldsymbol{x}_i|T^m)$.
+- The choice of the loss function depends on the context, e.g. sum of the squared error may be used for regression problems and logarithmic loss function is used for classification problems. 
+- The loss function must be differentiable. 
+- Compute the residuals as $r_i^m = - \frac{\partial L(y_i|f_m(\boldsymbol{x}_i))}{\partial f_m(\boldsymbol{x}_i)}$.
+
+:::
+
+## Extreme gradient boosting
+
+::: incremental
+
+- Extreme gradient boosted trees, or **XGBoost**, makes improvements to gradient boosting algorithms. 
+- XGBoost is one of the most dominant methods for [Kaggle competitions](https://www.kaggle.com/). 
+- XGBoost implements many optimisation methods that allow for computationally fast fit of the model (e.g. parallelised tree building, cache awareness computing, efficient handling of missing data).
+- XGBoost also implements algorithmic techniques to ensure better model fit (e.g. regularisation to avoid overfitting, in-build cross-validation, pruning trees based on depth-first approach).
+
+:::
+
+
+# Combining predictions {background-color="#006DAE" .mcenter}
+
+## Business decisions
+
+- Suppose a corporation needs to make a decision, e.g. deciding
+  - between strategy A, B or C (classification problem) or 
+  - how much to spend (regression problem). 
+  
+. . .   
+  
+- An executive board is presented with recommendations from experts. 
+
+Experts | 👨‍✈️ | 🕵️‍♀️ | 🧑‍🎨 | 🧑‍🎤 | 🧑‍💻 |👷 | 👨‍🔧 
+--- | --- | --- | --- | --- | --- | --- | --- | --- | 
+Classification | A | B | C | B | A | C | B | 
+Regression | $9.3M | $9.2M | $8.9M | $3.1M | $9.2M | $8.9M | $9.4M | 
+
+. . . 
+
+- **What would your final decision be for each problem?**
+
+
+## Ensemble learning
+
+Experts | 👨‍✈️ | 🕵️‍♀️ | 🧑‍🎨 | 🧑‍🎤 | 🧑‍💻 |👷 | 👨‍🔧 
+--- | --- | --- | --- | --- | --- | --- | --- | --- | 
+Classification | A | B | C | B | A | C | B | 
+Regression | $9.3M | $9.2M | $8.9M | $3.1M | $9.2M | $8.9M | $9.4M | 
+
+::: incremental
+
+- Combining predictions from multiple models depends on whether you have a regression or classification problem.
+- The simplest approach for:
+  - regression problems is to take the **_average_** ($8.1M here), and
+  - classification problems is to take the **_majority vote_** (B here).
+- Other methods to combine predictions may be used.
+
+:::
+
+
+
+# Applications in R {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-database'></i> Data 
+
+```{r libs}
+library(rsample)
+set.seed(2023)
+```
+
+1. Regression problem with the `insurance` data
+
+```{r insurance-data}
+insurance_split <- insurance %>% 
+  mutate(across(where(is.character), as.factor)) %>% 
+  initial_split(prop = 3/4)
+insurance_train <- training(insurance_split)
+insurance_test <- testing(insurance_split)
+```
+
+2. Classification problem with the `cancer` data 
+
+```{r cancer-data}
+cancer_split <- cancer %>% 
+  mutate(diagnosis = ifelse(diagnosis == "M", 1, 0)) %>% 
+  initial_split(prop = 3/4)
+cancer_train <- training(cancer_split)
+cancer_test <- testing(cancer_split)
+```
+
+
+
+
+## <i class='fab fa-r-project'></i> Bagging trees with `ipred`
+
+
+```{r bagging-tree1}
+library(ipred)
+```
+
+- For `insurance` data:
+
+
+```{r bagging-tree2}
+reg_bag <- bagging(charges ~ ., 
+                   data = insurance_train,
+                   nbagg = 1000,
+                   control = rpart.control(cp = 0))
+```
+
+- For `cancer` data:
+
+
+```{r bagging-tree3}
+class_bag <- bagging(diagnosis ~ .,
+                     data = cancer_train,
+                     nbagg = 1000,
+                     control = rpart.control(cp = 0))
+```
+
+
+- `nbagg` is the number of bagged trees to use.
+
+
+## <i class='fab fa-r-project'></i> Random forests with `ranger`
+
+```{r rf-tree1}
+library(ranger)
+```
+- For `insurance` data:
+
+
+```{r rf-tree2}
+reg_rf <- ranger(charges ~ ., 
+                 data = insurance_train,
+                 mtry = floor((ncol(insurance_train) - 1) / 3),
+                 importance = "impurity",
+                 num.trees = 500)
+```
+
+- For `cancer` data:
+
+```{r rf-tree3}
+class_rf <- ranger(diagnosis ~ ., 
+                   data = cancer_train,
+                   mtry = floor((ncol(cancer_train) - 1) / 3),
+                   importance = "impurity",
+                   num.trees = 500,
+                   classification = TRUE)
+```
+
+- `mtry` is the number of predictors to use in each node
+
+
+## <i class='fab fa-r-project'></i> Boosted trees with `gbm` {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+Note: this is not pure boosting alone (it implements bagging as well).
+
+```{r gbm-tree1}
+library(gbm)
+```
+
+- For `insurance` data:
+
+```{r gbm-tree2}
+reg_boost <- gbm(charges ~ .,
+                 data = insurance_train,
+                 distribution = "gaussian", # squared error
+                 n.trees = 10000,
+                 shrinkage = 0.01,
+                 interaction.depth = 1,
+                 cv.folds = 10)
+```
+
+- For `cancer` data:
+
+```{r gbm-tree3}
+class_boost <- gbm(diagnosis ~ .,
+                   data = cancer_train,
+                   distribution = "bernoulli", # binary logistic regression
+                   n.trees = 10000,
+                   shrinkage = 0.01,
+                   interaction.depth = 1,
+                   cv.folds = 10)
+```
+
+- `shrinkage` is $\lambda$,
+- `n.trees` are the number of iterations/trees,
+- `interaction.depth` is the maximum depth of tree,
+- `cv.folds` is the number of folds for internal cross-validation error calculation.
+
+
+## <i class='fab fa-r-project'></i>  Cross-validation to select $J$
+
+```{r gbm-select}
+Jreg <- gbm.perf(reg_boost, method = "cv")
+Jreg
+Jclass <- gbm.perf(class_boost, method = "cv")
+Jclass
+```
+
+## <i class='fab fa-r-project'></i> Optimal boosted tree
+
+- For `insurance` data:
+
+```{r gbm-tree-optimal2}
+reg_boost_optimal <- gbm(charges ~ .,
+                         data = insurance_train,
+                         distribution = "gaussian",
+                         n.trees = Jreg,
+                         shrinkage = 0.01,
+                         interaction.depth = 1)
+```
+
+- For `cancer` data:
+
+```{r gbm-tree-optimal3}
+class_boost_optimal <- gbm(diagnosis ~ .,
+                           data = cancer_train,
+                           distribution = "bernoulli",
+                           n.trees = Jclass,
+                           shrinkage = 0.01,
+                           interaction.depth = 1)
+```
+
+## <i class='fab fa-r-project'></i> Extreme gradient boosted trees with `xgboost`
+
+
+```{r xgboost-tree1}
+library(xgboost)
+```
+
+- For `insurance` data:
+
+```{r xgboost-tree2}
+reg_xgb <- xgboost(data = model.matrix(~ . - charges, data = insurance_train)[, -1],
+                   label = insurance_train$charges,
+                   max.depth = 2,
+                   eta = 1,
+                   nrounds = 10,
+                   verbose = 0)
+```
+
+- For `cancer` data:
+
+```{r xgboost-tree3}
+class_xgb <- xgboost(data = model.matrix(~ . - diagnosis, data = cancer_train)[, -1],
+                     label = cancer_train$diagnosis,
+                     max.depth = 2,
+                     eta = 1,
+                     nrounds = 10,
+                     objective = "binary:logistic",
+                     verbose = 0)
+```
+
+
+
+## Comparison for `insurance` data
+
+```{r reg-model-comparisons}
+library(yardstick)
+list(bagged = reg_bag,
+     randomforest = reg_rf,
+     boost = reg_boost_optimal,
+     xgboost = reg_xgb) %>% 
+  imap_dfr(function(model, name) {
+    insurance_test %>% 
+      mutate(pred = switch(name,
+                           randomforest = predict(model, .)$predictions,
+                           xgboost = predict(model, model.matrix(~ . - charges, data = .)[, -1]),
+                           predict(model, .))) %>% 
+      metric_set(rmse, mae, mape)(., charges, pred) %>% 
+      mutate(name = name) %>% 
+      pivot_wider(id_cols = name, names_from = .metric, values_from = .estimate)
+  })
+```
+
+
+## Comparison for `cancer` data
+
+```{r class-model-comparisons}
+list(bagged = class_bag,
+     randomforest = class_rf,
+     boost = class_boost_optimal,
+     xgboost = class_xgb) %>% 
+  imap_dfr(function(model, name) {
+    cancer_test %>% 
+      mutate(prob = switch(name,
+                           randomforest = predict(model, .)$predictions,
+                           xgboost = predict(model, model.matrix(~ . - diagnosis, data = .)[, -1]),
+                           predict(model, ., type = "response")),
+             pred = factor(ifelse(prob > 0.5, 1, 0)),
+             diagnosis = factor(diagnosis)) %>% 
+      metric_set(accuracy, bal_accuracy, kap, roc_auc)(., diagnosis, prob, estimate = pred, event_level = "second") %>% 
+      mutate(name = name) %>% 
+      pivot_wider(id_cols = name, names_from = .metric, values_from = .estimate)
+  })
+```
+
+
+
+
+# Diagnostics {background-color="#006DAE" .mcenter}
+
+
+
+## Variable importance {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+```{r vip}
+library(vip)
+```
+
+* For `insurance` data
+
+::: flex
+
+::: {.w-50}
+
+```{r vip1}
+vi(reg_boost_optimal)
+vi(reg_rf)
+vi(reg_xgb)
+```
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r vip2}
+vip(reg_boost_optimal)
+vip(reg_rf)
+vip(reg_xgb)
+```
+
+:::
+
+:::
+
+
+* For `cancer` data
+
+::: flex
+
+::: {.w-50}
+
+```{r vip11}
+vi(class_boost_optimal)
+vi(class_rf)
+vi(class_xgb)
+```
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r vip21}
+vip(class_boost_optimal)
+vip(class_rf)
+vip(class_xgb)
+```
+
+:::
+
+:::
+
+
+* If the value is large, then the variable is very important. 
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+- Tree methods can be extended by using ensemble approaches, e.g. bagging, random forest and boosting. 
+- Each of these methods have pros and cons.
+- All these methods can be applied to both regression and classification.

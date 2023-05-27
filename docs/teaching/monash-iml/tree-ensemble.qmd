@@ -1,0 +1,21 @@
+---
+title: Tree ensemble methods
+date: 2023-04-03
+format: html
+html: 'monash-iml/2023/lecture-06.html'
+---
+
+```{r}
+#| echo: false
+htmllink <- gsub("monash-iml/", "", rmarkdown::metadata$html)
+```
+
+
+This was taught as part of the lecture for the Introduction to Machine Learning.
+
+<a href='`r htmllink`'><i class="fa-solid fa-link"></i></a> 
+
+
+
+
+<iframe width="600px" src="`r htmllink`" height="337.5px" style="border: 1px solid black;"></iframe>

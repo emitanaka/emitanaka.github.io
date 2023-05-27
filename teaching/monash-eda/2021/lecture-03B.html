@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-03B.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Initial data analysis&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 3 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+
+---
+
+
+# Linear models in R .f4[REVIEW] .f5[Part 1/3]
+
+.f4[
+
+```r
+library(tidyverse)
+glimpse(cars)
+```
+
+```
+## Rows: 50
+## Columns: 2
+## $ speed &lt;dbl&gt; 4, 4, 7, 7, 8, 9, 10, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 16, 16, 17, 17, 17, 18, 18, 18, 18, 19, 19, 19, 20, 20, 20, 20, 20, 22, 23, 24, 24, 24…
+## $ dist  &lt;dbl&gt; 2, 10, 4, 22, 16, 10, 18, 26, 34, 17, 28, 14, 20, 24, 28, 26, 34, 34, 46, 26, 36, 60, 80, 20, 26, 54, 32, 40, 32, 40, 50, 42, 56, 76, 84, 36, 46, 68, 32, 48, 52, 56, 64, 66, 54, 70, 92…
+```
+]
+--
+
+.f4[
+
+```r
+ggplot(cars, aes(speed, dist)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+&lt;img src="images/week3B/plot-cars-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+# Linear models in R .f4[REVIEW] .f5[Part 2/3]
+
+* We can fit linear models in R with the `lm` function:
+```r
+lm(dist ~ speed, data = cars)
+```
+is the same as
+```r
+lm(dist ~ 1 + speed, data = cars)
+```
+
+--
+
+* The above model is mathematically written as 
+`$$y_i = \beta_0 + \beta_1 x_i + e_i$$`
+where &lt;ul&gt;
+&lt;li&gt;\\(y_i\\) and \\(x_i\\) are the  stopping distance (in ft) and speed (in mph), respectively, of the \\(i\\)-th car;&lt;/li&gt; &lt;li&gt;\\(\beta_0\\) and \\(\beta_1\\) are intercept and slope, respectively; and&lt;/li&gt;
+&lt;li&gt;\\(e_i\\) is the random error; usually assuming \\(e_i \sim NID(0, \sigma^2)\\). &lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# Linear models in R .f4[REVIEW] .f5[Part 3/3]
+
+.flex[
+.w-40[
+&lt;img src="images/week3B/plot-cars-1.png" width="432" style="display: block; margin: auto auto auto 0;" /&gt;
+
+]
+.w-60[
+
+```r
+fit &lt;- lm(dist ~ 1 + speed, data = cars)
+coef(fit)
+```
+
+```
+## (Intercept)       speed 
+##  -17.579095    3.932409
+```
+]
+
+]
+
+* So `\(\hat{\beta}_0 \approx -17.58\)` and `\(\hat{\beta}_1 \approx 3.93\)`.
+
+
+
+--
+
+.w-80[
+* *Assuming* this model is appropriate, .monash-blue[the stopping distance increases by about 4 ft for increase in speed by 1 mph.]
+]
+
+
+---
+
+count: false
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 1/2]
+
+.w-60[
+* Say, we are interested in characterising the price of the diamond in terms of its carat.
+&lt;img src="images/week3B/plot-diamonds-1.png" width="432" style="display: block; margin: auto;" /&gt;
+* Looking at this plot, would you fit a linear model with formula
+
+.center[
+`price ~ 1 + carat`?
+]
+
+]
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 1/2]
+
+.w-60[
+* Say, we are interested in characterising the price of the diamond in terms of its carat.
+&lt;img src="images/week3B/plot-diamonds-lm-1.png" width="432" style="display: block; margin: auto;" /&gt;
+* Looking at this plot, would you fit a linear model with formula
+
+.center[
+`price ~ 1 + carat`?
+]
+
+]
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 2/2]
+
+.flex[
+.w-50[
+&lt;img src="images/week3B/plot-diamonds-lm2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-50[
+* What about
+&lt;center&gt;
+&lt;code&gt;price ~ poly(carat, 2)&lt;/code&gt;?
+&lt;/center&gt;
+which is the same as fitting:
+
+`$$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + e_i.$$`
+
+{{content}}
+]
+]
+
+
+--
+
+* Should the assumption for error distribution be modified if so?
+{{content}}
+--
+
+
+* Should we make some transformation before modelling?
+{{content}}
+--
+
+
+
+* Are there other candidate models?
+
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 2/2]
+
+* Notice that we did _**no formal statistical inference**_ as we initially try to formulate the model.
+--
+
+
+* The goal of the main analysis is to characterise the price of a diamond by its carat. This may involve:
+   * formal inference for model selection;
+   * justification of the selected "final" model; and
+   * fitting the final model.
+--
+
+
+* There may be in fact many, many models considered but discarded at the IDA stage. 
+--
+
+
+* These discarded models are hardly ever reported. Consequently, majority of reported statistics give a distorted view and it's important to remind yourself what might _**not**_ be reported.
+
+
+---
+
+# Model selection
+
+
+.blockquote.w-70[
+All models are _approximate_ and _tentative_; approximate in the sense that no model is exactly true and tentative in that they may be modified in the light of further data
+
+.pull-right[&amp;mdash;Chatfield (1985)] 
+
+]
+
+&lt;br&gt;&lt;br&gt;
+
+--
+
+.blockquote[
+All models are wrong but some are useful
+
+.pull-right[&amp;mdash;George Box]
+
+]
+
+
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 1/9]
+
+A wheat breeding trial to test 107 varieties (also called genotype) is conducted in a field experiment laid out in a rectangular array with 22 rows and 15 columns. 
+
+.overflow-scroll.h-70.f4[
+
+```r
+data("gilmour.serpentine", package = "agridat")
+skimr::skim(gilmour.serpentine)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values            
+## Name                       gilmour.serpentine
+## Number of rows             330               
+## Number of columns          5                 
+## _______________________                      
+## Column type frequency:                       
+##   factor                   2                 
+##   numeric                  3                 
+## ________________________                     
+## Group variables            None              
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                    
+## 1 rep                   0             1 FALSE          3 R1: 110, R2: 110, R3: 110     
+## 2 gen                   0             1 FALSE        107 TIN: 6, VF6: 6, WW1: 6, (WW: 3
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean     sd    p0   p25   p50   p75  p100 hist 
+## 1 col                   0             1   8     4.33     1     4   8     12     15 ▇▇▇▇▇
+## 2 row                   0             1  11.5   6.35     1     6  11.5   17     22 ▇▆▆▆▇
+## 3 yield                 0             1 592.  154.     194   469 618.   714.   925 ▂▅▆▇▂
+```
+]
+
+.footnote.f5[
+Gilmour, Cullis and Verbyla (1997) Accounting for natural and extraneous variation in the analysis of field experiments. *Journal of Agric Biol Env Statistics* **2** 269-293
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 2/9]
+
+**Experimental Design**
+
+* The experiment employs what is referred to as a **randomised complete block design** (RCBD) .f4[(technically it is _near_-complete and not exactly RCBD due to check varieties have double the replicates of test varieties)].
+--
+
+* RCBD means that 
+    * the there are equal number of replicates for each treatment (here it is `gen`); 
+    * each treatment appears exactly once in each block; 
+    * the blocks are of the same size; and
+    * each treatment are randomised within block.
+--
+
+
+* In agricultural field experiments, blocks are formed spatially by grouping plots within contiguous areas (called `rep` here). 
+* The boundaries of blocks may be chosen arbitrary.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 3/9]
+
+**Experimental Design**
+
+.grid[.item[
+&lt;img src="images/week3B/unnamed-chunk-6-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+&lt;img src="images/week3B/unnamed-chunk-7-1.gif" width="75%" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 4/9]
+
+**Analysis**
+
+* In the main analysis, people would commonly analyse this using what is called **two-way ANOVA** model (with no interaction effect).
+* The two-way ANOVA model has the form
+&lt;center&gt;
+&lt;code&gt;yield = mean + block + treatment + error&lt;/code&gt;
+&lt;/center&gt;
+* So for this data,
+
+```r
+fit &lt;- lm(yield ~ 1 + rep + gen, 
+          data = gilmour.serpentine)
+```
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 5/9]
+
+**Analysis**
+
+.overflow-scroll.h-80.f4[
+
+```r
+summary(fit)
+```
+
+```
+## 
+## Call:
+## lm(formula = yield ~ 1 + rep + gen, data = gilmour.serpentine)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -245.070  -69.695   -1.182   71.427  250.652 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      720.248     67.335  10.697  &lt; 2e-16 ***
+## repR2             96.100     15.585   6.166 3.29e-09 ***
+## repR3           -129.845     15.585  -8.331 8.44e-15 ***
+## gen(WqKPWmH*3Ag   24.333     94.372   0.258 0.796766    
+## genAMERY         -93.333     94.372  -0.989 0.323747    
+## genANGAS        -132.667     94.372  -1.406 0.161192    
+## genAROONA       -153.667     94.372  -1.628 0.104884    
+## genBATAVIA      -175.333     94.372  -1.858 0.064513 .  
+## genBD231         -70.333     94.372  -0.745 0.456895    
+## genBEULAH       -173.667     94.372  -1.840 0.067074 .  
+## genBLADE        -270.000     94.372  -2.861 0.004628 ** 
+## genBT_SCHOMBURG  -49.000     94.372  -0.519 0.604125    
+## genCADOUX       -223.333     94.372  -2.367 0.018820 *  
+## genCONDOR       -124.333     94.372  -1.317 0.189041    
+## genCORRIGIN     -217.667     94.372  -2.306 0.022010 *  
+## genCUNNINGHAM   -254.667     94.372  -2.699 0.007502 ** 
+## genDGR/MNX-9-9e  -47.667     94.372  -0.505 0.613996    
+## genDOLLARBIRD   -200.667     94.372  -2.126 0.034584 *  
+## genEXCALIBUR     -55.000     94.372  -0.583 0.560621    
+## genGOROKE       -141.667     94.372  -1.501 0.134743    
+## genHALBERD       -53.333     94.372  -0.565 0.572551    
+## genHOUTMAN      -209.333     94.372  -2.218 0.027560 *  
+## genJANZ         -214.667     94.372  -2.275 0.023884 *  
+## genK2011-5*      -87.333     94.372  -0.925 0.355758    
+## genKATUNGA      -110.333     94.372  -1.169 0.243609    
+## genKIATA        -165.667     94.372  -1.755 0.080565 .  
+## genKITE         -180.000     94.372  -1.907 0.057772 .  
+## genKULIN         -91.000     94.372  -0.964 0.335964    
+## genLARK         -336.333     94.372  -3.564 0.000448 ***
+## genLOWAN        -152.333     94.372  -1.614 0.107915    
+## genM4997        -146.000     94.372  -1.547 0.123277    
+## genM5075        -194.667     94.372  -2.063 0.040304 *  
+## genM5097        -102.667     94.372  -1.088 0.277826    
+## genMACHETE      -231.333     94.372  -2.451 0.015010 *  
+## genMEERING      -247.667     94.372  -2.624 0.009286 ** 
+## genMOLINEUX     -165.667     94.372  -1.755 0.080565 .  
+## genOSPREY       -162.000     94.372  -1.717 0.087451 .  
+## genOUYEN        -136.667     94.372  -1.448 0.148986    
+## genOXLEY        -221.667     94.372  -2.349 0.019713 *  
+## genPELSART      -200.333     94.372  -2.123 0.034882 *  
+## genPEROUSE      -283.667     94.372  -3.006 0.002955 ** 
+## genRAC655       -112.667     94.372  -1.194 0.233813    
+## genRAC655'S'    -113.667     94.372  -1.204 0.229702    
+## genRAC696         -3.667     94.372  -0.039 0.969042    
+## genRAC710        -51.000     94.372  -0.540 0.589455    
+## genRAC750        -77.333     94.372  -0.819 0.413410    
+## genRAC759        -42.000     94.372  -0.445 0.656721    
+## genRAC772          5.000     94.372   0.053 0.957794    
+## genRAC777       -172.333     94.372  -1.826 0.069183 .  
+## genRAC779          3.667     94.372   0.039 0.969042    
+## genRAC787       -118.000     94.372  -1.250 0.212486    
+## genRAC791        -72.667     94.372  -0.770 0.442120    
+## genRAC792       -102.333     94.372  -1.084 0.279385    
+## genRAC798         -1.667     94.372  -0.018 0.985926    
+## genRAC804        -45.000     94.372  -0.477 0.633949    
+## genRAC805        -43.000     94.372  -0.456 0.649093    
+## genRAC806        -35.333     94.372  -0.374 0.708462    
+## genRAC807        -91.333     94.372  -0.968 0.334201    
+## genRAC808        -54.000     94.372  -0.572 0.567765    
+## genRAC809        -43.333     94.372  -0.459 0.646559    
+## genRAC810       -131.667     94.372  -1.395 0.164359    
+## genRAC811         42.333     94.372   0.449 0.654174    
+## genRAC812        -94.000     94.372  -0.996 0.320310    
+## genRAC813        -83.333     94.372  -0.883 0.378179    
+## genRAC814        -72.333     94.372  -0.766 0.444214    
+## genRAC815       -111.000     94.372  -1.176 0.240781    
+## genRAC816        -66.333     94.372  -0.703 0.482862    
+## genRAC817       -100.000     94.372  -1.060 0.290466    
+## genRAC818       -107.000     94.372  -1.134 0.258101    
+## genRAC819       -121.333     94.372  -1.286 0.199895    
+## genRAC820         -1.000     94.372  -0.011 0.991555    
+## genRAC821        -98.333     94.372  -1.042 0.298560    
+## genROSELLA      -184.333     94.372  -1.953 0.052050 .  
+## genSCHOMBURGK   -132.333     94.372  -1.402 0.162242    
+## genSHRIKE       -128.000     94.372  -1.356 0.176376    
+## genSPEAR        -254.667     94.372  -2.699 0.007502 ** 
+## genSTILETTO     -157.000     94.372  -1.664 0.097603 .  
+## genSUNBRI       -218.333     94.372  -2.314 0.021612 *  
+## genSUNFIELD     -206.667     94.372  -2.190 0.029576 *  
+## genSUNLAND      -182.667     94.372  -1.936 0.054192 .  
+## genSWIFT        -197.000     94.372  -2.087 0.037990 *  
+## genTASMAN       -161.000     94.372  -1.706 0.089410 .  
+## genTATIARA       -64.333     94.372  -0.682 0.496142    
+## genTINCURRIN     -19.000     81.728  -0.232 0.816382    
+## genTRIDENT      -132.667     94.372  -1.406 0.161192    
+## genVF299         -66.333     94.372  -0.703 0.482862    
+## genVF300        -111.667     94.372  -1.183 0.237976    
+## genVF302        -108.333     94.372  -1.148 0.252234    
+## genVF508          11.667     94.372   0.124 0.901725    
+## genVF519          -1.000     94.372  -0.011 0.991555    
+## genVF655        -160.167     81.728  -1.960 0.051283 .  
+## genVF664        -106.667     94.372  -1.130 0.259583    
+## genVG127        -109.667     94.372  -1.162 0.246460    
+## genVG503         -43.000     94.372  -0.456 0.649093    
+## genVG506        -108.667     94.372  -1.151 0.250782    
+## genVG701         -19.333     94.372  -0.205 0.837867    
+## genVG714        -108.333     94.372  -1.148 0.252234    
+## genVG878          52.333     94.372   0.555 0.579767    
+## genWARBLER      -217.000     94.372  -2.299 0.022415 *  
+## genWI216           4.000     94.372   0.042 0.966230    
+## genWI221         -17.333     94.372  -0.184 0.854440    
+## genWI231        -218.333     94.372  -2.314 0.021612 *  
+## genWI232         -56.333     94.372  -0.597 0.551165    
+## genWILGOYNE     -131.000     94.372  -1.388 0.166496    
+## genWW1402       -117.333     94.372  -1.243 0.215071    
+## genWW1477       -185.667     81.728  -2.272 0.024064 *  
+## genWW1831        -86.667     94.372  -0.918 0.359435    
+## genWYUNA        -176.667     94.372  -1.872 0.062524 .  
+## genYARRALINKA   -245.000     94.372  -2.596 0.010061 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 115.6 on 221 degrees of freedom
+## Multiple R-squared:  0.6226,	Adjusted R-squared:  0.4381 
+## F-statistic: 3.375 on 108 and 221 DF,  p-value: 1.081e-14
+```
+]
+
+
+---
+
+
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 6/9]
+
+
+.grid[.item[
+&lt;img src="images/week3B/unnamed-chunk-11-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+&lt;img src="images/week3B/unnamed-chunk-12-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+&lt;img src="images/week3B/unnamed-chunk-13-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 7/9]
+
+Do you notice anything from below?
+
+&lt;br&gt;
+
+&lt;img src="images/week3B/unnamed-chunk-14-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 8/9]
+
+
+
+&lt;iframe src="lecture-03-supp.html" width="900", height = "900" frameBorder="0"&gt;
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 9/9]
+
+* It's well known in agricultural field trials that spatial variations are introduced in traits; this could be because of the fertility trend, management practices or other reasons.
+* In the IDA stage, you investigate to identify these spatial variations - you cannot just simply fit a two-way ANOVA model!
+
+.grid[.item.center[
+&lt;img src="images/field_harvest.gif" height = "380px"&gt;
+]
+.item.center[
+&lt;img src="images/field_spray.gif" height = "380px"&gt;
+]
+]
+
+
+
+
+
+---
+
+class: middle center
+
+.blockquote[
+"Teaching of Statistics should provide a more balanced blend of IDA and inference"
+
+.pull-right[Chatfield (1985)]
+]
+
+
+--
+
+&lt;br&gt;&lt;br&gt;
+
+Yet there is still very little emphasis of it in teaching and also at times in practice.
+
+--
+
+&lt;br&gt;
+
+So don't forget to do IDA!
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+&lt;ul class="fa-ul"&gt;
+{{content}}
+&lt;/ul&gt;
+
+
+]
+]
+
+--
+
+  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;&lt;b&gt;&lt;i&gt;Initial data analysis&lt;/i&gt;&lt;/b&gt; (IDA) is a model-focussed exploration of data with two main objectives:
+  &lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;&lt;i&gt;data description&lt;/i&gt;&lt;/b&gt; including scrutinizing for data quality, and&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;&lt;i&gt;model formulation&lt;/i&gt;&lt;/b&gt; without any formal statistical inference.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/li&gt;
+
+{{content}}
+
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;IDA hardly sees the limelight even if it's the very foundation of what the main analysis is built on.&lt;/li&gt;
+
+
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 3 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

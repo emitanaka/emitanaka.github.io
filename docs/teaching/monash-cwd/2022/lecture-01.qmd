@@ -1,0 +1,627 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Basic communication theory and practice"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 1"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 1"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: false
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css, assets/lecture-01.css]
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Basic communication theory and its relevancy with communicating with data
+* Demonstrate communication competency by selecting appropriate behaviour based on audience and self monitoring
+* Identify and apply rhetorical elements to improve data storytelling 
+* Clearly articulate and express technical problems for others to help you
+
+:::
+
+::: {.callout-tip }
+
+## Why
+
+* Effective communication with data is a blend of hard and soft skills 
+* You need the hard skills to process and understand the data 
+* But you also need the soft skills to get the message across to others
+
+:::
+
+
+## Communicating
+
+
+::: {.blockquote}
+To effectively communicate, we must realize that we are all different in the way we perceive the world and use this understanding as a guide to our communication with others.
+
+[-- Anthony Robbins]{.fr}
+
+:::
+
+
+## Communicating [with data]{.monash-blue}
+
+::: {.blockquote}
+The two words 'information' and 'communication' are often used interchangeably, but they signify quite different things. Information is giving out; **communication is getting through**.
+
+[-- Sydney J. Harris]{.fr}
+:::
+
+
+# The Basics of <br>[Communication Theory]{.monash-blue}
+
+::: callout-warning
+
+## Communication here refers to human communication
+
+In this section, communication refers to **_human_** communication. 
+:::
+
+
+## Communication is [symbolic]{.monash-blue}
+
+
+::: incremental
+
+- Arbitrary nature of symbols is overcome with linguistic rules
+- Agreement among people about these rules is required to effectively communicate
+- **Meanings rest in people, not words**
+
+:::
+
+<center>
+<img src="images/drawn/triangle-of-meaning.png" height="300px">
+</center>
+
+## Communication is a [process]{.monash-blue}
+
+Communication is often thought of as discrete, independent acts but in fact it is a continuous, ongoing process.
+
+::: {.flex .fragment}
+
+::: w-45
+
+**Linear communication model**
+
+<center>
+<img src="images/drawn/linear-communication-model.png" width="90%">
+</center>
+
+:::
+
+::: w-55
+
+**Transactional communication model**
+
+<center>
+<img src="images/drawn/transactional-communication-model.png" width="90%">
+</center>
+
+:::
+
+
+:::
+
+
+## Communication [competence]{.monash-blue}
+
+::: incremental 
+
+* **There is no single, ideal way to communicate**
+* Competence is situational and relational (where, what and who)
+* Ability to **select the most appropriate behaviour** in a particular situation 
+* Skill to **perform behaviour** not just knowing them
+* **Empathy** or perspective taking 
+* **Cognitive complexity** -- ability to construct a variety of framework for viewing an issue
+* **Self-monitoring** -- paying close to your own behaviour and use this to shape your behaviour
+
+:::
+
+
+
+## [Types]{.monash-blue} of communication
+
+-   **Intrapersonal** [-- communicating with one-self]{.fragment}
+-   **Dyadic/interpersonal** [-- two people interacting]{.fragment}
+-   **Small group** [-- two or more people interacting with group membership]{.fragment}
+-   **Public** [-- a group too large for all to contribute]{.fragment}
+-   **Mass** [-- messages transmitted to large, wide-spread audiences via media]{.fragment}
+
+::: fragment
+
+::: callout-note
+
+## Tutorial
+
+How does your communication strategy change for different types of communication?
+
+:::
+
+:::
+
+## [Effective]{.monash-blue} communication 
+
+::: incremental 
+
+* Communication doesn't always require complete understanding 
+* We notice some messages more and ignore others, e.g. we tend to notice messages that are:
+   * **intense**, 
+   * **repetitious**, and 
+   * **constrastive**.
+* **Motives** also determine what information we select from environment
+
+:::
+
+
+::: notes 
+
+* We are influenced by what is most obvious
+
+:::
+
+
+
+
+
+
+# Rhetorics
+
+The art of effective or persuasive speaking or writing
+
+## Rhetorical Triangle
+
+<center>
+<img src="images/drawn/rhetorical-triangle.png">
+</center>
+
+## Rhetorical Situation 
+
+
+::: {.floating .circle style="top:10%;left:4%;animation-delay:-4.3s;"}
+Writer or Speaker
+:::
+
+
+::: {.floating .circle style="top:11%;left:24%;animation-delay:-0.1s;"}
+Purpose
+:::
+
+::: {.floating .circle style="top:21%;left:44%;animation-delay:-3.4s;"}
+Message
+:::
+
+
+::: {.floating .circle style="top:15%;left:64%;animation-delay:-2.1s;"}
+Audience
+:::
+
+
+::: {.floating .circle style="top:13%;left:84%;animation-delay:-4.2s;"}
+Context
+:::
+
+
+
+## {}
+
+::: blockquote
+
+No one ever made a decision because of a number. They need a story.
+
+[-- Daniel Kahneman]{.fr}
+:::
+
+
+::: blockquote
+
+Maybe stories are just data with a soul.
+
+[-- Brene Brown]{.fr}
+
+:::
+
+## Hans Rosling 
+
+<iframe height="80%" width="100%" src="https://www.youtube.com/embed/hVimVzgtD6w?start=148" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+
+# Communicating *your problem*
+
+::: incremental 
+
+* Asking for help, requires you to communicate what your problem is to another party.  
+
+* How you communicate your problem, can assist you greatly in getting the answer to your problem.
+
+:::
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Part 1]{.f4}
+
+
+* What do you think about the question below?
+<center>
+<img class="border-box" width = "900px" style="padding:0px" src="images/stackoverflow-1.png">
+</center>
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Part 2]{.f4}
+
+
+* What do you think now?
+
+
+
+::: {.ba .pa3}
+
+I am looking to adjust the size of two separate ggplots within the same R chunk in Rmarkdown. These plots must be different when outputted as a pdf, so defining the dimensions at the beginning of the chunk doesn't work. Does anyone have any ideas? My code is below.
+````md
+`r ''````{r, fig.height = 3, fig.width = 3}
+ggplot(df, aes(weight, height)) +
+  geom_point()
+
+ggplot(df, aes(height, volume)) +
+  geom_point()
+```
+````
+
+:::
+
+::: notes
+
+* could not find function "ggplot"
+* the package needs to be loaded
+
+:::
+
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Part 3]{.f4}
+
+
+* Is this better?
+
+
+::: {.ba .pa3}
+I am looking to adjust the size of two separate ggplots within the same R chunk in Rmarkdown. These plots must be different when outputted as a pdf, so defining the dimensions at the beginning of the chunk doesn't work. Does anyone have any ideas? My code is below.
+````md
+`r ''````{r, fig.height = 3, fig.width = 3}
+library(ggplot2)
+ggplot(df, aes(weight, height)) +
+  geom_point()
+
+ggplot(df, aes(height, volume)) +
+  geom_point()
+```
+````
+
+:::
+
+::: notes
+
+* Data `df` is not defined!
+
+:::
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Part 4]{.f4}
+
+
+* Okay better now?
+
+
+::: {.ba .pa3}
+
+I am looking to adjust the size of two separate ggplots within the same R chunk in Rmarkdown. These plots must be different when outputted as a pdf, so defining the dimensions at the beginning of the chunk doesn't work. Does anyone have any ideas? My code is below.
+````md
+`r ''````{r, fig.height = 3, fig.width = 3}
+library(ggplot2)
+df <- read.csv("mydata.csv")
+ggplot(df, aes(weight, height)) +
+  geom_point()
+
+ggplot(df, aes(height, volume)) +
+  geom_point()
+```
+````
+
+:::
+
+::: notes
+
+* Is the data used in this question necessarily for the question?
+* Do we even have a copy of `mydata.csv`??
+
+:::
+
+
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Part 5]{.f4}
+
+
+* Are we done now?
+
+::: {.ba .pa3}
+
+I am looking to adjust the size of two separate ggplots within the same R chunk in Rmarkdown. These plots must be different when outputted as a pdf, so defining the dimensions at the beginning of the chunk doesn't work. Does anyone have any ideas? My code is below.
+````md
+`r ''````{r, fig.height = 3, fig.width = 3}
+library(ggplot2)
+ggplot(trees, aes(Girth, Height)) +
+  geom_point()
+
+ggplot(trees, aes(Height, Volume)) +
+  geom_point()
+```
+````
+
+:::
+
+
+::: notes
+
+* Author is using the built-in dataset `trees` here
+
+:::
+
+
+
+# ❓ How to ask questions?
+
+
+
+## Checklist [(note: not an exhaustive checklist)]{.f4}
+
+
+<label class="checkbox-container">Is the problem clearly and succinctly described?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Is the expected solution or behaviour outlined?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Are you asking the right people at the right place?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+
+If the question is **asked in an public forum** or similar:
+
+<label class="checkbox-container">Can people who can answer your question find your question? E.g. does the post have appropriate tags or keywords to reach the right experts?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+  
+  
+If the **problem is computer system related**...
+
+<label class="checkbox-container">Can the problem be easily reproduced on other people's system?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Is the minimum reproducible code or steps supplied?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+If the **problem is based on data** ...
+
+<label class="checkbox-container">Is the data supplied?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">If the data is big, could you cull your data further to communicate or reproduce the problem?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+
+
+
+## 🆘 Asking for help [1]{.circle .monash-bg-red2 .monash-white} [Check]{.f4} 
+::: flex
+::: w-60
+<img class="border-box" width = "100%" style="padding:0px" src="images/stackoverflow-1.png">
+:::
+::: {.w-40 .pl3}
+<label class="checkbox-container">Is the problem clearly and succintly defined?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Is the expected solution or behaviour outlined?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Is the problem asked at the right place or person?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+<label class="checkbox-container">Can people who can answer your question find your question?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+<label class="checkbox-container">Can the problem be easily reproduced on other people's system?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">Is the minimum reproducible code or steps supplied?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+<label class="checkbox-container">Is the data supplied?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+<label class="checkbox-container">If the data is big, could you cull your data further to communicate or reproduce the problem?
+<input type="checkbox"><span class="checkmark"></span>
+</label>
+
+:::
+:::
+
+
+## 🆘 Asking for help [2]{.circle .monash-bg-red2 .monash-white}
+
+::: flex
+::: w-30
+* How about the question on the right?
+* What makes it *hard* or *easy* for people to answer this question?
+
+
+
+:::
+::: w-70
+
+<center>
+<img class="ba" width = "100%" style="padding:0px" src="images/stackoverflow-2-1.png">
+<img class="ba" width = "100%" style="padding:0px" src="images/stackoverflow-2-2.png">
+
+</center>
+:::
+:::
+
+
+::: notes
+
+* In this example, the author provides the data but it requires work for others to read this data in.
+
+:::
+
+
+## Session Information 
+
+You can easily get the session information in R using `sessioninfo::session_info()`. <br>[Scroll to see the packages used to make these slides.]{.f4}
+
+::: {.overflow-scroll .h-70}
+```{r, include = FALSE}
+options(width = 80)
+```
+
+```{r}
+sessioninfo::session_info()
+```
+:::
+
+
+
+## 🎁 Reproducible Example with `reprex` [LIVE DEMO]{.f4}
+
+* Copy your **minimum reproducible example** then run
+
+```{r, eval = FALSE}
+reprex::reprex(session_info = TRUE)
+```
+
+
+* Once you run the above command, your clipboard contains the formatted code and output for you to paste into places like [GitHub issues](https://docs.github.com/en/enterprise/2.15/user/articles/creating-an-issue), [Stackoverflow](https://stackoverflow.com/) and forums powered by [Discourse](https://www.discourse.org/), e.g. [RStudio Community](https://community.rstudio.com/).
+* For general code questions, I suggest that you post to the community forums rather than Moodle.
+
+## Communicating with Data
+
+
+<center>
+
+<img src="images/drawn/venn-diagram.png" height="600px"/>
+
+</center>
+
+## Week 1 Lesson  {.scrollable}
+
+
+::: callout-important
+
+## Summary
+
+* Communication is a symbolic, ongoing process that requires **_getting through_** to other parties
+* There is no single ideal way to communicate -- communication competence depends on situation and relations but a competent communicator can select and perform appropriate behaviour based on **seeing other people's perspectives** and **understanding their own behaviour**
+* We discussed about the **elements of rhetorics** and how it relates to telling a compelling data story
+* We looked at the case study with communicating your problem to ask for help
+
+:::
+
+## Week 1 Lesson
+
+::: callout-tip
+
+## Resources
+
+* See more at [Learn R Chapter 3: Troubleshooting and asking for help](https://learnr.numbat.space/chapter3)
+* Watch more about storytelling with data at:
+  * [Why storytelling is so powerful in the digital era](https://www.youtube.com/watch?v=mSi0kmqOBu4) 
+  * [Why storytelling is more trustworthy than presenting data](https://www.youtube.com/watch?v=Ez5yS4Q5ASA) 
+  * [Making data mean more through storytelling](https://www.youtube.com/watch?v=6xsvGYIxJok)
+
+:::
+

@@ -1,0 +1,1037 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Clearly communicating with code"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 8"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 8"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    incremental: true
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+
+* Understand and formulate code for communication
+* Understand R package structure
+* Build R package with R code, data, and launching shiny apps
+
+
+:::
+
+::: {.callout-tip }
+
+## Why
+
+
+* Sharing code makes your analysis **transparent** and **reproducible** to others.
+* Writing code that is readable by others _make author intent **explainable**_
+* An R package makes functions, data or apps **accessible**, thereby increasing impact of your work
+
+:::
+
+[Thanks to Stuart Lee for developing the initial content in this slide, which has been subsequently modified a fair amount by me.]{.f2}
+
+## Example data
+
+
+::: callout-note
+
+## Plant growth
+
+An experiment to compare yields under control and two different treatment conditions on plants
+
+```{r}
+#| code-line-numbers: false
+str(PlantGrowth)
+```
+
+
+:::
+
+. . . 
+
+::: callout-note
+
+## Tooth growth
+
+An experiment to study the effect of vitamin C on tooth growth in guinea pigs
+
+```{r}
+#| code-line-numbers: false
+str(ToothGrowth)
+```
+
+
+:::
+
+
+
+## Which one do you prefer?
+
+
+**Code #1**
+```{r}
+with(PlantGrowth, tapply(weight, group, mean))
+```
+
+. . . 
+
+**Code #2**
+
+```{r}
+library(tidyverse)
+PlantGrowth %>% 
+  group_by(group) %>% 
+  summarise(weight_avg = mean(weight))
+```
+
+## What do you expect the output is?
+
+
+**Code #1**
+```{r}
+#| output-location: fragment
+with(ToothGrowth, tapply(len, list(supp, dose), mean))
+```
+
+. . . 
+
+**Code #2**
+
+```{r}
+#| output-location: fragment
+library(tidyverse)
+ToothGrowth %>% 
+  group_by(supp, dose) %>% 
+  summarise(length_avg = mean(len))
+```
+
+# Naming matters {background-color="#006DAE"}
+
+## Syntactic sugar
+
+::: {.callout-note appearance="minimal"}
+
+**Syntactic sugar** means using function name or syntax in a programming language that is designed to make things _**easier to read or to express for humans**_.
+
+:::
+
+. . . 
+
+```r
+my_function(x)
+```
+
+. . . 
+
+What do you think this function is doing?
+
+. . . 
+
+```r
+compute_average(x)
+```
+
+. . . 
+
+
+<i class="fas fa-lightbulb"></i> A human reads your code, so write your function in a way that reads and works well for humans
+
+
+## Naming cases
+
+::: flex
+
+::: {.w-50 .pr3}
+
+::: fragment
+::: callout-note
+
+## camelCase
+
+* Capitalise all words after first word.
+* **Common in R Shiny** and JavaScript. 
+
+:::
+:::
+
+::: fragment
+::: callout-note
+
+## snake_case
+
+* All words are lower case and separated by an underscore.
+* **Preferred by R programmers** in general (except Shiny).
+
+:::
+:::
+
+:::
+::: {.w-50 .pl3}
+
+::: fragment
+::: callout-note
+
+## PascalCase
+
+* Capitalise all words.
+* Preferred by C programmers.
+
+:::
+:::
+::: fragment
+::: callout-note
+
+## kebab-case
+
+* All words are lower case and separated by a dash.
+* Common in HTML attribute names and CSS property names.
+
+:::
+:::
+:::
+:::
+
+. . . 
+
+Stick with the style convention of the language as much as possible!
+
+## Syntactically valid names in R
+
+::: incremental
+
+* In R, a [**syntactically valid name**]{.monash-blue} consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number.
+* It also cannot be a **reserved word**, e.g. `if`, `else`, `TRUE`, `FALSE`, `while`, `function`. For full list see [`?Reserved`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html).
+* Anything else is a **non-syntactic name** in R and you can still use any name in R by surrounding it with backticks:
+
+::: fragment
+```{r}
+#| code-line-numbers: false
+`4` <- 3
+```
+:::
+
+* You can use `make.names()` to make syntatically valid names in R. 
+
+:::
+
+
+::: aside
+
+Source: [R Manual](https://stat.ethz.ch/R-manual/R-devel/library/base/html/make.names.html)
+
+:::
+
+## Object names
+
+
+* Variable and function names should **use only snake case**.
+* Strive for names that are **concise** and **meaningful**.
+
+
+. . . 
+
+::: flex
+
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+day_one
+day_1
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+DayOne
+dayone
+first_day_of_the_month
+djm1
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/package-files.html)
+
+:::
+
+
+## Function names
+
+* Function names should be **verbs** (with exceptions). 
+* Avoid using `.` in the names...
+* ...unless writing a function method for S3 object system.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+add_row()
+permute()
+add_column()
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+row_adder()
+permutation()
+add.column()
+```
+
+
+:::
+
+:::
+
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+## Variable names 
+
+* Variable names should be **nouns**. 
+* Consider using a list or data.frame to group variables in a similar context instead of assigning it as separate objects.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+origin
+fit
+```
+
+::: {.monash-black .f3 .nonincremental}
+
+where 
+
+* `fit[[1]] = fit1`, 
+* `fit[[2]] = fit2`,
+* and so on.
+
+:::
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+originate
+fit1
+fit2
+fit3
+fit4
+fit5
+```
+
+
+:::
+
+:::
+
+# Readable code {background-color="#006DAE"}
+
+. . . 
+
+[Consistency]{style="color:yellow;" .f1} is key!
+
+## Consistency spacing 
+
+* Always put a space after a comma, never before.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+x[, 1]
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+x[,1]
+x[ ,1]
+x[ , 1]
+```
+
+
+:::
+
+:::
+
+* Do not put spaces inside or outside parentheses for regular function calls.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+mean(x, na.rm = TRUE)
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+mean (x, na.rm = TRUE)
+mean( x, na.rm = TRUE )
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+
+## Consistency spacing 
+
+* Place a space before and after `()` when used with `if`, `for`, or `while`.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+if (debug) {
+  show(x)
+}
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+if(debug){
+  show(x)
+}
+```
+
+
+:::
+
+:::
+
+* Place a space after `()` (but not before) used for function arguments:
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+function(x) {}
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+function (x) {}
+function(x){}
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+
+## Consistency spacing 
+
+* Most infix operators (`+`, `-`, `<-`, etc.) should be surrounded by spaces...
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+height <- (feet * 12) + inches
+mean(x, na.rm = TRUE)
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+height<-feet*12+inches
+mean(x, na.rm=TRUE)
+```
+
+
+:::
+
+:::
+
+* ...with exceptions of operators with high precedence (`::`, `:::`, `$`, `@`, `[`, `[[`, `^`, unary `-`, unary `+`, and `:`).
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+sqrt(x^2 + y^2)
+df$z
+x <- 1:10
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+sqrt(x ^ 2 + y ^ 2)
+df $ z
+x <- 1 : 10
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+
+## Consistency spacing 
+
+* ... with exceptions of single-sided formulas when the right-hand side is a single identifier.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+~foo
+tribble(
+  ~col1, ~col2,
+  "a",   "b"
+)
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+~ foo
+tribble(
+  ~ col1, ~ col2,
+  "a", "b"
+)
+```
+
+
+:::
+
+:::
+
+*  Single-sided formulas with a complex right-hand side do need a space.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+~ x + y
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2 .pr3}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+~x + y
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+
+## Avoid long lines
+
+* Limit your code to 80 characters per line.
+* If the arguments to a function don’t all fit on one line, put each argument on its own line and indent.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+do_something_very_complicated(
+  something = "that",
+  requires = many,
+  arguments = "some of which may be long"
+)
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+do_something_very_complicated("that", requires, many, arguments, "some of which may be long")
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+## Sequence of functions
+
+* Avoid deeply nesting functions in one line.
+* `%>%` should always have a space before it, and should usually be followed by a new line.
+* After the first step, each line should be indented by two spaces.
+
+. . . 
+
+::: flex
+
+::: {.w-50 .monash-green2 .pl3}
+
+Good <i class="fa-solid fa-circle-check"></i>
+
+```
+shopping_list %>% 
+  buy() %>% 
+  prepare() %>% 
+  cook()
+```
+
+
+:::
+
+
+::: {.w-50 .monash-red2}
+
+Bad <i class="fa-solid fa-circle-xmark"></i> 
+
+```
+cook(prepare(buy(shopping_list)))
+
+shopping_list %>% buy() %>% 
+  prepare() %>% cook()
+```
+
+
+:::
+
+:::
+
+::: aside
+
+Source: [The tidyverse style guide](https://style.tidyverse.org/)
+
+:::
+
+
+## R packages for styling code
+
+* `styler` allows you to interactively restyle selected text, files, or entire projects.
+*  `styler` includes an RStudio add-in, the easiest way to re-style existing code.
+* `lintr` performs automated checks to confirm that you conform to the style guide.
+
+# What exactly are [R packages]{style="color:yellow"}? {background-color="#006DAE"}
+
+
+## R packages can be many things...
+
+A container:
+
+* for a set of R functions,
+* to share data, 
+* to share an app, 
+* and more, e.g. Rmd templates (out of scope for this unit).
+
+## The anatomy of an R package
+
+* `DESCRIPTION` file
+* `R/` directory for R files that contain your functions
+* `NAMESPACE` file (manual creation is out of scope for this unit)
+
+. . . 
+
+Optionally,
+
+* `data/`: for binary data available to the user 
+* `data-raw/`: for raw data 
+* `inst/`: for arbitrary additional files that you want include in your package. 
+* and others.
+
+
+## The `DESCRIPTION` file
+
+Metadata for the package
+
+* Package name
+* Title and description of what the package does
+* Authors  
+* Dependencies (depends, imports and suggests)
+* Licencing 
+* Version number 
+* Where to report bugs and so on
+
+
+## Example: `dplyr` `DESCRIPTION` file
+
+```{r}
+#| echo: false
+#| output: asis
+file <- readLines("https://raw.githubusercontent.com/tidyverse/dplyr/main/DESCRIPTION")
+cat("```\n")
+cat(file, sep = "\n")
+cat("```\n")
+```
+
+
+## The R/ directory
+
+* The functions you create are stored as R scripts that live in the R/ directory. 
+* Functions can be internal to the package or exported so other users have access to them.
+* See for example the [`dplyr` R directory](https://github.com/tidyverse/dplyr/tree/main/R).
+
+## The `NAMESPACE` file
+
+* The file contains a directive that describes whether an R object is exported from this package or imported from others.
+* These directives can be automatically created by `roxygen2` (covered next lecture).
+
+. . . 
+
+```{r}
+#| echo: false
+#| output: asis
+file <- readLines("https://raw.githubusercontent.com/tidyverse/dplyr/main/NAMESPACE")
+cat("```\n")
+cat(file, sep = "\n")
+cat("```\n")
+```
+
+
+## Creating an R package
+
+
+* `usethis::create_package("mypkg")` for creating a skeleton R package
+* Add things to your R package
+* `devtools::load_all()` for loading the functions in the R/ directory to the current environment
+
+
+## Adding functions to an R package
+
+* `usethis::use_r("new-r-file")` for creating a new R file in the R/ directory
+
+. . . 
+
+```
+- mypackage
+  |- R
+     |- new-r-file.R
+     |- ...
+  |- DESCRIPTION
+  |- ...
+```
+
+
+## Distribute data via an R package
+
+* `usethis::use_data_raw("filename")` for adding a file to data-raw/ directory to include code to reproduce data. 
+* `usethis::use_data(mydata)` for creating a binary data file in data/ directory.
+* More information on this at [R Packages (2e) Chapter 8 Data](https://r-pkgs.org/data.html).
+
+
+## Launcing shiny app via an R package
+
+```
+- mypackage
+  |- inst
+     |- myapp
+        |- app.R
+  |- R
+     |- run-app.R
+     |- ...
+  |- DESCRIPTION
+  |- ...
+```
+
+`run-app.R`
+
+```r
+#' @export
+run_app <- function() {
+  app_dir <- system.file("myapp", package = "mypackage")
+  shiny::runApp(app_dir, display.mode = "normal")
+}
+```
+
+Note: for this to work, you need to first install the package!
+
+## Installing the package
+
+* First run `devtools::document()`<br>(we will cover this more next lecture).
+* Then run `devtools::install()`.
+* Now you can call `library(mypackage)` to use exported functions or data in your package!
+
+## Master the keyboard shortcuts
+
+::: nonincremental 
+
+* **Cmd**/**Ctrl** + **Shift** + **L**: Load all
+* **Cmd**/**Ctrl** + **Shift** + **D**: Document
+* **Cmd**/**Ctrl** + **Shift** + **B**: Build and Reload
+* plus more... see **RStudio IDE** > **Tools** > **Keyboard Shortcuts Help**
+
+:::
+
+## Week 8 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+::: nonincremental
+
+* How to enhance communication in code by adopting a consistent styling.
+* R packages are flexible containers to share R code, data, and app amongst other things. 
+* An R package can be set up, documented, and tried out with `usethis` and `devtools`.
+
+
+:::
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+::: nonincremental
+
+* [Filazzola & Lortie (2022) A call for clean code to effectively communicate science](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13961)
+- [R Packages 2nd edition](https://r-pkgs.org) by Hadley Wickham and Jenny Bryan
+
+:::
+
+:::
+
+

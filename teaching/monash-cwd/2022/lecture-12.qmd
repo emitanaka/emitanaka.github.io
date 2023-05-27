@@ -1,0 +1,474 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Interactive"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 12"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 12"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    incremental: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+
+library(tidyverse)
+library(plotly)
+theme_set(theme_bw(base_size = 18))
+```
+```{r data, include = FALSE, cache = TRUE}
+files <- paste0("data/", dir("data/", pattern = "^tmax"))
+data <- map_dfr(files, ~{
+  station <- read_csv(.x, n_max = 1) %>% pull("site name")
+  tmp <- read_csv(.x, skip = 2, col_names = c("date", "max_temp")) %>% 
+    select(date, max_temp) %>% 
+    mutate(station = station)
+  }) %>% 
+  mutate(station = recode(station, 
+                              "PERTH AIRPORT" = "Perth",
+                              "ADELAIDE (WEST TERRACE / NGAYIRDAPIRA)" = "Adelaide",
+                              "CAIRNS AERO" = "Cairns",
+                              "BRISBANE AERO" = "Brisbane",
+                              "SYDNEY (OBSERVATORY HILL)" = "Sydney",
+                              "CANBERRA AIRPORT" = "Canberra",
+                              "MELBOURNE (OLYMPIC PARK)" = "Melbourne"))
+```
+
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Gain exposure to existing state-of-the-art interactive graphics
+* Understand the difference between interactivity in Shiny and say, Plotly graphics
+
+:::
+
+
+## User Interactions 
+
+<img src="images/lecture-03/actions.svg">
+
+::: {.f4 .absolute .bottom-0}
+
+Image from Spencer (2022, Feb. 17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland
+
+:::
+
+## User Inputs
+
+<img src="images/lecture-03/widgets.svg">
+
+::: {.f4 .absolute .bottom-0}
+
+Image from Spencer (2022, Feb. 17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland
+
+:::
+
+## Overview 
+
+<center>
+<img src="https://ssp3nc3r.github.io/data_in_wonderland/images/overview-schematic.svg" width="80%">
+</center>
+
+::: {.f4 .absolute .bottom-0}
+
+Image from Spencer (2022, Feb. 17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland
+
+:::
+
+
+# State of the art for<br>interactive plots {background-color="#006DAE"}
+
+## Interactive plots with JS
+
+* State-of-the-art for interactive plots is **JS**
+* Some of the most popular and free JS library for plotting are:
+
+::: flex
+
+::: w-10
+
+:::
+
+::: w-30
+
+  * [Chart.js](https://www.chartjs.org/)
+  * [Dygraphs](https://dygraphs.com/)
+  * [D3.js](https://d3js.org/)
+ 
+:::
+
+::: w-30
+
+  * [ECharts](https://echarts.apache.org/en/index.html)
+  * [Google Charts](https://developers.google.com/chart)
+  * [Highcharts](https://www.highcharts.com/)
+ 
+:::
+
+::: w-30
+
+   * [Plotly](https://plotly.com/javascript/)
+   * [Vis.js](https://visjs.org/)
+:::
+
+:::
+
+
+* Rising JS libraries that are based on the *Grammar of Graphics*:
+
+::: flex
+
+::: w-10
+
+:::
+
+::: w-45
+
+   * [Observable Plot](https://observablehq.com/@observablehq/plot)
+ 
+:::
+
+::: w-45
+
+   * [Vega and Vega-Lite](https://vega.github.io/vega/)
+
+:::
+
+
+:::
+
+
+## Interactive plots with JS through R  {.scrollable}
+
+* No need to learn JS!
+* Many JS library for plotting are available via an R package:
+
+| JS | R package |
+| --- | --- |
+| [Chart.js](https://www.chartjs.org/) | [`chartjs`](https://github.com/Tutuchan/chartjs),  [`charter`](https://github.com/JohnCoene/charter) |
+| [Dygraphs](https://dygraphs.com/) | [`dygraphs`](https://github.com/rstudio/dygraphs) | 
+| [D3.js](https://d3js.org/) | [`r2d3`](https://github.com/rstudio/r2d3), [`networkD3`](https://github.com/christophergandrud/networkD3) | 
+| [ECharts](https://echarts.apache.org/en/index.html) | [`echarts4r`](https://github.com/JohnCoene/echarts4r)| 
+| [Google Charts](https://developers.google.com/chart) | [`googleVis`](https://github.com/mages/googleVis) |
+| [Highcharts](https://www.highcharts.com/) | [`highcharter`](https://github.com/jbkunst/highcharter) | 
+| [Plotly](https://plotly.com/javascript/) | [`plotly`](https://github.com/plotly/plotly.R) | 
+| [Vis.js](https://visjs.org/) | [`visNetwork`](https://github.com/datastorm-open/visNetwork) |
+| [Observable Plot](https://observablehq.com/@observablehq/plot) | [`obsplot`](https://github.com/juba/obsplot) |
+| [Vega and Vega-Lite](https://vega.github.io/vega/) | [`vegawidget`](https://github.com/vegawidget/vegawidget), [`altair`](https://github.com/vegawidget/altair),  [`virgo`](https://github.com/vegawidget/virgo),  [`vegabrite`](https://github.com/vegawidget/vegabrite) |
+
+
+# Plotly {background-color="#006DAE"}
+
+## Plotly
+
+* Plotly is a high-level, declarative library for plotting build on `d3.js` and `stack.gl` (open software ecosystem for WebGL).
+
+. . . 
+
+```{r plot-plotly, eval = FALSE}
+library(plotly)
+plot_ly(ggplot2::diamonds, x = ~cut, color = ~clarity, colors = "Accent")
+```
+
+. . . 
+
+```{r, echo = FALSE}
+p <- plot_ly(ggplot2::diamonds, x = ~cut, color = ~clarity, colors = "Accent")
+widgetframe::frameWidget(p, height = "450px")
+```
+
+
+## Plotly for ggplot2
+
+. . . 
+
+```{r plot-ggplot2, eval = FALSE}
+#| code-line-numbers: "|1-4|6"
+library(ggplot2)
+g <- ggplot(ggplot2::diamonds, aes(x = cut, fill = clarity)) +
+  geom_bar(position = "dodge") +
+  scale_fill_brewer(palette = "Accent")
+
+ggplotly(g)
+```
+
+. . . 
+
+```{r, echo = FALSE}
+library(ggplot2)
+g <- ggplot(ggplot2::diamonds,
+       aes(x = cut, fill = clarity)) +
+  geom_bar(position = "dodge") +
+  scale_fill_brewer(palette = "Accent")
+
+widgetframe::frameWidget(ggplotly(g), height = "450px")
+```
+
+
+## Plotly with drop down menu
+
+
+```{r, echo = FALSE}
+
+yields <- na.omit(cwdata::key_crop_yields)
+crops <- sort(unique(yields$crop))
+
+map(crops, ~ {
+  yields %>%
+    filter(crop == .x) %>%
+    plot_ly(
+      x = ~ year,
+      y = ~ yield,
+      type = 'scatter',
+      mode = 'lines',
+      color = ~ crop,
+      transforms = list(
+        list(
+          type = 'filter',
+          target = ~ entity,
+          operation = '=',
+          value = "Afghanistan"
+        )
+      )
+    )
+}) %>%
+  subplot(nrows = 3) %>%
+  layout(
+    showlegend = FALSE,
+    annotations = imap(crops, ~ {
+      list(
+        x = 0 + 1 / 4 * (.y - 1) - 1 / 4 * 4 * (.y > 4) - 1 / 4 * 4 * (.y > 8),
+        y = 1 - 0.05 - 1 / 3 * (.y > 4) - 1 / 3 * (.y > 8) ,
+        font = list(size = 12),
+        text = .x,
+        xref = "paper",
+        yref = "paper",
+        xanchor = "center",
+        yanchor = "bottom",
+        showarrow = FALSE
+      )
+    }),
+    updatemenus = list(list(
+      type = 'dropdown',
+      active = 0,
+      buttons = map(
+        unique(yields$entity),
+        ~ list(
+          method = "restyle",
+          args = list("transforms[0].value", .x),
+          label = .x
+        )
+      )
+    ))
+  )
+```
+
+## Code for Plotly with drop down menu
+
+```{r, eval = FALSE}
+#| code-line-numbers: "|1|2|4-22|5-6|7-19|23|24-51|26-38|39-50"
+yields <- na.omit(cwdata::key_crop_yields)
+crops <- sort(unique(yields$crop))
+
+map(crops, ~ {
+  yields %>%
+    filter(crop == .x) %>%
+    plot_ly(
+      x = ~ year,
+      y = ~ yield,
+      type = 'scatter',
+      mode = 'lines',
+      color = ~ crop,
+      transforms = list(
+        list(
+          type = 'filter',
+          target = ~ entity,
+          operation = '=',
+          value = "Afghanistan"
+        )
+      )
+    )
+}) %>%
+  subplot(nrows = 3) %>%
+  layout(
+    showlegend = FALSE,
+    annotations = imap(crops, ~ {
+      list(
+        x = 0 + 1 / 4 * (.y - 1) - 1 / 4 * 4 * (.y > 4) - 1 / 4 * 4 * (.y > 8),
+        y = 1 - 0.05 - 1 / 3 * (.y > 4) - 1 / 3 * (.y > 8) ,
+        font = list(size = 18),
+        text = .x,
+        xref = "paper",
+        yref = "paper",
+        xanchor = "center",
+        yanchor = "bottom",
+        showarrow = FALSE
+      )
+    }),
+    updatemenus = list(list(
+      type = 'dropdown',
+      active = 0,
+      buttons = map(
+        unique(yields$entity),
+        ~ list(
+          method = "restyle",
+          args = list("transforms[0].value", .x),
+          label = .x
+        )
+      )
+    ))
+  )
+```
+
+
+## Difference to Shiny
+
+`cwdata::run_app()` <a href="https://ebsmonash.shinyapps.io/global-crop-yields/"><i class="fas fa-link"></i></a>
+
+<a href="https://ebsmonash.shinyapps.io/global-crop-yields/"><img src="images/cwdata-app.png"></a>
+
+
+## Code for Shiny app
+
+```{r, eval = FALSE}
+#| code-line-numbers: "10-13|24-29|16"
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(cwdata)
+
+ui <- fluidPage(
+  br(),
+  sidebarLayout(
+    sidebarPanel(
+      selectizeInput("entity",
+                     "Select a country or region:",
+                     choices = sort(unique(key_crop_yields$entity)),
+                     selected = "Australia")
+    ),
+    mainPanel(
+      plotOutput("tsplot")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+  output$tsplot <- renderPlot({
+    key_crop_yields %>%
+      filter(entity == input$entity) %>%
+      ggplot(aes(year, yield)) +
+        geom_line() +
+        geom_point() +
+        facet_wrap(~crop, scale = "free_y")
+  })
+
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+## Week 12 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* State of the art in interactive visualisation uses JS
+* Many of the well known JS is available through an R package 
+* Shiny requires a server backend to run R 
+* Interactive plots produced by R packages generally do not need a server but are often limited in scope with the prescribed interactivity
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+
+::: nonincremental
+
+* [Spencer (2022, Feb. 17). Data in Wonderland. Section 3.](https://ssp3nc3r.github.io/data_in_wonderland/#interactive)
+
+* [Sievert (2019) Interactive web-based data visualization with R, plotly, and shiny](https://plotly-r.com/)
+
+* Shneiderman (2003) The Eyes Have It: A Task by Data Type Taxonomy for Information Visualizations. *The Craft of Information Visualization: Readings and Reflections*
+
+:::
+
+:::

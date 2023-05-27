@@ -1,0 +1,680 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Data tables"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 5B"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 5B"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+library(knitr)
+library(kableExtra)
+library(janitor)
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Recall and understand the motivations of various common tables that present statistical information
+* Learn guidelines for communicating data with tables
+* Make data tables with R
+
+:::
+
+. . . 
+
+::: {.callout-tip }
+
+## Why
+
+* Your choice of statistical tables to present should consider the motivation of your audience
+* You need to be aware of the common convention of how to present information in tables
+
+
+:::
+
+
+
+
+# <i class="fas fa-table"></i> Some common tables
+
+## Descriptive summary statistics tables 
+
+```{r, message = FALSE}
+library(tidyverse)
+mtcars %>% 
+  select(mpg, wt, vs, cyl) %>% 
+  glimpse()
+```
+
+
+
+<center style="padding:10px">
+```{r, echo = FALSE}
+df <- mtcars %>% mutate(cyl = factor(cyl),
+                        vs = factor(vs))
+table1::table1(~ mpg + wt + vs | cyl, data = df)
+```
+</center>
+
+## Regression results tables
+
+```{r}
+df <- mutate(mtcars, 
+             cyl = as.factor(cyl))
+fit1 <- lm(mpg ~ wt + vs + cyl, data = df)
+fit2 <- lm(mpg ~ wt + cyl,  data = df)
+```
+
+```{r, echo = FALSE, results = "asis"}
+t1 <- gtsummary::tbl_regression(fit1)
+t2 <- gtsummary::tbl_regression(fit2)
+gtsummary::tbl_merge(tbls = list(t1, t2),
+                     tab_spanner = c("`fit1`", "`fit2`"))
+```
+
+##  What statistics to present? 
+
+::: incremental
+
+* [**This depends on what you want to convey and your audience.**]{.monash-blue}
+
+* There are two key purposes of the table:
+
+  1. [_display_]{.monash-blue} information; and
+  2. [_communicate_]{.monash-blue} information.
+
+* In general, tables tend to be about display of information and graphs are preferred for communication.
+* However, if precision matters then tables can be better at communicating this than graphs.
+
+:::
+
+
+
+## <i class="fas fa-table"></i> Descriptive summary statistics 
+
+::: incremental
+
+* The main goal is to give a numerical summary to give a "feel" of what the data contains. These generally should convey:
+  * variables in the data,
+  * the number of observations for each variable, 
+  * missing values (if any),
+  * the distribution, e.g. in the form of five number of summaries or counts/percentages for categorical variables. 
+  
+:::
+
+## <i class="fas fa-table"></i> Descriptive summary statistics 
+
+* For numerical variables, you may have a **correlation table** which displays the correlation coefficients of every pair of variables. Because it is symmetrical, you can omit out the upper triangle.
+
+```{r, echo = FALSE}
+cc <- cor(select(mtcars, mpg, wt, hp))
+cc[upper.tri(cc, diag = T)] <- NA
+tt <- as_tibble(cc)
+tt %>% mutate(Variable = c("1. Miles per gallon", "2. Weight", "3. Horsepower"),
+              Mean = round(c(mean(mtcars$mpg), mean(mtcars$wt), mean(mtcars$hp)), 2),
+              SD = round(c(sd(mtcars$mpg), sd(mtcars$wt), sd(mtcars$hp)), 2),
+              mpg = ifelse(is.na(mpg), "", round(mpg, 2)),
+              wt = ifelse(is.na(wt), "", round(wt, 2))) %>% 
+  select(Variable, Mean, SD, mpg, wt) %>% 
+  knitr::kable(table.attr = "class='cor-table'",
+               col.names = c("Variables", "Mean", "SD",
+                             "1.", "2.")) %>% 
+  kable_classic(full_width = FALSE)
+```
+
+## <i class="fas fa-table"></i> Descriptive summary statistics
+
+* You may have **cross-tabulations** (also called **contingency tables**)
+```{r xtab, echo = FALSE}
+mtcars %>% 
+  tabyl(cyl, gear) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  adorn_percentages("all") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_ns() %>% 
+  adorn_title("combined") %>% 
+  knitr::kable(table.attr = "class='xtab'") %>% 
+  kable_styling() %>% 
+  row_spec(4, extra_css = "border-top: 1px solid black;") %>% 
+  kable_classic(full_width = FALSE)
+```
+
+
+## <i class="fas fa-table"></i> Regression results 
+
+::: incremental
+
+* Or more generally, the important numerical characteristics of your model. This may include:
+  * parameter estimates of your model,
+  * the standard error or confidence/credible interval of your estimates,
+  * model fit quality, e.g. $R^2$, AIC, BIC and so on.
+
+* You see often the inclusion of $p$-value, usually from the significance test of the corresponding variable and some indicate the significance level by the amount of `*`.
+* It is important to **_convey the uncertainty_** for the estimates or predictions from your model. 
+
+:::
+
+## <i class="fas fa-table"></i> Regression results 
+
+* There is also what is called the **ANOVA table** that shows the variation according to different sources.
+
+. . . 
+
+```{r}
+glimpse(ToothGrowth)
+```
+
+. . . 
+
+::: f3
+
+```{r, echo = FALSE}
+tab <- aov(len ~ supp * factor(dose), data = ToothGrowth)
+st <- summary(tab)
+options(knitr.kable.NA = '')
+knitr::kable(st[[1]])
+```
+
+:::
+
+
+# Communication considerations for tables
+
+
+## <i class="fas fa-syringe" style="color:#FFC0CB"></i> Numerical precision 
+
+* Select an appropriate precision for your goal and audience:
+
+```{r, echo = FALSE}
+set.seed(1)
+mtcars %>% 
+  rownames_to_column() %>% 
+  # add some random decimal places
+  mutate(wt1 = round(wt + rnorm(n())/ 1000, 5),
+         wt2 = round(wt, 2),
+         wt3 = round(wt, 0)) %>%  
+  select(rowname, wt1:wt3) %>% 
+  head(4) %>% 
+  knitr::kable(table.attr="class='xtab'",
+        col.names = c("Car brand", "5 d.p.", "2 d.p.", "0 d.p.")) %>% 
+  kable_styling() %>% 
+  column_spec(2:4, width = "150px") %>% 
+add_header_above(c(" " = 1, "Weight" = 3)) %>% 
+  kable_classic(full_width = FALSE)
+```
+
+
+
+## <i class="fas fa-syringe" style="color:#FFC0CB"></i> Numerical precision
+
+* Display trailing zeroes to match selected precision of the column:
+
+```{r, echo = FALSE}
+tibble(zero = c(0.233, 0.32, 0.4, 0.343)) %>% 
+  mutate(nozero = as.character(zero)) %>% 
+  knitr::kable(table.attr="class='xtab'", 
+               align = "rr",
+               col.names = c("Yes", "No")) %>% 
+  kable_styling() %>% 
+  column_spec(1:2, width = "100px") %>% 
+  add_header_above(c("Trailing zeroes" = 2),
+                   extra_css = "border-bottom: 1px solid black;") %>% 
+  kable_classic(full_width = FALSE)
+```
+
+
+## <i class="fas fa-syringe" style="color:#FFC0CB"></i> Numerical precision 
+
+* Change and display units as appropriate:
+
+::: f3
+
+```{r, echo = FALSE}
+mtcars %>% 
+  rownames_to_column() %>% 
+  # add some random decimal places
+  mutate(wt1 = wt * 1000,
+         wt2 = wt,
+         wt3 = round(wt1 * 0.453592),
+         wt4 = signif(wt3 * 1000, 3),
+         wt5 = scales::comma(signif(wt3 * 1000000))) %>%  
+  select(rowname, wt1:wt5) %>% 
+  head(4) %>% 
+  knitr::kable(table.attr="class='xtab'",
+               col.names = c("Car brand", "Weight (lbs)", "Weight (1000 lbs)", "Weight (kg)", "Weight (g)", "Weight (mg)"),
+               align = "lrrrrr") %>% 
+  kable_styling() %>% 
+  column_spec(2:6, width = "200px") %>% 
+  kable_classic()
+  
+```
+
+:::
+
+* Show comma every 3 digits (or other marks as needed). <br>E.g. `1000000` is harder to read than `1,000,000`.
+
+```{r}
+scales::comma(c(439024, 4900343), accuracy = 1000)
+```
+
+
+## <i class="fas fa-align-left"></i> Column <i class="fas fa-align-center"></i> alignment   <i class="fas fa-align-right"></i>
+
+* Spanner labels are usually aligned in center.
+* Right-align numbers 
+* Left-align texts
+
+::: f3
+
+```{r, echo = FALSE}
+mtcars %>% 
+  rownames_to_column("car") %>% 
+  # add some random decimal places
+  mutate(
+    car1 = car,
+    car2 = car,
+    car3 = car,
+    hp1 = hp,
+    hp2 = hp,
+    hp3 = hp) %>%  
+  select(car1:hp3) %>% 
+  head(4) %>% 
+  knitr::kable(table.attr="class='xtab'",
+               col.names = c("Left", "Center", "Right", "Left", "Center", "Right"),
+               align = "lcrlcr") %>% 
+  kable_styling() %>% 
+  column_spec(1:3, width = "200px") %>% 
+  column_spec(4:6, width = "80px") %>% 
+  add_header_above(c("Car brand" = 3,
+                     "Horsepower" = 3)) %>% 
+  kable_classic()
+```
+
+:::
+
+
+## <i class="fas fa-align-justify"></i> Labels within tables
+
+* It is possibly obvious, but tables designed as final product (e.g. in report) should have polished labels
+* For columns, the unit may be written in the column header label
+* You shouldn't label the unit within the table
+
+::: flex
+::: {.w-50 .f3}
+
+<center>
+✅
+</center>
+
+
+```{r, echo = FALSE}
+mtcars %>% 
+  rownames_to_column("car") %>% 
+  select(car, wt, disp) %>% 
+  head() %>% 
+  knitr::kable(col.names = c("Car brand", "Weight<br> (1000 lbs)", "Displacement<br> (cubic inches)"), escape = FALSE) %>% 
+  kable_classic(full_width = FALSE)
+```
+
+:::
+::: {.w-50 .f3}
+
+<center>
+❌
+</center>
+
+```{r, echo = FALSE}
+mtcars %>% 
+  rownames_to_column("car") %>% 
+  select(car, wt, disp) %>% 
+  mutate(wt = paste(wt*1000, "lbs"),
+         disp = paste(disp, "cubic inches")) %>% 
+  head() %>% 
+  knitr::kable() %>% 
+  kable_classic(full_width = FALSE)
+```
+:::
+:::
+
+
+## <i class="fas fa-align-justify"></i> Texts accompanying tables
+
+::: incremental
+
+* Besides the contents of table, a table may be accompanied with: **_table header_**, **_caption_**, **_footnotes_** and/or **_source notes_**.
+* The conventions of how and what to write will depend on your audience and medium of report
+* Generally if you are *communicating* information, your caption should:
+  * [summarise the take-away message]{.monash-blue}, in other words, why should the audience care about this table?
+  * give context of the table (e.g. "$R_0 > 1$ means that the virus is more infectious")
+
+:::
+
+# Making tables with R 
+
+
+## 🏗️ How to make tables in R?
+
+::: incremental
+
+* There are many packages that make table in R, including ones that wrangle the data for you to make specialised table output. E.g. `knitr::kable`, `kableExtra`, `formattable`, `gt`, `DT`, `pander`, `xtable`, `stargazer`.
+
+* You can read the documentation for each packages to make the table you want (I mainly use `knitr::kable`, `kableExtra` and `DT`).
+
+* Whatever package you use, it's important that you understand the output and how it works with the medium you are trying to display the table.
+
+:::
+
+## <i class="fas fa-file"></i> Table in Markdown
+
+::: flex
+
+::: w-50
+
+In markdown file:
+
+<br>
+
+```
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+```
+
+:::
+
+::: {.w-50 .pl3 .fragment}
+
+*Possible* display:
+
+<br>
+
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
+:::
+
+:::
+
+
+## <i class="fas fa-file"></i> Table in HTML & PDF
+
+
+::: flex
+
+::: {.w-50 .pr3}
+
+HTML &rarr; Web browser
+```html
+<table>
+<thead>
+<tr>
+<th>First Header</th> <th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content Cell</td> <td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td> <td>Content Cell</td>
+</tr>
+</tbody>
+</table>
+```
+
+
+:::
+
+::: {.w-50 .pl3 .fragment}
+
+
+LaTeX &rarr; PDF
+```latex
+\begin{tabular}{cc}
+\hline
+First Header & Second Header\\
+\hline
+Content Cell & Content Cell\\
+Content Cell & Content Cell\\
+\hline
+\end{tabular}
+```
+
+
+:::
+
+:::
+
+. . . 
+
+* HTML is for HTML output 
+* LaTeX is for PDF output
+* Most HTML elements do _not_ work in LaTeX and vice versa.
+
+
+## Case study: building static tables by components with `gt`
+
+<center>
+<img src="images/gt_parts_of_a_table.svg">
+</center>
+
+Source: https://gt.rstudio.com/
+
+
+## Case study: building static tables by components with `gt`
+
+
+
+```{r}
+library(gt)
+df <- select(head(mtcars), wt, disp, cyl)
+```
+
+
+
+## Case study: building static tables by components with `gt` {visibility="uncounted"}
+
+
+```{r}
+#| code-line-numbers: "3"
+library(gt)
+df <- select(head(mtcars), wt, disp, cyl)
+gt(df) 
+```
+
+## Case study: building static tables by components with `gt` {visibility="uncounted"}
+
+
+
+```{r}
+#| code-line-numbers: "4-5"
+library(gt)
+df <- select(head(mtcars), wt, disp, cyl)
+gt(df) %>% 
+  tab_header(title = "Motor Trend Car Road Tests", 
+             subtitle = "Design and performance of 1973-74 automobile models")
+```
+
+## Case study: building static tables by components with `gt` {visibility="uncounted"}
+
+
+```{r}
+#| code-line-numbers: "6"
+library(gt)
+df <- select(head(mtcars), wt, disp, cyl)
+gt(df) %>% 
+  tab_header(title = "Motor Trend Car Road Tests",
+             subtitle = "Design and performance of 1973-74 automobile models") %>% 
+  tab_source_note(md("Source: 1974 *Motor Trend* US magazine"))
+```
+
+## Case study: building static tables by components with `gt` {visibility="uncounted"}
+
+```{r}
+#| code-line-numbers: "7-11"
+library(gt)
+df <- select(head(mtcars), wt, disp, cyl)
+gt(df) %>% 
+  tab_header(title = "Motor Trend Car Road Tests",
+             subtitle = "Design and performance of 1973-74 automobile models") %>% 
+  tab_source_note(md("Source: 1974 *Motor Trend* US magazine")) %>% 
+  cols_label( 
+    wt = html("Weight<br>(1000lbs)"), 
+    disp = html("Displacement<br> (inch<sup>3</sup>)"), 
+    cyl = html("Number of<br>cylinders") 
+  ) 
+```
+
+
+## Case study: interactive tables with `DT`
+
+::: f4
+
+```{r}
+DT::datatable(mtcars, options = list(pageLength = 4))
+```
+
+:::
+
+* `DT::datatable` works best for HTML documents.
+* For PDF documents, it takes a `webshot` of the HTML table and inserts it as an image.
+* It's useful for data exploration where the main goal of the table is display of information rather than communication.
+
+
+
+## When do you make tables over plots?
+
+. . . 
+
+* When you want to **_show exact values_** or the **_accuracy of the values are important_** to convey.
+
+. . . 
+
+* You _can_ combine plots with tables!
+
+
+
+## <i class="fas fa-table red"></i> Case study  heatmap table with `formattable` 
+
+```{r}
+#| output-location: fragment
+library(formattable)
+mtcars %>% 
+  select(mpg, disp, wt, hp) %>% 
+  cor() %>% 
+  as.data.frame() %>% 
+  rownames_to_column("Variables") %>% 
+  formattable(list(area(col = 2:5) ~ color_tile("#F5B7B1", "#7DCEA0")))
+```
+
+
+## <i class="fas fa-table red"></i> Case study: inline plots with `sparkline` 
+
+
+* **Sparkline** refers to a small chart drawn without axes or coordinates.
+* This will be out of scope for this unit.
+
+<img src="images/sparkline.png">
+
+
+
+## Week 5B Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* You saw various common tables that present information and the motivation behind it
+* We went through some guidelines for best way to communicate with tables
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+* [`kableExtra` documentation](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
+* [Introduction to Creating `gt` Tables](https://gt.rstudio.com/articles/intro-creating-gt-tables.html)
+* [`DT` documentation](https://rstudio.github.io/DT/)
+* [`gtsummary` for summary tables](https://www.danieldsjoberg.com/gtsummary/)
+* [`modelsummary` for regression tables](https://vincentarelbundock.github.io/modelsummary/articles/modelsummary.html)
+
+:::

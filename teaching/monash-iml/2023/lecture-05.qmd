@@ -1,0 +1,1107 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Decision trees"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 5"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 5"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Decision trees*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(gganimate)
+library(tidymodels)
+library(ISLR)
+library(latex2exp)
+library(rpart)
+library(rpart.plot)
+library(geomtextpath)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 5,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+
+
+
+
+# Classification trees {background-color="#006DAE" .mcenter}
+
+## Classification tree
+
+
+- In a **classification tree** we use a recursive two-way partition (or branches) of predictors.
+
+. . . 
+
+::: flex
+
+::: {.w-40 .fragment}
+
+
+```{r cancer-data}
+#| echo: false
+library(tidyverse)
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_binary = ifelse(diagnosis=="M", 1, 0),
+         diagnosis = factor(diagnosis, levels = c("M", "B"))) %>% 
+  janitor::clean_names()
+```
+```{r decision-tree}
+#| echo: false
+library(rpart)
+library(rsample)
+set.seed(2023)
+cancer_split <- initial_split(cancer)
+cancer_train <- training(cancer_split)
+cancer_rpart <- rpart(diagnosis ~ radius_mean + concave_points_mean, 
+                      data = cancer_train,
+                      method = "class")
+```
+```{r decision-tree-plot}
+#| echo: false
+#| fig-width: 4.5
+library(rpart.plot)
+rpart.plot(cancer_rpart, box.palette = "RdGn")
+```
+
+:::
+
+::: {.w-60 .pl3 .fragment}
+
+```{r rpart-partitions}
+#| echo: false
+#| fig-width: 8
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = cancer_rpart$splits[1, "index"], ymax = Inf,
+           fill = "red2", alpha = 0.2) +
+  annotate("rect", xmin = -Inf, xmax = cancer_rpart$splits[2, "index"], 
+           ymin = -Inf, ymax = cancer_rpart$splits[1, "index"],
+           fill = "forestgreen", alpha = 0.2) +
+  annotate("rect", xmin = cancer_rpart$splits[2, "index"], xmax = Inf, 
+           ymin = -Inf, ymax = cancer_rpart$splits[1, "index"],
+           fill = "red2", alpha = 0.2) +
+  geom_texthline(yintercept = cancer_rpart$splits[1, "index"], 
+                 label = "Partition 1", hjust = 0.8, vjust = -0.2,
+                 linetype = "dashed", fontface = "bold") +
+  
+  annotate("textline", 
+           x = c(cancer_rpart$splits[2, "index"], cancer_rpart$splits[2, "index"]), 
+           y = c(-Inf, cancer_rpart$splits[1, "index"]), fontface = "bold",
+           label = "Partition 2", vjust = 1.2, hjust = 0.05, linetype = "dashed") +
+  geom_point(aes(color = diagnosis), alpha = 0.5) +
+  scale_color_manual(values = c("red2", "forestgreen")) 
+```
+
+
+:::
+:::
+
+
+## <i class="fab fa-r-project"></i> Classification trees with R
+
+
+- There are a number of R packages 📦 that can fit classification trees, e.g. `tree` and `rpart`. 
+
+. . . 
+
+- <i class="fas fa-exclamation-circle"></i> Again, be sure to read the documentation and try fitting a model to toy data to check you know how it works. 
+
+. . . 
+
+```{r cancer-data}
+#| code-fold: true
+#| code-summary: "Code for data"
+```
+
+```{r decision-tree}
+```
+
+
+
+
+
+## Interpreting classification tree plot
+
+
+::: flex
+
+::: {.w-40}
+
+```{r decision-tree-plot}
+#| fig-width: 4.5
+#| code-fold: true
+#| code-line-numbers: "9-11"
+```
+
+:::
+
+::: {.w-60 .pl3}
+- The rectangles are nodes that contain:
+  - class identifier,
+  - proportion of the reference class, and
+  - percentage of observations in node.
+- The bottom rectangles are **terminal nodes** (or **leaves**).
+- The bold text shows the splitting rules (**branches**).
+- Colors indicate class, with a darker color indicating lower _impurity_.
+
+:::
+:::
+
+
+## Classifying new observations 
+
+
+::: flex
+
+::: {.w-40}
+
+```{r decision-tree-plot}
+#| fig-width: 4.5
+#| code-fold: true
+#| code-line-numbers: "9-11"
+```
+
+:::
+
+::: {.w-60 .pl3}
+
+`id` | `concave_points_mean` | `radius_mean`
+---|---:|---:|
+1 | 0.8 | 4.1 |
+2 | 0.04 | 8.3 |
+3 | 0.005 | 18.1 |
+
+
+What class would above observations belong to according to this tree?
+
+::: incremental
+
+1. M
+2. B
+3. M    
+
+
+:::
+
+:::
+
+:::
+
+
+
+
+## Partition notation
+
+::: flex
+::: {.w-60}
+
+- Suppose $s$ is the value to split in variable $j$. 
+- Then we have two sets (or nodes):
+  - $\color{#C8008F}{\mathcal{A}_L} = \{\{y_i, \boldsymbol{x}_i\}:x_{ij}<s\}$ and
+  - $\color{#027EB6}{\mathcal{A}_R} = \{\{y_i, \boldsymbol{x}_i\}:x_{ij}\geq s\}$.
+- Different choices of $j$ and $s$ encode different partitions. 
+- Suppose $p_{k\mathcal{A}}$ is the proportion of observations in class $k$ in a set $\mathcal{A}$.
+
+:::
+::: {.w-40 .pl3 .f3}
+
+```{r rpart-partition1}
+#| echo: false
+#| fig-width: 8
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  annotate("rect", xmin = 15, xmax = Inf, 
+           ymin = -Inf, ymax = Inf,
+           fill = "#027EB6", alpha = 0.2) +
+  annotate("rect", xmin = -Inf, xmax = 15, 
+           ymin = -Inf, ymax = Inf,
+           fill = "#C8008F", alpha = 0.2) +
+  geom_point(aes(color = diagnosis), alpha = 0.5) +
+  geom_textvline(xintercept = 15, linetype = "dashed", 
+                 label = "s = 15",
+                 hjust = 0.8) +
+  annotate(geom = 'text', 
+           x = 10, y = 0.2, 
+           color = "#C8008F",
+           label = TeX("$A_L$", output = 'character'),
+           parse = TRUE) +
+  annotate(geom = 'text', 
+           x = 17, y = 0.2, 
+           color = "#027EB6",
+           label = TeX("$A_R$", output = 'character'),
+           parse = TRUE) +
+  scale_color_manual(values = c("red2", "forestgreen")) 
+
+cancer_partition_counts <- cancer_train %>% 
+    mutate(AL = ifelse(radius_mean < 15, "AL", "AR")) %>% 
+    group_by(diagnosis, AL) %>% 
+    count() %>% 
+    pivot_wider(diagnosis, names_from = AL, values_from = n)
+```
+
+
+```{r rpart-partition1-counts}
+#| echo: false
+cancer_partition_counts %>% 
+    janitor::adorn_percentages("col") %>%  
+  janitor::adorn_pct_formatting() %>% 
+  janitor::adorn_ns() %>% 
+  mutate(diagnosis = ifelse(diagnosis == "M", "$p_{M}$", "$p_{B}$")) %>% 
+  knitr::kable(escape = FALSE, 
+               col.names = c("", "$\\mathcal{A}_L$", "$\\mathcal{A}_R$")) 
+```
+
+:::
+:::
+
+
+
+## Impurity metrics
+
+::: incremental
+
+- We need an algorithm to find the optimal $\{j^*, s^*\}$.
+* Some popular [**impurity metrics**]{.monash-blue} are the: 
+  - **Gini index**: $f_{Gini}(\mathcal{A})= \sum_{k = 1}^K p_{k\mathcal{A}}(1 - p_{k\mathcal{A}}) = 1 - \sum_{k = 1}^K p_{k\mathcal{A}}^2$ 
+  - **entropy index**: $f_{entropy}(\mathcal{A}) = -\sum_{k = 1}^K p_{k\mathcal{A}}\log_2(p_{k\mathcal{A}})$.
+* Smaller values of the impurity index means higher purity.
+* An [**_overall_ impurity**]{.monash-blue} can be calculated from the weighted average:
+$$\frac{|\mathcal{A}_L|}{|\mathcal{A}_L| + |\mathcal{A}_R|}f(\mathcal{A}_L) + \frac{|\mathcal{A}_R|}{|\mathcal{A}_L| + |\mathcal{A}_R|}f(\mathcal{A}_R).$$
+
+:::
+
+## Example calculation of Gini impurity index
+
+```{r rpart-partition1-counts}
+#| echo: false
+```
+
+```{r partition-counts-by-hand}
+#| echo: false
+nML <- cancer_partition_counts %>% 
+  filter(diagnosis == "M") %>% 
+  pull(AL)
+nBL <- cancer_partition_counts %>% 
+  filter(diagnosis == "B") %>% 
+  pull(AL)
+pL <- nML / (nML + nBL)
+giniL <- round(1 - pL^2 - (1 - pL)^2, 3)
+
+nBR <- cancer_partition_counts %>% 
+  filter(diagnosis == "B") %>% 
+  pull(AR)
+nMR <- cancer_partition_counts %>% 
+  filter(diagnosis == "M") %>% 
+  pull(AR)
+pR <- nMR / (nMR + nBR)
+giniR <- round(1 - pR^2 - (1 - pR)^2, 3)
+```
+
+::: incremental
+
+- $f_{Gini}(\mathcal{A}_L) = 1 - \frac{(`r nML`^2 + `r nBL`^2)}{(`r nML` + `r nBL`)^2}   \approx `r giniL`$
+- $f_{Gini}(\mathcal{A}_R) = 1 - \frac{(`r nMR`^2 + `r nBR`^2)}{(`r nMR` + `r nBR`)^2}   \approx `r giniR`$
+- $\text{Overall impurity} = \frac{`r nML` + `r nBL`}{`r nML` + `r nBL` + `r nMR` + `r nBR`} `r giniL` + \frac{`r nMR` + `r nBR`}{`r nML` + `r nBL` + `r nMR` + `r nBR`} `r giniR` \approx `r round(((nML + nBL) * giniL + (nMR + nBR) * giniR)/(nML + nBL + nMR + nBR), 3)`$
+
+:::
+
+## Search for the optimal partition 
+
+* The goal is to find $j$ and $s$ such that it minimises the _overall impurity_:
+$$\{j^*, s^*\} = \underset{j\in \{1, \dots, p\}, s \in \mathbb{R}}{\text{argmin}}~\text{Overall impurity}(\mathcal{A}_L, \mathcal{A}_R).$$
+
+
+```{r data-algorithm}
+#| echo: false
+impurity_search <- map_dfr(c("radius_mean", "concave_points_mean"), ~{
+  map_dfr(sort(unique(cancer_train[[.x]])),
+          function(xval) {
+            cancer_train %>%
+              mutate(AL = ifelse(.data[[.x]] < xval, "AL", "AR")) %>%
+              group_by(AL, diagnosis) %>%
+              count() %>% 
+              group_by(AL) %>% 
+              mutate(p = n / sum(n)) %>% 
+              summarise(gini = 1 - sum(p^2), 
+                        n = sum(n)) %>% 
+              mutate(weight = n / sum(n)) %>% 
+              summarise(overall = sum(weight * gini)) %>% 
+              mutate(xval = xval, x = .x)
+          })
+  })
+```
+
+::: flex
+::: {.w-50}
+
+```{r plot-algorithm1}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_vline(aes(xintercept = xval), 
+             data = impurity_search %>% 
+               filter(x == "radius_mean"),
+             linetype = "dashed") +
+  #facet_wrap(~overall) + 
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 20, y = 0.01,
+             data = impurity_search %>% 
+               filter(x == "radius_mean")) +
+  transition_states(xval) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+```
+
+:::
+::: {.w-50 .pl3}
+```{r plot-algorithm2}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_hline(aes(yintercept = xval), 
+             data = impurity_search %>% 
+               filter(x == "concave_points_mean"),
+             linetype = "dashed") +
+  #facet_wrap(~overall) + 
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 20, y = 0.01,
+             data = impurity_search %>% 
+               filter(x == "concave_points_mean")) +
+  transition_states(xval) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+```
+:::
+:::
+
+
+
+
+## Selected partition 
+
+::: flex
+::: {.w-50}
+
+```{r plot-algorithm-min1}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_vline(aes(xintercept = xval), 
+             data = impurity_search %>% 
+               filter(x == "radius_mean") %>% 
+               filter(overall == min(overall)),
+             linetype = "dashed") +
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 20, y = 0.01,
+             data = impurity_search %>% 
+               filter(x == "radius_mean") %>% 
+               filter(overall == min(overall))) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+```
+
+:::
+::: {.w-50 .pl3}
+```{r plot-algorithm-min2}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_train, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_hline(aes(yintercept = xval), 
+             data = impurity_search %>% 
+               filter(x == "concave_points_mean",
+                      overall == min(overall)),
+             linetype = "dashed") +
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 20, y = 0.01,
+             data = impurity_search %>% 
+               filter(x == "concave_points_mean",
+                      overall == min(overall))) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+
+min_impurity_xval <- impurity_search %>% 
+  filter(overall == min(overall)) %>% 
+  pull(xval)
+```
+:::
+:::
+
+
+* Selected predictor: $j^* = \texttt{concave\_points\_mean}$ 
+* Selected threshold: $s^* = `r round(min_impurity_xval, 3)`$
+
+
+## Search for the next optimal partition 
+
+* We find the next $j$ and $s$ such that it minimises the overall impurity for the partitioned subset. 
+
+
+```{r data-algorithm2}
+#| echo: false
+cancer_subset <- cancer_train %>% 
+  filter(concave_points_mean <= min_impurity_xval)
+impurity_search2 <- map_dfr(c("radius_mean", "concave_points_mean"), ~{
+  map_dfr(sort(unique(cancer_subset[[.x]])),
+          function(xval) {
+            cancer_subset %>%
+              mutate(AL = ifelse(.data[[.x]] < xval, "AL", "AR")) %>%
+              group_by(AL, diagnosis) %>%
+              count() %>% 
+              group_by(AL) %>% 
+              mutate(p = n / sum(n)) %>% 
+              summarise(gini = 1 - sum(p^2), 
+                        n = sum(n)) %>% 
+              mutate(weight = n / sum(n)) %>% 
+              summarise(overall = sum(weight * gini)) %>% 
+              mutate(xval = xval, x = .x)
+          })
+  })
+```
+
+::: flex
+::: {.w-50}
+
+```{r plot-algorithm12}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_subset, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_vline(aes(xintercept = xval), 
+             data = impurity_search2 %>% 
+               filter(x == "radius_mean"),
+             linetype = "dashed") +
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 16, y = 0.001,
+             data = impurity_search2 %>% 
+               filter(x == "radius_mean")) +
+  transition_states(xval) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+```
+
+:::
+::: {.w-50 .pl3}
+```{r plot-algorithm22}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(cancer_subset, aes(radius_mean, concave_points_mean)) + 
+  geom_point(aes(color = diagnosis), alpha = 0.5) + 
+  geom_hline(aes(yintercept = xval), 
+             data = impurity_search2 %>% 
+               filter(x == "concave_points_mean"),
+             linetype = "dashed") +
+  geom_text(aes(label = sprintf("Overall impurity = %.3f", overall)), x = 16, y = 0.001,
+             data = impurity_search2 %>% 
+               filter(x == "concave_points_mean")) +
+  transition_states(xval) +
+  scale_color_manual(values = c("red2", "forestgreen")) +
+  guides(color = "none")
+```
+:::
+:::
+
+::: fragment
+
+* We repeat again for the next subset and so on ... <br>[until we reach the **stopping rule**.]{.fragment}
+
+:::
+
+## Stopping rules
+
+::: incremental
+
+- The partitioning will be recursively applied until it meets the selected stopping rule.
+- Some stopping rules in `rpart.control()` include:
+  - `minsplit`: the minimum number of observations in any non-terminal node.
+  - `minbucket`: the minimum number of observations allowed in a terminal node.
+  - `cp`: complexity parameter -- minimum difference between impurity values required to continue splitting.
+  
+:::
+
+## <i class="fab fa-r-project"></i> Changing the stopping rules in `rpart`
+
+```{r fit-change-stop}
+#| code-line-numbers: "3-5"
+#| fig-height: 4
+#| fig-width: 7
+cancer_rpart_stop <- rpart(diagnosis ~ radius_mean + concave_points_mean,
+                           data = cancer_train, method = "class",
+                           control = rpart.control(minbucket = 0.03 * nrow(cancer),
+                                                   minsplit = 10,
+                                                   cp = 0))
+
+rpart.plot(cancer_rpart_stop, box.palette = "RdGn")
+```
+
+
+## Algorithm in a nutshell
+
+::: incremental
+
+1. Start with all observations in a single set.
+2. Sort values on first variable.
+3. Compute overall impurity for all possible partitions into two sets.
+4. Choose the best partition on this variable.
+5. Repeat 2-4 for all other variables.
+6. Choose the best partition among all variables. Your data is now split into two subsets. 
+7. Repeat 1-6 on each subset.
+8. Stop when stopping rule is achieved. 
+
+:::
+
+
+## <i class='fab fa-r-project'></i> Tuning parameters: search space
+
+* First we define the search space of the parameters.
+
+```{r cv-search}
+search_df <- expand_grid(minbucket = seq(10, 100, length.out = 4),
+                         minsplit = seq(10, 100, length.out = 4),
+                         cp = seq(0, 1, length.out = 50)) 
+search_df
+```
+
+## <i class='fab fa-r-project'></i> Tuning parameters: fit and predict {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+```{r cv-stop, cache.lazy = FALSE}
+library(yardstick)
+set.seed(2023)
+cancer_folds <- cancer_train %>% 
+  vfold_cv(v = 5) 
+
+search_res <- cancer_folds %>% 
+  mutate(search = map(splits, function(asplit) {
+    search_df %>% 
+      rowwise() %>% 
+      # fit the model for each row 
+      # different row contains unique combination of 
+      # minbucket, minsplit, and cp
+      mutate(fit = list(rpart(diagnosis ~ radius_mean + concave_points_mean,
+                              data = training(asplit), method = "class",
+                              control = rpart.control(minbucket = .data$minbucket,
+                                                      minsplit = .data$minsplit,
+                                                      cp = .data$cp)))) %>% 
+      ungroup() %>% 
+      # compute classification metric on validation fold
+      mutate(metrics = map(fit, function(afit) {
+        # get validation fold
+        testing(asplit) %>% 
+          # predict from fitted model for this validation fold
+          mutate(pred = predict(afit, ., type = "class")) %>% 
+          # get classification metrics
+          metric_set(accuracy, bal_accuracy, kap)(., truth = diagnosis, estimate = pred)
+      })) %>% 
+      unnest(metrics) %>% 
+      select(-c(fit, .estimator))
+  })) %>% 
+  unnest(search)
+
+# summarise the data for easy view
+search_res_summary <- search_res %>% 
+  group_by(minbucket, minsplit, cp, .metric) %>% 
+  summarise(mean = mean(.estimate),
+            sd = sd(.estimate))
+
+search_res_summary
+```
+
+
+## <i class='fab fa-r-project'></i> Tuning parameters: results
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-cv}
+#| code-fold: true
+#| fig-width: 7
+search_res_summary_max <- search_res_summary %>% 
+  group_by(.metric) %>% 
+  filter(mean == max(mean))
+
+search_res_summary %>% 
+  ggplot(aes(cp, mean)) +
+  geom_line(aes(color = factor(minsplit), linetype = factor(minbucket))) + 
+  geom_point(data = search_res_summary_max,
+             color = "red") +
+  facet_grid(.metric ~ .)
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+::: f3
+
+```{r search-max}
+#| echo: false
+search_res_summary_max %>% 
+  knitr::kable()
+```
+
+:::
+
+* `minbucket` and `minsplit` doesn't seem to make much difference (for the range searched at least).
+* `cp = 0` seems sufficient in this case. 
+
+
+:::
+
+:::
+
+
+## <i class='fab fa-r-project'></i> Tuning `cp` with cross validation error in `rpart`
+
+* `rpart` automatically stores the cross validation error in the resulting model object
+
+```{r rpart-fit}
+fit <- rpart(diagnosis ~ radius_mean + concave_points_mean,
+             data = cancer_train, method = "class",
+             control = rpart.control(cp = 0, xval = 10)) # 10 folds (default)
+fit$cptable
+```
+
+* `rel error` is the in-sample error (always decreases with more split) 
+* `xerror` is the cross-validation error 
+* `xstd` is the standard deviation of the cross-validation error
+
+
+## <i class="fas fa-database"></i> Bank marketing data {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- This data found [here](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing) contains direct marketing campaigns of a Portuguese banking institution.
+- 🎯 The goal is to predict if the client will subscribe to a term deposit (`y` = `"yes"` or `"no"`). 
+
+```{r bank-data}
+#| classes: skimr
+library(tidyverse)
+bank <- read_delim("https://emitanaka.org/iml/data/bank-full.csv", delim = ";")
+skimr::skim(bank)
+```
+
+
+
+## <i class="fab fa-r-project"></i> Fitting and visualising the model
+
+[<i class="fas fa-exclamation-triangle"></i> `duration` is omitted as a predictor in the model as it is computed based on the response.]{.f3}
+
+```{r fit-bank-rpart}
+#| code-line-numbers: "1|2"
+#| output-location: fragment
+#| fig-height: 3.5
+fit_rpart <- rpart(y ~ . - duration, data = bank, method = "class")
+rpart.plot(fit_rpart)
+```
+
+. . . 
+
+* How are partitions determined for _categorical variables_?
+
+
+## Partitions for categorical variables
+
+
+::: flex
+::: {.w-50}
+
+- When the variable is a categorical variable, the partition of observations is based on whether it belongs to a particular class or not. 
+
+::: {.fragment fragment-index=2}
+
+- E.g., there are 4 classes for `poutcome` and so 4 overall impurities are calculated, one for each class vs other. 
+
+:::
+
+:::
+::: {.w-50 .pl3 .fragment fragment-index=2}
+
+```{r plot-categorical}
+#| echo: false
+#| fig-height: 4
+#| fig-width: 4
+cat_partition_search <- map_dfr(unique(bank$poutcome), 
+        ~bank %>% 
+          mutate(split = .x,
+                 boutcome = ifelse(poutcome == .x, "in", "not"))) 
+
+ggplot(cat_partition_search, aes(boutcome)) + 
+  geom_bar(position = "fill", aes(fill = y), color = "black") + 
+  geom_text(data = ~.x %>% 
+              group_by(boutcome, split) %>% 
+              summarise(n = n()),
+            size = 3,
+            aes(y = 1.1, label = paste0("n = ", scales::comma(n)))) +
+  #facet_grid(. ~ split) +
+  transition_states(split) +
+  geom_label(data = ~.x %>% 
+               group_by(split, boutcome) %>% 
+               summarise(n = n(), 
+                         y = sum(y == "yes"), 
+                         p = y / n) %>%
+               group_by(split) %>% 
+               mutate(w = n / sum(n), 
+                      gini = 1 - p^2 - (1 - p)^2) %>%
+               group_by(split) %>% 
+               summarise(overall = sum(w * gini)) %>% 
+               mutate(boutcome = "not"),
+             aes(label = str_wrap(sprintf("Overall impurity = %.3f", overall), 15), y = 0.7, x = 4), hjust = 0, nudge_x = -1) +
+  ggtitle("poutcome = {closest_state}") +
+  labs(y = "proportion", x = "") +
+  scale_x_discrete(expand = expansion(add = c(1, 2.7))) +
+  scale_y_continuous(expand = expansion(add = c(0.1, 0.3)),
+                     breaks = c(0, 0.5, 1)) +
+  scale_fill_manual(values = c("red2", "forestgreen")) +
+  theme(legend.position = "bottom",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+
+:::
+:::
+
+
+
+
+
+
+
+
+## <i class="fas fa-check-circle"></i> Benefits of classification trees
+
+
+::: incremental
+
+- The decision rules provided by trees are **_easy to explain and follow_**.
+- Trees search for optimal overall impurity independently for each predictor, therefore **_missing values in predictors can be better handled in trees_**. 
+- Trees:
+  - **_can handle a mix of predictor types_**, categorical and quantitative,
+  - are **robust to outliers**,
+  - can **capture non-linear relationships**,
+  - **invariant to transformations** of predictors (as it is based on ordering).
+
+:::
+
+## <i class="fas fa-times-circle"></i> Limitations of classification trees
+
+
+::: incremental
+
+- Trees cannot model interaction between predictors.
+- The algorithm is **greedy**!
+  - This can result in a _local optimal solution_.
+  - It can often _overfit_ the data (i.e. have _high variance_).
+- When separation is in linear combinations of variables trees struggle to provide a good classification.
+
+:::
+
+# Regression tree {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-database"></i> Insurance cost {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .right-1 .top-1}
+
+- Recall this data sourced from the [Medical Cost Personal Datasets](https://www.kaggle.com/datasets/mirichoi0218/insurance) in Week 2.
+
+```{r insurance-data}
+#| classes: skimr
+library(tidyverse)
+insurance <- read_csv("https://emitanaka.org/iml/data/insurance.csv")
+skimr::skim(insurance)
+```
+
+## <i class="fab fa-r-project"></i> Fitting regression tree with R 
+
+```{r reg-tree}
+fit <- rpart(charges ~ ., data = insurance, method = "anova")
+rpart.plot(fit)
+```
+
+
+## Interpreting regression tree plot
+
+
+::: flex
+
+::: {.w-40}
+
+```{r reg-tree-plot}
+#| fig-width: 4.5
+#| echo: false
+rpart.plot(fit)
+```
+
+:::
+
+::: {.w-60 .pl3}
+- The nodes contain:
+  - **average of the response**, and
+  - percentage of observations in node.
+- The bold text shows the splitting rules (branches).
+- Colors indicate class, with a darker color indicating lower impurity.
+- The **prediction is the average of the response in the terminal node**.
+
+:::
+:::
+
+## Partition based on a binary predictor
+
+
+
+```{r insurance-impurity}
+#| echo: false
+insurance_partition1 <- insurance %>% 
+               group_by(smoker) %>% 
+               summarise(avg = mean(charges),
+                         RSS = sum((charges - mean(charges))^2))
+
+overall1 <- sum(insurance_partition1$RSS)
+```
+
+
+::: flex
+::: {.w-60 .incremental}
+
+- For a binary variable, $\mathcal{A}_L$ and $\mathcal{A}_R$ is based on its class. 
+- Then find the average responses, $\bar{y}_L$ and $\bar{y}_R$, for $\mathcal{A}_L$ and $\mathcal{A}_R$, respectively.
+- We can use the **residual sum of squares**, e.g. $\text{RSS}(\mathcal{A}_L) = \sum_{i \in \mathcal{A}_L}(y_i - \bar{y}_L)^2$, to measure the impurity. 
+- The **overall impurity** is $\text{RSS}(\mathcal{A}_L) + \text{RSS}(\mathcal{A}_R) = `r round(overall1/1000/1000/1000, 1)`\text{B}$.
+
+:::
+::: {.w-40 .pl3}
+
+```{r plot-insurance}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 6
+ggplot(insurance, aes(bmi, age)) +
+  geom_point(aes(color = charges)) +
+  colorspace::scale_color_continuous_sequential(palette = "Inferno", trans = "log10") +
+  facet_wrap(~smoker, labeller = label_both, ncol = 1) +
+  geom_label(aes(label = paste(sprintf("Average charge = %.1fK", avg/1000), sprintf("RSS = %.1fB", RSS/1000/1000/1000), sep = "\n"), x = 20, y = 58, hjust = 0),
+             fontface = "bold",
+             data = insurance_partition1)
+```
+
+:::
+:::
+
+
+## Partition based on a quantitative predictor
+
+- Like for classification trees, a quantitative predictor is partitioned based on the split value. 
+- The overall impurity is based on a combined impurity measure for quantitative response (RSS here).
+
+```{r insurance-data-algorithm}
+#| echo: false
+insurance_impurity_search <- map_dfr(c("age", "bmi"), ~{
+  map_dfr(sort(unique(insurance[[.x]])),
+          function(xval) {
+            insurance %>%
+              mutate(AL = ifelse(.data[[.x]] < xval, "AL", "AR")) %>%
+              group_by(AL) %>%
+              summarise(RSS = sum((charges - mean(charges))^2)) %>% 
+              ungroup() %>% 
+              summarise(overall = sum(RSS)) %>% 
+              mutate(xval = xval, x = .x)
+          })
+  })
+```
+
+::: flex
+::: {.w-50}
+
+```{r insurance-plot-algorithm1}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(insurance, aes(bmi, age)) + 
+  geom_point(aes(color = charges), alpha = 0.5) + 
+  geom_vline(aes(xintercept = xval), 
+             data = insurance_impurity_search %>% 
+               filter(x == "bmi"),
+             linetype = "dashed") +
+  #facet_wrap(~overall) + 
+  geom_text(aes(label = sprintf("Overall impurity = %.1fB", overall/1000/1000/1000)), 
+            x = 40, y = 58, hjust = 0,
+            data = insurance_impurity_search %>% 
+               filter(x == "bmi"),
+            fontface = "bold") +
+  transition_states(xval) +
+  colorspace::scale_color_continuous_sequential(palette = "Inferno", trans = "log10") +
+  guides(color = "none") 
+```
+
+:::
+::: {.w-50 .pl3}
+```{r insurance-plot-algorithm2}
+#| echo: false
+#| fig-height: 3.1
+#| fig-width: 6
+ggplot(insurance, aes(bmi, age)) + 
+  geom_point(aes(color = charges), alpha = 0.5) + 
+  geom_hline(aes(yintercept = xval), 
+             data = insurance_impurity_search %>% 
+               filter(x == "age"),
+             linetype = "dashed") +
+  #facet_wrap(~overall) + 
+  geom_text(aes(label = sprintf("Overall impurity = %.1fB", overall/1000/1000/1000)), 
+            x = 40, y = 58, hjust = 0,
+             data = insurance_impurity_search %>% 
+               filter(x == "age"),
+            fontface = "bold") +
+  transition_states(xval) +
+  colorspace::scale_color_continuous_sequential(palette = "Inferno", trans = "log10") +
+  guides(color = "none") 
+```
+:::
+:::
+
+
+
+
+
+## <i class='fab fa-r-project'></i> Pruning
+
+- We can grow a tree, $T_0$, and then **prune** it to a shorter tree ($T_1$). 
+
+
+::: flex
+
+::: {.w-50 .mcenter .fragment}
+
+$T_0$
+
+```{r full-tree}
+T0 <- rpart(charges ~ ., 
+            data = insurance, 
+            method = "anova", 
+            cp = 0)
+rpart.plot(T0)
+```
+
+:::
+
+::: {.w-50 .pl3 .mcenter .fragment}
+
+$T_1$
+
+```{r pruned-tree}
+#| output-location: fragment
+T1 <- prune(T0, cp = 0.01)
+rpart.plot(T1)
+```
+
+
+:::
+
+:::
+
+## <i class='fab fa-r-project'></i> Pruning to optimal `cp` based on `xerror` {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+* We can select optimal `cp` based on `xerror`
+
+
+
+```{r cptable}
+T0$cptable %>% as_tibble()
+optimal_cp <- T0$cptable %>% 
+              as.data.frame() %>% 
+              filter(xerror == min(xerror)) %>% 
+              # if multiple optimal points, then select one
+              slice(1) %>% 
+              pull(CP)
+optimal_cp
+
+T2 <- prune(T0, cp = optimal_cp)
+rpart.plot(T2)
+```
+
+
+
+
+
+
+
+
+
+
+## Decision tree algorithm
+
+- **Top-down**: it begins at the top of the tree (all observations belong to a single region) and then successively splits the predictor space; each split is indicated via two new branches further down on the tree.
+- **Greedy**: at each step of the tree-building process, the best split is made at that particular step, rather than looking ahead and picking a split that will lead to a better tree in some future step.
+
+
+# <i class="fas fa-key"></i> Takeaway {background-color="#006DAE"}
+
+
+- Tree-based models consist of one or more of nested conditions for the predictors that partition the data. 
+- **Decision trees** can be used for both regression and classification problems.
+- Decision trees used for:
+  - classification problems is referred to as **classification trees**, and
+  - regression problems is referred to as **regression trees**.

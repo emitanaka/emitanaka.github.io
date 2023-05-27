@@ -1,0 +1,1221 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Working with a single variable, making transformations, detecting outliers, using robust statistics"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 4 - Session 1"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+      - "assets/datatables.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+
+```{r setup, include = FALSE}
+set.seed(1)
+library(tidyverse)
+library(ggtext)
+library(colorspace)
+library(patchwork)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week4A/",
+  fig.width = 6,
+  fig.height = 3.5,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week4A/"
+)
+theme_set(ggthemes::theme_gdocs(base_size = 14) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 18),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+```{r DT-options, include = FALSE}
+toggle_select <- DT::JS(
+  "table.on('click.dt', 'tbody tr', function() {",
+  "$(this).toggleClass('selected');",
+  "})"
+)
+table_options <- function(scrollY, title, csv) {
+  list(
+    dom = 'Bft',
+    pageLength = -1,
+    searching = TRUE,
+    scrollX = TRUE,
+    scrollY = scrollY,
+    buttons = list(list(extend = 'copy',
+                        filename = title),
+                   list(extend = 'csv',
+                        filename = csv)))
+}
+```
+```{r recode-party-names}
+recode_party_names <- c("Australian Labor Party (Northern Territory) Branch" = "Australian Labor Party",
+                        "Labor" = "Australian Labor Party",
+                        "The Greens (Vic)" = "The Greens",
+                        "The Greens (Wa)" = "The Greens",
+                        "Katter's Australian Party (KAP)" = "Katter's Australian Party",
+                        "Country Liberals (Nt)" = "Country Liberals (NT)")
+```
+
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+---
+
+class: transition middle
+
+# Continuous variables
+
+This lecture is partly based on Chapter 3 of
+
+Unwin (2015) Graphical Data Analysis with R
+
+---
+
+# Possible features of a single continuous variable
+
+```{r plots, include = FALSE, fig.width = 4, fig.height = 2}
+some_df <- tibble(id = 1:200) %>% 
+  mutate(x1 = rexp(n()),
+         p1 = rbinom(n(), 1, 0.98),
+         x2 = p1 * rnorm(n()) + (1 - p1) * runif(n(), 4, 5),
+         p2 = rbinom(n(), 1, 0.6),
+         x3 = p2 * rnorm(n()) + (1 - p2) * rnorm(n(), 8, 2),
+         x4 = p2 * runif(n(), 1, 3) + (1 - p2) * runif(n(), 4, 10),
+         x5 = sample(0:10, size = n(), replace = TRUE, prob = c(0.6, rep(0.04, each = 10))),
+         x6 = sample(18:30, size = n(), replace = TRUE),
+         p3 = rbinom(n(), 1, 0.98), 
+         x7 = p3 * rnorm(n()) + (1 - p3) * runif(n(), -10, -3))
+
+ggplot(some_df, aes(x1)) + 
+  geom_histogram(binwidth = 0.3) + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x2, "")) + 
+  geom_boxplot(binwidth = 0.3) + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x3)) + 
+  geom_density() + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x4, y = 1)) + 
+  geom_point() + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x5)) + 
+  geom_bar() + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x6)) + 
+  geom_histogram(binwidth = 0.1) + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+
+ggplot(some_df, aes(x7)) + 
+  geom_dotplot() + 
+  theme_void() + 
+  annotate("rect", xmin = -Inf, xmax = sort(some_df$x7)[3] + 0.5, ymin = 0, ymax = Inf, fill = "red", alpha = 0.3) + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+```
+```{r feature-table}
+tribble(~Feature, ~Example, ~Description,
+        "Asymmetry", '<img src="images/week4A/plots-1.png" height ="54px">',  "The distribution is not symmetrical.",
+        "Outliers", '<img src="images/week4A/plots-2.png" height ="54px">', "Some observations are that are far from the rest.",
+        "Multimodality", '<img src="images/week4A/plots-3.png" height ="54px">', 'There are more than one "peak" in the observations.',
+        'Gaps', '<img src="images/week4A/plots-4.png" height ="54px">', 'Some continuous interval that are contained within the range but no observations exists.',
+        'Heaping', '<img src="images/week4A/plots-5.png" height ="54px">', 'Some values occur unexpectedly often.',
+        'Discretized', '<img src="images/week4A/plots-6.png" height ="54px">', 'Only certain values are found, e.g. due to rounding.',
+        'Implausible', '<img src="images/week4A/plots-7.png" height ="54px">', 'Values outside of plausible or likely range.'
+) %>% 
+  knitr::kable(escape = FALSE) %>% 
+  kableExtra::kable_classic()
+```
+
+---
+
+# Numerical features of a single contiuous variables
+
+```{r example-plot, fig.height = 1.3}
+ggplot(some_df, aes(x1)) + 
+  geom_histogram(binwidth = 0.2, fill = "pink", color = "black") + 
+  theme_void() + 
+  theme(axis.line.x = element_line(color = "black", size = 2))
+```
+
+
+* A measure of .monash-blue[**_central tendency_**], e.g. mean, median and mode
+--
+
+* A measure of .monash-blue[**_dispersion_**] (also called variability or spread), e.g. variance, standard deviation and interquartile range
+--
+
+* There are other measures, e.g. .monash-blue[**_skewness_**] and .monash-blue[**_kurtosis_**] that measures "tailedness", but these are not as common as the measures of first two
+--
+
+* The mean is also the _first moment_ and variance, skewness and kurtosis are _second, third, and fourth central moments_ 
+--
+
+
+**Significance tests** or **hypothesis tests**
+
+* Testing for $H_0: \mu = \mu_0$ vs. $H_1: \mu \neq \mu_0$ (often $\mu_0 = 0$)
+* The $t$-test is commonly used if the underlying data are believed to be normally distributed
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 1/8]
+
+.flex[
+.w-70[
+**Context**
+
+* There are 151 seats in the House of Representative for the 2019 Australian federal election
+* The major parties in Australia are:
+  * the .monash-blue[**Coalition**], comprising of the:
+     * **Liberal**, 
+     * **Liberal National** <span class="f6">(Qld)</span>, 
+     * **National**, and 
+     * **Country Liberal** <span class="f6">(NT)</span> parties, and
+  * the Australian .monash-blue[**Labor**] party 
+* The .green[**Greens**] party is a small but notable party  
+  
+]
+.w-30.center[
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Scott_Morrison_2014_%28cropped_2%29.jpg" class="w-50 ba" alt="Scott Morrison">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Bill_Shorten-crop.jpg" class="w-50 ba" alt="Bill Shorten">
+
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 2/8]
+
+.f5[<i class="fas fa-database"></i> https://results.aec.gov.au/24310/Website/Downloads/HouseFirstPrefsByCandidateByVoteTypeDownload-24310.csv]
+
+```{r aus-election-data}
+df1 <- read_csv(here::here("data/HouseFirstPrefsByCandidateByVoteTypeDownload-24310.csv"), 
+                skip = 1,
+                col_types = cols(
+                      .default = col_character(),
+                      OrdinaryVotes = col_double(),
+                      AbsentVotes = col_double(),
+                      ProvisionalVotes = col_double(),
+                      PrePollVotes = col_double(),
+                      PostalVotes = col_double(),
+                      TotalVotes = col_double(),
+                      Swing = col_double()))
+```
+
+
+```{r aus-election-table}
+df1 %>% 
+  DT::datatable(rownames = FALSE,
+                escape = FALSE,
+                width = "1150px",
+                options = table_options(scrollY = "380px", 
+                                        title = "Australian Federal Election 2019",
+                                        csv = "aus-election-2019"),
+                extensions = 'Buttons', 
+                elementId = "tab1A",
+                callback = toggle_select) %>% 
+  DT::formatRound(c("OrdinaryVotes", "AbsentVotes", "ProvisionalVotes", "PrePollVotes", "PostalVotes", "TotalVotes"), digits = 0) %>% 
+  DT::formatRound("Swing", digits = 2)
+```
+  
+  
+Given this data, what questions would you ask?
+
+`r countdown::countdown(2)`
+
+
+.footnote.f5[
+Data source: Australian Electoral Commission. (2019). Federal Elections
+(website), accessed August 2021. URL: https://results.aec.gov.au/
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 3/8]
+
+.question-box[
+What is the number of the seats won in the House of Representatives by parties?
+]
+
+--
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+
+```{r aus-election-data1}
+tdf1 <- df1 %>% 
+  filter(Elected == "Y") %>% 
+  mutate(PartyNm = str_to_title(PartyNm),
+         PartyNm = recode(PartyNm, !!!recode_party_names)) %>% 
+  count(PartyNm, sort = TRUE) %>% 
+  slice(2:4, 1, 8, 6, 7, 5)
+```
+
+```{r aus-election-table1}
+data.frame(PartyNm = "Coalition", n = sum(tdf1$n[1:3])) %>% 
+  rbind(tdf1) %>% 
+  knitr::kable(col.names = c("Party", "# of seats")) %>% 
+  kableExtra::add_indent(2:4) %>% 
+  kableExtra::row_spec(2:4, color = "#C8C8C8") %>% 
+  kableExtra::kable_classic(full_width = FALSE,
+                            font_size = 20)
+```
+
+
+
+]
+.w-50[
+
+
+**What does this table tell you?**
+
+{{content}}
+
+]
+]]
+.panel[.panel-name[data]
+.scroll-sign[
+.f5.s400[
+```{r aus-election-data, echo = TRUE, eval = FALSE}
+```
+```{r aus-election-data-skim, echo = TRUE, render = knitr::normal_print}
+skimr::skim(df1)
+```
+```{r recode-party-names, echo = TRUE}
+```
+```{r aus-election-data1, echo = TRUE, eval = FALSE}
+```
+]
+
+]]
+.panel[.panel-name[R]
+.f5[
+<i class="fas fa-pencil-alt"></i> Note: `tidyverse` is expected to be loaded already.
+```{r aus-election-table1, echo = TRUE, eval = FALSE}
+```
+]]]
+
+
+--
+
+* The Coalition won the government
+* Labor and Coalition hold majority of the seats in the House of Representatives (lower house)
+* Parties such as The Greens, Centre Alliance and Katter's Australian Party (KAP) won _only_ a single seat
+
+{{content}}
+
+--
+
+Only? {{content}}
+--
+Wait... **Did the parties compete in all electoral districts?**
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 4/8]
+
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+
+```{r aus-election-data2}
+tdf2 <- df1 %>% 
+  mutate(PartyNm = str_to_title(PartyNm),
+         PartyNm = recode(PartyNm, !!!recode_party_names)) %>% 
+  count(PartyNm, sort = TRUE)
+```
+
+```{r aus-election-table2}
+tdf2 %>% 
+  DT::datatable(rownames = FALSE,
+                escape = FALSE,
+                width = "500px",
+                options = table_options(scrollY = "400px", 
+                                        title = "Australian Federal Election 2019 - Party Distribution",
+                                        csv = "aus-election-2019-party-dist"),
+                elementId = "tab1B",
+                colnames = c("Party", "# of electorates"),
+                callback = toggle_select) 
+```
+
+
+]
+.w-50[
+
+
+**What do you notice from this table?**
+
+{{content}}
+
+]
+]]
+.panel[.panel-name[data]
+.f5[
+```{r, ref.label = c("aus-election-data2"), echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+You can omit `table_options` and `toggle_select` or have a look at the source Rmd to find out what it is
+
+```{r aus-election-table2, echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* The Greens are represented in every electoral districts
+* United Australia Party is the only other non-major party to be represented in every electoral district
+* KAP is represented in 7 electoral districts 
+* Centre Alliance is only represented in 3 electoral districts!
+
+{{content}}
+
+--
+
+Let's have a closer look at the Greens party...
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 5/8]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-70[
+
+```{r aus-election-data3}
+tdf3 <- df1 %>% 
+  group_by(DivisionID) %>% 
+  summarise(DivisionNm = unique(DivisionNm),
+            State = unique(StateAb),
+            votes_GRN = TotalVotes[which(PartyAb=="GRN")],
+            votes_total = sum(TotalVotes)) %>% 
+  mutate(perc_GRN = votes_GRN / votes_total * 100)
+```
+
+```{r aus-election-plot1, fig.width = 10}
+tdf3 %>% 
+  ggplot(aes(perc_GRN)) +
+  geom_histogram(color = "white", fill = "#00843D") +
+  labs(x = "Percentage of first preference votes per division",
+       y = "Count", 
+       title = "First preference votes for the Greens party") 
+```
+]
+.w-30[
+
+
+
+**What does this graph tell you?**
+
+{{content}}
+
+]
+]]
+.panel[.panel-name[data]
+.scroll-sign[
+.f5.s500[
+```{r aus-election-data3, echo = TRUE, eval = FALSE}
+```
+```{r aus-election-data3-skim, echo = TRUE, render = knitr::normal_print}
+skimr::skim(tdf3)
+```
+
+]]]
+.panel[.panel-name[R]
+.f5[
+```{r aus-election-plot1, echo = TRUE, eval = FALSE}
+```
+]
+]]
+
+
+???
+
+* Australia uses full-preference instant-runoff voting in single member seats
+* Following the full allocation of preferences, it is possible to derive a two-party-preferred figure, where the votes have been allocated between the two main candidates in the election. 
+* In Australia, this is usually between the candidates from the Coalition parties and the Australian Labor Party.
+
+--
+
+<ul>
+<li>Majority of the country does not have first preference for the Greens</li>
+<li>Some constituents are slightly more supportive than the others</li>
+</ul>
+
+{{content}}
+
+--
+
+**What further questions would you ask?**
+
+`r countdown::countdown(2)`
+
+
+
+---
+
+# Formulating questions for EDA
+
+* Think .monash-blue[**broad (open-ended) questions**] that promotes discussion and divergent thinking
+--
+
+* Polar questions (i.e. the answer is yes or no) are restrictive in exploring the data
+--
+
+* For example,
+
+.flex[
+.w-50[
+.center[
+<div class="question-box w-80 tl">
+Is the outlying observation the electoral district that won the seat?
+</div>
+{{content}}
+]
+
+
+
+
+]
+.w-50[
+```{r aus-election-plot1}
+```
+
+]
+
+]
+
+--
+<div class="center">
+<div class="question-box w-80 tl">
+What is characterising the distribution of the percentage of first preference votes for the Greens party?
+</div>
+</div>
+
+--
+
+* What promotes a higher level of exploration?
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 6/8]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+```{r aus-election-table3}
+tdf3 %>% 
+  group_by(State) %>% 
+  summarise(mean = mean(perc_GRN),
+            median = median(perc_GRN),
+            sd = sd(perc_GRN),
+            iqr = IQR(perc_GRN),
+            skewness = moments::skewness(perc_GRN),
+            kurtosis = moments::kurtosis(perc_GRN)) %>% 
+  arrange(desc(mean)) %>% 
+  rbind(data.frame(State = "National",
+                   mean = mean(tdf3$perc_GRN),
+                   median = median(tdf3$perc_GRN),
+                   sd = sd(tdf3$perc_GRN),
+                   iqr = IQR(tdf3$perc_GRN),
+                   skewness = moments::skewness(tdf3$perc_GRN),
+                   kurtosis = moments::kurtosis(tdf3$perc_GRN))) %>% 
+  knitr::kable(col.names = c("State", "Mean", "Median", "SD", "IQR", "Skewness", "Kurtosis"), digits = 3) %>% 
+  kableExtra::kable_classic() %>% 
+  kableExtra::add_header_above(c(" ", "% of first preference for the Greens" = 4, " " = 2)) %>% 
+  kableExtra::row_spec(9, extra_css = "border-top: 2px solid black;")
+```
+]
+.w-50.pl3[
+
+
+{{content}}
+]]]
+.panel[.panel-name[data]
+.f5[
+```{r, ref.label = c("aus-election-data3"), echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("aus-election-table3"), echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* Why are the means and the medians different?
+
+* How are the standard deviations and the interquartile ranges similar or different?
+
+* Are there some other numerical statistics we should show?
+
+`r countdown::countdown(1)`
+
+
+
+---
+
+# Robust measure of central tendency
+
+.flex[
+.w-40[
+* <span style="color:#D81B60">**Mean**</span> is a non-robust measure of location. 
+* <span style="color:#1E88E5">**Median**</span>  is the 50% quantile of the observations
+* <span style="color:#FFC107">**Trimmed mean**</span>  is the sample mean after discarding observations at the tails. 
+* <span style="color:#004D40">**Winsorized mean**</span>  is the sample mean after replacing observations at the tails with the minimum or maximum of the observations that remain.
+
+
+]
+.w-60[
+
+```{r robust-mean, fig.height = 3.5, fig.width = 4, fig.show='hide'}
+set.seed(1)
+df_list <- imap(c("rnorm(100)", "rt(50, 20)", "rexp(40)", "runif(150, 0, 1)", "rexp(100, 2)", "p <- rbinom(200, 1, 0.5) ; p * rgamma(200, 3) + (1 - p) * rnorm(200, 8, 1)"), ~{
+  data.frame(id = .y, x = eval(parse(text = .x)))
+})
+iwalk(df_list, ~{
+  g <- ggplot(.x, aes(x)) + 
+    geom_histogram(color = "white") + 
+    geom_vline(xintercept = mean(.x$x),
+               color = "#D81B60", size = 1.3) + 
+    geom_vline(xintercept = median(.x$x),
+               color = "#1E88E5", size = 1.3) + 
+    geom_vline(xintercept = mean(.x$x, trim = 0.2),
+               color = "#FFC107", size = 1.3) + 
+    geom_vline(xintercept = psych::winsor.mean(.x$x, trim = 0.2),
+               color = "#004D40", size = 1.3) +
+    theme_void() +
+    scale_y_continuous(expand = c(0, 0)) +
+    ggtitle(.y) +
+    theme(plot.title = element_text(face = "bold", size = 30),
+          axis.line.x = element_line(color = "black"),
+          axis.text.x = element_text(color = "black"),
+          axis.ticks.length.x = unit(1, "mm"))
+  print(g)
+})
+```
+
+```{r robust-plots, results = "asis", cache = FALSE}
+cat(sprintf("<img src='images/week4A/robust-mean-%d.png' class='ba pl2' height ='150px'/>", 1:length(df_list)))
+```
+```{r central-measure-table}
+df_list %>% 
+  bind_rows() %>% 
+  group_by(id) %>% 
+  summarise(mean = mean(x),
+            median = median(x),
+            trimmed = mean(x, trim = 0.2),
+            winsor = psych::winsor.mean(x, trim = 0.2)) %>% 
+  knitr::kable(col.names = c("Plot", "Mean", "Median", "Trimmed Mean<sup>*</sup>", "Winsorized Mean<sup>*</sup>"), digits = 3, escape = FALSE) %>% 
+  kableExtra::kable_classic(font_size = 12, full_width = FALSE) %>% 
+  kableExtra::column_spec(2, color = "#D81B60") %>% 
+  kableExtra::column_spec(3, color = "#1E88E5") %>% 
+  kableExtra::column_spec(4, color = "#FFC107") %>% 
+  kableExtra::column_spec(5, color = "#004D40")
+```
+
+.f5[
+<sup>*</sup> Both trimmed and Winsorized mean trimmed 20% of the tails. ]
+]
+]
+
+
+
+---
+
+# Robust measure of dispersion
+
+.flex[
+.w-50[
+* <span style="color:#648FFF">**Standard deviation**</span> or its square, **variance**, is a popular choice of measure of dispersion but is not robust to outliers
+* Standard deviation for sample $x_1, ..., x_n$ is calculated as 
+$$\sqrt{\sum_{i=1}^n \frac{(x_i - \bar{x})^2}{n - 1}}$$
+* <span style="color:#785EF0">**Interquartile range**</span> is the difference between 1st and 3rd quartile and is a more robust measure of spread
+* <span style="color:#FE6100">**Median absolute deviance**</span> (MAD) is also more robust and defined as 
+$$\text{median}(|x_i - \text{median}(x_i)|)$$
+
+]
+.w-50.pl3[
+```{r robust-plots, results = "asis", cache = FALSE}
+```
+```{r central-dispersion-table}
+df_list %>% 
+  bind_rows() %>% 
+  group_by(id) %>% 
+  summarise(sd = sd(x),
+            iqr = IQR(x),
+            mad = mad(x),
+            skew = moments::skewness(x),
+            kurtosis = moments::kurtosis(x)) %>% 
+  knitr::kable(col.names = c("Plot", "SD", "IQR", "MAD", "Skewness", "Kurtosis"), digits = 3, escape = FALSE) %>% 
+  kableExtra::kable_classic(font_size = 12, full_width = FALSE) %>% 
+  kableExtra::column_spec(2, color = "#648FFF") %>% 
+  kableExtra::column_spec(3, color = "#785EF0") %>% 
+  kableExtra::column_spec(4, color = "#FE6100") %>% 
+  kableExtra::add_header_above(c("", "Measure of dispersion" = 3, " " = 2))
+```
+]]
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 7/8]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+
+```{r aus-election-plot2, fig.height = 7}
+tdf3 %>% 
+  mutate(State = fct_reorder(State, perc_GRN)) %>% 
+  ggplot(aes(perc_GRN, State)) +
+  geom_boxplot(varwidth = TRUE) +
+  labs(x = "Percentage of first preference votes per division",
+       y = "State", 
+       title = "First preference votes for the Greens party")
+```
+
+
+
+]
+.w-50[
+
+**We should plot the data!**
+
+* The width of the boxplot is proportional to the number of electoral districts in the corresponding state (which is roughly proportional to the population)
+
+
+**What do you notice from this graph?**
+
+`r countdown::countdown(1, 30)`
+
+]
+]]
+.panel[.panel-name[data]
+.f5[
+```{r aus-election-data3, echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r aus-election-plot2, echo = TRUE, eval = FALSE}
+```
+]]]
+
+---
+
+# Outliers
+
+.info-box.w-60[
+**Outliers** are *observations* that are significantly different from the majority.
+]
+
+<br>
+
+.flex[
+.w-50[
+* Outliers can _**occur by chance in almost all distributions**_, but could be indicative of:
+  * a measurement error, 
+  * a different population, or 
+  * an issue with the sampling process.
+
+
+]
+.w-50[
+```{r aus-election-plot2}
+```
+
+]
+]
+
+---
+
+
+# Closer look at the _boxplot_
+
+
+```{r annotated-boxplot, fig.height = 3}
+fn <- quantile(mtcars$wt, c(0, 0.25, 0.5, 0.75, 1), type = 7)
+iqr <- fn[4] - fn[2]
+ggplot(mtcars, aes(wt, "")) + 
+  geom_boxplot(size = 1.4, width = 0.2, outlier.color = "#006DAE",
+               outlier.size = 3, outlier.fill = "#006DAE") + 
+  geom_dotplot(binwidth = 0.1, fill = "gray") + 
+  annotate("line", x = fn[c(2,4)], y = 1.3, size = 1.3, color = "#C8008F") +
+  annotate("segment", x = fn[c(2, 4, 3)], xend = fn[c(2,4, 3)],
+           y = c(1.25, 1.25, 0.75), yend = c(1.35, 1.35, 0.9), size = 1.3, color = "#C8008F") +
+  annotate("text", x = c(mean(fn[c(2, 4)]), fn[3]), y = c(1.4, 0.7), label = c("IQR", "median"), size = 10, color = "#C8008F") + 
+  # some reason vline didn't work
+  annotate("segment", x = c(fn[4] + 1.5 * iqr, fn[2] - 1.5 * iqr),  xend = c(fn[4] + 1.5 * iqr, fn[2] - 1.5 * iqr), y = -Inf, yend = Inf, linetype = "dashed") + 
+  theme_void()
+```
+
+
+* Observations that are outside the range of lower to upper thresholds are referred at times as .monash-blue[outliers]
+* Plotting boxplots for data from a skewed distribution will almost always show these "outliers" but these are not necessary outliers
+* Some definitions of outliers assume a symmetrical population distribution (e.g. in boxplots or observations a certain standard deviations away from the mean) and these definitions are ill-suited for asymmetrical distributions
+
+--
+
+.center[
+**But are there some things we .red[*cannot*] see from boxplots?**
+
+]
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election .f4[Part 8/8]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+
+```{r aus-election-2019-plot3, fig.height = 7}
+tdf3 %>% 
+  mutate(State = fct_reorder(State, perc_GRN)) %>% 
+  ggplot(aes(perc_GRN, State)) +
+  ggbeeswarm::geom_quasirandom(groupOnX = FALSE, varwidth = TRUE) +
+  labs(x = "Percentage of first preference votes per division",
+       y = "State", 
+       title = "First preference votes for the Greens party")
+```
+
+
+
+]
+.w-50[
+
+{{content}}
+
+
+]
+]]
+.panel[.panel-name[data]
+.f5[
+```{r aus-election-data3, echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r aus-election-2019-plot3, echo = TRUE, eval = FALSE}
+```
+]]]
+
+
+--
+
+**Now what do you notice from this graph that you didn't notice before?**
+
+{{content}}
+
+--
+
+* There are only two electoral districts in NT!
+* And only 3 and 5 electoral districts in ACT and TAS, respectively!
+
+{{content}}
+
+--
+
+* We have _not_ computed the number of electoral districts for each state so far!
+
+{{content}}
+
+--
+
+<div class="info-box">
+<i class="fas fa-book-reader"></i> Both numerical and graphical summaries can either <i>reveal</i> and/or <i>hide</i> aspects of the data
+</div>
+
+
+
+---
+
+class: transition 
+
+# Transformations
+
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[2] Melbourne Housing Prices .f4[Part 1/5]
+
+.flex[
+.w-50[
+```{r melb-house-data}
+df2 <- read_csv(here::here("data/MELBOURNE_HOUSE_PRICES_LESS.csv"),
+                col_types = cols(
+                  .default = col_character(),
+                  Rooms = col_double(),
+                  Price = col_double(),
+                  Date = col_date(format = "%d/%m/%Y"),
+                  Propertycount = col_double(),
+                  Distance = col_double()))
+```
+
+
+```{r melb-house-data-dispplay}
+df2 %>% 
+  head(20) %>% 
+  select(Suburb, Rooms, Type, Price, Date) %>% 
+  mutate(Price = scales::comma(Price),
+         Type = fct_recode(Type, 
+                           "Home" = "h",  
+                           "Townhouse" = "t",
+                           "Unit" = "u")) %>% 
+  knitr::kable(col.names = c("Suburb", "Rooms", "Type", "Price ($)", "Date"),
+               align = "lrlr") %>% 
+  kableExtra::kable_classic(font_size = 12) 
+```
+
+]
+.w-50.pl3[
+
+* This data was scrapped each week from domain.com.au from `r min(df2$Date)` to `r max(df2$Date)`
+* In total there are **`r scales::comma(nrow(df2))`** observations 
+* All variables shown .f5[(there are more variables not shown here)], except price, have complete records
+* The are **`r scales::comma(sum(!is.na(df2$Price)))`** property prices across Melbourne (roughly `r scales::percent(sum(is.na(df2$Price))/ nrow(df2))` missing)
+
+{{content}}
+
+]]
+
+
+
+.footnote.f5[
+Data source: Tony Pio (2018) Melbourne Housing Market, Version 27. Retrieved August 2021 from https://www.kaggle.com/anthonypino/melbourne-housing-market.
+]
+
+--
+
+**How would you explore this data first?**
+
+`r countdown::countdown(1)`
+
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[2] Melbourne Housing Prices .f4[Part 2/5]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+Observations arranged by Suburb and Date:
+```{r melb-house-plot-miss, fig.height = 7}
+df2 %>% 
+  select(Suburb, Rooms, Type, Price, Date) %>% 
+  arrange(Suburb, Date) %>% 
+  visdat::vis_miss()
+```
+]
+.w-50[
+
+Comparing distribution of room number for observations with missing and non-missing price records:
+
+```{r melb-house-plot-room-miss, fig.width = 8}
+df2 %>% 
+  mutate(miss = ifelse(is.na(Price), "Missing", "Recorded")) %>% 
+  count(Rooms, miss) %>% 
+  group_by(miss) %>% 
+  mutate(perc = n / sum(n) * 100) %>% 
+  ggplot(aes(as.factor(Rooms), perc, fill = miss)) +
+  geom_col(position = "dodge") + 
+  scale_fill_viridis_d() + 
+  labs(x = "Rooms", y = "Percentage", fill = "Price")
+```
+
+{{content}}
+
+]]]
+.panel[.panel-name[data]
+.scroll-sign[
+.f5.s400[
+```{r, ref.label = c("melb-house-data"), echo = TRUE, eval = FALSE}
+```
+```{r melb-house-data-skim, echo = TRUE, render = knitr::normal_print}
+skimr::skim(df2)
+```
+
+]]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("melb-house-plot-miss", "melb-house-plot-room-miss"), echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* Okay nothing notable as far as I can see 
+* What next?
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[2] Melbourne Housing Prices .f4[Part 3/5]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+```{r melb-house-price-plot1}
+df2 %>% 
+  ggplot(aes(Price/1e6)) +
+  geom_histogram(color = "white") + 
+  labs(x = "Price ($1,000,000)",
+       y = "Count")
+```
+]
+.w-50[
+
+**What can we say from this plot?**
+
+{{content}}
+
+]]]
+.panel[.panel-name[data]
+.f5[
+```{r, ref.label = c("melb-house-data"), echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("melb-house-price-plot1"), echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* The housing prices are right-skewed
+{{content}}
+
+--
+
+* There appears to be a lot of outlying housing prices (how can we tell?)
+
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[2] Melbourne Housing Prices .f4[Part 4/5]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+```{r melb-house-price-plot2}
+df2 %>% 
+  ggplot(aes(Price/1e6)) +
+  geom_histogram(color = "white") + 
+  labs(x = "Price ($1,000,000)",
+       y = "Count") +
+  scale_x_log10()
+```
+]
+.w-50[
+
+
+{{content}}
+
+]]]
+.panel[.panel-name[data]
+.f5[
+```{r, ref.label = c("melb-house-data"), echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("melb-house-price-plot2"), echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* The x-axis has been $\log_{10}$ transformed in this plot
+
+{{content}}
+--
+
+* The plot appears more symmetrical now
+{{content}}
+--
+
+* What is a measure of central tendancy here?
+
+<span class='f4'>With no transformation:</span>
+```{r melb-house-stats}
+df2 %>% 
+  filter(!is.na(Price)) %>% 
+  summarise(Mean = scales::dollar(mean(Price)),
+            Median = scales::dollar(median(Price)),
+            `Trimmed Mean` = scales::dollar(mean(Price, trim = 0.2)),
+            `Winsorised Mean` = scales::dollar(psych::winsor.mean(Price))) %>% 
+  knitr::kable(align = "r") %>% 
+  kableExtra::kable_classic()
+```
+
+<span class='f4'>With log transformation (and back transformed to original scale):</span>
+```{r melb-house-stats-tranformed}
+df2 %>% 
+  filter(!is.na(Price)) %>% 
+  mutate(lPrice = log10(Price)) %>% 
+  summarise(Mean = scales::dollar(10^mean(lPrice)),
+            Median = scales::dollar(10^median(lPrice)),
+            `Trimmed Mean` = scales::dollar(10^mean(lPrice, trim = 0.2)),
+            `Winsorised Mean` = scales::dollar(10^psych::winsor.mean(lPrice))) %>% 
+  knitr::kable(align = "r") %>% 
+  kableExtra::kable_classic()
+```
+
+---
+
+class: transition 
+
+# Multi-modality
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[2] Melbourne Housing Prices .f4[Part 5/5]
+
+.panelset[
+.panel[.panel-name[📊]
+.flex[
+.w-50[
+```{r melb-house-by-room, fig.height = 7}
+df2 %>% 
+  ggplot(aes(Price/1e6, as.factor(Rooms))) + 
+  geom_violin() + 
+  geom_boxplot(width = 0.1) +
+  scale_x_log10() + 
+  labs(x = "Price ($1,000,000)", y = "# of Rooms")
+```
+]
+.w-50[
+
+{{content}}
+
+]]]
+.panel[.panel-name[data]
+.f5.s500[
+```{r, ref.label = c("melb-house-data"), echo = TRUE, eval = FALSE}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("melb-house-by-room"), echo = TRUE, eval = FALSE}
+```
+]]]
+
+--
+
+* You can see that drawing separate violin and box plots for each room number show that higher number of rooms generally are pricier
+* You could not see this, however, when the data are combined
+
+```{r melb-house-price-plot2}
+```
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+<ul class="fa-ul">
+{{content}}
+</ul>
+
+
+]
+]
+
+--
+
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Numerical and graphical summaries can reveal, but also hide, aspects of data</li>
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span><b>Do many numerical and graphical summaries of the data!</b></li>
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

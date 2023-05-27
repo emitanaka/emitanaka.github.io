@@ -1,0 +1,31 @@
+.dataTable, .dataTables_info, .dataTables_filter {
+  font-family: "Arial Narrow", "Source Sans Pro", sans-serif;
+  font-size: 12pt;
+}
+
+
+.dt-button {
+  font-size: 0.5em!important;
+  padding: 0.3em!important;
+  font-family: "Arial Narrow", "Source Sans Pro", sans-serif;
+  color: black!important;
+  background-color: white!important;
+  border: 1.5px solid black!important;
+  border-radius: 2px;
+  background-image: none!important;
+  font-weight: 400;
+  -webkit-box-shadow: 0px 10px 20px -6px rgb(0 0 0 / 12%);
+  -moz-box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 10px 20px -6px rgb(0 0 0 / 12%);
+}
+
+.dt-button:hover {
+  background-color: black!important;
+  color: white!important;
+}
+
+.dataTables_paginate {
+  font-size: 0.5em;
+  font-family: "Arial Narrow", "Source Sans Pro", sans-serif;
+}
+

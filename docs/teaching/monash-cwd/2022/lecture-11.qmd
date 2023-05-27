@@ -1,0 +1,576 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Visual"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 11"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 11"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    incremental: true
+    include-after-body: "assets/after-body.html"
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 8,
+  fig.height = 3,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+
+library(tidyverse)
+theme_set(theme_bw(base_size = 18))
+
+```
+
+```{r data, include = FALSE, cache = TRUE}
+files <- paste0("data/", dir("data/", pattern = "^tmax"))
+data <- map_dfr(files, ~{
+  station <- read_csv(.x, n_max = 1) %>% pull("site name")
+  tmp <- read_csv(.x, skip = 2, col_names = c("date", "max_temp")) %>% 
+    select(date, max_temp) %>% 
+    mutate(station = station)
+  }) %>% 
+  mutate(station = recode(station, 
+                              "PERTH AIRPORT" = "Perth",
+                              "ADELAIDE (WEST TERRACE / NGAYIRDAPIRA)" = "Adelaide",
+                              "CAIRNS AERO" = "Cairns",
+                              "BRISBANE AERO" = "Brisbane",
+                              "SYDNEY (OBSERVATORY HILL)" = "Sydney",
+                              "CANBERRA AIRPORT" = "Canberra",
+                              "MELBOURNE (OLYMPIC PARK)" = "Melbourne"))
+```
+
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Revise principles and practices for data visualisation that effectively and efficiently convey intended messages to viewers 
+* Examine a case study with some common pitfalls in data visualisation
+
+:::
+
+## Anscombe's Quartet
+
+::: flex
+
+::: {.w-50 .f3}
+
+```{r}
+ans <- anscombe %>% 
+  mutate(n = 1:n()) %>% 
+  pivot_longer(-n) %>% 
+  mutate(set = parse_number(name),
+         var = str_extract(name, ".")) %>% 
+  pivot_wider(c(set, n),
+              values_from = value,
+              names_from = var) %>% 
+  arrange(set, n)
+
+knitr::kable(anscombe)
+```
+
+:::
+
+::: {.w-50 .f3 .fragment}
+
+Summary statistics
+
+```{r}
+ans %>% 
+  group_by(set) %>% 
+  summarise(cor = cor(x, y),
+            sd_x = sd(x),
+            sd_y = sd(y),
+            mean_x = mean(x),
+            mean_y = mean(y),
+            intercept = coef(lm(y ~ x))[1],
+            slope = coef(lm(y ~ x))[2]) %>% 
+  knitr::kable(digits = 3)
+```
+
+::: fragment
+
+... show hardly any differences between sets.
+
+:::
+
+
+:::
+
+:::
+
+
+## Anscombe's Quartet
+
+
+```{r plot-anscombe}
+ans %>% 
+  ggplot(aes(x, y)) +
+  geom_point() + 
+  facet_wrap(~set) 
+```
+
+
+## Same Stats, Different Graphs
+
+```{r plot-dozen, fig.height = 3.5}
+datasauRus::twelve_from_slant_long %>% 
+  ggplot(aes(x, y)) +
+  geom_point(size = 0.5) + 
+  facet_wrap(~dataset) +
+  theme(text = element_text(size = 12))
+```
+
+
+
+::: aside
+
+Matejka, J., & Fitzmaurice, G. (2017). Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing. CHI 2017 
+
+:::
+
+## Uncovering Simpson's paradox
+
+```{r}
+datasauRus::simpsons_paradox %>% 
+  ggplot(aes(x, y)) +
+  geom_point() + 
+  geom_smooth(se = FALSE, method = lm) +
+  facet_wrap(~dataset)
+```
+
+## Advantages of visualisation
+
+- Ability to "see" large amounts of data
+- Reveals properties or structures in data that are not apparent in numerical summaries
+- Facilitates understanding of both large-scale and small-scale features of the data
+
+## A model of visual information processing
+
+<center>
+<img src="images/vis-system.png" width="50%">
+</center>
+
+::: aside
+
+Ware, Colin (2021) Information Visualisation: Perception for Design.
+
+:::
+
+
+
+
+## Visual encodings 
+
+<center>
+<img src="https://ssp3nc3r.github.io/data_in_wonderland/images/semiologyelements.png" width="50%">
+</center>
+
+::: aside 
+
+Spencer (2022, Feb. 17). Data in Wonderland. 
+
+:::
+
+## Effectiveness of visual encoding 
+
+<center>
+<img src="https://ssp3nc3r.github.io/data_in_wonderland/index_files/figure-html5/encodings1-1.png" width="70%">
+</center>
+
+::: aside 
+
+Spencer (2022, Feb. 17). Data in Wonderland. 
+
+:::
+
+## Effectiveness of visual encoding by data type
+
+<center>
+<img src="images/DVHB_VisualVariables_A3.png" width="68%">
+</center>
+
+::: aside 
+
+Spencer (2022, Feb. 17). Data in Wonderland. 
+
+:::
+
+## Affectiveness by color
+
+<center>
+<img src="images/affective-colors.png" width="70%">
+</center>
+
+::: aside 
+
+Bartram et al. (2017) Affective Color in Visualization. CHI Conference
+
+:::
+
+# Case study {background-color="#006DAE"}
+
+Daily maximum temperature in selected Australian locations
+
+## Data from the Bureau of Meteorology
+
+Daily maximum temperature from beginning of 1910 to mid 2021 for 7 Australian location (Perth, Adelaide, Cairns, Brisbane, Sydney, Canberra, and Melbourne).
+
+```{r}
+data %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+
+## Daily maximum temperature 
+
+```{r plot-max-temp1}
+data %>% 
+  #filter(lubridate::year(date) > 2017) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_line() +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "Date", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C")) 
+```
+
+::: fragment
+
+Very long time series... what's the intended message?
+
+:::
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp2}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_line() +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "Date", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C"))
+```
+
+::: fragment
+
+Lots of fluctuation in temperature... does it show the trend?
+
+:::
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp3}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_smooth(se = FALSE) +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "Date", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C"))
+```
+
+::: fragment
+
+This is showing the fit from a GAM model... but we lost understanding the underlying variation in the original data
+
+:::
+
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp4}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_line(alpha = 0.2, size = 0.5) +
+  geom_smooth(se = FALSE) +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "Date", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C"))
+```
+
+::: fragment
+
+Some models don't look like a good fit... let's examine individually
+
+:::
+
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp5}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_line(alpha = 0.2, size = 0.5) +
+  geom_smooth(se = FALSE, size = 0.5) +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "Date", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C")) +
+  facet_wrap(~station) +
+  theme(text = element_text(size = 10))
+```
+
+::: fragment
+
+The legend is redundant here... remove unnessary elements.
+
+:::
+
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp6}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp, color = station)) +
+  geom_line(alpha = 0.2, size = 0.5) +
+  geom_smooth(se = FALSE, size = 0.5, 
+              method = loess, 
+              method.args = list(span = 0.3)) +
+  geom_text(data = ~filter(.x, date == "2019-07-01"),
+            aes(label = station),
+            y = 40, hjust = 0) +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C")) +
+  facet_wrap(~station) +
+  theme(text = element_text(size = 10)) +
+  guides(color = "none") +
+  theme(strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+::: fragment
+
+Using loess with span of 0.3 instead ... comparison across location is harder when in data shown in different panels
+
+:::
+
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp7}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, last)) %>% 
+  ggplot(aes(date, max_temp)) +
+  geom_smooth(se = FALSE, size = 0.5, 
+              method = loess, 
+              method.args = list(span = 0.3), 
+              data = ~rename(.x, station2 = station), 
+              aes(group = station2), 
+              color = "grey", alpha = 0.8) +
+  geom_line(alpha = 0.2, size = 0.5, aes(color = station)) +
+  geom_smooth(se = FALSE, size = 0.5, 
+              method = loess, 
+              method.args = list(span = 0.3), 
+              aes(color = station)) +
+  geom_text(data = ~filter(.x, date == "2019-07-01"),
+            aes(label = station, color = station),
+            y = 40, hjust = 0) +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(x = "", y = "") +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C")) +
+  facet_wrap(~station) +
+  theme(text = element_text(size = 10)) +
+  guides(color = "none") +
+  theme(strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+::: fragment
+
+Casting a shadow of the trend across locations in each panel makes it easier to compare the trend... 
+
+:::
+
+
+## Recent maximum temperature trend 
+
+```{r plot-max-temp8}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, max)) %>% 
+  ggplot(aes(date, station)) +
+  geom_tile(aes(fill = max_temp)) +
+  colorspace::scale_fill_continuous_sequential(labels = scales::comma_format(suffix = "°C"),
+                                               palette = "Reds 2", rev = TRUE) +
+  labs(x = "", y = "", fill = "") 
+```
+
+::: fragment
+
+There were missing values in data that wasn't apparent before! 
+
+:::
+
+
+## Weekly average maximum temperature trend 
+
+```{r plot-max-temp9}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, max)) %>% 
+  mutate(week = lubridate::week(date),
+         year = lubridate::year(date)) %>% 
+  group_by(week, year, station) %>% 
+  mutate(temp = mean(max_temp, na.rm = TRUE)) %>% 
+  ggplot(aes(date, station)) +
+  geom_tile(aes(fill = temp)) +
+  colorspace::scale_fill_continuous_sequential(labels = scales::comma_format(suffix = "°C"),
+                                               palette = "Reds 2", rev = TRUE) +
+  labs(x = "", y = "", fill = "") 
+```
+
+::: fragment
+
+By taking weekly averages, the plot is smoother and you can focus on the main trend instead instead of getting distracted with daily fluctuations.
+
+:::
+
+## Maximum temperature trend by month
+
+```{r plot-max-temp10}
+data %>% 
+  filter(date >= as.Date("2019-07-01")) %>%
+  mutate(station = fct_reorder(station, max_temp, max)) %>% 
+  mutate(month = lubridate::month(date),
+         year = lubridate::year(date)) %>% 
+  group_by(month, year) %>% 
+  mutate(mdate = min(date)) %>% 
+  ungroup() %>% 
+  ggplot(aes(mdate, max_temp)) +
+  geom_boxplot(outlier.size = 0.5,
+               aes(group = mdate, fill = station)) +
+  labs(x = "", y = "", fill = "") + 
+  facet_wrap(~station) +
+  theme(strip.background = element_blank(),
+        strip.text = element_blank(),
+        text = element_text(size = 12)) +
+  scale_y_continuous(labels = scales::comma_format(suffix = "°C")) +
+  guides(fill = "none", color = "none") +
+  geom_text(data = ~filter(., date == min(date)),
+            aes(label = station, color = station), y = 50,
+            hjust = 0) +
+  colorspace::scale_color_discrete_qualitative() +
+  colorspace::scale_fill_discrete_qualitative() +
+  ylim(0, 55)
+```
+
+::: fragment
+
+This plot is easier to see the overall trend and the monthly variation... 
+:::
+
+::: fragment
+
+Can you think of other way to visualise the trend?
+
+:::
+
+
+
+## Visual design guidelines 
+
+* Design graphics so important data elements can be quickly perceived 
+* Graphical symbol systems should be standardised within and across applications
+* Ensure sufficient distinction for clear discrimination of symbols -- no need for maximal distinctness
+* Use low-chroma colors to color large areas
+* Do not use more than 10 colors if possible
+
+
+
+## Week 11 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* We revised the princples and practices of data visualisation
+* We looked at different encoding choices based on the daily maximum temperature
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+* [Spencer (2022, Feb. 17). Data in Wonderland. Section 2.](https://ssp3nc3r.github.io/data_in_wonderland/#visual)
+* Ware, Colin (2021) Information Visualisation: Perception for Design. 4th ed.
+
+:::

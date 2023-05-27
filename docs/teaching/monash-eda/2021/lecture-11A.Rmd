@@ -1,0 +1,804 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Using computational tools to determine whether what is seen in the data can be assumed to apply more broadly"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 11 - Session 1"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+      - "assets/datatables.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+library(broom)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week11A/",
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  #out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week11/"
+)
+theme_set(theme_bw(base_size = 18) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 24),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+```{css, echo = FALSE}
+table {
+  margin: auto;
+  border-top: 0.16em solid #111111;
+  border-bottom: 0.16em solid #111111;
+}
+table thead th {
+  border-bottom: 0.1em solid #111111;
+  text-align: left;
+}
+tr, th {
+  padding-left: 15px;
+  padding-right: 15px
+}
+```
+
+---
+
+class: transition middle
+
+# Revisiting <br> .yellow[hypothesis testing]
+
+
+---
+
+```{r coin}
+set.seed(1)
+head <- '<img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;">'
+tail <- '<img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;">'
+```
+
+
+# Testing coin bias .font_small[Part 1/2]
+
+* Suppose I have a coin that I'm going to flip `r tail` 
+--
+
+* If the coin is unbiased, what is the probability it will show heads?
+--
+
+* Yup, the probability should be 0.5. 
+--
+
+* So how would I test if a coin is biased or unbiased?
+--
+
+* We'll collect some data. 
+--
+
+* **Experiment 1**: I flipped the coin 10 times and this is the result:
+
+<center>
+```{r coin-bias, results='asis'}
+samp10 <- sample(rep(c(head, tail), c(7, 3)))
+cat(paste0(samp10, collapse = ""))
+```
+</center>
+--
+
+* The result is 7 head and 3 tails. So 70% are heads. 
+--
+
+* Do you believe the coin is biased based on this data?
+
+
+---
+
+# Testing coin bias .font_small[Part 2/2]
+
+* **Experiment 2**: Suppose now I flip the coin 100 times and this is the outcome:
+
+```{r coin-bias100, results='asis'}
+samp100 <- sample(rep(c(head, tail), c(70, 30)))
+cat(paste0(samp100, collapse = ""))
+```
+--
+
+* We observe 70 heads and 30 tails. So again 70% are heads. 
+--
+
+* Based on this data, do you think the coin is biased?
+
+---
+
+# (Frequentist) hypotheses testing framework
+
+* Suppose $X$ is the number of heads out of $n$ independent tosses.
+* Let $p$ be the probability of getting a head for this coin.
+
+
+|     |     |
+|-----|-----|
+|**Hypotheses**  | $H_0: p = 0.5$ vs. $H_1: p \neq 0.5$   |
+--
+
+|**Assumptions**  | Each toss is independent with equal chance of getting a head.   |
+--
+
+|**Test statistic** | $X \sim B(n, p)$. Recall $E(X) = np$.<br> The observed test statistic is denoted $x$. |
+--
+
+|**P-value** <br>.font_small[(or critical value or confidence interval)] | $P(\mid X - np\mid \geq \mid x - np\mid )$ |
+--
+
+|**<i class="fas fa-gavel"></i> Conclusion** | Reject null hypothesis when the $p$-value is less than<br> some significance level $\alpha$. Usually $\alpha = 0.05$.|
+
+--
+
+* The p-value for experiment 1 is $P(|X - 5| \geq 2) \approx 0.34$.
+* The p-value for experiment 2 is $P(|X - 50| \geq 20) \approx 0.00008$.
+
+---
+
+# Judicial system
+
+.grid[
+.item[
+<br>
+<center>
+<img src="images/omni/judicial-court.png">
+</center>
+]
+
+.item.bg-gray80.pl3[
+<br>
+{{content}}
+]
+
+]
+
+--
+
+<center>
+<img src="images/omni/statistical-court.png">
+</center>
+<ul>
+<li><i class="fas fa-search"></i> Evidence by test statistic</li>
+<li><i class="fas fa-gavel"></i> Judgement by p-value, critical value or confidence interval</li>
+</ul>
+{{content}}
+
+--
+
+<span class="red">Does the test statistic have to be a <i>numerical summary statistics</i>?</span>
+
+
+
+---
+
+class: transition middle
+
+# Visual inference
+
+---
+
+# Visual inference
+
+.grid[
+.item[
+
+* Hypothesis testing in visual inference framework is where:
+   * <i class="fas fa-search"></i>  the .monash-blue[_test statistic is a plot_] and 
+   * <i class="fas fa-gavel"></i> judgement is by human perceptions.
+{{content}}
+
+]
+.item.bg-gray80.pa3[
+
+From Exercise 4 in week 9 tutorial: a residual plot after modelling high-density lipoprotein in human blood.
+
+
+```{r HDL-resplot, fig.height = 5}
+samples <- read_csv(here::here("data/HDLsamples.csv"))
+fit <- lm(HDL ~ cholesterol + trigylceride + SPB, data = samples)
+df <- augment(fit)
+ggplot(df, aes(.fitted, .std.resid)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(x = "Fitted values", y = "Studentised residuals")
+```
+]
+]
+--
+
+* You (and many other people) actually do visual inference many times but generally in an informal fashion.
+{{content}}
+--
+
+* Here, we are making an inference on whether the residual plot has any patterns based on a single data plot.
+
+---
+
+class: transition middle
+
+.font_large[
+
+<i class="fas fa-chart-bar"></i> Data plots tend to be over-interpreted
+
+<br>
+
+<i class="fas fa-chart-bar"></i> Reading data plots require calibration
+
+
+]
+
+---
+
+# Visual inference more formally
+
+.flex[
+.w-60[
+1. State your null and alternate hypotheses.
+{{content}}
+]]
+--
+2. Define a <b>visual test statistic</b>, $V(.)$, i.e. a function of a sample to a plot.
+{{content}}
+--
+3. Define a method to generate <b>null data</b>, $\boldsymbol{y}_0$. 
+{{content}}
+--
+4. $V(\boldsymbol{y})$ maps the actual data, $\boldsymbol{y}$, to the plot. We call this the <b class="monash-blue">data plot</b>.
+{{content}}
+--
+5. $V(\boldsymbol{y}_0)$ maps a null data to a plot of the same form. We call this the <b class="monash-blue">null plot</b>. We repeat this $m - 1$ times to generate $m-1$ null plots. 
+{{content}}
+--
+6. A <b class="monash-blue">lineup</b> displays these $m$ plots in a random order. 
+{{content}}
+--
+7. Ask $n$ human viewers to select a plot in the lineup that looks different to others without any context given.
+
+---
+
+count: false
+
+# Visual inference more formally
+
+.flex[
+.w-60[
+1. State your null and alternate hypotheses.
+2. Define a **visual test statistic**, $V(.)$, i.e. a function of a sample to a plot.
+3. Define a method to generate **null data**, $\boldsymbol{y}_0$. 
+4. $V(\boldsymbol{y})$ maps the actual data, $\boldsymbol{y}$, to the plot. We call this the .monash-blue[**data plot**].
+5. $V(\boldsymbol{y}_0)$ maps a null data to a plot of the same form. We call this the .monash-blue[**null plot**]. We repeat this $m - 1$ times to generate $m-1$ null plots. 
+6. A .monash-blue[**lineup**] displays these $m$ plots in a random order. 
+7. Ask $n$ human viewers to select a plot in the lineup that looks different to others without any context given.
+
+]
+.w-40.pl3[
+
+.info-box[
+Suppose $x$ out of $n$ people detected the data plot from a lineup, then
+* the .monash-blue[**visual inference p-value**] is given as $$P(X \geq x)$$ where $X \sim B(n, 1/m)$, and 
+* the .monash-blue[**power of a lineup**] is estimated as $x/n$.
+]
+
+]]
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[1] In which plot is the pink group higher than the blue group?
+
+```{r weight-data, include = FALSE}
+data("WeightLoss", package = "carData")
+# purposefully make it 2 groups
+df <- filter(WeightLoss, group!="DietEx") 
+skimr::skim(df)
+```
+
+* Note: there is no correct answer here. 
+
+```{r weight-lineup, echo = FALSE, fig.height = 6.5, fig.width = 14}
+library(nullabor)
+set.seed(2021)
+lineup1 <- lineup(null_permute("group"), true = df, n = 10, pos = 4)
+lineup1 %>% 
+  ggplot(aes(group, wl1, color = group)) +
+  ggbeeswarm::geom_quasirandom() +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank()) +
+  guides(color = "none") + 
+  scale_color_manual(values = c("#006DAE", "#ee64a4")) -> glineup1
+glineup1
+```
+
+---
+
+# Visual inference p-value (or "see"-value)
+
+* So <span contenteditable="true">&nbsp;&nbsp; $x$ &nbsp;&nbsp;</span> out of <span contenteditable="true">&nbsp;&nbsp; $n$ &nbsp;&nbsp;</span> of you chose the data plot.
+* So the visual inference p-value is $P(X \geq x)$ where $X \sim B(n, 1/10)$.
+* In R, this is 
+```r
+1 - pbinom(x - 1, n, 1/10) 
+# OR 
+nullabor::pvisual(x, n, 10)
+```
+
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by diet 
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+```{r weight-plot, fig.height = 6, fig.width = 5}
+gweight <- ggplot(df, aes(group, wl1, color = group)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  labs(x = "", y = "Weight loss at 1 month") + 
+  theme(text = element_text(size = 22)) + 
+  guides(color = "none") +
+  scale_color_manual(values = c("#006DAE", "#ee64a4"))
+gweight
+```
+.gray[This is actually Plot 4 in the previous lineup.]
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+```{r weight-data, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, eval = FALSE, ref.label = c("weight-plot"), echo = TRUE}
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with diet after 1 month?
+
+.f5[
+{{content}}
+
+]
+
+]
+
+]
+
+--
+
+```{r weight-numbers}
+df %>% 
+  group_by(group) %>% 
+  summarise(N = n(), Mean = mean(wl1), SD = sd(wl1)) %>% 
+  knitr::kable(col.names = c("Group", "N", "Mean", "Std. Dev"),
+              digits = 2) %>% 
+  kableExtra::kable_classic(full_width = FALSE)
+```
+
+{{content}}
+--
+```{r weight-ttest, echo = TRUE}
+with(df, 
+     t.test(wl1[group=="Diet"], wl1[group=="Control"], 
+            alternative = "greater"))
+```
+
+---
+
+# Null data generation method
+
+.w-70[
+* We are testing $H_0: \mu_{diet} = \mu_{control}$ vs. $H_1: \mu_{diet} > \mu_{control}$ where $\mu_{diet}$ and $\mu_{control}$ are the average weight loss for population on diet and no diet, respectively.
+{{content}}
+
+]
+
+
+--
+
+* There are a number of ways to generate null data under $H_0$, e.g. 
+{{content}}
+--
+
+   * we could assume a parametric distribution of the data and estimate the parameters from the data, or 
+{{content}}
+--
+
+   * we could permute the labels for the diet and control group.
+--
+
+.flex[
+.w-33[
+```{r weight-null-demo1, echo = FALSE, fig.width = 4, fig.height = 4}
+gweight + 
+  labs(title = "Original data") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.3))
+```
+
+]
+{{content}}
+]
+
+--
+
+<div class="w-33">
+
+```{r weight-null-demo2, fig.width = 4, fig.height = 4}
+df_null <- df %>% 
+  mutate(group_new = sample(group))
+gweight %+% df_null +
+  aes(color = group_new) +
+  labs(title = "Permute labels") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.3))
+```
+
+</div>
+
+{{content}}
+
+--
+
+<div class="w-33">
+
+```{r weight-null-demo3, fig.width = 4, fig.height = 4}
+gweight %+% df_null +
+  aes(x = group_new, color = group_new) +
+  labs(title = "Null data") + 
+  theme(plot.title = element_text(face = "bold", hjust = 0.3))
+```
+
+</div>
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[2] In which plot is the pink group higher than the blue group?
+
+```{r weight-ex-data, include = FALSE}
+df2 <- filter(WeightLoss, group!="Diet")
+skimr::skim(df2)
+```
+
+```{r weight-ex-lineup, echo = FALSE, fig.height = 6.5, fig.width = 14}
+set.seed(1)
+lineup2 <- lineup(null_permute("group"), true = df2, n = 10, pos = 10)
+glineup1 %+% lineup2 + aes(y = wl2) 
+```
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by diet and exercise
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+```{r weight-ex-plot, fig.height = 6, fig.width = 5}
+gweight %+% df2 + 
+  aes(y = wl2) +
+  labs(y = "Weight loss at 2 months")
+```
+.white[This is actually Plot 10 in the previous lineup.]
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+```{r weight-ex-data, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, eval = FALSE, ref.label = c("weight-ex-plot"), echo = TRUE}
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with diet *and exercise after 2 months*?
+
+.f5[
+{{content}}
+
+]
+
+]
+
+]
+
+--
+
+```{r weight-ex-numbers}
+df2 %>% 
+  group_by(group) %>% 
+  summarise(N = n(), Mean = mean(wl2), SD = sd(wl2)) %>% 
+  knitr::kable(col.names = c("Group", "N", "Mean", "Std. Dev"),
+              digits = 2) %>% 
+  kableExtra::kable_classic(full_width = FALSE)
+```
+
+{{content}}
+--
+```{r weight-ex-ttest, echo = TRUE}
+with(df2, 
+     t.test(wl2[group=="DietEx"], wl2[group=="Control"], 
+            alternative = "greater"))
+```
+
+
+---
+
+class: transition 
+
+
+# What about if we change the visual test statistic?
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[3]  In which plot is the pink group higher than the blue group?
+
+`geom_point()` .white[Data plot is Plot 3]
+
+```{r weight-ex-data3, include = FALSE}
+df3 <- filter(WeightLoss, group != "Control")
+```
+
+```{r weight-lineup3, fig.height = 7, fig.width = 13}
+glineup2 <- lineup(null_permute("group"), true = df3, n = 10, pos = 3) %>% 
+  ggplot(aes(group, wl2, color = group)) +
+  guides(color = "none") +
+  scale_color_manual(values = c("#006DAE", "#ee64a4")) +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+
+glineup2 + geom_point()
+```
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[4]  In which plot is the pink group higher than the blue group?
+
+`geom_boxplot()`  .white[Data plot is Plot 2]
+
+```{r weight-lineup4, fig.height = 7, fig.width = 13}
+glineup2 %+% lineup(null_permute("group"), true = df3, n = 10, pos = 2) +
+  geom_boxplot() 
+```
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[5]  In which plot is the pink group higher than the blue group?
+
+`geom_violin()`  .white[Data plot is Plot 4]
+
+```{r weight-lineup5, fig.height = 7, fig.width = 13}
+glineup2 %+% lineup(null_permute("group"), true = df3, n = 10, pos = 4) +
+  geom_violin()
+```
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[6]  In which plot is the pink group higher than the blue group?
+
+`ggbeeswarm::geom_quasirandom()`  .white[Data plot is Plot 10]
+
+```{r weight-lineup6, fig.height = 7, fig.width = 13}
+glineup2 %+% lineup(null_permute("group"), true = df3, n = 10, pos = 10) +
+  ggbeeswarm::geom_quasirandom()
+```
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by exercise
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+```{r weight-ex-plot3, fig.height = 6, fig.width = 5}
+gweight %+% df3 + 
+  aes(y = wl2) +
+  labs(y = "Weight loss at 2 months")
+```
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+```{r weight-ex-data3, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, eval = FALSE, ref.label = c("weight-ex-plot3"), echo = TRUE}
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with *exercise* after 2 months?
+
+.f5[
+```{r weight-ex-numbers3}
+df3 %>% 
+  group_by(group) %>% 
+  summarise(N = n(), Mean = mean(wl2), SD = sd(wl2)) %>% 
+  knitr::kable(col.names = c("Group", "N", "Mean", "Std. Dev"),
+              digits = 2) %>% 
+  kableExtra::kable_classic(full_width = FALSE)
+```
+```{r weight-ex-ttest3, echo = TRUE}
+with(df3, 
+     t.test(wl2[group=="DietEx"], wl2[group=="Diet"], 
+            alternative = "greater"))
+```
+
+]
+
+]
+
+]
+
+
+
+---
+
+# Power of a lineup
+
+.w-70[
+* The power of a lineup is calculated as $x/n$ where $x$ is the number of people who detected the data plot out of $n$ people
+
+<br>
+
+{{content}}
+]
+
+.footnote.f4[
+Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+]
+
+--
+
+
+Plot type | $x$ | $n$ | Power
+--- | --- | --- | --- 
+`geom_point` | $x_1$ | $n_1$ | $x_1 / n_1$
+`geom_boxplot` | $x_2$ | $n_2$ | $x_2 / n_2$
+`geom_violin` | $x_3$ | $n_3$ | $x_3 / n_3$
+`ggbeeswarm::geom_quasirandom` | $x_4$ | $n_4$ | $x_4 / n_4$
+
+<br>
+
+--
+
+* The plot type with a higher power is preferable 
+
+--
+
+* You can use this framework to find the optimal plot design
+
+
+---
+
+# Some considerations in visual inference
+
+* In practice you don't want to bias the judgement of the human viewers so for a proper visual inference:   
+   * you should _not_ show the data plot before the lineup
+   * you should _not_ give the context of the data 
+   * you should remove labels in plots
+* You can crowd source these by paying for services like:
+   * [Amazon Mechanical Turk](https://www.mturk.com/), 
+   * [Appen (formerly Figure Eight)](https://appen.com/figure-eight-is-now-appen/) and
+   * [LABVANCED](https://www.labvanced.com/).
+* If the data is for research purposes, then you may need ethics approval for publication.
+
+---
+
+# Resources and Acknowledgement
+
+.font18[
+- Buja, Andreas, Dianne Cook, Heike Hofmann, Michael Lawrence, Eun-Kyung Lee, Deborah F. Swayne, and Hadley Wickham. 2009. “Statistical Inference for Exploratory Data Analysis and Model Diagnostics.” Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 367 (1906): 4361–83.
+- Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” IEEE Transactions on Visualization and Computer Graphics 16 (6): 973–79.
+- Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+- Majumder, M., Heiki Hofmann, and Dianne Cook. 2013. “Validation of Visual Statistical Inference, Applied to Linear Models.” Journal of the American Statistical Association 108 (503): 942–56.
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+]
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

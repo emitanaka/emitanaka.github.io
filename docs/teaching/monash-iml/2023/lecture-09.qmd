@@ -1,0 +1,1556 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Clustering"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 9"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 9"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Clustering*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(geomtextpath)
+library(ggdendro)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+theme_set(theme_bw(base_size = 18))
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+```
+
+## [`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+## Cluster analysis 
+
+::: incremental
+
+- So far we have been working with cases where we have a response of interest (**labelled data**).
+- In some instances, we only have a set of variables but no response of interest (**unlabelled data**).
+- But we may be interested in finding an _unobserved grouping_ within this unlabelled data, e.g. customer segmentation in marketing analysis. 
+- This is an example of *unsupervised learning*.
+
+:::
+
+## How many clusters do you see?
+
+```{r penguin-scatter}
+#| echo: false
+data(penguins, package = "palmerpenguins")
+penguinsc <- penguins %>% 
+  filter(if_all(everything(), complete.cases))
+
+ggplot(penguinsc) + 
+  geom_point(aes(x = bill_length_mm, y = flipper_length_mm)) +
+  labs(x = "Variable 1", y = "Variable 2") + 
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm"))
+
+
+data(flea, package = "tourr")
+```
+
+
+## A possible clustering 
+
+
+
+```{r penguins-kmeans}
+#| echo: false
+kout <- penguinsc %>% 
+  select(bill_length_mm, flipper_length_mm) %>% 
+  scale() %>% 
+  kmeans(3)
+
+
+StatChull <- ggproto("StatChull", Stat,
+  compute_group = function(data, scales) {
+    data[chull(data$x, data$y), , drop = FALSE]
+  },
+  
+  required_aes = c("x", "y")
+)
+
+stat_chull <- function(mapping = NULL, data = NULL, geom = "polygon",
+                       position = "identity", na.rm = FALSE, show.legend = NA, 
+                       inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatChull, data = data, mapping = mapping, geom = geom, 
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+
+penguinsc %>% 
+  mutate(group = factor(kout$cluster)) %>% 
+  ggplot(aes(bill_length_mm, flipper_length_mm)) +
+  stat_chull(aes(color = group, fill = group), alpha = 0.1) + 
+  geom_point(aes(color = group)) +
+  labs(x = "Variable 1", y = "Variable 2") + 
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(color = "none", fill = "none")
+
+```
+
+- Here we cluster the observations into 3 groups... [_but how?_]{.fragment}
+
+## Approaches to clustering 
+
+- [**Hierarchical**]{.monash-blue}:   
+  - **Agglomerative**: One to all.
+  - **Divisive**: All to one.
+  
+. . .   
+  
+- [**Non-hierarchical**]{.monash-blue}: 
+  - Select the number of clusters. 
+  - Then assign observations to clusters. 
+  - [We'll use **$k$-means clustering** to show this.]{.fragment}
+
+
+# Hierarchical clustering {background-color="#006DAE" .mcenter}
+
+
+## Distance 
+
+::: incremental
+
+- For clustering, we are grouping observations that are similar.
+- Recall from Lecture 7, we covered some [distance metrics](https://emitanaka.org/iml/lectures/lecture-07.html#/distance-metrics).
+- For clustering, we need two notions of distance:
+  - Distance between _observations_
+  - Distance between _clusters_
+- Let's denote $\mathcal{A}$ and $\mathcal{B}$ as the two sets that contain the observation indexes of the two clusters[, e.g. $\mathcal{A} = \{1, 4\}$ and $\mathcal{B} = \{2, 3, 5\}$ denotes that observations 1 and 4 are in the first cluster and observations 2, 3 and 5 are in the second cluster.]{.fragment}
+  
+:::
+
+
+## Hierarchical clustering
+
+::: incremental
+
+- [**Agglomerative**]{.monash-blue}: Start with all observations in singleton clusters. Merge clusters sequentially until all are in one cluster. 
+- The functions `hclust()` or `agnes()` can be used for this.
+- [**Divisive**]{.monash-blue}: Start with all observtions in one cluster, and sequentially divide until all observations are in singleton clusters. 
+- The function `diana()` can be used for this.
+
+:::
+
+
+## Agglomeration method 
+
+- There are several ways to merge clusters:
+  - **Single linkage**: $D(\mathcal{A}, \mathcal{B}) = \min_{i\in\mathcal{A},j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$
+  - **Complete linkage**: $D(\mathcal{A}, \mathcal{B}) = \max_{i\in\mathcal{A},j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$
+  - **Average linkage**: $D(\mathcal{A}, \mathcal{B}) = \frac{1}{|\mathcal{A}||\mathcal{B}|}\sum_{i\in\mathcal{A}}\sum_{j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$
+  - **Centroid linkage**: $D(\mathcal{A}, \mathcal{B}) = D(\bar{\boldsymbol{x}}_\mathcal{A},\bar{\boldsymbol{x}}_\mathcal{B})$, combining based on distance between the centroid location of the each cluster
+  - **Ward's method**: minimises the total within-cluster variance by merging clusters with minimum between-cluster distance.
+  
+
+## <i class='fas fa-basketball-ball'></i> Toy data 
+
+- Suppose we have this data with four groups shown below.
+
+```{r toy-cluster}
+#| echo: false
+set.seed(1)
+n <- c(17, 20, 18, 19)
+df <- tibble(x = c(runif(n[1], 0, 4), 
+                   runif(n[2], 6, 10),
+                   runif(n[3], 0, 4),
+                   runif(n[4], 6, 10))) %>% 
+  mutate(y = rep(c(8, 0, 0, -8), times = n) + x + rnorm(n()),
+         group = rep(LETTERS[1:4], times = n))
+
+gtoy <- ggplot(df, aes(x, y)) +
+  geom_point(aes(color = group)) +
+  labs(x = "Variable 1", y = "Variable 2")
+
+gtoy
+```
+
+  
+## Single linkage 
+
+$$D(\mathcal{A}, \mathcal{B}) = \min_{i\in\mathcal{A},j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$$
+
+
+```{r single-linkage-demo}
+#| echo: false
+d <- dist(df[, c("x", "y")])
+dist_df <- expand_grid(tibble(id1 = 1:nrow(df), x1 = df$x, y1 = df$y, group1 = df$group), 
+            tibble(id2 = 1:nrow(df), x2 = df$x, y2 = df$y,
+                   group2 = df$group)) %>% 
+  mutate(d = as.vector(as.matrix(d))) %>% 
+  filter(id1 != id2)
+
+single_df <- dist_df %>% 
+  group_by(group1, group2) %>% 
+  filter(d == min(d)) %>%
+  filter(group1 == "A" & group2 == "B" |
+         group1 == "A" & group2 == "C" |
+         group1 == "A" & group2 == "D" |
+         group1 == "B" & group2 == "C" |
+         group1 == "B" & group2 == "D" |
+         group1 == "C" & group2 == "D") %>% 
+  ungroup()
+
+gtoy + 
+  geom_labelsegment(data = single_df, 
+               aes(x1, y1, xend = x2, yend = y2, 
+                   label = scales::comma(d, 0.01)),
+               hjust = 0.3)
+```
+
+- Here we have 4 groups and 6 distances (based on ED) between clusters.
+
+
+## Complete linkage 
+
+$$D(\mathcal{A}, \mathcal{B}) = \max_{i\in\mathcal{A},j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$$
+
+```{r complete-linkage-demo}
+#| echo: false
+complete_df <- dist_df %>% 
+  group_by(group1, group2) %>% 
+  filter(d == max(d)) %>% 
+  filter(group1 == "A" & group2 == "B" |
+         group1 == "A" & group2 == "C" |
+         group1 == "A" & group2 == "D" |
+         group1 == "B" & group2 == "C" |
+         group1 == "B" & group2 == "D" |
+         group1 == "C" & group2 == "D") %>% 
+  ungroup() 
+
+gtoy + 
+  geom_labelsegment(data = complete_df, 
+               aes(x1, y1, xend = x2, yend = y2, 
+                   label = scales::comma(d, 0.01)),
+               hjust = 0.35)
+```
+
+## Average linkage
+
+$$D(\mathcal{A}, \mathcal{B}) = \frac{1}{|\mathcal{A}||\mathcal{B}|}\sum_{i\in\mathcal{A}}\sum_{j\in\mathcal{B}}D(\boldsymbol{x}_i,\boldsymbol{x}_j)$$
+
+
+```{r average-linkage-demo}
+#| echo: false
+average_df <- dist_df %>% 
+  group_by(group1, group2) %>% 
+  summarise(d = mean(d), 
+            x1 = mean(x1),
+            x2 = mean(x2),
+            y1 = mean(y1),
+            y2 = mean(y2)) %>% 
+  filter(group1 == "A" & group2 == "B" |
+         group1 == "A" & group2 == "C" |
+         group1 == "A" & group2 == "D" |
+         group1 == "B" & group2 == "C" |
+         group1 == "B" & group2 == "D" |
+         group1 == "C" & group2 == "D") %>% 
+  ungroup() 
+
+gtoy + 
+  stat_chull(aes(fill = group), alpha = 0.1) +
+  geom_labelsegment(data = average_df, 
+               aes(x1, y1, xend = x2, yend = y2, 
+                   label = scales::comma(d, 0.01)),
+               hjust = 0.2)
+```
+
+## Centroid linkage
+
+$$D(\mathcal{A}, \mathcal{B}) = D(\bar{\boldsymbol{x}}_\mathcal{A},\bar{\boldsymbol{x}}_\mathcal{B})$$
+
+
+```{r centroid-linkage-demo}
+#| echo: false
+centroid_df <- dist_df %>% 
+  group_by(group1, group2) %>% 
+  summarise(x1 = mean(x1),
+            x2 = mean(x2),
+            y1 = mean(y1),
+            y2 = mean(y2)) %>% 
+  filter(group1 == "A" & group2 == "B" |
+         group1 == "A" & group2 == "C" |
+         group1 == "A" & group2 == "D" |
+         group1 == "B" & group2 == "C" |
+         group1 == "B" & group2 == "D" |
+         group1 == "C" & group2 == "D") %>% 
+  rowwise() %>% 
+  mutate(d = sqrt((x1 - x2)^2 + (y1 - y2)^2)) %>%  
+  ungroup() 
+
+gtoy + 
+  stat_chull(aes(fill = group), alpha = 0.1) +
+  geom_point(data = centroid_df,
+             aes(x1, y1, color = group1),
+             size = 4, shape = 10) +
+  geom_point(data = centroid_df,
+             aes(x2, y2, color = group2),
+             size = 4, shape = 10) +
+  geom_labelsegment(data = centroid_df, 
+               aes(x1, y1, xend = x2, yend = y2, 
+                   label = scales::comma(d, 0.01)),
+               hjust = 0.2)
+```
+
+
+
+## Ward's method
+
+- Minimises the total within-cluster sum of squares:
+$$W = \sum_{k = 1}^g \left(\sum_{i\in\mathcal{A}_k}\sum_{j=1}^p\left(x_{ij} - \bar{x}_{\cdot j}\right)^2\right)$$
+where: 
+
+  - $\bar{x}_{\cdot j} = \frac{1}{|\mathcal{A}_k|}\sum_{i\in\mathcal{A}_k}x_{ij}$,
+  - $\mathcal{A}_k$ is a set of indexes for the $k$-th group,
+  - $g$ is the number of cluster groups.
+
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 0
+
+```{r small-toy-data}
+#| echo: false
+set.seed(2)
+n <- c(3, 2, 3, 4)
+df2 <- tibble(x = c(runif(n[1], 0, 4), 
+                   runif(n[2], 6, 10),
+                   runif(n[3], 0, 4),
+                   runif(n[4], 6, 10))) %>% 
+  mutate(y = rep(c(5, 0, 0, -5), times = n) + x + rnorm(n()),
+         group = rep(LETTERS[1:4], times = n)) %>% 
+  mutate(label = LETTERS[1:n()])
+
+
+d2 <- dist(df2[, c("x", "y")])
+h2 <- hclust(d2, method = "single")
+h2$labels <- df2$label
+```
+
+::: flex
+
+::: {.w-60}
+
+```{r small-toy-scatter}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+gtoybase <- df2 %>% 
+  ggplot(aes(x, y)) +
+  geom_point(size = 4) + 
+  labs(x = "Variable 1", y = "Variable 2") +
+  geom_text(aes(label = label), size = 4, nudge_x = 0.3, nudge_y = 0.3) +
+  coord_equal()
+
+gtoybase
+
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend0}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(0.5, 0.5, 5, 5),
+           fill = "white")
+```
+
+- Every observation starts as a singleton cluster.
+
+:::
+
+:::
+
+
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 1
+
+::: flex
+
+::: {.w-60}
+
+```{r iter1}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter1 <- df2 %>% 
+  slice(abs(h2$merge[1, ]))
+
+gtoy1 <- gtoybase +
+  geom_point(data = iter1, color = "#E69F00", size = 4) +
+  geom_text(data = iter1, 
+            aes(label = label), size = 4, 
+            color = "#E69F00",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 1")
+
+gtoy1
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend1}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(1.5, 1.5, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 2
+
+::: flex
+
+::: {.w-60}
+
+```{r iter2}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter2 <- df2 %>% 
+  slice(abs(h2$merge[2, ]))
+
+gtoy2 <- gtoy1 +
+  geom_point(data = iter2, color = "#56B4E9", size = 4) +
+  geom_text(data = iter2, 
+            aes(label = label), size = 4, 
+            color = "#56B4E9",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 2")
+
+gtoy2
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend2}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(1.75, 1.75, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 3
+
+::: flex
+
+::: {.w-60}
+
+```{r iter3}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter3 <- df2 %>% 
+  slice(abs(h2$merge[3, ]))
+
+gtoy3 <- gtoy2 +
+  geom_point(data = iter3, color = "#009E73", size = 4) +
+  geom_text(data = iter3, 
+            aes(label = label), size = 4, 
+            color = "#009E73",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 3")
+
+gtoy3
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend3}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(2.1, 2.1, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 4
+
+::: flex
+
+::: {.w-60}
+
+```{r iter4}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter4 <- df2 %>% 
+  slice(abs(h2$merge[4, 1]))
+
+gtoy4 <- gtoy3 +
+  geom_point(data = iter4, color = "#E69F00", size = 4) +
+  geom_text(data = iter4, 
+            aes(label = label), size = 4, 
+            color = "#E69F00",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 4")
+
+gtoy4
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend4}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(2.3, 2.3, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 5
+
+
+::: flex
+
+::: {.w-60}
+
+```{r iter5}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter5 <- df2 %>% 
+  slice(abs(h2$merge[5, 1]))
+
+gtoy5 <- gtoy4 +
+  geom_point(data = iter5, color = "#009E73", size = 4) +
+  geom_text(data = iter5, 
+            aes(label = label), size = 4, 
+            color = "#009E73",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 5")
+
+gtoy5
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend5}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(2.4, 2.4, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 6
+
+::: flex
+
+::: {.w-60}
+
+```{r iter6}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter6 <- df2 %>% 
+  slice(abs(c(h2$merge[2, ], h2$merge[4, 1], h2$merge[1, ])))
+
+gtoy6 <- gtoy5 +
+  geom_point(data = iter6, color = "#E69F00", size = 4) +
+  geom_text(data = iter6, 
+            aes(label = label), size = 4, 
+            color = "#E69F00",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 6")
+
+gtoy6
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend6}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(2.49, 2.49, 5, 5),
+           fill = "white")
+```
+
+
+:::
+
+:::
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 7
+
+::: flex
+
+::: {.w-60}
+
+```{r iter7}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter7 <- df2 %>% 
+  slice(abs(h2$merge[7, ]))
+
+gtoy7 <- gtoy6 +
+  geom_point(data = iter7, color = "#0072B2", size = 4) +
+  geom_text(data = iter7, 
+            aes(label = label), size = 4, 
+            color = "#0072B2",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 7")
+
+gtoy7
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend7}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(2.9, 2.9, 5, 5),
+           fill = "white")
+```
+
+:::
+
+:::
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 8
+
+::: flex
+
+::: {.w-60}
+
+```{r iter8}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter8 <- df2 %>% 
+  slice(abs(c(h2$merge[5, 1], h2$merge[7, ], h2$merge[3, ])))
+
+gtoy8 <- gtoy7 +
+  geom_point(data = iter8, color = "#0072B2", size = 4) +
+  geom_text(data = iter8, 
+            aes(label = label), size = 4, 
+            color = "#0072B2",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 8")
+
+gtoy8
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend8}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(3.2, 3.2, 5, 5),
+           fill = "white")
+```
+
+:::
+
+:::
+
+
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 9
+
+::: flex
+
+::: {.w-60}
+
+```{r iter9}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter9 <- df2 %>% 
+  slice(10, 12, 4, 9, 11, 1, 2, 3)
+
+gtoy9 <- gtoy8 +
+  geom_point(data = iter9, color = "#0072B2", size = 4) +
+  geom_text(data = iter9, 
+            aes(label = label), size = 4, 
+            color = "#0072B2",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 9")
+
+gtoy9
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend9}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(3.45, 3.45, 5, 5),
+           fill = "white")
+```
+
+:::
+
+:::
+
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 10
+
+::: flex
+
+::: {.w-60}
+
+```{r iter10}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+iter10 <- df2 %>% 
+  slice(10, 12, 4, 9, 11, 1, 2, 3, 7)
+
+gtoy10 <- gtoy9 +
+  geom_point(data = iter10, color = "#0072B2", size = 4) +
+  geom_text(data = iter10, 
+            aes(label = label), size = 4, 
+            color = "#0072B2",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 10")
+
+gtoy10
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend10}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank()) +
+  annotate("polygon", 
+           x = c(0, 13, 13, 0), 
+           y = c(4.45, 4.45, 5, 5),
+           fill = "white")
+```
+
+:::
+
+:::
+
+
+
+## <i class='far fa-object-group'></i> Single linkage demo: iteration 11
+
+::: flex
+
+::: {.w-60}
+
+```{r iter11}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+
+gtoy11 <- gtoy10 +
+  geom_point(data = df2, color = "#0072B2", size = 4) +
+  geom_text(data = df2, 
+            aes(label = label), size = 4, 
+            color = "#0072B2",
+            nudge_x = 0.3, nudge_y = 0.3) +
+  labs(title = "Iteration 11")
+
+gtoy11
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+```{r dend11}
+#| fig-height: 6
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  theme(axis.text.y = element_blank())
+```
+
+:::
+
+:::
+
+
+## <i class='fab fa-pagelines'></i> Dendrogram
+
+::: flex
+
+::: {.w-40}
+
+```{r dendro}
+#| echo: false
+ggdendrogram(h2, size = 4)
+```
+
+
+:::
+
+::: {.w-60 .pl3}
+
+- Each leaf of the dendrogram represents one observation.
+- Leaves fuse into branches and branches fuse, either with leaves or other branches.	
+- Fusions lower in the tree mean the groups of observations are more similar to each other. 
+
+:::
+
+:::
+
+
+
+
+
+## <i class='fas fa-cut'></i> Cutting the tree
+
+- Cut the tree at a particular height results in a particular set of clusters. 
+- For example, cutting the tree at the dashed red line below results in 4 clusters: (E), (G), (J, L, D, I K) and (A, B, C, F, H).
+
+
+```{r dendro-cut}
+#| echo: false
+ggdendrogram(h2, size = 4) +
+  geom_hline(yintercept = 3.2, linetype = "dashed", color = "red")
+```
+
+## <i class='fas fa-link'></i> Chaining
+
+- Single linkage often suffers from **_chaining_**, i.e. a single observation results in merging two clusters.
+- This results in clusters that are spread out and not compact.
+
+
+::: flex
+
+::: {.w-33 .fragment}
+
+```{r toy-chain}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+
+hchain <- hclust(dist(df[, c("x", "y")]), method = "single")
+gchainbase <- df %>% 
+  mutate(group = factor(cutree(hchain, 4))) %>% 
+  ggplot(aes(x, y, color = group)) +
+  geom_point() +
+  guides(color = "none") +
+  colorspace::scale_color_discrete_qualitative() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm"))
+
+gchainbase
+```
+
+
+:::
+
+::: {.w-33 .pl3 .fragment}
+
+
+
+```{r toy-chain2}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+dfadd <- df %>% 
+  add_row(x = 4.8, y = 5) %>% 
+  mutate(group = factor(cutree(hclust(dist(tibble(x, y)), method = "single"), 4)))
+
+gchainbase + 
+  geom_point(color = "black") +
+  annotate("point", x = 4.8, y = 5, color = "red")
+
+```
+
+
+:::
+
+::: {.w-33 .pl3 .fragment}
+
+```{r toy-chain3}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+gchainbase %+% dfadd
+
+```
+
+:::
+
+
+:::
+
+
+## Inlier and outlier 
+
+::: flex
+
+::: {.w-50}
+
+- An _inlier_ is an erroneous observation that lies within the interior of a distribution.
+
+
+```{r inlier-example}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+cluster1 <- MASS::mvrnorm(20, mu = c(2, 1), Sigma = diag(c(0.2, 0.2))) %>% 
+  as.data.frame() 
+cluster2 <- MASS::mvrnorm(20, mu = c(5, 5), Sigma = diag(c(0.2, 0.2))) %>% 
+  as.data.frame() 
+cluster3 <- MASS::mvrnorm(20, mu = c(1, 5), Sigma = diag(c(0.2, 0.2))) %>% 
+  as.data.frame() 
+
+bind_rows(cluster1, cluster2, cluster3) %>% 
+  ggplot(aes(V1, V2)) +
+  geom_point() +
+  annotate("point", x = 2, y = 3.5, color = "red") +
+  annotate("text", x = 2, y = 3.3, color = "red", label = "inlier") +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm"))
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+- An _outlier_ is an observation that lies well outside the typical range of values. 
+
+```{r outlier-example}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+bind_rows(cluster1, cluster2, cluster3) %>% 
+  ggplot(aes(V1, V2)) +
+  geom_point() +
+  annotate("point", x = 8, y = 1.5, color = "red") +
+  annotate("text", x = 8, y = 1.3, color = "red", label = "outlier") +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm"))
+```
+
+
+:::
+
+:::
+
+
+## Robustness
+
+::: incremental
+
+- Methods that are not often affected by single observations are referred to be _robust_.
+- Single linkage is easily affected by inliers. 
+- Complete linkage less affected by inliers but affected by outliers. 
+- Other methods like average linkage, centroid linkage and Ward's method are more robust. 
+
+
+:::
+
+
+# <i class='fab fa-r-project'></i> Hierarchical clustering with R {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-database'></i> Yale face database
+
+```{r yale-data}
+#| code-fold: true
+#| fig-width: 10
+#| fig-height: 6
+Sys.setenv(VROOM_CONNECTION_SIZE = 5000000)
+yalefaces <- read_csv("https://emitanaka.org/iml/data/yalefaces.csv")
+
+imagedata_to_plotdata <- function(data = yalefaces, 
+                                  w = 320, 
+                                  h = 243, 
+                                  which = sample(1:165, 15)) {
+  data %>% 
+    mutate(id = 1:n()) %>% 
+    filter(id %in% which) %>% 
+    pivot_longer(starts_with("V")) %>% 
+    mutate(col = rep(rep(1:w, each = h), n_distinct(id)),
+           row = rep(rep(1:h, times = w), n_distinct(id)))
+}
+
+gfaces <- imagedata_to_plotdata(yalefaces) %>% 
+    ggplot(aes(col, row)) +
+    geom_tile(aes(fill = value)) + 
+    facet_wrap(~subject + type, nrow = 3) +
+    scale_y_reverse() +
+    theme_void(base_size = 18) +
+    guides(fill = "none") +
+    coord_equal()
+
+gfaces
+```
+
+
+## Principle components as features 
+
+```{r yalepca}
+yalefaces_x <- yalefaces %>%
+  select(-c(subject, type))
+yalefaces_pca <- prcomp(yalefaces_x)
+```
+- Applying hierarchical clustering with various methods:
+
+```{r hclust-methods}
+hsingle <- hclust(dist(yalefaces_pca$x), method = "single")
+hcomplete <- hclust(dist(yalefaces_pca$x), method = "complete")
+haverage <- hclust(dist(yalefaces_pca$x), method = "average")
+hcentroid <- hclust(dist(yalefaces_pca$x), method = "centroid")
+hward <- hclust(dist(yalefaces_pca$x), method = "ward.D2")
+# add labels 
+hsingle$labels <- paste("Subject", yalefaces$subject, yalefaces$type)
+hcomplete$labels <- paste("Subject", yalefaces$subject, yalefaces$type)
+haverage$labels <- paste("Subject", yalefaces$subject, yalefaces$type)
+hcentroid$labels <- paste("Subject", yalefaces$subject, yalefaces$type)
+hward$labels <- paste("Subject", yalefaces$subject, yalefaces$type)
+```
+
+## <i class='fab fa-r-project'></i> Dendrogram with R {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+```{r ggdendro}
+#| fig-width: 10
+#| fig-height: 35
+library(ggdendro)
+ggdendrogram(hward, rotate = TRUE) + labs(title = "Ward's method")
+```
+
+## <i class='fab fa-r-project'></i> Cutting the tree with R
+
+```{r cutree}
+#| fig-width: 10
+#| fig-height: 6
+cward <- cutree(hward, k = 15)
+cward
+
+table(cward) # 15 groups 
+```
+
+## Clustering results {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- Remember for the following we never used subject id variable in the clustering.
+
+- Cluster 1 is mostly subject 1! 
+
+```{r cutree-clusters-view}
+#| echo: false
+#| fig-width: 10
+view_cluster <- function(k) {
+  cluster <- yalefaces %>% 
+    mutate(group = cward) %>% 
+    filter(group == k) %>% 
+    imagedata_to_plotdata(which = 1:n())
+  
+  gfaces %+% cluster
+}
+```
+
+
+```{r cutree-clusters-view1}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(1) + labs(title = "Cluster 1") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 2 seems to be capturing mostly the left light.
+
+```{r cutree-clusters-view2}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(2) + labs(title = "Cluster 2") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 3 is mostly subject 2.
+
+```{r cutree-clusters-view3}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4
+view_cluster(3) + labs(title = "Cluster 3") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 4 is mostly right light.
+
+```{r cutree-clusters-view4}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(4) + labs(title = "Cluster 4") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 5 is mostly subject 4
+
+```{r cutree-clusters-view5}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(5) + labs(title = "Cluster 5") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 6 is a mix
+
+```{r cutree-clusters-view6}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(6) + labs(title = "Cluster 6") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 7 contains mostly subject 3, 7 and 8
+
+```{r cutree-clusters-view7}
+#| echo: false
+#| fig-width: 10
+view_cluster(7) + labs(title = "Cluster 7")
+```
+
+- Cluster 8 is the left light
+
+```{r cutree-clusters-view8}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(8) + labs(title = "Cluster 8") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 9 is subjects 5 and 12
+
+```{r cutree-clusters-view9}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(9) + labs(title = "Cluster 9") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 10 is mostly subject 14
+
+```{r cutree-clusters-view10}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(10) + labs(title = "Cluster 10") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 11 is subject 6
+
+```{r cutree-clusters-view11}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(11) + labs(title = "Cluster 11") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 12 is subject 9
+
+
+```{r cutree-clusters-view12}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(12) + labs(title = "Cluster 12") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 13 is subjects 10 and 15
+
+
+```{r cutree-clusters-view13}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(13) + labs(title = "Cluster 13") +
+  facet_wrap(~subject + type, nrow = 2)
+```
+
+- Cluster 14 is subject 11
+
+```{r cutree-clusters-view14}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 3.5
+view_cluster(14) + labs(title = "Cluster 14") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+- Cluster 15 is subject 13
+
+```{r cutree-clusters-view15}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 2
+view_cluster(15) + labs(title = "Cluster 15") +
+  facet_wrap(~subject + type, nrow = 1)
+```
+
+
+
+# $k$-means clustering {background-color="#006DAE" .mcenter}
+
+
+## $k$-means clustering algorithm
+
+::: incremental
+
+- The number of clusters, $k$, must be decided apriori to using this method. 
+- In $k$-means clustering, each observation must be closest to the centroid (or mean) of its own cluster. 
+- This method is iterative and follows along the lines of:
+  1. Initially start with $k$ partitions of data or $k$ seed points.
+  2. Assign observations to the cluster with the closest mean.
+  3. Recompute centroids of each cluster.
+  4. Repeat steps 2-3 until convergence.
+
+:::
+
+
+## <i class='far fa-object-group'></i> $k$-means demo: iteration 0
+
+```{r}
+
+```
+
+
+- Select $k = 2$ with initial seed points $(2.5, 6)$ and $(7.5, 7)$.
+
+```{r kmeans0}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+
+seed <- tibble(x = c(2.5, 7.5), y = c(6, 7))
+gkmean1 <- ggplot(df2, aes(x, y)) +
+  geom_point(size = 4) +
+  geom_text(aes(label = label), nudge_x = 0.3, nudge_y = 0.5) +
+  annotate("point", x = seed$x, y = seed$y, color = c("#009E73", "#0072B2"), size = 6,
+           shape = "circle plus") +
+  labs(x = "x1", y = "x2") +
+  coord_equal()
+
+gkmean1
+```
+
+## <i class='far fa-object-group'></i> $k$-means demo: iteration 1
+
+- Assign observations to the closest seed point.
+
+```{r kmeans1}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+dfkmean1 <- df2 %>% 
+  mutate(d1 = sqrt((x - seed$x[1])^2  + (y - seed$y[1])^2),
+         d2 = sqrt((x - seed$x[2])^2  + (y - seed$y[2])^2)) %>% 
+  mutate(group = ifelse(d1 < d2, "#009E73", "#0072B2")) 
+
+gkmean2 <- gkmean1 %+% dfkmean1 +
+  geom_point(size = 4, aes(color = I(group))) +
+  geom_text(aes(label = label, color = I(group)), 
+            nudge_x = 0.3, nudge_y = 0.5) 
+
+gkmean2
+```
+
+## <i class='far fa-object-group'></i> $k$-means demo: iteration 2
+
+- Recompute the centroids.
+
+```{r kmeans2}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+centroids <- dfkmean1 %>% 
+  group_by(group) %>% 
+  summarise(x = mean(x), y = mean(y))
+  
+gkmean3 <- ggplot(dfkmean1, aes(x, y)) +
+  geom_point(size = 4, aes(color = I(group))) +
+  geom_text(aes(label = label, color = I(group)), 
+            nudge_x = 0.3, nudge_y = 0.5) +
+  geom_point(data = centroids,
+             aes(color = I(group)),
+             size = 6, 
+             shape = "circle plus") +
+  labs(x = "x1", y = "x2") +
+  coord_equal()
+
+gkmean3  
+```
+
+## <i class='far fa-object-group'></i> $k$-means demo: iteration 3
+
+- Assign observations to the closest centroid.
+
+```{r kmeans3}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+dfkmean2 <- df2 %>% 
+  mutate(d1 = sqrt((x - centroids$x[1])^2  + (y - centroids$y[1])^2),
+         d2 = sqrt((x - centroids$x[2])^2  + (y - centroids$y[2])^2)) %>% 
+  mutate(group = ifelse(d1 > d2, "#009E73", "#0072B2")) 
+
+gkmean4 <- gkmean3 %+% dfkmean2 +
+  geom_point(size = 4, aes(color = I(group))) +
+  geom_text(aes(label = label, color = I(group)), 
+            nudge_x = 0.3, nudge_y = 0.5) 
+
+gkmean4
+```
+
+## <i class='fab fa-r-project'></i> $k$-means clustering in R
+
+```{r kmeans-r}
+kout <- kmeans(yalefaces_pca$x, centers = 15) # `scale` the data if different measurement units
+str(kout)
+```
+
+- `cluster` contains the cluster number of the observation
+
+
+## <i class='fas fa-exclamation-circle'></i>  Randomness in $k$-means clustering 
+
+
+- The $k$-means algorithm can yield quite different results depending on the initial seed.
+
+. . . 
+
+```{r kmeans-r2}
+kout1 <- kmeans(yalefaces_pca$x, centers = 15) 
+table(kout1$cluster)
+```
+
+. . . 
+
+```{r kmeans-r3}
+kout2 <- kmeans(yalefaces_pca$x, centers = 15) 
+table(kout2$cluster)
+```
+
+## <i class='fas fa-exclamation-circle'></i> $k$-means clustering caveats
+
+- Unlike hierarchical clustering, the result for different number of clusters can contradict each other!
+
+::: flex
+
+::: {.w-60}
+
+```{r kmeans-r4}
+kout3 <- kmeans(yalefaces_pca$x, centers = 3) 
+kout5 <- kmeans(yalefaces_pca$x, centers = 5) 
+table(kout3$cluster, kout5$cluster)
+
+hout3 <- cutree(hclust(dist(yalefaces_pca$x)), 3)
+hout5 <- cutree(hclust(dist(yalefaces_pca$x)), 5)
+table(hout3, hout5)
+```
+
+
+:::
+
+::: {.w-20 .pl3}
+
+- $k$-means: 
+  - $1\rightarrow 2, 3, 5$
+  - $2\rightarrow 1, 5$
+  - $3\rightarrow 4$ 
+  
+:::
+
+::: {.w-20 .pl3}
+
+- hierarchical: 
+  - $1\rightarrow 1, 4$
+  - $2\rightarrow 2$
+  - $3\rightarrow 3, 5$ 
+
+:::
+
+:::
+
+
+
+
+
+
+
+
+
+## Label switching 
+
+- Cluster labels can be switched around. 
+- Cluster 1 can be equivalent to Cluster 2 in another iteration -- the number doesn't matter. 
+
+
+```{r label-switch}
+koutA <- kmeans(yalefaces_pca$x, centers = 5) 
+koutB <- kmeans(yalefaces_pca$x, centers = 5) 
+table(koutA$cluster, koutB$cluster)
+```
+
+- Here Cluster 5 in A is Cluster 3 in B.
+
+
+
+# <i class='fas fa-key'></i> Takeaways {background-color="#006DAE" .mcenter}
+
+- Clustering is an unsupervised learning.
+- There are many methods for clustering.
+- Clustering helps to explore data. 
+- The choice of the number of clusters largely depends on the context of the problem -- too many clusters may not be helpful but neither is too few. 
+

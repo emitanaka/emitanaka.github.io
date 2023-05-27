@@ -1,0 +1,15 @@
+<ul>
+<% for (const item of items) { %>
+  <li><a href="<%- item.path %>"><%= item.title %></a>
+  <% if (item.html) { %>
+  <a style="font-size:0.8em;" href="<%- item.html %>"><i class="fa-solid fa-link"></i></a>
+  <% } %>
+  <% if (item.html2) { %>
+  <a style="font-size:0.8em;" href="<%- item.html2 %>"><i class="fa-solid fa-link"></i></a>
+  <% } %>
+  <% if (item.pdf) { %>
+  <a style="font-size:0.8em;" href="<%- item.pdf %>"><i class="fa-solid fa-file-pdf"></i></a>
+  <% } %>
+  <span style="font-size:0.7em;color:grey;">Last taught in <%- item.date %></span></li>
+<% } %>
+</ul>

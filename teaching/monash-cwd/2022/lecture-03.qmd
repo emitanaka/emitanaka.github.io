@@ -1,0 +1,574 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Communicating data with interactive web apps"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 3"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 3"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-in-header: 
+      text: >
+        <script src="assets/shiny.min.js"></script>
+        <script src="assets/jqueryui/jquery-ui.min.js"></script>
+        <script src="assets/jquery.min.js"></script>
+        <script src="assets/datepicker/js/bootstrap-datepicker.min.js"></script>
+        <script>(function() {
+        var datepicker = $.fn.datepicker.noConflict();
+        $.fn.bsDatepicker = datepicker;
+        })();
+        </script>
+        <link href="assets/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"> 
+        <script src="assets/ionrangeslider/js/ion.rangeSlider.min.js"></script> 
+        <link href="assets/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet">    
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/strftime/strftime-min.js"></script>
+        <script src="assets/selectize/js/selectize.min.js"></script>
+        <link href="assets/selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+    include-after-body: 
+      text: >
+        <link rel="stylesheet" href="assets/syntax-highlight.css">
+        <link rel="stylesheet" href="assets/monash-after-body.css">
+        <link rel="stylesheet" href="assets/fontawesome-free-6.1.1-web/css/all.css">
+        <script src="assets/fontawesome-free-6.1.1-web/js/all.js"></script>
+        <script src="assets/shiny.min.js"></script>
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+`r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+## {#aim background="white"}
+
+::: {.callout-important }
+
+## Aim
+
+* Use interactivity to enable data exploration, understanding and communication
+* Design web apps with displays that fit for the purpose
+* Make web applications using `shiny`
+
+:::
+
+::: fragment
+
+::: {.callout-tip }
+
+## Why
+
+Interactive web apps can 
+
+* connect people and data,
+* make systems playful, 
+* prompt self-reflection,
+* personalise the view, and 
+* reduce cognitive load. 
+
+
+:::
+
+
+:::
+
+---
+
+## Human Computer Interaction 
+
+::: {.callout-note appearance="minimal"}
+
+Open-ended dialogue between the user and the computer
+
+:::
+
+::: incremental
+
+* Enable audience to some degree **co-author narrative**, i.e. narratives moves away from being author-guided to audience-driven.
+* **Leverage user interaction techniques** to improve user experience, e.g. 
+   * Show details on demand
+   * Reduce overall cognitive load
+   * Personalised view
+
+:::
+
+## User Interactions 
+
+<img src="images/lecture-03/actions.svg">
+
+::: {.f4 .absolute .bottom-0}
+
+Image from Spencer (2022, Feb. 17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland
+
+:::
+
+## User Inputs
+
+<img src="images/lecture-03/widgets.svg">
+
+::: {.f4 .absolute .bottom-0}
+
+Image from Spencer (2022, Feb. 17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland
+
+:::
+
+# Criteria for the Design of Interactive Data Visualisation
+
+
+[Tominski, Christian, and Heidrun Schumann (2020) Interactive Visual Data Analysis. CRC Press.]{.f3}
+
+## Quality criteria 
+
+::: fragment
+::: callout-note
+## Expressiveness [(Mandatory Condition)]{.monash-gray50}
+
+An interactive visual representation is expressive if it allows the user to carry out the actions needed to acquire the desired information in the data.
+
+:::
+:::
+
+::: fragment
+::: callout-note
+
+## Effectiveness [(Goal-Oriented Condition)]{.monash-gray50}
+
+A measure of how well the user can convey an interaction intent to the computer.
+
+:::
+:::
+
+
+::: fragment
+::: callout-note
+
+## Efficiency [(Desired Condition)]{.monash-gray50}
+
+The balance of benefits and costs for using an interactive visualisation approach. E.g. does the human effort of building the interactive visualisation outweigh its benefits? Are the efforts of users to interact with it offset the information gained for users?
+
+:::
+:::
+
+
+## Goals 
+
+::: incremental
+
+* **Exploration** promotes undirected search
+* **Description** characterises observations by associated data elements
+* **Explanation** identifies contributing causes behind an observation 
+* **Confirmation** find concrete evidences for or against a hypothesis 
+* **Presentation** communicates results of a confirmed analysis
+
+:::   
+
+## Example: Global Temperature
+
+[https://climate.nasa.gov/vital-signs/global-temperature/](https://climate.nasa.gov/vital-signs/global-temperature/)
+
+<img src="images/lecture-03/global-temperature.png" width="70%"/>
+
+## Example: Handwriting with Neural Network {background-iframe="https://distill.pub/2016/handwriting/" background-interactive=true}
+
+## Example: How you will die 
+
+[https://flowingdata.com/2016/01/19/how-you-will-die/](https://flowingdata.com/2016/01/19/how-you-will-die/")
+
+[<img src="images/lecture-03/how-you-will-die.png" width="70%"/>](https://flowingdata.com/2016/01/19/how-you-will-die/")
+
+
+
+
+
+
+# What is `shiny`?
+
+<i class="fa-solid fa-gear fa-spin"></i> [Demo App](https://ebsmonash.shinyapps.io/ETC5523-Covid-19-App-Demo/?showcase=0)
+
+
+# How to get started with `shiny`?
+
+::: fragment
+
+* RStudio > File > New File > Shiny Web App...
+* Using snippet: Type `shinyapp` and Shift + Tab
+
+:::
+
+# User Interface
+
+## Writing HTML from R
+
+
+``` r
+library(shiny) # exported from `htmltools`
+tags$html(
+  tags$body(
+    h1('My first heading'),
+    p('My first paragraph, with some ', strong('bold'), ' text.'),
+    div(id = 'myDiv', class = 'simpleDiv',
+        'Here is a div with some attributes.')
+  )
+)
+```
+::: fragment
+``` html
+<html>
+  <body>
+    <h1>My first heading</h1>
+    <p>
+      My first paragraph, with some 
+      <strong>bold</strong>
+       text.
+    </p>
+    <div id="myDiv" class="simpleDiv">Here is a div with some attributes.</div>
+  </body>
+</html>
+```
+:::
+::: {.f3 .fragment}
+
+* Use `includeCSS()` and `includeScript()` to include CSS and JS files
+
+:::
+
+
+
+## HTML Inputs [Part 1]{.f4}
+
+::: f4
+::: fragment
+```{r}
+actionButton("id1", "Push")
+```
+:::
+::: fragment
+
+```{r}
+actionLink("id2", "Link")
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+checkboxGroupInput("id3", "Select", 
+                   choices = c("Mon", "Tue", "Wed"),
+                   selected = "Mon")
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+checkboxInput("id4", "I accept")
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+fileInput("id5", "Upload file")
+```
+:::
+
+:::
+
+
+
+
+## HTML Inputs  [Part 2]{.f4}
+
+::: f4
+
+
+::: fragment
+
+```{r}
+numericInput("id6", "Enter number", 
+             value = 1, min = 1, max = 10, step = 1)
+```
+:::
+<br>
+
+::: fragment
+```{r}
+radioButtons("id7", "Select one", 
+             choices = c("Pizza", "Dumplings", "Sushi"))
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+passwordInput("id8", "Enter password")
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+textInput("id9", "Enter text", value = "Enter coments here")
+```
+:::
+
+:::
+
+
+## HTML Input [Part 3]{.f4}
+
+::: f4
+
+::: fragment
+
+Note: calendar date picker pop up doesn't show up here.
+
+```{r}
+dateInput("id10", "Select day")
+dateRangeInput("id11", "Select days")
+```
+:::
+<br>
+
+::: fragment
+
+```{r}
+selectInput("id12", "Select a drink", choices = c("Tea", "Coffee"))
+```
+
+:::
+
+<br>
+
+::: fragment
+
+
+```{r}
+sliderInput("id13", "How many?", min = 0, max = 10, value = 0)
+```
+:::
+:::
+
+# Layouts
+
+## `fluidRow` + `columns` {.scrollable}
+
+
+This is using [bootstrap](https://getbootstrap.com/docs/3.4/css/)
+
+``` r
+fluidPage(
+  fluidRow(column(width = 4,
+                  h3("Some informative table"),
+                  tableOutput("mytable")),
+           column(width = 4, offset = 3,
+                  h3("Fancy plot"),
+                  plotOutput("myplot"))),
+  fluidRow(column(width = 12, 
+                  "Minimum width is 1 and maximum width is 12"))
+)
+```
+
+``` html 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Some informative table</h3>
+      <div id="mytable" class="shiny-html-output"></div>
+    </div>
+    <div class="col-sm-4 offset-md-3 col-sm-offset-3">
+      <h3>Fancy plot</h3>
+      <div id="myplot" class="shiny-plot-output" style="width:100%;height:400px;"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">Minimum width is 1 and maximum width is 12</div>
+  </div>
+</div>
+```
+
+
+## `sidebarLayout`
+
+``` r
+fluidPage(sidebarLayout(
+  sidebarPanel(h3("User control"),
+               actionButton("id1", "Push")),
+  mainPanel(h3("Main Panel"),
+            plotOutput("myplot"))
+))
+```
+
+``` html
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-4">
+      <form class="well" role="complementary">
+        <h3>User control</h3>
+        <button id="id1" type="button" class="btn btn-default action-button">Push</button>
+      </form>
+    </div>
+    <div class="col-sm-8" role="main">
+      <h3>Main Panel</h3>
+      <div id="myplot" class="shiny-plot-output" style="width:100%;height:400px;"></div>
+    </div>
+  </div>
+</div>
+```
+
+
+
+# Server & Client Communication
+
+<i class="fa-solid fa-gear fa-spin"></i> [Demo App](https://ebsmonash.shinyapps.io/ETC5523-Covid-19-App-Demo/)
+
+<img src="images/drawn/shiny-server.png">
+
+
+## Server and User Interface Outputs
+
+server | ui 
+--- | ---
+`renderDataTable` | `dataTableOutput`
+`renderImage` | `imageOutput`
+`renderPlot` | `plotOutput`
+`renderPrint` | `verbatimTextOutput`
+`renderTable` | `tableOutput`
+`renderText` | `textOutput`
+`renderUI` | `uiOutput` or `htmlOutput`
+
+## Reactivity
+
+* `reactiveValues` creates your own reactive values
+* `isolate` prevents reactions
+* `reactive` caches its value to reduce computation and notifies its dependencies when it has been invalidated
+* `observeEvent` runs code when the first argument changes
+* `observe` runs code when any reactive elements within it changes
+
+
+
+
+
+
+# Debugging
+
+* `browser()` + breaking points
+
+# How to deploy your Shiny app?
+
+[shinyapps.io](shinyapps.io)
+
+
+## Week 3 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* We went through the benefits of interactivity for communicating data 
+* We considered how to design displays for web apps
+* You learnt how to use make web apps using `shiny`
+
+
+:::
+
+
+::: {.callout-tip}
+
+## Resources
+
+```{css, echo = FALSE}
+.box {
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 3px solid black;
+  background-color: #006DAE;
+  color: white!important;
+  text-align: center;
+  border-radius: 5px;
+  opacity: 0.9;
+  font-size: 0.7em;
+}
+.box:hover {
+  background-color: #EE0220; 
+  opacity: 1;
+}
+```
+
+
+* [Hohman, et al., "Communicating with Interactive Articles", Distill, 2020.](https://distill.pub/2020/communicating-with-interactive-articles/)
+* Introduction to Shiny [[Tutorials]{.box}](https://shiny.rstudio.com/tutorial/) [[Course]{.box}](https://rstudio-education.github.io/shiny-course/) [[Mastering Shiny]{.box}](https://mastering-shiny.org/)
+* Debugging Shiny [[Techniques]{.box}](https://rstudio.com/resources/shiny-dev-con/debugging-techniques/) [[Article]{.box}](https://shiny.rstudio.com/articles/debugging.html)
+* Cheatsheet for Shiny [[Cheatsheet]{.box}](https://github.com/rstudio/cheatsheets/raw/main/shiny.pdf)
+
+:::

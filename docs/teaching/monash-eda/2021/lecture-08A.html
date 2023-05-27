@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-08A.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Sculpting data using models, checking assumptions, co-dependency and performing diagnostics&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 8 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+&lt;style type="text/css"&gt;
+.gray80 {
+  color: #505050!important;
+  font-weight: 300;
+}
+.bg-gray80 {
+  background-color: #DCDCDC!important;
+}
+&lt;/style&gt;
+
+
+---
+
+class: transition middle
+
+# Parametric regression
+
+---
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+
+
+
+
+]
+.w-50.pl3[
+
+
+
+]
+]
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+&lt;img src="images/week8A/quad-good-data-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+
+
+
+]
+]
+
+---
+
+count: false
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+`$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$`
+where `\(\epsilon_i \sim NID(0, \color{red}{\sigma^2})\)` for `\(i = 1, ..., n\)`,
+
+  * `\(\color{red}{red} = \text{estimated}\)`
+  * `\(\color{blue}{blue} = \text{observed}\)`
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+&lt;img src="images/week8A/quad-good-data-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+]
+
+---
+
+count: false
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+`$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$`
+where `\(\epsilon_i \sim NID(0, \color{red}{\sigma^2})\)` for `\(i = 1, ..., n\)`,
+
+  * `\(\color{red}{red} = \text{estimated}\)`
+  * `\(\color{blue}{blue} = \text{observed}\)`
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+&lt;img src="images/week8A/quad-good-fit-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+]
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+`$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$`
+where `\(\epsilon_i \sim NID(0, \color{red}{\sigma^2})\)` for `\(i = 1, ..., n\)`,
+
+  * `\(\color{red}{red} = \text{estimated}\)`
+  * `\(\color{blue}{blue} = \text{observed}\)`
+* Because some type of distribution is assumed in advance, parametric fitting can lead to fitting a smooth curve that misrepresents the data.
+
+]
+.w-50.pl3[
+
+**Example**
+
+&lt;img src="images/week8A/quad-good-fit-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+]
+
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+`$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$`
+where `\(\epsilon_i \sim NID(0, \color{red}{\sigma^2})\)` for `\(i = 1, ..., n\)`,
+
+  * `\(\color{red}{red} = \text{estimated}\)`
+  * `\(\color{blue}{blue} = \text{observed}\)`
+* Because some type of distribution is assumed in advance, parametric fitting can lead to fitting a smooth curve that misrepresents the data.
+
+]
+.w-50.pl3[
+
+**Examples**
+
+&lt;img src="images/week8A/quad-good-fit-1.png" width="432" style="display: block; margin: auto;" /&gt;
+Assuming a quadratic fit:
+
+&lt;img src="images/week8A/quad-bad-fit-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+]
+]
+
+
+
+---
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+`$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$`
+* Then we have
+`$$y~|~x \sim N(x^2, 2^2).$$`
+
+
+]
+.w-50.f4[
+
+
+]
+]
+
+---
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+`$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$`
+* Then we have
+`$$y~|~x \sim N(x^2, 2^2).$$`
+* Let's draw `\(200\)` observations from this model.
+
+
+
+]
+.w-50.f4[
+
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200)
+
+df
+```
+
+```
+## # A tibble: 200 × 1
+##       id
+##    &lt;int&gt;
+##  1     1
+##  2     2
+##  3     3
+##  4     4
+##  5     5
+##  6     6
+##  7     7
+##  8     8
+##  9     9
+## 10    10
+## # … with 190 more rows
+```
+
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+`$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$`
+* Then we have
+`$$y~|~x \sim N(x^2, 2^2).$$`
+* Let's draw `\(200\)` observations from this model.
+* Suppose that `\(x\in(-10,10)\)` and that we have uniform coverage over the support.
+
+
+
+]
+.w-50.f4[
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200) %&gt;% 
+        mutate(x = runif(n(), -10, 10))
+
+df
+```
+
+```
+## # A tibble: 200 × 2
+##       id     x
+##    &lt;int&gt; &lt;dbl&gt;
+##  1     1 -4.69
+##  2     2 -2.56
+##  3     3  1.46
+##  4     4  8.16
+##  5     5 -5.97
+##  6     6  7.97
+##  7     7  8.89
+##  8     8  3.22
+##  9     9  2.58
+## 10    10 -8.76
+## # … with 190 more rows
+```
+
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+`$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$`
+* Then we have
+`$$y~|~x \sim N(x^2, 2^2).$$`
+* Let's draw `\(200\)` observations from this model.
+* Suppose that `\(x\in(-10,10)\)` and that we have uniform coverage over the support.
+* The response `\(y\)` is generated as per above model.
+
+
+]
+.w-50.f4[
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200) %&gt;% 
+        mutate(x = runif(n(), -10, 10),
+               y = x^2 + rnorm(n(), 0, 2))
+df
+```
+
+```
+## # A tibble: 200 × 3
+##       id     x      y
+##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1     1 -4.69 20.8  
+##  2     2 -2.56  6.63 
+##  3     3  1.46  0.301
+##  4     4  8.16 67.0  
+##  5     5 -5.97 34.3  
+##  6     6  7.97 67.0  
+##  7     7  8.89 80.5  
+##  8     8  3.22 12.2  
+##  9     9  2.58  7.44 
+## 10    10 -8.76 80.2  
+## # … with 190 more rows
+```
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+`$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$`
+* Then we have
+`$$y~|~x \sim N(x^2, 2^2).$$`
+* Let's draw `\(200\)` observations from this model.
+* Suppose that `\(x\in(-10,10)\)` and that we have uniform coverage over the support.
+* The response `\(y\)` is generated as per above model.
+
+
+]
+.w-50.f4[
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200) %&gt;% 
+        mutate(x = runif(n(), -10, 10),
+               y = x^2 + rnorm(n(), 0, 2))
+```
+Plotting this:
+
+```r
+ggplot(df, aes(x, y)) +
+  geom_point()
+```
+
+&lt;img src="images/week8A/sim-plot-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+]
+
+---
+
+class: transition middle
+
+# Logistic regression
+
+---
+
+# Logistic regression 
+
+.w-80[
+* Not all parametric models assume Normally distributed errors nor continuous responses.
+
+{{content}}
+]
+--
+
+
+* Logistic regression models the relationship between a set of explanatory variables `\((x_{i1}, ..., x_{ik})\)` and a set of &lt;span class="monash-blue"&gt;**binary outcomes**&lt;/span&gt; `\(Y_i\)` for `\(i = 1, ..., n\)`.
+{{content}}
+--
+
+* We assume that `\(Y_i \sim B(1, p_i)\equiv Bernoulli(p_i)\)` and the model is given by 
+
+`$$\text{logit}(p_i) = \text{ln}\left(\dfrac{p_i}{1 - p_i}\right) = \beta_0 + \beta_1x_{i1} + ... + \beta_k x_{ik}.$$`
+{{content}}
+--
+
+* Taking the exponential of both sides and rearranging we get
+`$$p_i = \dfrac{1}{1 + e^{-(\beta_0 + \beta_1x_{i1} + ... + \beta_k x_{ik})}}.$$`
+{{content}}
+--
+
+* The function `\(f(p) = \text{ln}\left(\dfrac{p}{1 - p}\right)\)` is called the &lt;span class="monash-blue"&gt;**logit**&lt;/span&gt; function, continuous with range `\((-\infty, \infty)\)`, and if `\(p\)` is the probablity of an event, `\(f(p)\)` is the log of the odds.
+
+---
+
+# Representation of data for binary outcomes
+
+.flex[
+.w-50.pr3[
+Data:
+
+.f5[
+
+```r
+mock_df
+```
+
+```
+## # A tibble: 18 × 5
+##    Patient Smoker Sex    Cancer CancerBinary
+##    &lt;fct&gt;   &lt;fct&gt;  &lt;fct&gt;  &lt;fct&gt;         &lt;dbl&gt;
+##  1 1       Yes    Female No                0
+##  2 2       Yes    Male   No                0
+##  3 3       No     Female Yes               1
+##  4 4       Yes    Male   No                0
+##  5 5       Yes    Female Yes               1
+##  6 6       No     Female No                0
+##  7 7       Yes    Female Yes               1
+##  8 8       No     Female No                0
+##  9 9       No     Female No                0
+## 10 10      No     Male   No                0
+## 11 11      Yes    Male   No                0
+## 12 12      Yes    Female Yes               1
+## 13 13      Yes    Male   No                0
+## 14 14      Yes    Female No                0
+## 15 15      No     Male   Yes               1
+## 16 16      No     Female Yes               1
+## 17 17      No     Male   No                0
+## 18 18      No     Male   Yes               1
+```
+]
+
+]
+.w-50[
+Summarised data:
+
+.f5[
+
+```r
+mock_sumdf
+```
+
+```
+## # A tibble: 4 × 4
+## # Groups:   Smoker [2]
+##   Smoker Sex    Cancer Total
+##   &lt;fct&gt;  &lt;fct&gt;   &lt;int&gt; &lt;int&gt;
+## 1 No     Female      2     5
+## 2 No     Male        2     4
+## 3 Yes    Female      3     5
+## 4 Yes    Male        0     4
+```
+]
+{{content}}
+]]
+
+--
+
+&lt;br&gt;
+
+* The summarised data here give the same information as the original data, except you lost the patient number
+* Note the sample size, n,  is larger than the number of rows in the summarised data
+
+---
+
+# Logistic regression in R
+
+* Fitting logistic regression models in R depend on the form of input data
+
+.flex[
+.w-50.f5.pr3[
+
+```r
+glm(Cancer ~ Smoker + Sex, 
+    family = binomial(link = "logit"), 
+    data = mock_df)
+```
+
+```
+## 
+## Call:  glm(formula = Cancer ~ Smoker + Sex, family = binomial(link = "logit"), 
+##     data = mock_df)
+## 
+## Coefficients:
+## (Intercept)    SmokerYes      SexMale  
+##      0.2517      -0.5034      -1.1145  
+## 
+## Degrees of Freedom: 17 Total (i.e. Null);  15 Residual
+## Null Deviance:	    24.06 
+## Residual Deviance: 22.61 	AIC: 28.61
+```
+]
+.w-50.f5[
+
+```r
+glm(cbind(Cancer, Total - Cancer) ~ Smoker + Sex, 
+    family = binomial(link = "logit"),
+    data = mock_sumdf)
+```
+
+```
+## 
+## Call:  glm(formula = cbind(Cancer, Total - Cancer) ~ Smoker + Sex, family = binomial(link = "logit"), 
+##     data = mock_sumdf)
+## 
+## Coefficients:
+## (Intercept)    SmokerYes      SexMale  
+##      0.2517      -0.5034      -1.1145  
+## 
+## Degrees of Freedom: 3 Total (i.e. Null);  1 Residual
+## Null Deviance:	    5.052 
+## Residual Deviance: 3.604 	AIC: 15.82
+```
+
+]
+]
+
+---
+
+# Simulating from a logistic regression model .f4[Part 1]
+
+.flex[
+.w-40.pr3[
+* Let's suppose that the probability of having cancer are the following:
+  * 0.075 for women smokers
+  * 0.045 for men smokers
+  * 0.005 for women non-smokers
+  * 0.003 for men non-smokers
+* We'll sample 500 people for each group
+]
+.w-60.f5[
+{{content}}
+]]
+
+
+--
+
+
+```r
+df &lt;- tibble(id = 1:2000) %&gt;% 
+  mutate(Smoker = rep(c("Yes", "No"), each = n() / 2),
+         Sex = rep(c("Female", "Male"), times = n() / 2)) 
+
+print(df, n = 4)
+```
+
+```
+## # A tibble: 2,000 × 3
+##      id Smoker Sex   
+##   &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; 
+## 1     1 Yes    Female
+## 2     2 Yes    Male  
+## 3     3 Yes    Female
+## 4     4 Yes    Male  
+## # … with 1,996 more rows
+```
+
+```r
+df %&gt;% 
+  group_by(Smoker, Sex) %&gt;% 
+  count()
+```
+
+```
+## # A tibble: 4 × 3
+## # Groups:   Smoker, Sex [4]
+##   Smoker Sex        n
+##   &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;
+## 1 No     Female   500
+## 2 No     Male     500
+## 3 Yes    Female   500
+## 4 Yes    Male     500
+```
+
+---
+
+count: false
+
+# Simulating from a logistic regression model .f4[Part 1]
+
+.flex[
+.w-40.pr3[
+* Let's suppose that the probability of having cancer are the following:
+  * 0.075 for women smokers
+  * 0.045 for men smokers
+  * 0.005 for women non-smokers
+  * 0.003 for men non-smokers
+* We'll sample 500 people for each group
+* Remember that under the logistic regression model, we assumed that `\(Y_i \sim B(1, p_i)\)`
+]
+.w-60.f5[
+
+```r
+df &lt;- tibble(id = 1:2000) %&gt;% 
+  mutate(Smoker = rep(c("Yes", "No"), each = n() / 2),
+         Sex = rep(c("Female", "Male"), times = n() / 2)) %&gt;% 
+  rowwise() %&gt;% 
+  mutate(CancerBinary = 
+*          case_when(Smoker=="Yes" &amp; Sex=="Female" ~ rbinom(1, 1, 0.075),
+*                    Smoker=="Yes" &amp; Sex=="Male" ~ rbinom(1, 1, 0.045),
+*                    Smoker=="No" &amp; Sex=="Female" ~ rbinom(1, 1, 0.005),
+*                    Smoker=="No" &amp; Sex=="Male" ~ rbinom(1, 1, 0.003)),
+         Cancer = ifelse(CancerBinary, "Yes", "No"))
+
+df %&gt;% 
+  filter(Cancer=="Yes")
+```
+
+```
+## # A tibble: 53 × 5
+## # Rowwise: 
+##       id Smoker Sex    CancerBinary Cancer
+##    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;         &lt;int&gt; &lt;chr&gt; 
+##  1    27 Yes    Female            1 Yes   
+##  2    32 Yes    Male              1 Yes   
+##  3    47 Yes    Female            1 Yes   
+##  4    83 Yes    Female            1 Yes   
+##  5   129 Yes    Female            1 Yes   
+##  6   136 Yes    Male              1 Yes   
+##  7   149 Yes    Female            1 Yes   
+##  8   218 Yes    Male              1 Yes   
+##  9   245 Yes    Female            1 Yes   
+## 10   251 Yes    Female            1 Yes   
+## # … with 43 more rows
+```
+]]
+
+
+
+---
+
+# Simulating from a logistic regression model .f4[Part 2]
+
+.flex[
+.w-40[
+
+* At times, you may want to **simulate the summary data directly** instead of the individual data
+{{content}}
+
+]
+.w-60[
+
+]]
+
+--
+
+* Recall that if `\(Y_i\sim B(1, p)\)` for `\(i = 1, ...k\)` and `\(Y_i\)`s are independent,  `$$S = Y_1 + Y_2 + ... +  Y_k \sim B(k, p)$$`
+
+---
+
+count: false
+
+# Simulating from a logistic regression model .f4[Part 2]
+
+.flex[
+.w-40[
+
+* At times, you may want to **simulate the summary data directly** instead of the individual data
+* Recall that if `\(Y_i\sim B(1, p)\)` for `\(i = 1, ...k\)` and `\(Y_i\)`s are independent,  `$$S = Y_1 + Y_2 + ... +  Y_k \sim B(k, p)$$`
+
+]
+.w-60.f5[
+
+```r
+expand_grid(Smoker = c("Yes", "No"), Sex = c("Female", "Male")) %&gt;% 
+  rowwise() %&gt;% 
+  mutate(Cancer = 
+*          case_when(Smoker=="Yes" &amp; Sex=="Female" ~ rbinom(1, 500, 0.075),
+*                    Smoker=="Yes" &amp; Sex=="Male" ~ rbinom(1, 500, 0.045),
+*                    Smoker=="No" &amp; Sex=="Female" ~ rbinom(1, 500, 0.005),
+*                    Smoker=="No" &amp; Sex=="Male" ~ rbinom(1, 500, 0.003)),
+*        Total = 500)
+```
+
+```
+## # A tibble: 4 × 4
+## # Rowwise: 
+##   Smoker Sex    Cancer Total
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 Yes    Female     35   500
+## 2 Yes    Male       23   500
+## 3 No     Female      0   500
+## 4 No     Male        3   500
+```
+
+]]
+
+--
+
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] Menarche
+
+* In 1965, the average age of 25 homogeneous groups of girls was
+recorded along with the number of girls who have reached
+menarche out of the total in each group.
+
+.panelset[
+.panel[.panel-name[📊]
+
+
+&lt;img src="images/week8A/menarche-plot-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f4[
+
+```r
+data(menarche, package = "MASS")
+skimr::skim(menarche)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values  
+## Name                       menarche
+## Number of rows             25      
+## Number of columns          3       
+## _______________________            
+## Column type frequency:             
+##   numeric                  3       
+## ________________________           
+## Group variables            None    
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean     sd    p0   p25   p50   p75   p100 hist 
+## 1 Age                   0             1  13.1   2.03  9.21  11.6  13.1  14.6   17.6 ▅▇▇▇▁
+## 2 Total                 0             1 157.  195.   88     98   105   117   1049   ▇▁▁▁▁
+## 3 Menarche              0             1  92.3 204.    0     10    51    92   1049   ▇▁▁▁▁
+```
+
+]]
+.panel[.panel-name[R]
+.scroll-sign[.s300.f4[
+
+```r
+# can't fit the model below using geom_smooth 
+# so manually fit
+menarche_model &lt;- glm(cbind(Menarche, Total - Menarche) ~ Age, 
+                      data = menarche, 
+                      family = binomial(link = "logit"))
+# length.out = 80 to match geom_smooth default
+menarche_pred &lt;- data.frame(Age = seq(min(menarche$Age),
+                                      max(menarche$Age),
+                                      length.out = 80))
+menarche_pred &lt;- menarche_pred %&gt;% 
+  mutate(fit = predict(menarche_model, newdata = menarche_pred, type = "response"))
+
+ggplot(menarche, aes(Age, Menarche/Total)) + 
+  geom_point() +
+  geom_line(data = menarche_pred, aes(y = fit), color = "blue")
+```
+]]]
+
+]
+
+.footnote.f4[
+Milicer, H. and Szczotka, F. (1966) Age at Menarche in Warsaw girls in 1965. Human Biology 38, 199–203.
+]
+
+---
+
+# Simulating data from a fitted logistic regression model .f4[Part 1]
+
+* Suppose we want to simulate from the fitted model
+
+.flex[
+.w-50.pr3.f5[
+
+* We first fit the fitted model
+
+
+```r
+fit1 &lt;- 
+  glm(cbind(Menarche, Total - Menarche) ~ Age, 
+      family = "binomial", 
+      data = menarche)
+(beta &lt;- coef(fit1))
+```
+
+```
+## (Intercept)         Age 
+##  -21.226395    1.631968
+```
+
+
+* The fitted regression model is given as:
+`$$\text{logit}(\hat{p}_i) = \hat{\beta}_0  + \hat{\beta}_1 x_{i1}.$$`
+* Rearranging we get
+`$$\hat{p}_i = \dfrac{1}{1 + e^{-(\hat{\beta}_0  + \hat{\beta}_1 x_{i1})}}.$$`
+]
+.w-50.f5[
+* Simulating from first principles:
+
+```r
+menarche %&gt;% 
+  rowwise() %&gt;% 
+  mutate(
+    phat = 1/(1 + exp(-(beta[1] + beta[2] * Age))),
+*   simMenarche = rbinom(1, Total, phat))
+```
+
+```
+## # A tibble: 25 × 5
+## # Rowwise: 
+##      Age Total Menarche    phat simMenarche
+##    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;       &lt;int&gt;
+##  1  9.21   376        0 0.00203           1
+##  2 10.2    200        0 0.0103            3
+##  3 10.6     93        0 0.0187            2
+##  4 10.8    120        2 0.0279            3
+##  5 11.1     90        2 0.0413            1
+##  6 11.3     88        5 0.0609            6
+##  7 11.6    105       10 0.0888            9
+##  8 11.8    111       17 0.128            12
+##  9 12.1    100       16 0.181            17
+## 10 12.3     93       29 0.249            23
+## # … with 15 more rows
+```
+
+]
+
+]
+
+---
+
+# Simulating data from a fitted logistic regression model .f4[Part 2]
+
+* An easier way to do this is to use the `simulate` function which works for many model objects in R
+* Below it's simulating 3 sets of responses (i.e. counts of "success" and "failure" events) from `fit1` logistic model object
+
+.f4[
+
+```r
+simulate(fit1, nsim = 3) 
+```
+
+```
+##    sim_1.Menarche sim_1.V2 sim_2.Menarche sim_2.V2 sim_3.Menarche sim_3.V2
+## 1               0      376              0      376              0      376
+## 2               2      198              1      199              0      200
+## 3               4       89              0       93              3       90
+## 4               4      116              2      118              6      114
+## 5               8       82              5       85              3       87
+## 6               6       82              3       85              6       82
+## 7              14       91              7       98              5      100
+## 8              13       98             14       97             16       95
+## 9              21       79             18       82             20       80
+## 10             25       68             21       72             27       66
+## 11             47       53             32       68             33       67
+## 12             37       71             43       65             41       67
+## 13             47       52             54       45             59       40
+## 14             57       49             63       43             68       38
+## 15             76       29             82       23             84       21
+## 16             87       30             96       21             91       26
+## 17             83       15             82       16             84       14
+## 18             90        7             88        9             91        6
+## 19            107       13            108       12            113        7
+## 20             97        5             98        4             97        5
+## 21            115        7            119        3            119        3
+## 22            108        3            108        3            108        3
+## 23             93        1             93        1             92        2
+## 24            112        2            112        2            114        0
+## 25           1048        1           1049        0           1048        1
+```
+]
+
+
+
+---
+
+# Diagnostics for logistic regression models
+
+.flex[
+.w-50.br.pr3[
+
+* One diagnostic is to compare the observed and expected proportions under the logistic regression fit.
+
+
+```r
+df1 &lt;- menarche %&gt;% 
+  mutate(
+    pexp = 1/(1 + exp(-(beta[1] + beta[2] * Age))),
+    pobs = Menarche / Total)
+```
+&lt;img src="images/week8A/plot-logistic-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50.pl3[
+
+{{content}}
+
+]
+
+]
+
+--
+
+* Goodness-of-fit type test is used commonly to assess the fit as well.
+
+* E.g. Hosmer–Lemeshow test, where test statistic is given as 
+
+&lt;span style="font-size:14pt!important;"&gt;
+`$$H = \sum_{i = 1}^r \left(\dfrac{(O_{1i} - E_{1g})^2}{E_{1i}} + \dfrac{(O_{0i} - E_{0g})^2}{E_{0i}}\right)$$`
+where `\(O_{1i}\)` `\((E_{1i})\)` and `\(O_{0i}\)` `\((E_{0i})\)` are observed (expected) frequencies for successful and non-successful events for group `\(i\)`, respectively.
+&lt;/span&gt;
+
+
+```r
+vcdExtra::HLtest(fit1)
+```
+
+```
+## Hosmer and Lemeshow Goodness-of-Fit Test 
+## 
+## Call:
+## glm(formula = cbind(Menarche, Total - Menarche) ~ Age, family = "binomial", 
+##     data = menarche)
+##  ChiSquare df   P_value
+##  0.1088745  8 0.9999996
+```
+
+
+---
+
+class: transition middle
+
+# Diagnostics for linear models
+
+---
+
+# Assumptions for linear models
+
+.flex[
+.w-50.pl3[
+For `\(i \in \{1, ..., n\}\)`,
+
+`$$Y_i = \beta_0 + \beta_1x_{i1} + ... + \beta_{k}x_{ik} + \epsilon_i,$$`
+where `\(\epsilon_i \sim NID(0, \sigma^2)\)` or in matrix format,
+
+`$$\boldsymbol{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim N(\boldsymbol{0}, \sigma^2 \mathbf{I}_n)$$`
+
+&lt;div style="font-size:12pt;padding-left:20px;"&gt;
+where 
+
+&lt;ul&gt;
+&lt;li&gt; `\(\boldsymbol{Y} = (Y_1, ..., Y_n)^\top\)`,&lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{\beta} = (\beta_0, ..., \beta_k)^\top\)`, &lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{\epsilon} = (\epsilon_1, ..., \epsilon_n)^\top\)`, and &lt;/li&gt;
+&lt;li&gt; `\(\mathbf{X} = \begin{bmatrix}\boldsymbol{1}_n &amp; \boldsymbol{x}_1 &amp; ... &amp; \boldsymbol{x}_k \end{bmatrix}\)`, where &lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{x}_j =(x_{1j}, ..., x_{nj})^\top\)` for `\(j \in \{1, ..., k\}\)`&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+
+]
+.w-50.pl3[
+
+]
+
+]
+
+---
+
+count: false
+
+# Assumptions for linear models
+
+.flex[
+.w-50.pl3[
+For `\(i \in \{1, ..., n\}\)`,
+
+`$$Y_i = \beta_0 + \beta_1x_{i1} + ... + \beta_{k}x_{ik} + \epsilon_i,$$`
+where `\(\color{red}{\epsilon_i \sim NID(0, \sigma^2)}\)` or in matrix format,
+
+`$$\boldsymbol{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \quad \color{red}{\boldsymbol{\epsilon} \sim N(\boldsymbol{0}, \sigma^2 \mathbf{I}_n)}$$`
+
+&lt;div style="font-size:12pt;padding-left:20px;"&gt;
+where 
+
+&lt;ul&gt;
+&lt;li&gt; `\(\boldsymbol{Y} = (Y_1, ..., Y_n)^\top\)`,&lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{\beta} = (\beta_0, ..., \beta_k)^\top\)`, &lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{\epsilon} = (\epsilon_1, ..., \epsilon_n)^\top\)`, and &lt;/li&gt;
+&lt;li&gt; `\(\mathbf{X} = \begin{bmatrix}\boldsymbol{1}_n &amp; \boldsymbol{x}_1 &amp; ... &amp; \boldsymbol{x}_k \end{bmatrix}\)`, where &lt;/li&gt;
+&lt;li&gt; `\(\boldsymbol{x}_j =(x_{1j}, ..., x_{nj})^\top\)` for `\(j \in \{1, ..., k\}\)`&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+
+]
+.w-50.pl3[
+This means that we assume
+
+1. `\(E(\epsilon_i) = 0\)` for `\(i \in \{1, ..., n\}.\)`
+2. `\(\epsilon_1, ..., \epsilon_n\)` are independent.
+3. `\(Var(\epsilon_i) = \sigma^2\)` for `\(i \in \{1, ..., n\}\)` (i.e. homogeneity).
+4. `\(\epsilon_1, ..., \epsilon_n\)` are normally distributed.
+
+{{content}}
+
+]
+
+]
+
+--
+
+&lt;br&gt;&lt;br&gt;
+&lt;i&gt;So how do we check it?&lt;/i&gt;
+
+
+
+
+---
+
+# Model diagnostics for linear models
+
+.flex.h-45[
+
+.w-50.pa3[
+Plot `\(Y_i\)` vs `\(x_i\)` to see if there is `\(\approx\)` a linear relationship between `\(Y\)` and `\(x\)`.
+
+&lt;img src="images/week8A/unnamed-chunk-10-1.png" width="216" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50.bg-gray80.pa3[
+
+A boxplot of the residuals `\(R_i\)` to check for symmetry.
+&lt;img src="images/week8A/unnamed-chunk-11-1.svg" width="180" style="display: block; margin: auto;" /&gt;
+
+]]
+.flex[
+.w-50.bg-gray80.pa3[
+To check the homoscedasticity assumption, plot `\(R_i\)` vs `\(x_i\)`. There should be no obvious patterns.
+
+&lt;img src="images/week8A/unnamed-chunk-12-1.svg" width="158.4" style="display: block; margin: auto;" /&gt;
+]
+.w-50.pa3[
+A normal Q-Q plot, i.e. a plot of the ordered residuals vs `\(\Phi^{-1}(\frac{i}{n+1})\)`.
+
+&lt;img src="images/week8A/unnamed-chunk-13-1.svg" width="158.4" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+
+
+
+---
+
+# Assessing (A1) `\(E(\epsilon_i) = 0\)` for `\(i=1,\ldots,n\)`
+
+* It is a property of the least squares method that $$\sum_{i=1}^n R_i = 0,\quad
+\text{so}\quad \bar R_i  = 0$$ for `\(R_i = Y_i - \hat{Y}_i\)`, hence (A1)  will always appear valid "overall". 
+--
+
+* Trend in residual versus fitted values or covariate can indicate "local"
+failure of (A1). 
+--
+
+* What do you conclude from the following plots?
+
+&lt;img src="images/week8A/sim-plots-1.svg" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Assessing (A2)-(A3) 
+
+.flex[.w-50.bg-gray80.pa3[
+
+### (A2) `\(\epsilon_1, \ldots ,\epsilon_n\)` are independent
+
+* If (A2) is correct, then residuals should appear randomly scattered
+about zero if plotted against fitted values or covariate.
+* Long sequences of positive residuals followed by sequences of negative residuals in `\(R_i\)` vs `\(x_i\)` plot suggests that the error terms are not independent.
+]
+.w-50.pa3[
+
+### (A3) `\(Var(\epsilon_i) = \sigma^2\)` for `\(i=1,\ldots,n\)`
+
+* If (A3) holds then the spread of the residuals should be roughly the same across the fitted values or covariate. 
+
+&lt;Br&gt;
+
+
+
+]
+]
+
+&lt;img src="images/week8A/sim-plots-1.svg" width="1008" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Assessing (A4) `\(\epsilon_1, \ldots ,\epsilon_n\)` are normally distributed
+
+.grid[.item[
+### Q-Q Plots
+
+* The function `qqnorm(x)` produces a Q-Q plot of the ordered vector `x` against the quantiles of the normal distribution.
+* The `\(n\)` chosen normal quantiles `\(\Phi^{-1}(\frac{i}{n+1})\)` are easy to calculate but more sophisticated ways exist:
+   * `\(\frac{i}{n+1} \mapsto \frac{i-3/8}{n+1/4}\)`, default in `qqnorm`. 
+   * `\(\frac{i}{n+1} \mapsto \frac{i-1/3}{n+1/3}\)`, recommended by Hyndman and Fan (1996).
+&lt;!-- * Symmetry, heavy or light tails, location and spread can be "easily" seen in Q-Q plots. How? --&gt;
+
+]
+.item.bg-gray80.pl3.pr3[
+
+### In R
+
+
+```r
+fit &lt;- lm(y ~ x)
+```
+
+
+By "hand"
+
+```r
+plot(qnorm((1:n) / (n + 1)), sort(resid(fit)))
+```
+
+By `base`
+
+
+```r
+qqnorm(resid(fit))
+qqline(resid(fit))
+```
+
+By `ggplot2`
+
+
+```r
+data.frame(residual = resid(fit)) %&gt;% 
+  ggplot(aes(sample = residual)) + 
+  stat_qq() + stat_qq_line(color="blue")
+```
+
+
+]
+]
+
+.footnote.f4[
+Reference: Hyndman and Fan (1996). *Sample quantiles in statistical packages*, American Statistician, 50, 361--365.
+]
+
+---
+
+# Examining simulated data
+
+.flex[
+.w-50[
+&lt;img src="images/week8A/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50.bg-gray80[
+
+&lt;img src="images/week8A/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+
+]]
+.flex[
+.w-50.bg-gray80.f5.pa3[
+
+{{content}}
+
+]
+.w-50[
+&lt;img src="images/week8A/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]]
+
+--
+
+Simulation scheme
+
+```r
+n &lt;- 100
+x &lt;- seq(0, 1, length.out = n)
+y1 &lt;- x + rnorm(n) / 3                  #  Linear
+y2 &lt;- 3 * (x - 0.5) ^ 2 + 
+  c(rnorm(n / 2)/3, rnorm(n / 2)/6)     #  Quadratic
+y3 &lt;- -0.25 * sin(20 * x - 0.2) + 
+  x + rnorm(n) / 3                      #  Non-linear
+
+M1 &lt;- lm(y1 ~ x); M2 &lt;- lm(y2 ~ x); M3 &lt;- lm(y3 ~ x)
+```
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+&lt;ul class="fa-ul"&gt;
+{{content}}
+&lt;/ul&gt;
+
+
+]
+]
+
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Parametric models assume some distribution in advance 
+&lt;/li&gt;
+
+{{content}}
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Logistic models can be used to model explanatory variables with binary outcomes
+&lt;/li&gt;
+
+{{content}}
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;You should be able to simulate from parametric models
+&lt;/li&gt;
+
+{{content}}
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;You can perform basic model diagnostics
+&lt;/li&gt;
+
+{{content}}
+--
+
+&lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;You can use simulation to analyse model properties
+&lt;/li&gt;
+
+
+---
+
+# Resources and Acknowledgement
+
+- Some of these slides were inspired by STAT3012 Applied Linear Models at The University of Sydney by Prof Samuel Muller
+- Cook &amp; Weisberg (1994) 
+"An Introduction to Regression Graphics"
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 8 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

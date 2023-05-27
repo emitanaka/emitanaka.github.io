@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="165.6px" height="129.6px" viewBox="0 0 165.6 129.6" version="1.1">
+  <metadata xmlns:gridsvg="http://www.stat.auckland.ac.nz/~paul/R/gridSVG/">
+    <gridsvg:generator name="gridSVG" version="1.7-2" time="2021-08-17 17:51:48"/>
+    <gridsvg:argument name="name" value="/Users/etan0038/Dropbox/teaching/monash/cwd-private/lectures/images/lecture-06A/task-texture.svg"/>
+    <gridsvg:argument name="exportCoords" value="none"/>
+    <gridsvg:argument name="exportMappings" value="none"/>
+    <gridsvg:argument name="exportJS" value="none"/>
+    <gridsvg:argument name="res" value="72"/>
+    <gridsvg:argument name="prefix" value=""/>
+    <gridsvg:argument name="addClasses" value="FALSE"/>
+    <gridsvg:argument name="indent" value="TRUE"/>
+    <gridsvg:argument name="htmlWrapper" value="FALSE"/>
+    <gridsvg:argument name="usePaths" value="vpPaths"/>
+    <gridsvg:argument name="uniqueNames" value="TRUE"/>
+    <gridsvg:separator name="id.sep" value="."/>
+    <gridsvg:separator name="gPath.sep" value="::"/>
+    <gridsvg:separator name="vpPath.sep" value="::"/>
+  </metadata>
+  <g transform="translate(0, 129.6) scale(1, -1)">
+    <g id="gridSVG" fill="rgb(255,255,255)" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="12" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="1" font-weight="normal" font-style="normal">
+      <defs>
+        <pattern id="gridSVG.patternFill.4.1" x="41.62" y="27.94" width="3.17" height="1.73" viewBox="0 0 36 28.8" patternUnits="userSpaceOnUse">
+          <g id="gridSVG.patternFill.gridSVG.patternFill.4.1.1.1">
+            <g id="gridSVG.patternFill.gridSVG.patternFill.4.1.2.1" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="12" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="0" font-weight="normal" font-style="normal">
+              <g id="gridSVG.patternFill.gridSVG.patternFill.4.1.2.1::GRID.lines.7040.1">
+                <polyline id="gridSVG.patternFill.gridSVG.patternFill.4.1.2.1::GRID.lines.7040.1.1" points="0,0 36,28.8" stroke-width="3.75" fill="none"/>
+              </g>
+            </g>
+          </g>
+        </pattern>
+        <pattern id="gridSVG.patternFill.5.1" x="39.24" y="26.64" width="7.92" height="4.32" viewBox="0 0 21.6 28.8" patternUnits="userSpaceOnUse">
+          <g id="gridSVG.patternFill.gridSVG.patternFill.5.1.1.1">
+            <g id="gridSVG.patternFill.gridSVG.patternFill.5.1.2.1" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="12" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="0" font-weight="normal" font-style="normal">
+              <g id="gridSVG.patternFill.gridSVG.patternFill.5.1.2.1::GRID.lines.7041.1">
+                <polyline id="gridSVG.patternFill.gridSVG.patternFill.5.1.2.1::GRID.lines.7041.1.1" points="0,0 64.8,86.4" stroke-width="3.75" fill="none"/>
+              </g>
+            </g>
+          </g>
+        </pattern>
+        <pattern id="gridSVG.patternFill.6.1" x="39.24" y="26.64" width="7.92" height="4.32" viewBox="0 0 3.6 5.76" patternUnits="userSpaceOnUse">
+          <g id="gridSVG.patternFill.gridSVG.patternFill.6.1.1.1">
+            <g id="gridSVG.patternFill.gridSVG.patternFill.6.1.2.1" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="none" stroke-width="0.75" font-size="5" font-family="Helvetica, Arial, FreeSans, Liberation Sans, Nimbus Sans L, sans-serif" opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-opacity="1" fill-opacity="0" font-weight="normal" font-style="normal">
+              <g id="gridSVG.patternFill.gridSVG.patternFill.6.1.2.1::GRID.circle.7042.1">
+                <circle id="gridSVG.patternFill.gridSVG.patternFill.6.1.2.1::GRID.circle.7042.1.1" cx="1.8" cy="2.88" r="1.08" fill="rgb(0,0,0)" fill-opacity="1"/>
+              </g>
+            </g>
+          </g>
+        </pattern>
+      </defs>
+      <g id="GRID.rect.7038.1">
+        <rect id="GRID.rect.7038.1.1" x="8.28" y="6.48" width="149.04" height="116.64" transform="" stroke-dasharray="none" stroke-width="2.25" fill="rgb(255,255,255)" fill-opacity="1"/>
+      </g>
+      <g id="GRID.text.7039.1">
+        <g id="GRID.text.7039.1.1" transform="translate(16.56, 116.64)" stroke-width="0.1">
+          <g id="GRID.text.7039.1.1.scale" transform="scale(1, -1)">
+            <text x="0" y="0" id="GRID.text.7039.1.1.text" text-anchor="start" font-size="13" fill="rgb(0,0,0)" fill-opacity="1">
+              <tspan id="GRID.text.7039.1.1.tspan.1" dy="9.31" x="0">TEXTURE</tspan>
+            </text>
+          </g>
+        </g>
+      </g>
+      <g id="GRID.VP.2677.1">
+        <g id="rect1.1" fill="url(#gridSVG.patternFill.4.1)" fill-opacity="1">
+          <rect id="rect1.1.1" x="31.32" y="33.12" width="39.6" height="17.28" transform="" stroke-width="2.25"/>
+        </g>
+        <g id="rect2.1" fill="url(#gridSVG.patternFill.5.1)" fill-opacity="1">
+          <rect id="rect2.1.1" x="70.92" y="61.2" width="23.76" height="17.28" transform="" stroke-width="2.25"/>
+        </g>
+        <g id="rect3.1" fill="url(#gridSVG.patternFill.6.1)" fill-opacity="1">
+          <rect id="rect3.1.1" x="106.56" y="30.96" width="23.76" height="21.6" transform="" stroke-width="2.25"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,485 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Using computational tools to determine whether what is seen in the data can be assumed to apply more broadly"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 11 - Session 2"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+      - "assets/datatables.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+library(broom)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week11B/",
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  #out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week11/"
+)
+theme_set(ggthemes::theme_gdocs(base_size = 18) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 24),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+```{css, echo = FALSE}
+.gray80 {
+  color: #505050!important;
+  font-weight: 300;
+}
+.bg-gray80 {
+  background-color: #DCDCDC!important;
+}
+.font18 {
+  font-size: 18pt;
+}
+```
+
+---
+
+class: transition 
+
+# Visual inference with the nullabor 📦
+
+
+---
+
+# `nullabor` + `ggplot2`
+
+* You can construct the null data "by hand" as you have done for Exercise 4 (d) in tutorial 9. 
+--
+
+* You will then need to create null plots and then randomly place the data plot to present the lineup. 
+--
+
+* You'll need to know which one is the data plot so you can tell if viewer's chose the data plot or not.
+--
+
+* The `nullabor` package makes it easy to create the data for the lineup and you can use `ggplot2` to construct the lineup.
+
+```{r pkgs, echo = TRUE}
+library(nullabor)
+library(tidyverse) # which includes ggplot2
+```
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 1/4]
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+```{r ex1-data, include = FALSE}
+data(cochran.crd, package = "agridat")
+skimr::skim(cochran.crd)
+```
+```{r ex1-plot, echo = FALSE, fig.height = 4}
+cochran.crd %>% 
+  ggplot(aes(factor(col), factor(row), fill = inf)) +
+  geom_tile(color = "black", size = 2) +
+  geom_text(aes(label = trt)) +
+  labs(x = "Column", y = "Row", fill = "Infection\npercent") +
+  scale_fill_continuous_sequential(palette = "Reds 3")
+```
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign[
+```{r ex1-data, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+```{r, eval = FALSE, ref.label = c("ex1-plot"), echo = TRUE}
+```
+]
+
+]
+
+
+
+
+]
+.item[
+
+* Experiment was conducted to investigate the effect of sulfur on controlling scab disease in potatoes.
+* There were seven treatments in total: control plus spring and fall application of 300, 600 or 1200 lbs/acres of sulfur. 
+* Employs a completely randomised design with 8 replications for control and 4 replications for other treatments.
+
+]
+
+]
+
+.footnote[
+W.G. Cochran and G. Cox, 1957. Experimental Designs, 2nd ed. John Wiley, New York.
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 2/4]
+
+* We are testing $H_0: \mu_1 = \mu_2 = ... = \mu_7$ vs. $H_1:$ at least one mean is different to others.
+--
+
+* Here we don't have to many observation per treatment so we can use a dotplot.
+--
+
+* For the method to generate null, we consider permuting the treatment labels. 
+```{r ex1-method, echo = TRUE}
+method <- null_permute("trt")
+```
+--
+
+* Then we generate the null data, also embedding the actual data in a random position. .font_small[Make sure to `set.seed` to get the same random instance.]
+```{r ex1-lineup, message = TRUE}
+set.seed(1)
+line_df <- lineup(method, true = cochran.crd, n = 10)
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 3/4]
+
+.f4[
+```{r ex1-lineupex}
+glimpse(line_df)
+```
+]
+
+* The `.sample` variable has information of which sample it is. 
+* One of the `.sample` number belongs to the real data. 
+
+.f4[
+```{r ex1-lineplot, eval = FALSE}
+line_df %>% 
+  ggplot(aes(trt, inf)) +
+  geom_point(size = 3, alpha = 1/2) + 
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(), # remove data context
+        axis.title = element_blank())
+```
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 4/4]
+
+.grid[
+.item[
+```{r ex1-lineplot, echo = FALSE, fig.width = 14}
+```
+
+{{content}}
+]
+]
+
+--
+
+```{r ex1-decrypt}
+decrypt("bhMq KJPJ 62 sSQ6P6S2 ua")
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 1/4]
+
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+```{r ex2-data, include = FALSE}
+skimr::skim(trees)
+```
+```{r ex2-plot, echo = FALSE, fig.height = 4}
+g1 <- trees %>% 
+  ggplot(aes(Girth, Volume)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+
+g2 <- trees %>% 
+  ggplot(aes(Height, Volume)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+
+g1 + g2
+```
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign[
+```{r ex2-data, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+```{r, eval = FALSE, ref.label = c("ex2-plot"), echo = TRUE}
+```
+]
+
+]
+
+
+
+
+]
+.item[
+
+* Data measures the diameter,  height and volume of timber in 31 felled black cherry trees.
+* We fit the model
+
+```{r ex2-fit}
+fit <- lm(log(Volume) ~ log(Girth) + log(Height),
+          data = trees)
+
+fit_df <- trees %>% 
+  # below are needed for lineup
+  mutate(.resid = residuals(fit),
+         .fitted = fitted(fit))
+```
+
+
+]
+
+]
+
+.footnote[
+Atkinson, A. C. (1985) Plots, Transformations and Regression. Oxford University Press.
+
+
+]
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 2/4]
+
+
+* We are testing $H_0:$ errors are $NID(0, \sigma^2)$ vs. $H_1:$ errors are not $NID(0, \sigma^2)$.
+--
+
+* We will use the residual plot as the visual statistic.
+--
+
+* For the method to generate null, we generate residuals from random draws from $N(0, \hat{\sigma}^2)$.
+```{r ex2-method, echo = TRUE}
+method <- null_lm(log(Volume) ~ log(Girth) + log(Height),
+                  method = "pboot")
+```
+--
+
+* Then we generate the lineup data.
+```{r ex2-lineup, message = TRUE}
+set.seed(2020)
+line_df <- lineup(method, true = fit_df, n = 10)
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 3/4]
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+```{r ex2-lineplot, echo = FALSE, fig.width = 14}
+line_df %>% 
+  ggplot(aes(.fitted, .resid)) +
+  geom_point(size = 1.2) + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(), # remove data context
+        axis.title = element_blank())
+```
+]
+.panel[.panel-name[R]
+```{r ex2-lineplot, eval = FALSE}
+```
+]]
+]
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 4/4]
+
+
+* We can have:
+   * `method = "pboot"`,
+   * `method = "boot"` or 
+   * `method = "rotate"`   
+for different (and valid) methods to generate null data when fitting a linear model.
+
+```{r ex2-method2, echo = TRUE}
+method <- null_lm(log(Volume) ~ log(Girth) + log(Height),
+                  method = "boot") #<<
+```
+--
+
+* We can also consider using a different visual statisitc, e.g. QQ-plot to assess normality.
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[4] Temperatures of stars .font_small[Part 1/2]
+
+* The data consists of the surface temperature in Kelvin degrees of 96 stars.
+--
+
+* We want to check if the surface temperature has an exponential distribution. 
+--
+
+* We use histogram with 30 bins as our visual test statistic.
+--
+
+* For the null data, we will generate from an exponential distribution.
+
+```{r star-null, message = TRUE}
+line_df <- lineup(null_dist("temp", "exp", list(rate = 1/mean(dslabs::stars$temp))),
+                  true = dslabs::stars,
+                  n = 10)
+```
+* Note: the rate in an exponential distribution can be estimated from the inverse of the sample mean.
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[4] Temperatures of stars .font_small[Part 2/2]
+
+.grid[
+.item[
+.panelset[
+.panel[.panel-name[📊]
+```{r stars-lineup, echo = FALSE, fig.width = 14}
+ggplot(line_df, aes(temp)) +
+  geom_histogram(color = "white") +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+
+```
+]
+.panel[.panel-name[R]
+```{r stars-lineup, eval = FALSE}
+```
+]]
+]]
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[5] Foreign exchange rate .font_small[Part 1/2]
+
+* The data contains the daily exchange rate of 1 AUD to 1 USD between 9th Jan 2018 to 21st Feb 2018.
+* Does the rate follow an ARIMA model?
+
+
+```{r ts-data, message = TRUE}
+data(aud, package = "nullabor")
+line_df <- lineup(null_ts("rate", forecast::auto.arima), true = aud, n = 10)
+```
+
+```{r ts-plot, eval = FALSE}
+ggplot(line_df, aes(date, rate)) +
+  geom_line() + 
+  facet_wrap(~ .sample, scales = "free_y", nrow = 2) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[5] Foreign exchange rate .font_small[Part 2/2]
+
+.grid[
+.item[
+```{r ts-plot, echo = FALSE, fig.width = 14}
+```
+]]
+
+---
+
+# Resources and Acknowledgement
+
+.font18[
+- Buja, Andreas, Dianne Cook, Heike Hofmann, Michael Lawrence, Eun-Kyung Lee, Deborah F. Swayne, and Hadley Wickham. 2009. “Statistical Inference for Exploratory Data Analysis and Model Diagnostics.” Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 367 (1906): 4361–83.
+- Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” IEEE Transactions on Visualization and Computer Graphics 16 (6): 973–79.
+- Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+- Majumder, M., Heiki Hofmann, and Dianne Cook. 2013. “Validation of Visual Statistical Inference, Applied to Linear Models.” Journal of the American Statistical Association 108 (503): 942–56.
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+]
+
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

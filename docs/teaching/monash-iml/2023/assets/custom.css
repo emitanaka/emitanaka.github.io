@@ -1,0 +1,115 @@
+.blockquote {
+  display: inline-block;
+  margin: 10px auto;
+  font-family:Open Sans;
+  font-style:italic;
+  color: #555555;
+  padding: 1.2em 30px 1.2em 100px;
+  border-left: 8px solid #006DAE ;
+  line-height:1.6;
+  position: relative;
+  background:#EDEDED;
+}
+
+.blockquote::before{
+  font-family: Arial;
+  content: "\201C";
+  color: #006DAE;
+  font-size: 4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  margin: auto;
+  width: 1.1em;
+  height: 1.1em;
+  text-align: center;
+  line-height: 1em;
+}
+
+
+.reveal table td {
+
+ border-bottom-width: 0;
+}
+
+
+.reveal .mcenter {
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+
+.vcenter {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+summary {
+  font-size: 0.5em;
+}
+
+
+.quarto-figure {
+    position: relative;
+    margin-bottom: 0em;
+}
+
+nav > ul > li:first-child {
+  display: none;
+}
+
+#TOC li {
+  font-size: 24px;
+}
+
+#TOC li:before {
+  content: "> ";
+}
+
+
+nav > ul {
+  height: 500px;
+  overflow: scroll;
+  width: 100%;
+}
+
+
+a {
+  color: #3dafe3!important;
+}
+
+
+.skimr  table {
+  margin: 0!important;
+  font-family: monospace;
+  font-size: 0.5em;
+}
+
+
+#toc-title:after {
+  content: "\f175 scroll";
+  font-size: 1.25rem;
+  position: absolute;
+  bottom: -0.5rem;
+  left: 3rem;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+
+details {
+    margin-bottom: 1em;
+}

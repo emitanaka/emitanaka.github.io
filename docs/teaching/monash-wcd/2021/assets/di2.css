@@ -1,0 +1,41 @@
+.fill-box {
+  display: inline-block;
+  border-radius: 5px;
+  margin: 10px auto;
+  padding: 15px;
+  background-color: white;
+  color: black;
+  opacity: 0.8;
+}
+
+ul li {
+  list-style-type: none;
+}
+ul li:before {
+  content: "\f072";
+  font-size: 24px;
+  font-family: "Font Awesome 5 Free";
+  margin-right: 10px;
+  font-weight: 900;
+  color: #027EB6;
+}
+ul li li:before {
+  content: "\f0f2";
+  font-size: 18px;
+  font-family: "Font Awesome 5 Free";
+  margin-right: 10px;
+  font-weight: 900;
+  color: #027EB6;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-32 {
+  height:32em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}

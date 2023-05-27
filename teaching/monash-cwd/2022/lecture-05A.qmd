@@ -1,0 +1,711 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Statistical model outputs"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 5A"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 5A"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+library(knitr)
+library(kableExtra)
+library(janitor)
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Extract information from model objects  
+* Understand and create functions in R
+* Understand and apply S3 object-oriented programming in R
+
+:::
+
+. . . 
+
+::: {.callout-tip }
+
+## Why
+
+* Working with model objects is necessary for you to get the information you need for communication 
+* These concepts will be helpful later when we start developing R-packages
+
+:::
+
+
+
+
+
+
+## 📈 Statistical models
+
+::: incremental
+* All models are approximations of the unknown data generating process 
+* How good of an approximation depends on the collected data and the model choice
+:::
+
+. . . 
+
+::: flex
+
+::: w-50
+
+```{r, echo = FALSE, fig.height = 4, fig.width = 6}
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  labs(y = "Miles per gallon\n(mpg)", x = "Weight\n(wt)", 
+       title = "Motor Trend Car Road Tests")
+```
+
+:::
+
+::: w-50
+
+
+🎯  Characterise `mpg` in terms of `wt`.
+
+::: fragment
+
+* We fit the model: 
+
+$$\texttt{mpg}_i = \beta_0 + \beta_1\texttt{wt}_i + e_i$$
+<details  style="padding-left:40px;font-size:18pt">
+<summary>Parameter details</summary>
+
+::: {.overflow-scroll .h3}
+
+* $\texttt{mpg}_i$ is the miles per gallon of the $i$-th car, 
+* $\texttt{wt}_i$ is the weight of the $i$-th car,
+* $\beta_0$ is the intercept,
+* $\beta_1$ is the slope, and
+* $e_i$ is random error, usually assumed $e_i \sim NID(0, \sigma^2)$
+
+:::
+
+</details>
+
+:::
+
+:::
+
+:::
+
+
+
+## Fitting linear models in R
+
+$$\texttt{mpg}_i = \beta_0 + \beta_1\texttt{wt}_i + e_i$$
+
+. . . 
+
+::: flex
+
+::: w-50
+
+In R we fit this as 
+```{r}
+#| code-line-numbers: false
+fit <- lm(mpg ~ wt, data = mtcars)
+```
+::: fragment
+
+which is the same as 
+```{r}
+#| code-line-numbers: false
+fit <- lm(mpg ~ 1 + wt, data = mtcars)
+fit
+```
+:::
+
+::: fragment
+
+$\hat{\beta}_0 = `r round(coef(fit)[1], 3)`$ and $\hat{\beta}_1 = `r round(coef(fit)[2], 3)`$
+
+:::
+
+:::
+
+
+::: w-50
+
+::: fragment
+
+```{r, echo = FALSE}
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(y = "Miles per gallon\n(mpg)", x = "Weight\n(wt)", 
+       title = "Motor Trend Car Road Tests")
+```
+
+:::
+
+:::
+
+:::
+
+
+
+## ℹ️ Extracting information from the fitted model
+
+::: incremental
+
+* When you fit a model, there would be a number of information you will be interested in extracting from the fit including:
+   * the model parameter estimates,
+   * model-related summary statistics, e.g. $R^2$, AIC and BIC,
+   * model-related values, e.g. residuals, fitted values and predictions.
+
+* So how do you extract these values from the `fit`?
+* What does `fit` even contain?
+
+:::
+
+
+## ℹ️ Extracting information from the fitted model 
+
+```{r}
+#| code-line-numbers: false
+str(fit)
+```
+
+
+## ℹ️ Extracting information from the fitted model
+
+
+Accessing model parameter estimates:
+```{r}
+#| code-line-numbers: false
+fit$coefficients
+# OR using
+coef(fit)
+```
+This gives us the estimates of $\beta_0$ and $\beta_1$. 
+
+. . . 
+
+But what about $\sigma^2$? Recall $e_i \sim NID(0, \sigma^2)$.
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+sigma(fit)^2
+```
+
+## ℹ️ Extracting information from the fitted model 
+
+
+You can also get a summary of the model object:
+
+```{r}
+#| code-line-numbers: false
+summary(fit)
+```
+
+. . . 
+
+So how do I extract these summary values out?
+
+## <i class="fas fa-broom"></i> Model objects to tidy data {.scrollable}
+
+
+```{r}
+#| code-line-numbers: false
+broom::tidy(fit)
+```
+. . . 
+```{r}
+#| code-line-numbers: false
+broom::glance(fit)
+```
+. . . 
+```{r}
+#| code-line-numbers: false
+broom::augment(fit)
+```
+
+But how do these functions work?
+
+
+# Functions in <i class="fab fa-r-project"></i>
+
+Revise about functions at [Learn R](https://learnr.numbat.space/chapter2#11)
+
+## Functions in R 
+
+::: incremental
+
+* Functions can be broken into three components:
+
+  * `formals()`, the list of arguments, 
+  * `body()`, the code inside the function, and 
+  * `environment()`^[This is outside the scope of this course.].
+
+* Functions in R are created using `function()` with binding to a name using `<-` or `=`
+
+:::
+
+## Functions in R 
+
+
+```{r}
+#| code-line-numbers: false
+f1 <- function(x) sum(x) / length(x)
+```
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+formals(f1)
+```
+
+. . . 
+
+
+```{r}
+#| code-line-numbers: false
+body(f1)
+```
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+environment(f1)
+```
+
+
+
+
+## <i class="fas fa-industry"></i> Function Example 1 {auto-animate=true}
+
+```{r}
+f1 <- function(x) sum(x) / length(x)
+```
+
+<br>
+
+```{r avg1}
+#| code-line-numbers: false
+#| output-location: fragment
+x1 <- c(1, 1, 2, 2)
+f1(x1)
+```
+. . . 
+
+<i class="monash-blue fas fa-wrench"></i> What if there are missing values in the vector or the values are dates?
+```{r avg2}
+#| code-line-numbers: false
+#| output-location: fragment
+x2 <- c(1, 1, 2, 2, NA)
+f1(x2)
+```
+
+```{r avg3, error = TRUE}
+#| code-line-numbers: false
+#| output-location: fragment
+x3 <- as.Date(c("2021-08-04", "2021-08-11"))
+f1(x3)
+```
+
+## <i class="fas fa-industry"></i> Function Example 2 {auto-animate=true}
+
+```{r avg}
+f2 <- function(x, na.rm = TRUE) {
+  n <- sum(!is.na(x))
+  sum(x, na.rm = na.rm) / n
+}
+```
+
+<br>
+
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f2(x1)
+```
+
+
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f2(x2)
+```
+
+
+```{r, error = TRUE}
+#| code-line-numbers: false
+#| output-location: fragment
+f2(x3)
+```
+
+
+## <i class="fas fa-industry"></i> Function Example 3 {auto-animate=true}
+
+
+```{r}
+#| code-line-numbers: 4-7
+f3 <- function(x, na.rm = TRUE) {
+  n <- sum(!is.na(x))
+  out <- sum(as.numeric(x), na.rm = na.rm) / n 
+  if(class(x)=="Date") { 
+    return(as.Date(out, 
+                   origin = "1970-01-01")) 
+  } 
+  out
+}
+```
+
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f3(x1)
+```
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f3(x2)
+```
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f3(x3)
+```
+
+. . . 
+
+* What about for another object class?
+
+```{r}
+#| code-line-numbers: false
+x4 <- as.POSIXct(c("2021-08-11 18:00", "2021-08-11 20:00"), tz = "UTC")
+```
+
+
+## S3 Object oriented programming (OOP)
+
+* The **_S3 system_** is the most widely used OOP system in R but there are other OOP systems in R, e.g. the S4 system is used for model objects in `lme4` R-package, but it will be out of scope for this unit 
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+class(x1)
+class(x2)
+class(x3)
+class(x4)
+```
+
+## S3 Object oriented programming (OOP)
+
+* Here I create a generic called `f4`:
+```{r}
+f4 <- function(x, ...) UseMethod("f4")
+```
+. . . 
+
+* And an associated default **method**:
+```{r}
+f4.default <- function(x, na.rm = TRUE) {
+  sum(x, na.rm = na.rm) / sum(!is.na(x))
+}
+```
+. . . 
+
+* And an associated specific **method** for the `Date` class:
+```{r}
+f4.Date <- function(x, na.rm = TRUE) {
+  out <- f4.default(as.numeric(x), na.rm = na.rm)
+  as.Date(out, origin = "1970-01-01")
+}
+```
+
+
+## S3 Object oriented programming (OOP) 
+
+
+```{r}
+#| code-line-numbers: false
+f4(x1)
+f4(x2)
+f4(x3)
+```
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+class(x4)
+```
+. . . 
+
+```{r}
+f4.POSIXct <- function(x, na.rm = TRUE) {
+  out <- f4.default(as.numeric(x), na.rm = na.rm)
+  as.POSIXct(out, 
+             tz = attr(x, "tzone"), 
+             origin = "1970-01-01")
+}
+```
+
+```{r}
+#| code-line-numbers: false
+#| output-location: fragment
+f4(x4)
+```
+
+
+## S3 Object oriented programming (OOP)
+
+::: incremental
+
+* A method is created by using the form `generic.class`.
+* When using a method for `class`, you can omit the `.class` from the function.
+* E.g. `f4(x4)` is the same as `f4.POSIXct(x4)` since the class of `x4` is `POSIXct` (and `POSIXt`). 
+* But notice `f4.numeric` doesn't exist, instead there is `f4.default`. 
+* `default` is a special class and when a generic doesn't have a method for the corresponding class, it falls back to `generic.default`
+
+:::
+
+
+
+# Working with *model objects*<br> in <i class="fab fa-r-project"></i>
+
+
+## <i class="far fa-chart-bar gray"></i> Modelling in R
+
+::: incremental
+
+* There are many R-packages that fit all kinds of models, e.g. 
+  * `mgcv` fits generalized additive models,
+  * `rstanarm` fits Bayesian regression models using Stan, and
+  * `fable` fits forecast models,
+  * many other contributions by the community. 
+
+* There are a lot of new R-packages contributed &mdash; some implementing the latest research results.
+* This means that if you want to use the state-of-the-art research, then you need to work with model objects beyond the standard `lm` and `glm`.
+
+:::
+
+## Example with Bayesian regression
+
+```{r, message = FALSE, warning = FALSE, error = TRUE}
+#| output-location: fragment
+#| code-line-numbers: false
+library(rstanarm)
+fit_stan <- stan_lm(mpg ~ 1 + wt, data = mtcars,
+                    prior = R2(0.7528, what = "mean"))
+```
+
+. . . 
+
+```{r, message = FALSE, warning = FALSE, error = TRUE}
+#| output-location: fragment
+#| code-line-numbers: false
+broom::tidy(fit_stan)
+```
+
+. . . 
+
+Huh?
+
+
+## S3 Object classes
+
+* So how do you find out the functions that work with model objects?
+
+. . . 
+
+* First notice the class of the object `fit`:
+
+```{r}
+#| code-line-numbers: false
+class(fit)
+```
+
+. . . 
+
+* The methods associated with this can be found using:
+
+```{r}
+#| code-line-numbers: false
+methods(class = "lm")
+```
+
+. . . 
+
+::: {.ba .absolute .bottom-1 .right-1 .pa3 .monash-bg-white}
+
+Where is `coef()`?
+
+:::
+
+
+## Case study `broom::tidy`
+
+```{r}
+#| code-line-numbers: false
+class(fit_stan)
+```
+
+. . . 
+
+```{r}
+#| code-line-numbers: false
+broom::tidy
+```
+
+There is no `tidy.stanreg` method so uses the `broom:::tidy.glm` instead.
+
+## Case study `broom::tidy` 
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: 3-8|3-8,10
+library(broom)
+
+tidy.stanreg <- function(x, ...) {
+  est <- x$coefficients
+  tibble(term = names(est), 
+         estimate = unname(est),
+         std.error = x$ses)
+}
+
+tidy(fit_stan)
+```
+
+
+# <i class="fas fa-clipboard-list"></i> Working with model objects
+
+* Is this only for R though? 
+* How do you work with model objects in general?
+
+
+
+## <i class="fab fa-python"></i> Python
+
+. . . 
+
+```{python}
+#| output-location: fragment
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+x = np.array(r.mtcars['wt']).reshape(-1, 1)
+y = np.array(r.mtcars['mpg'])
+model = LinearRegression().fit(x, y)
+
+[model.intercept_, model.coef_]
+```
+
+. . . 
+
+<i class="fab fa-r-project"></i>
+
+```{r, echo = FALSE}
+coef(fit) # in R
+```
+
+
+
+
+
+
+## Week 5A Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* Model objects are usually a `list` returning multiple output from the model fit
+* When working with model objects, check the object structure and find the methods associated with it (and of course check the documentation)
+* You should be able to work (or at least know how to get started) with all sort of model objects
+* We revised how to create functions in R
+* We applied S3 object-oriented programming in R
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+* [Wickham (2019) Advanced R, 2nd edition, Chapman & Hall, Chapter 13](https://adv-r.hadley.nz/s3.html)
+* [Create your own broom tidier methods](https://www.tidymodels.org/learn/develop/broom/#implement-tidying-methods)
+* Learn R [Chapter 2: R Programming Basics](https://learnr.numbat.space/chapter2) and [Chapter 7: Linear Regression with R](https://learnr.numbat.space/chapter7)
+
+:::

@@ -1,0 +1,616 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Non-parameteric regression"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 2"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 2"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    toc: true
+    toc-title: "[*Non-parameteric regression*]{.monash-blue} - table of contents"
+    auto-stretch: false
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(patchwork)
+library(mvtnorm)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 6,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+
+ 
+
+
+## Regression models
+
+
+* Regression models propose $y_i = f(x_{i1}, x_{i2}, ..., x_{ip}) + e_i$ where the goal is to estimate the function $f$.
+
+. . . 
+
+
+* Methods for estimation:
+  - [**parametric**]{.monash-blue} - assumes model takes a specific form to data
+  - [**non-parametric**]{.monash-blue} - no or less specific assumptions of the functional form to all data
+  - [**semi-parametric**]{.monash-blue} - (not covered in this unit) combines parametric and non-parametric methods
+
+## Why non-parametric regression?
+
+
+::: incremental
+* In a parametric regression, some type of distribution is assumed in advance. 
+* Therefore, fitted parametric regression models can lead to fitting a smooth curve that misrepresents the data.
+* Non-parametric regression works for well to fitting a line to a scatter plot where noisy data values, sparse data points or weak inter-relationships interfere with your ability to see a line of best fit.
+* A drawback of non-parametric regressions is that it does not produce a functional form of the fitted model.
+
+:::
+
+## Non-parametric regression methods
+
+::: incremental
+
+- Some methods:
+  - [**local regression**]{.monash-blue}: sliding window with regression fitted to subsets
+  - [**step functions**]{.monash-blue}: cut the range of a predictor into distinct regions
+  - [**regression splines**]{.monash-blue}: combine polynomials and step functions to different subsets of a predictor.
+- These methods offer a lot of flexibility, while maintaining the ease and interpretability of linear models.
+
+:::
+
+
+## <i class="fas fa-database"></i> US economic time series
+
+This dataset is available from [http://research.stlouisfed.org/fred2](http://research.stlouisfed.org/fred2). 
+
+```{r economics-plot}
+#| code-fold: true
+#| fig-height: 4.5
+library(tidyverse)
+ggplot(economics, aes(date, uempmed)) + 
+  geom_point() +
+  labs(x = "Date", y = "Median unemployment duration")
+```
+
+## A parametric approach
+
+- The [curve]{.monash-blue} below is a fit of the polynomial model of order 27:
+
+$$\color{#006DAE}{y_i = \beta_0 + \beta_1x_{i1}+ \beta_2x_{i1}^2 + \cdots + \beta_{27}x_{i1}^{27} + e_i}$$
+
+```{r economics-plot-parameteric}
+#| code-fold: true
+#| fig-height: 3.5
+ggplot(economics, aes(date, uempmed)) + 
+  geom_point() +
+  geom_smooth(method = stats::lm, 
+              formula = y ~ poly(x, 27),
+              color = "#006DAE") +
+  labs(x = "Date", y = "Median unemployment\nduration")
+```
+
+
+# Local regression {background-color="#006DAE" .mcenter}
+
+
+## Local regression
+
+::: incremental
+
+* [LOESS]{.monash-blue} (LOcal regrESSion) and [LOWESS]{.monash-blue} (LOcally WEighted
+Scatterplot Smoothing) are **non-parametric regression** methods (LOESS is a generalisation of LOWESS).
+* **LOESS fits a weighted low order polynomial model to a subset of neighbouring data**.
+* A user specified "bandwidth", "smoothing parameter" or "span" $\alpha$ determines how much of the data is used to fit each local polynomial model.
+* Large $\alpha$ produce a smoother fit.
+* Small $\alpha$ overfits the data with the fitted regression capturing the random error in the data.
+
+:::
+
+
+
+## <i class="fab fa-r-project"></i> How to fit LOESS curves in R?
+
+The model can be fitted using the `loess` function where 
+
+* the _default span_ is 0.75 and 
+* the _default local polynomial degree_ is 2.
+```{r loess}
+fit <- loess(uempmed ~ as.numeric(date),
+             data = economics, 
+             span = 0.75, 
+             degree = 2) 
+fit
+```
+
+
+## <i class="fab fa-r-project"></i> Showing LOESS on the plot in R
+
+In `ggplot`, you can add the loess using `geom_smooth` with `method = loess` and method arguments passed as list:
+
+
+```{r loess-ggplot}
+#| fig.height: 3
+#| code-line-numbers: 3-5
+ggplot(economics, aes(date, uempmed)) +
+  geom_point() + 
+  geom_smooth(method = loess, 
+              method.args = list(span = 0.75, 
+                                 degree = 2)) 
+```
+
+
+
+
+
+
+
+
+
+## How `span` changes the loess fit
+
+```{r cubic-polynomial-data}
+#| echo: false
+cubic <- tibble(id = 1:200) %>% 
+  mutate(x = runif(n(), -10, 10),
+         y = 0.5 * x + 3 * sin(x) + rnorm(n(), 0, 2))
+```
+
+
+```{r loess-span, fig.height = 5, fig.width = 8, out.width = "70%"}
+#| echo: false
+library(gganimate)
+fits <- tibble(span = seq(.1, 1, .05)) %>%
+  rowwise() %>%
+  do(mutate(broom::augment(loess(y ~ x, cubic, span = .$span)),
+            span = .$span))
+
+p <- ggplot(fits, aes(x, y)) +
+  geom_point() +
+  geom_line(aes(y = .fitted), color = "red", size = 1.2) +
+  labs(title = 'span = {closest_state}')
+
+p + transition_states(
+    span,
+    transition_length = 2,
+    state_length = 1
+  )
+```
+
+::: aside 
+
+Code inspired by http://varianceexplained.org/files/loess.html
+
+:::
+
+
+## How `loess` works
+
+```{r animate-loess, gganimate = list(nframes = 500), fig.height = 5, fig.width = 8, out.width = "70%"}
+#| echo: false
+dat <- cubic %>%
+  crossing(center = unique(cubic$x)) %>%
+  mutate(dist = abs(x - center)) %>%
+  filter(rank(dist) / n() <= .4) %>%
+  mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3) %>% 
+  arrange(x, center) 
+
+p <- ggplot(dat, aes(x, y)) +
+  geom_point(data = cubic, color = "gray") +
+  geom_point(aes(alpha = weight), color = "#6600cc") +
+  geom_smooth(data = cubic,
+              se = FALSE, color = "red",
+              method = stats::loess, size = 1,
+              method.args = list(span = 0.4)) +
+  geom_smooth(aes(group = center, weight = weight), 
+              method = stats::lm, se = FALSE, 
+              formula = y ~ poly(x, 2)) +
+  geom_vline(aes(xintercept = center), lty = 2) +
+  labs(title = "span = 0.4") +
+  guides(alpha = FALSE)#+
+  #ggforce::facet_wrap_paginate(~center, nrow = 3, ncol = 3)
+p + transition_states(center, 
+                      transition_length = 1, 
+                      state_length = 1)
+```
+
+
+
+::: aside
+
+Code inspired by http://varianceexplained.org/files/loess.html
+
+:::
+
+
+# Step functions {background-color="#006DAE" .mcenter}
+
+## Step functions 
+
+::: flex
+
+::: {.w-40 .incremental}
+
+- The idea of a **step function** is to cut up the range of a predictor into distinct regions. 
+- This essentially converts a continuous predictor into an ordered categorical variable.
+- We don't normally use this idea alone!
+
+
+:::
+
+::: {.w-60 .pl3}
+
+```{r step-function}
+#| code-line-numbers: 4
+ggplot(economics, aes(date, uempmed)) +
+  geom_point() + 
+  geom_smooth(method = stats::lm,
+              formula = y ~ cut_number(x, 4)) 
+```
+
+:::
+
+:::
+
+
+# Regression splines {background-color="#006DAE" .mcenter}
+
+## Splines (mechanical)
+
+::: flex
+
+::: w-40
+
+![](images/1024px-Spline-shaft.png)
+
+:::
+
+::: w-60
+
+* A wooden or metal strip that fits into another part of a machine to make it rotate.
+
+:::
+
+
+:::
+
+
+
+::: aside 
+
+Image from [wikipedia](https://en.wikipedia.org/wiki/Spline_(mechanical)#/media/File:Spline-shaft.png).
+
+:::
+
+## Splines (drawing)
+
+::: flex
+
+::: w-40
+
+![](images/800px-Spline_(PSF).png)
+
+:::
+
+::: w-60
+
+* A thin, long wood or metal to draw smooth curves.
+
+:::
+
+
+:::
+
+
+
+::: aside 
+
+Image from [wikipedia](https://en.wikipedia.org/wiki/Flat_spline#/media/File:Spline_(PSF).png).
+
+:::
+
+
+
+
+
+## Splines (mathematical) {.smaller}
+
+::: incremental
+
+- A **spline** is a _piecewise polynomial function_ where 
+  - each piece corresponds to a disjoint subinterval that makes up the range of the variable, and 
+  - the function output is the same values at the subinterval boundaries.
+- The boundaries of the subintervals are called **knots**.
+- The **_smoothness_** of a spline is based on adjacent polynomial pieces sharing common derivative values or up to a certain order.
+- The simplest spline consists of step functions (but step functions are not necessary a spline).
+
+:::
+
+```{r spline-step}
+#| echo: false
+#| fig-height: 3
+data.frame(x = c(0, 1/3, 1/3, 1, 0, 1/3, 1/3, 2/3, 2/3, 1, 0, 2/3, 2/3, 1),
+           y = c(1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1),
+           piece = c(rep(1, 4), rep(2, 6), rep(3, 4))) %>% 
+  ggplot(aes(x, y, color = factor(piece))) +
+  geom_line(linewidth = 2) + 
+  facet_wrap(~piece, labeller = label_both) +
+  guides(color = "none") +
+  scale_y_continuous(breaks = c(0, 1)) +
+  theme(axis.text.x = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  labs(title = "A spline of degree 0 with 4 knots")
+
+```
+
+
+## Basis spline (B-spline)
+
+- All possible splines can be constructed from a linear combination of B-splines.
+
+```{r bspline}
+#| echo: false
+#| fig-height: 4
+splines::bs(cubic$x, df = 10, degree = 3) %>%
+  as.data.frame() %>%
+  mutate(x = cubic$x) %>%
+  pivot_longer(-x, names_to = "basis", values_to = "value") %>%
+  mutate(basis = fct_inorder(basis)) %>% 
+  ggplot(aes(x, value, color = basis)) +
+  geom_line(linewidth = 2) +
+  labs(color = "basis function", title = "B-spline function of degree 3 with 11 knots") +
+  colorspace::scale_color_discrete_qualitative()
+```
+
+## Breakdown of B-spline regression
+
+::: flex
+
+::: w-40
+
+```{r cubic-poly}
+#| echo: false
+#| fig-width: 6
+intvls <- tibble(intervals = levels(cut_interval(cubic$x, 10))) %>% 
+  mutate(lower = as.numeric(str_extract(intervals, "-?[0-9][.][0-9]+")),
+         upper = str_extract(intervals, "-?[0-9][.][0-9]+]") %>% 
+                str_replace("]", "") %>% 
+                as.numeric()) %>% 
+  mutate(no = 1:n())
+
+ggplot(cubic) + 
+  geom_point(aes(x, y)) +
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  geom_smooth(aes(x, y),
+              # should be the same with or without -1
+              method = lm, formula = y ~ -1 + splines::bs(x, df = 10)) +
+  guides(fill = "none") +
+  labs(title = "11 knots, 10 equal subintervals")
+```
+
+
+
+:::
+
+::: w-60
+
+```{r fit-cubic-bspline}
+#| echo: false
+#| fig-height: 7
+nknots <- 11
+bsplines <- splines::bs(cubic$x, df = nknots - 1, degree = 3)
+fit_bspline <- lm(y ~ -1 + bsplines, data = cubic)
+slopes_bspline <- coef(fit_bspline)
+map_dfr(1:(nknots - 1), ~{
+  cubic %>% 
+    mutate(.basis = paste("Basis:", .x),
+           .value = slopes_bspline[paste0("bsplines", .x)] * bsplines[, .x]) %>% 
+    filter(.value != 0)
+}) %>% 
+  #bind_rows(mutate(cubic, 
+  #                 .basis = "Intercept", 
+  #                 .value = slopes_bspline["(Intercept)"])) %>%
+  mutate(.basis = fct_inorder(.basis)) %>% 
+  ggplot(aes(x, y)) +
+  geom_point(data = cubic) + 
+  geom_line(aes(y = .value, color = .basis), linewidth = 2) +
+  facet_wrap(~.basis) +
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(color = "none") +
+  colorspace::scale_color_discrete_qualitative()
+  
+```
+
+
+:::
+
+
+:::
+
+
+
+
+
+## <i class="fab fa-r-project"></i> Fitting B-splines with R
+
+::: flex
+
+::: {.w-40 .incremental}
+
+- In R, we can get the basis splines using `splines::bs`.
+- The degree of freedom (`df`) is the number of knots plus one.
+
+:::
+
+::: {.w-60 .pl3}
+
+```{r spline-fit}
+#| code-line-numbers: 4
+ggplot(economics, aes(date, uempmed)) +
+  geom_point() + 
+  geom_smooth(method = stats::lm,
+              formula = y ~ splines::bs(x, df = 20)) 
+```
+
+:::
+
+:::
+
+
+
+## Natural cubic splines
+
+- Natural cubic splines is a spline with degree 3 such that the second derivative is zero at the boundaries (i.e. is a linear function at the boundaries). 
+
+```{r nspline}
+#| echo: false
+#| fig-height: 4
+splines::ns(cubic$x, df = 10) %>%
+  as.data.frame() %>%
+  mutate(x = cubic$x) %>%
+  pivot_longer(-x, names_to = "basis", values_to = "value") %>%
+  mutate(basis = fct_inorder(basis)) %>% 
+  ggplot(aes(x, value, color = basis)) +
+  geom_line(linewidth = 2) +
+  labs(color = "basis function", title = "Natural cublic spline function with 11 knots") +
+  colorspace::scale_color_discrete_qualitative()
+```
+
+
+## Breakdown of natural cubic spline regression
+
+::: flex
+
+::: w-40
+
+```{r natural-cubic-spline}
+#| echo: false
+#| fig-width: 6
+ggplot(cubic) + 
+  geom_point(aes(x, y)) +
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  geom_smooth(aes(x, y),
+              # should be the same with or without -1
+              method = lm, formula = y ~ -1 + splines::ns(x, df = 10)) +
+  guides(fill = "none") +
+  labs(title = "11 knots, 10 equal subintervals")
+```
+
+
+
+:::
+
+::: w-60
+
+```{r fit-cubic-nspline}
+#| echo: false
+#| fig-height: 7
+nknots <- 11
+bsplines <- splines::ns(cubic$x, df = nknots - 1)
+fit_bspline <- lm(y ~ -1 + bsplines, data = cubic)
+slopes_bspline <- coef(fit_bspline)
+map_dfr(1:(nknots - 1), ~{
+  cubic %>% 
+    mutate(.basis = paste("Basis:", .x),
+           .value = slopes_bspline[paste0("bsplines", .x)] * bsplines[, .x]) %>% 
+    filter(.value != 0)
+}) %>% 
+  #bind_rows(mutate(cubic, 
+  #                 .basis = "Intercept", 
+  #                 .value = slopes_bspline["(Intercept)"])) %>%
+  mutate(.basis = fct_inorder(.basis)) %>% 
+  ggplot(aes(x, y)) +
+  geom_point(data = cubic) + 
+  geom_line(aes(y = .value, color = .basis), linewidth = 2) +
+  facet_wrap(~.basis) +
+  theme(axis.text = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(color = "none") +
+  colorspace::scale_color_discrete_qualitative()
+  
+```
+
+
+:::
+
+:::
+
+
+## <i class="fab fa-r-project"></i> More knots results in overfitting
+
+```{r nknot-splines-plot}
+#| code-fold: true
+#| code-line-numbers: 11
+map_dfr(c(0, 2, 3, 8, 14, 48),
+        ~ economics %>%
+          mutate(
+            nknot = .x,
+            nknot_label = paste(nknot, "knots") %>% fct_inorder()
+          )) %>%
+  ggplot(aes(date, uempmed, nknot = nknot)) +
+  geom_point() +
+  geom_smooth(
+    method = lm,
+    formula = y ~ splines::ns(x, df = nknot + 1),
+    se = FALSE,
+    colour = "orangered3"
+  ) +
+  facet_wrap(~ nknot_label) +
+  ggtitle("Natural cubic splines")
+```
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+- Non-parametric regression is useful in data exploration and analysis although parameters must be carefully chosen not to overfit the data.
+

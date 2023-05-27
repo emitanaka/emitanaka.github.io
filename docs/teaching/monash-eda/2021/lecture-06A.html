@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+    <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-06A.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Making comparisons between groups and strata&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+&lt;style type="text/css"&gt;
+.gray80 {
+  color: #505050!important;
+  font-weight: 300;
+}
+&lt;/style&gt;
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] Pest resistance maize .font_small[Part 1/2]
+
+* &lt;i class="fas fa-bug"&gt;&lt;/i&gt; Pests, like thrips and spiders, damage maize crops. .font_small[Note: Maize = Corn]
+* &lt;i class="fas fa-dna"&gt;&lt;/i&gt; One strategy to protect crops against pests is to cultivate *genetically modified* (GM) maize that expresses a toxic protein.
+
+&lt;div class="grid" style="grid-template-columns: 300px auto;"&gt;
+&lt;div class="item" width="100px"&gt;
+
+&lt;table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Thrips &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Spiders &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 16.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 16.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 16.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 10.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 18.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 14.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 10.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;/div&gt;
+&lt;div class="item" width="1000px"&gt;
+&lt;ul&gt;
+&lt;li&gt;The species abundance on 8 &lt;i&gt;Bt&lt;/i&gt; GM maize is shown.&lt;/li&gt;
+{{content}}
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+
+.footnote.f6[
+Kevin Wright (2018). agridat: Agricultural Datasets. R package version 1.16.
+
+L. A. Hothorn, 2005. Evaluation of Bt-Maize Field Trials by a Proof of Safety. http://www.seedtest.org/upload/cms/user/presentation7Hothorn.pdf
+]
+
+--
+&lt;li&gt;Is the strategy working?&lt;/li&gt;
+{{content}}
+--
+&lt;li&gt;Well it didn't completely eliminate pests but &lt;em class="monash-blue"&gt;did it lower the abundance?&lt;/em&gt;&lt;/li&gt;
+{{content}}
+--
+&lt;li&gt;We can't tell without knowing what the typical abundance is.&lt;/li&gt;
+{{content}}
+--
+&lt;div class="blockquote" style="margin-left:-30px;margin-right:-1px;"&gt;
+At the heart of quantitative reasoning is a single question: &lt;b&gt;Compared to what?&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+&lt;footer class="pull-right"&gt;&amp;mdash;Edward Tufte&lt;/footer&gt;
+&lt;/div&gt;
+
+---
+
+
+
+
+# .orange[Case study] .circle.bg-orange.white[1] Pest resistance maize .font_small[Part 2/2]
+
+* The actual experiment compared *Bt* variety to the **isogenic control variety**.
+--
+
+* How would you compare graphically?
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week6A/crop-plot1-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+]
+.panel[.panel-name[data]
+.h200.f5.scroll-sign[
+
+```r
+data(gathmann.bt, package = "agridat")
+df1 &lt;- gathmann.bt %&gt;% 
+  pivot_longer(-gen, values_to = "abundance",
+               names_to = "species") %&gt;% 
+  mutate(species = case_when(species=="thysan" ~ "Thrip",
+                             TRUE ~ "Spider"))
+skimr::skim(df1)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df1   
+## Number of rows             32    
+## Number of columns          3     
+## _______________________          
+## Column type frequency:           
+##   character                1     
+##   factor                   1     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   min   max empty n_unique whitespace
+## 1 species               0             1     5     6     0        2          0
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts     
+## 1 gen                   0             1 FALSE          2 Bt: 16, ISO: 16
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 abundance             0             1  6.01  6.36     0   0.6   2.5  10.7  18.4 ▇▂▃▁▂
+```
+]]
+.panel[.panel-name[R]
+.scroll-sign[
+.s300.f5[
+
+```r
+g1 &lt;- ggplot(df1, aes(gen, abundance, color = species)) +
+  geom_point(size = 3) + 
+  facet_wrap(~species, scales = "free") + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE) + 
+  labs(x = "", y = "Abundance", tag = "(A)") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+g2 &lt;- ggplot(df1, aes(gen, abundance, color = species)) +
+  geom_point(size = 3) + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE) + 
+  labs(x = "", y = "Abundance", tag = "(B)", color = "Species") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+g3 &lt;- ggplot(df1, aes(gen, abundance, color = species)) +
+  geom_point(size = 3) + 
+  facet_wrap(~species) + 
+  scale_color_discrete_qualitative() + 
+  labs(x = "", y = "Abundance", tag = "(C)", color = "Species") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+g4 &lt;- ggplot(df1, aes(species, abundance, color = gen)) +
+  geom_point(size = 3) + 
+  facet_wrap(~gen, scales = "free") + 
+  scale_color_discrete_qualitative(palette = "Harmonic") + 
+  guides(color = FALSE) + 
+  labs(x = "", y = "Abundance", tag = "(D)") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+g5 &lt;- ggplot(df1, aes(species, abundance, color = gen)) +
+  geom_point(size = 3) + 
+  scale_color_discrete_qualitative(palette = "Harmonic") + 
+  guides(color = FALSE) + 
+  labs(x = "", y = "Abundance", tag = "(E)") + 
+  theme(axis.text.x = element_text(angle = 90))
+
+g6 &lt;- ggplot(df1, aes(species, abundance, color = gen)) +
+  geom_point(size = 3) + 
+  facet_wrap(~gen) + 
+  scale_color_discrete_qualitative(palette = "Harmonic") + 
+  labs(x = "", y = "Abundance", tag = "(F)", color = "Genotype")  + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+(g1 + g2 + g3) / (g4 + g5 + g6)
+```
+
+]]]
+
+]
+
+---
+
+# Comparing like-with-like .font_small[Part 1]
+
+.info-box.w-70[
+
+Comparison should be fair - any differences should be due to the factor you wish to investigate.
+]
+
+--
+
+.grid[.item[
+
+&lt;br&gt;
+
+&lt;center&gt;
+&lt;img src="images/spiders.jpg" style="border: 5px solid black;" height = "120px"&gt;
+&lt;img src="images/thrips.jpeg" style="border: 5px solid black;" height = "120px"&gt;
+&lt;/center&gt;
+
+&lt;img src="images/week6A/crop-plot2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+]
+.item[
+
+**Comparable populations and measurements**
+
+* Abundance is measured for two species: spiders and thrips.
+* The abundance metric differ between species.
+* Would you compare the .gray80[abundance of spiders on a *Bt* variety] to the .gray80[abundance of thrips on a isogenic variety]?
+
+]
+]
+
+
+
+
+.footnote.f6[
+Image source: https://www.infonet-biovision.org/PlantHealth/Pests/Thrips
+and https://cropwatch.unl.edu/2016/managing-spider-mites-corn-and-soybean
+]
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2] Maize kernels .font_small[Part 1/2]
+
+&lt;div class="grid" style="grid-template-columns: 350px 800px;"&gt;
+.item.font_small[
+&lt;img src="images/corn.jpg" style="border: 5px solid black;" height = "130px"&gt;
+
+1.	Plant pathologist
+2.	Associate plant pathologist
+3.	Professor of agronomy
+4.	Assistant professor of agronomy
+5.	Professor of philosophy
+6.	Biologist
+7.	Biologist (also author)
+8.	Assistant in biology
+9.	Data entry clerk (a.k.a. "Computer")
+10.	Farmer
+11.	Professor of plant physiology
+12.	Instructor in plant physiology
+13.	Assistant in plant physiology
+14.	Assistant in plant physiology
+15.	Professor of biology
+]
+.item[
+
+* 4 maize ears selected.
+* 15 observers asked to classify kernels to (i) starchy yellow, (ii) starchy white, (iii) sweet yellow or (iv) sweet white. 
+* Ear 11 was slightly abnormal due to a fungus attack giving some pinkish tinge to some kernels. 
+* Is Ear 11 different?
+
+&lt;img src="images/week6A/kernel-plot1-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+]
+&lt;/div&gt;
+
+.footnote.f6[
+Raymond Pearl, 1911. The Personal Equation In Breeding Experiments Involving Certain Characters of Maize, Biol. Bull., 21, 339-366. 
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2] Maize kernels .font_small[Part 2/2]
+
+&lt;div class="grid" style="grid-template-columns: 350px 800px;"&gt;
+.item.font_small[
+&lt;img src="images/corn.jpg" style="border: 5px solid black;" height = "130px"&gt;
+
+1.	Plant pathologist
+2.	Associate plant pathologist
+3.	Professor of agronomy
+4.	Assistant professor of agronomy
+5.	Professor of philosophy
+6.	Biologist
+7.	Biologist (also author)
+8.	Assistant in biology
+9.	Data entry clerk (a.k.a. "Computer")
+10.	Farmer
+11.	Professor of plant physiology
+12.	Instructor in plant physiology
+13.	Assistant in plant physiology
+14.	Assistant in plant physiology
+15.	Professor of biology
+]
+.item[
+
+* All observer are counting the kernels of the same ears, however there are variations across observers.
+* Notice Observer 1 classifies more kernels as yellow for Ear 11.
+
+&lt;img src="images/week6A/kernel-plot2-1.png" width="828" style="display: block; margin: auto;" /&gt;
+
+
+]
+&lt;/div&gt;
+
+---
+
+# Comparing like-with-like .font_small[Part 2]
+
+.flex[
+.w-40[
+**Comparable conditions**
+
+* The variability due to other sources need to be accounted, removed or "averaged" out for a fair comparison.
+]
+.w-60[
+&lt;img src="images/week6A/kernel-plot3-1.png" width="396" style="display: block; margin: auto;" /&gt;
+]]
+
+
+
+
+---
+
+# Comparing like-with-like .font_small[Part 3]
+
+&lt;center&gt;
+&lt;img src="images/virus.png" height = "100px" style="padding-top:10px;"&gt;
+&lt;/center&gt;
+
+**Comparable variables and sources** 
+
+* Data collected by different sources may have different rules. E.g. in Australia, "a COVID-19 death is defined for surveillance purposes as a death in a probable or confirmed COVID-19 case, unless there is a clear alternative cause of death that cannot be related to COVID19 (e.g. trauma)"&lt;sup&gt;[1]&lt;/sup&gt; 
+* .gray80[Do other countries use the same definition?]
+* The COVID-19 death data often have delays in reporting and data would be updated or corrected later.
+
+.footnote.f6[
+&lt;sup&gt;[1]&lt;/sup&gt; https://www.health.gov.au/resources/total-covid-19-cases-and-deaths-by-states-and-territories
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Multi-environment soybean trial 
+
+
+
+* 58 soy varieties are grown in four locations in Queensland in 1970 then 1971.
+* Soy breeders are interested in finding the "best" variety.
+* So which variety is the best for yield?
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/soy-plot1-1.png" width="1065.6" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h300.scroll-sign.f5[
+
+```r
+data(australia.soybean, package = "agridat")
+skimr::skim(australia.soybean)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values           
+## Name                       australia.soybean
+## Number of rows             464              
+## Number of columns          10               
+## _______________________                     
+## Column type frequency:                      
+##   factor                   3                
+##   numeric                  7                
+## ________________________                    
+## Group variables            None             
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                            
+## 1 env                   0             1 FALSE          8 B70: 58, B71: 58, L70: 58, L71: 58    
+## 2 loc                   0             1 FALSE          4 Bro: 116, Law: 116, Nam: 116, Red: 116
+## 3 gen                   0             1 FALSE         58 G01: 8, G02: 8, G03: 8, G04: 8        
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate     mean    sd       p0      p25      p50     p75    p100 hist 
+## 1 year                  0             1 1970.    0.501 1970     1970     1970.    1971    1971    ▇▁▁▁▇
+## 2 yield                 0             1    2.05  0.752    0.282    1.52     2.07     2.56    4.38 ▂▆▇▃▁
+## 3 height                0             1    0.883 0.272    0.25     0.708    0.888    1.04    1.73 ▂▆▇▂▁
+## 4 lodging               0             1    2.31  0.976    1        1.5      2.25     3       4.75 ▇▅▅▂▁
+## 5 size                  0             1   11.1   4.45     4        7.84     9.5     14.0    23.6  ▅▇▂▃▁
+## 6 protein               0             1   40.3   2.93    33.2     38.1     40.2     42.2    48.5  ▁▇▇▅▁
+## 7 oil                   0             1   19.9   2.67    13.0     18.0     19.8     22.1    26.8  ▁▆▇▆▂
+```
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+australia.soybean %&gt;% 
+  mutate(gen = reorder(gen, yield)) %&gt;% 
+  ggplot(aes(gen, yield, color = loc, shape = as.factor(year))) +
+  geom_point(size = 3) + 
+  labs(x = "Genotype", y = "Yield (tons/hectare)", shape = "Year", color = "Location") +
+  scale_color_discrete_qualitative() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
+```
+]]
+
+]
+
+---
+
+# Types of comparison
+
+* Is the interest to find the best variety *for a location*? 
+* In that case, should the comparison be within location?
+* Or is the interest to find the overall best variety *at any location*?
+* Comparisons may be specific or general. 
+* A different type of comparison may require a different calculation or graphic for investigation.
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/soy-plot2-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[R]
+.f5[
+
+```r
+ggplot(australia.soybean, aes(env, yield, group = gen)) +
+  geom_point(size = 6, color = "gray") + 
+  geom_line(size = 1.3, color = "gray") +
+  geom_point(data = filter(australia.soybean, gen %in% c("G49", "G48", "G50")), aes(color = gen), size = 6) + 
+  geom_line(data = filter(australia.soybean, gen %in% c("G49", "G48", "G50")), aes(color = gen), size = 1.3) +
+  scale_color_discrete_qualitative() + 
+  labs(x = "Environment", y = "Yield",
+       color = "Genotype") 
+```
+]
+]]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4] Weight of calves with different diets .font_small[Part 1/3]
+
+
+
+
+* 67 calves born in 1975 across 11 herds are fed of one of three diets with low, medium or high energy with their initial and final weights recorded.
+* Different graphics and metrics will help to make comparison easier and fair.
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/diet-plot1-1.png" width="864" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+
+```r
+data(urquhart.feedlot, package = "agridat")
+df4 &lt;- urquhart.feedlot %&gt;% 
+  pivot_longer(c(weight1, weight2), names_to = "when", values_to = "weight") %&gt;% 
+  mutate(when = factor(as.character(when), 
+                       labels = c("initial", "final"),
+                       levels = c("weight1", "weight2")),
+         diet = factor(diet, levels = c("High", "Medium", "Low")))
+skimr::skim(df4)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df4   
+## Number of rows             134   
+## Number of columns          5     
+## _______________________          
+## Column type frequency:           
+##   factor                   2     
+##   numeric                  3     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts               
+## 1 diet                  0             1 FALSE          3 Low: 64, Med: 46, Hig: 24
+## 2 when                  0             1 FALSE          2 ini: 67, fin: 67         
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50    p75  p100 hist 
+## 1 animal                0             1  34    19.4     1  17.2   34    50.8    67 ▇▇▇▇▇
+## 2 herd                  0             1  25.6  10.7     3  19     31    34      36 ▂▁▂▂▇
+## 3 weight                0             1 863.  182.    530 705    842. 1027    1248 ▃▇▃▆▃
+```
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+df4 %&gt;% 
+  ggplot(aes(diet, weight, color = diet)) + 
+  geom_point(size = 3) + facet_grid(when ~ herd, scale="free_y") + 
+  scale_color_discrete_qualitative() + 
+  labs(x = "Diet", y = "Weight", title = "Weight by herd, timing and diet") + 
+  guides(color = FALSE) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
+```
+]]
+]
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4] Weight of calves with different diets .font_small[Part 2/3]
+
+* Weight data are *paired* so comparison of initial and final weights should be matched with the animal.
+
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/diet-plot2-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+       
+]
+.panel[.panel-name[R]
+
+```r
+ggplot(df4, aes(when, weight, color = diet, group = animal)) + 
+  geom_point(size = 3) + facet_wrap(~herd, nrow = 2) + 
+  geom_line() + 
+  labs(x = "", y = "Weight", color = "Diet")
+```
+]]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4] Weight of calves with different diets .font_small[Part 3/3]
+
+* People are generally better at comparing lengths on a common scale instead of angles .font_small[(see Cleveland &amp; McGill, 1985)]
+* We could compare the *difference in inital and final weight*.
+* Weight gain doesn't take into account the initial weight though.
+* We could consider computing the relative weight gain with respect to its initial weight.
+
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/diet-plot3-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+
+       
+]
+.panel[.panel-name[R]
+.scroll-sign[.s250.f5[
+
+```r
+g1 &lt;- urquhart.feedlot %&gt;% 
+  mutate(diet = factor(diet, 
+                       levels = c("High", "Medium", "Low"))) %&gt;% 
+  ggplot(aes(diet, weight2 - weight1, color = diet)) + 
+  geom_boxplot() + 
+  labs(x = "", y = "Weight gain", color = "Diet") + 
+  guides(color = FALSE)
+g2 &lt;- urquhart.feedlot %&gt;% 
+  mutate(diet = factor(diet, 
+                       levels = c("High", "Medium", "Low"))) %&gt;% 
+  ggplot(aes(diet, (weight2 - weight1)/weight1, color = diet)) + 
+  geom_boxplot() + 
+  labs(x = "", y = "Relative weight\ngain", color = "Diet") + 
+  guides(color = FALSE)
+
+g1 + g2
+```
+]]]]
+
+.footnote.f6[
+Cleveland, William S., and Robert Mc Gill. n.d. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.”
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[5] Swiss bank notes
+
+* Comparisons are not always based on point estimates.
+* Below is the comparison of distribution for the diagonal length of genuine and forged Swiss bank notes.
+
+
+
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week6A/bank-plot1-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h300.scroll-sign.f5[
+
+```r
+data(bank, package = "gclus")
+df5 &lt;- bank %&gt;% 
+  mutate(status = ifelse(Status==0, "genuine", "forgery")) 
+skimr::skim(bank)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       bank  
+## Number of rows             200   
+## Number of columns          7     
+## _______________________          
+## Column type frequency:           
+##   numeric                  7     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 Status                0             1   0.5  0.501   0     0     0.5   1     1   ▇▁▁▁▇
+## 2 Length                0             1 215.   0.377 214.  215.  215.  215.  216.  ▁▇▇▂▁
+## 3 Left                  0             1 130.   0.361 129   130.  130.  130.  131   ▁▅▇▇▁
+## 4 Right                 0             1 130.   0.404 129   130.  130   130.  131.  ▃▆▇▅▁
+## 5 Bottom                0             1   9.42 1.44    7.2   8.2   9.1  10.6  12.7 ▇▆▅▅▂
+## 6 Top                   0             1  10.7  0.803   7.7  10.1  10.6  11.2  12.3 ▁▂▆▇▃
+## 7 Diagonal              0             1 140.   1.15  138.  140.  140.  142.  142.  ▂▇▅▅▇
+```
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+g1 &lt;- ggplot(df5, aes(Diagonal, fill = status)) + 
+        geom_histogram(binwidth = 0.2, color = "white") +
+        facet_grid(status ~ . ) + 
+  labs(x = "Diagonal length (mm)", 
+       y = "Count") + 
+  guides(fill = FALSE) + 
+  scale_fill_manual(values = c("#C7A76C", "#7DB0DD"))
+
+g1
+```
+]]
+]
+
+---
+
+# Comparing graphically .font_small[Part 1]
+
+.flex[
+.w-40[
+* From (A) we can see that the diagonal length distribution is quite different between forged and genuine notes. 
+* Comparing (B) and (C) is however difficult due to different **aspect ratio** and graphs are not in **common scale** nor **alignment**.
+]
+.w-60[
+&lt;img src="images/week6A/bank-plot2-1.png" width="612" style="display: block; margin: auto;" /&gt;
+
+]]
+
+
+
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[6] Barley Yield .font_small[Part 1/2]
+
+
+
+
+.grid[.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/barley-plot1-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+data("barley", package = "lattice")
+skimr::skim(barley)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       barley
+## Number of rows             120   
+## Number of columns          4     
+## _______________________          
+## Column type frequency:           
+##   factor                   3     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                        
+## 1 variety               0             1 FALSE         10 Sva: 12, No.: 12, Man: 12, No.: 12
+## 2 year                  0             1 FALSE          2 193: 60, 193: 60                  
+## 3 site                  0             1 FALSE          6 Gra: 20, Dul: 20, Uni: 20, Mor: 20
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 yield                 0             1  34.4  10.3  14.4  26.9  32.9  41.4  65.8 ▃▇▅▂▁
+```
+]]
+.panel[.panel-name[R]
+
+```r
+ggplot(barley, aes(yield, variety, shape = year)) + 
+  geom_point(size = 3) + 
+  facet_wrap(~site) + 
+  theme(plot.title.position = "plot",
+        plot.title = element_text(face = "bold")) + 
+  labs(x = "Yield", shape = "Year", y = "Variety")
+```
+]
+]
+
+]
+.item[
+* 10 barley varieties were tested at 6 locations in 1931 and in 1932
+* Do you notice anything about the yield with respect to the years?
+]
+
+]
+
+.footnote.f6[
+Immer, R. F., H. K. Hayes, and LeRoy Powers. (1934). Statistical Determination of Barley Varietal Adaptation. *Journal of the American Society of Agronomy* **26** 403–419
+]
+
+---
+
+count: false
+
+
+# .orange[Case study] .bg-orange.circle.white[6] Barley Yield .font_small[Part 1/2]
+
+
+.grid[.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/barley-plot2-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+data("barley", package = "lattice")
+skimr::skim(barley)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       barley
+## Number of rows             120   
+## Number of columns          4     
+## _______________________          
+## Column type frequency:           
+##   factor                   3     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                        
+## 1 variety               0             1 FALSE         10 Sva: 12, No.: 12, Man: 12, No.: 12
+## 2 year                  0             1 FALSE          2 193: 60, 193: 60                  
+## 3 site                  0             1 FALSE          6 Gra: 20, Dul: 20, Uni: 20, Mor: 20
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 yield                 0             1  34.4  10.3  14.4  26.9  32.9  41.4  65.8 ▃▇▅▂▁
+```
+]]
+.panel[.panel-name[R]
+
+```r
+ggplot(barley, aes(yield, variety, color = year)) + 
+  geom_point(size = 3) + 
+  facet_wrap(~site) + 
+  theme(plot.title.position = "plot",
+        plot.title = element_text(face = "bold")) + 
+  labs(x = "Yield", y = "Variety", color = "Year") + 
+  scale_color_discrete_qualitative()
+```
+]
+]
+
+]
+.item[
+* 10 barley varieties were tested at 6 locations in 1931 and in 1932
+* Do you notice anything about the yield with respect to the years?
+
+&lt;br&gt;
+
+*How about now?*
+]
+
+]
+
+.footnote.f6[
+Immer, R. F., H. K. Hayes, and LeRoy Powers. (1934). Statistical Determination of Barley Varietal Adaptation. *Journal of the American Society of Agronomy* **26** 403–419
+]
+
+---
+
+count: false
+
+
+# .orange[Case study] .bg-orange.circle.white[6] Barley Yield .font_small[Part 1/2]
+
+
+.grid[.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/barley-plot3-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+data("barley", package = "lattice")
+skimr::skim(barley)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       barley
+## Number of rows             120   
+## Number of columns          4     
+## _______________________          
+## Column type frequency:           
+##   factor                   3     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                        
+## 1 variety               0             1 FALSE         10 Sva: 12, No.: 12, Man: 12, No.: 12
+## 2 year                  0             1 FALSE          2 193: 60, 193: 60                  
+## 3 site                  0             1 FALSE          6 Gra: 20, Dul: 20, Uni: 20, Mor: 20
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 yield                 0             1  34.4  10.3  14.4  26.9  32.9  41.4  65.8 ▃▇▅▂▁
+```
+]]
+.panel[.panel-name[R]
+
+```r
+ggplot(barley, aes(yield, variety, color = year)) + 
+  geom_point(size = 3, alpha = 0.4) + 
+  geom_point(data = subset(barley, (site=="University Farm" &amp; variety == "No. 475") | (site=="Grand Rapids" &amp; variety == "Velvet")), size = 3) +
+  facet_wrap(~site) + 
+  theme(plot.title.position = "plot",
+        plot.title = element_text(face = "bold")) + 
+  labs(x = "Yield", y = "Variety", color = "Year") + 
+  scale_color_discrete_qualitative()
+```
+]
+]
+
+]
+.item[
+* 10 barley varieties were tested at 6 locations in 1931 and in 1932
+* Do you notice anything about the yield with respect to the years?
+
+&lt;br&gt;
+
+*How about now?*
+]
+
+]
+
+.footnote.f6[
+Immer, R. F., H. K. Hayes, and LeRoy Powers. (1934). Statistical Determination of Barley Varietal Adaptation. *Journal of the American Society of Agronomy* **26** 403–419
+]
+
+---
+
+# .orange[Case study] .bg-orange.circle.white[6] Barley Yield .font_small[Part 2/2]
+
+
+.grid[.item[
+&lt;img src="images/week6A/barley-plot3-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.item[
+
+* Cleveland (1993) speculated that the year labels may have been reversed for some data.
+* Wright (2013) investigated this by examining extended data from 1927 to 1936, in addition to weather covariates, and found that the observations are not particularly unusual.
+
+]
+
+]
+
+.footnote.f6[
+Cleveland, W. S. (1993) Visualising Data, Summit, NJ: Hobart Press.&lt;br&gt;
+Wright, Kevin (2013). Revisiting Immer's Barley Data. The American Statistician. **67** (3) 129–133.
+]
+
+
+
+
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[7] Olive oils
+
+
+
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week6A/olives-plot1-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+data(olives, package = "classifly")
+df2 &lt;- olives %&gt;% 
+  mutate(Region = factor(Region, labels = c("South", "Sardinia", "North")))
+  
+skimr::skim(df2)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df2   
+## Number of rows             572   
+## Number of columns          10    
+## _______________________          
+## Column type frequency:           
+##   factor                   2     
+##   numeric                  8     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                         
+## 1 Region                0             1 FALSE          3 Sou: 323, Nor: 151, Sar: 98        
+## 2 Area                  0             1 FALSE          9 Sou: 206, Inl: 65, Cal: 56, Umb: 51
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   mean    sd    p0    p25   p50    p75  p100 hist 
+## 1 palmitic              0             1 1232.  169.    610 1095   1201  1360    1753 ▁▂▇▆▁
+## 2 palmitoleic           0             1  126.   52.5    15   87.8  110   169.    280 ▂▇▅▃▁
+## 3 stearic               0             1  229.   36.7   152  205    223   249     375 ▂▇▃▁▁
+## 4 oleic                 0             1 7312.  406.   6300 7000   7302. 7680    8410 ▁▇▇▇▁
+## 5 linoleic              0             1  981.  243.    448  771.  1030  1181.   1470 ▃▅▃▇▃
+## 6 linolenic             0             1   31.9  13.0     0   26     33    40.2    74 ▂▅▇▂▁
+## 7 arachidic             0             1   58.1  22.0     0   50     61    70     105 ▂▁▇▇▂
+## 8 eicosenoic            0             1   16.3  14.1     1    2     17    28      58 ▇▃▅▂▁
+```
+]]
+.panel[.panel-name[R]
+.s400.scroll-sign[
+
+```r
+g1 &lt;- 
+  df2 %&gt;% 
+  mutate(Area = fct_reorder(Area, palmitic)) %&gt;% 
+  ggplot(aes(Area, palmitic, color = Region)) + 
+  geom_boxplot() + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE, x = guide_axis(n.dodge = 2))
+
+g2 &lt;- ggplot(df2, aes(Region, palmitic, color = Region)) + 
+  geom_boxplot() + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE)
+
+g3 &lt;- ggplot(df2, aes(palmitic, color = Region)) + 
+  geom_density() +
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE)
+
+g4 &lt;- ggplot(df2, aes(palmitic, color = Region)) + 
+  stat_ecdf() +
+  scale_color_discrete_qualitative()
+
+g1 / (g2 | (g3 / g4)) + plot_layout(guides = "collect", byrow = FALSE)
+```
+]
+]]
+
+???
+
+* The olive oil data consists of the percentage composition of 8 fatty acids (palmitic, palmitoleic, stearic, oleic, linoleic, linolenic, arachidic, eicosenoic) found in the lipid fraction of 572 Italian olive oils. 
+* There are 9 collection areas, 4 from southern Italy (North and South Apulia, Calabria, Sicily), two from Sardinia (Inland and Coastal) and 3 from northern Italy (Umbria, East and West Liguria).
+
+
+---
+
+# Comparing graphically .font_small[Part 2]
+
+.grid[.item[
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/color-olives-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[R]
+
+```r
+ggplot(olives, aes(palmitoleic, palmitic, color = Area)) + 
+  geom_point() + 
+  scale_color_discrete_qualitative()
+```
+]
+]
+
+]
+.item[
+* Color is a great way to differentiate categories but if there are too many categories then it becomes hard to compare.
+* In this scatter plot, there are too many overlapping points so splitting the data to **multiple windows** via facetting may make it easier to compare. 
+]
+]
+
+---
+
+# Comparing graphically .font_small[Part 3]
+
+.grid[.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/no-shadow-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[R]
+
+```r
+ggplot(olives, aes(palmitoleic, palmitic, color = Area)) + 
+  geom_point() + 
+  facet_wrap(~Area) + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE)
+```
+]
+]
+]
+.item[
+
+{{content}}
+
+]
+]
+
+--
+
+&lt;div class="panelset"&gt;
+&lt;div class="panel"&gt;
+&lt;span class="panel-name"&gt;📊&lt;/span&gt;
+
+&lt;img src="images/week6A/shadow-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+&lt;/div&gt;
+&lt;div class="panel"&gt;
+&lt;span class="panel-name"&gt;R&lt;/span&gt;
+
+
+```r
+ggplot(olives, aes(palmitoleic, palmitic)) + 
+  geom_point(data = dplyr::select(olives, -Area), color = "gray") + 
+  geom_point(aes(color = Area)) +
+  facet_wrap(~Area)+ 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE)
+```
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[8] England and East Indies trade data
+
+
+.grid[
+.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/trade-plot1-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+data(EastIndiesTrade, package = "GDAdata")
+skimr::skim(EastIndiesTrade)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values         
+## Name                       EastIndiesTrade
+## Number of rows             81             
+## Number of columns          3              
+## _______________________                   
+## Column type frequency:                    
+##   numeric                  3              
+## ________________________                  
+## Group variables            None           
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 Year                  0             1 1740   23.5  1700  1720  1740  1760  1780 ▇▇▇▇▇
+## 2 Exports               0             1  518. 421.    100   145   370   840  1395 ▇▂▃▂▂
+## 3 Imports               0             1 1005. 320.    460   835   975  1000  1550 ▃▃▇▁▅
+```
+]]
+.panel[.panel-name[R]
+.s400.scroll-sign[
+
+```r
+g1 &lt;- ggplot(EastIndiesTrade, aes(Year, Exports)) +
+    annotate("rect", xmin = 1701, xmax = 1714, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1756, xmax = 1763, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1775, xmax = 1780, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  geom_line(color = "#339933", size = 2) + 
+  geom_line(aes(Year, Imports), color = "red", size = 2) +
+  geom_ribbon(aes(ymin = Exports, ymax = Imports), fill = "gray") + 
+  labs(y = "&lt;span style='color:#339933'&gt;Export&lt;/span&gt;/&lt;span style='color:red'&gt;Import&lt;/span&gt;", tag = "(A)") + 
+  theme(axis.title.y = ggtext::element_markdown())
+
+g2 &lt;- ggplot(EastIndiesTrade, aes(Year, Exports - Imports)) +
+  annotate("rect", xmin = 1701, xmax = 1714, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1756, xmax = 1763, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1775, xmax = 1780, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  geom_line(size = 2) +
+  labs(tag = "(B)")
+
+g3 &lt;- ggplot(EastIndiesTrade, aes(Year, (Exports - Imports)/(Exports + Imports) * 2)) + 
+    annotate("rect", xmin = 1701, xmax = 1714, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1756, xmax = 1763, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  annotate("rect", xmin = 1775, xmax = 1780, 
+           ymin = -Inf, ymax = Inf, 
+           fill = "red", alpha = 0.3) +
+  geom_line(color = "#001a66", size = 2) + 
+  labs(y = "Relative difference", tag = "(C)")
+
+g1 / g2 / g3 
+```
+]]
+]
+
+]
+.item[
+* (A) shows the export from England to the East Indies and the import to England from the East Indies in millions of pounds.
+* Import and export figures are easier to compare by plotting the difference like in (B).
+* Relative difference may be more of an interest - (C) plots the relative difference with respect to the average of export and import values. 
+* The red area correspond to War of the Spanish Succession (1701-14), Seven Years' War (1756-63) and the American Revolutionary War (1775-83).
+]
+]
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[9] Melbourne's daily maximum temperature
+
+
+
+.grid[
+.item50[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6A/temp-plot1-1.png" width="720" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h300.scroll-sign[
+
+```r
+df9 &lt;- read_csv(here::here("data", "melb_temp.csv")) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(temp = maximum_temperature_degree_c) %&gt;% 
+  filter(!is.na(temp)) %&gt;% 
+  dplyr::select(year, month, day, temp)
+skimr::skim(df9)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df9   
+## Number of rows             18310 
+## Number of columns          4     
+## _______________________          
+## Column type frequency:           
+##   character                2     
+##   numeric                  2     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   min   max empty n_unique whitespace
+## 1 month                 0             1     2     2     0       12          0
+## 2 day                   0             1     2     2     0       31          0
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   mean    sd     p0    p25    p50    p75   p100 hist 
+## 1 year                  0             1 1995.  14.5  1970   1983   1995   2008   2020   ▇▇▇▇▇
+## 2 temp                  0             1   19.9  6.48    5.7   14.8   18.6   23.6   46.8 ▃▇▃▁▁
+```
+
+]]
+.panel[.panel-name[R]
+
+```r
+ggplot(df9, aes(month, temp)) + 
+  geom_boxplot() + 
+  labs(x = "Month", y = "Maximum temperature (°C)")
+```
+]
+
+]]
+.item[
+* Melbourne's daily maximum temperature from 1970 to 2020.
+* How are the temperature different across months?
+* What about the temperature within a month?
+* You'll explore this data in week 7 tutorial!
+]
+
+]
+
+&lt;div style="position:absolute;bottom:0;left:10px;font-size:12pt;"&gt;Thanks to Di for the data!&lt;/div&gt;
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

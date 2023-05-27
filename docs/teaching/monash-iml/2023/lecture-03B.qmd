@@ -1,0 +1,930 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Regularisation"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 3B"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 3B"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    toc: true
+    toc-title: "[*Regularisation*]{.monash-blue} - table of contents"
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(patchwork)
+library(tidyverse)
+library(echarts4r)
+
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+## Too many predictors
+
+
+
+::: incremental
+
+- **Subset selection methods** are a useful way of selecting important predictors. 
+- However, they 
+    - are not guaranteed to provide the best model, 
+    - can be slow to compute if $p$ is large, and 
+    - have issues when $p > n$.
+- **Regularisation** (**shrinkage**) methods avoid these issues.
+
+:::
+
+
+## Ordinary least squares
+
+- OLS fits the coefficients as 
+$$\hat{\boldsymbol\beta}= \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\ \sum_{i = 1}^n \left(y_i - \beta_0 - \sum_{j = 1}^p \beta_j x_{ij} \right)^2  = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}~\text{RSS}(\boldsymbol{\beta}).$$
+- This is an **unconstrained optimization** problem.
+
+
+## Visualising the RSS
+
+
+::: flex
+
+::: {.w-60}
+
+```{r vis-setup}
+#| echo: false
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+  mutate(x1 = runif(n(), -4, 4),
+         x2 = runif(n(), -2, 2),
+         y = 2 * x1 + 3 * x2  + rnorm(n()))
+
+RSS <- function(beta1, beta2) {
+  df %>% 
+    mutate(resq = (y - beta1 * x1 - beta2 * x2)^2) %>% 
+    pull(resq) %>% 
+    sum()
+}
+
+s <- 1
+RSSridge <- function(beta1, beta2, lambda = 10) {
+  df %>% 
+    mutate(objfun = (y - beta1 * x1 - beta2 * x2)^2 + lambda * (beta1^2 + beta2^2 - s)) %>% 
+    pull(objfun) %>% 
+    sum()
+}
+
+
+search_space <- expand_grid(beta1 = seq(-1.1, 4, length = 50),
+                            beta2 = seq(-1.1, 6, length = 50)) %>% 
+  rowwise() %>% 
+  mutate(rss = RSS(beta1, beta2),
+         rss_ridge = RSSridge(beta1, beta2),
+         type = "RSS")
+
+ridge_constraint_space <- tibble(beta1 = seq(-1, 1, length = 360)) %>% 
+  mutate(beta2top = sqrt(s - beta1^2),
+         beta2bottom = -sqrt(s - beta1^2)) %>% 
+  pivot_longer(starts_with("beta2"), names_to = "beta2type", values_to = "beta2") %>% 
+  select(-beta2type) %>% 
+  mutate(rss_min = min(search_space$rss),
+         rss_max = max(search_space$rss)) %>% 
+  pivot_longer(c(rss_min, rss_max), values_to = "rss") %>% 
+  select(-name) %>% 
+  mutate(type = "constraint")
+
+
+lasso_constraint_space <- tibble(beta1 = seq(-1, 1, length = 360)) %>% 
+  mutate(beta2top = s - abs(beta1),
+         beta2bottom = -(s - abs(beta1))) %>% 
+  pivot_longer(starts_with("beta2"), names_to = "beta2type", values_to = "beta2") %>% 
+  select(-beta2type) %>% 
+  mutate(rss_min = min(search_space$rss),
+         rss_max = max(search_space$rss)) %>% 
+  pivot_longer(c(rss_min, rss_max), values_to = "rss") %>% 
+  select(-name) %>% 
+  mutate(type = "constraint")
+```
+
+
+```{r vis-rss}
+#| echo: false
+#| cache: false
+search_space %>% 
+  e_charts(beta1, reorder = FALSE) %>% 
+  e_surface(beta2, rss, name = "RSS") %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+
+$$y_i = \beta_1x_{i1} + \beta_2x_{i2} + e_i,$$
+
+*  Data simulated with: $\beta_1 = 2, \beta_2 = 3, e_i \sim N(0, 1)$
+
+* Axis grid
+  * `X`: $\beta_1$
+  * `Y`: $\beta_2$
+  * `Z`: $\text{RSS}(\beta_1, \beta_2)$
+
+:::
+:::
+
+
+
+
+
+## Shrinkage methods
+
+::: incremental
+
+* **Shrinkage methods** fit a model containing all $p$ predictors using a technique that constrains or _regularizes_ the coefficient estimates. 
+* This shrinks some of the coefficient estimates towards zero.
+* There are three main methods: 
+  - [**Ridge regression**]{.monash-blue} (also called L2 regularisation)
+  - [**Lasso**]{.monash-blue} (also called L1 regularisation)
+  - [**Elastic net**]{.monash-blue} (linear combination of L1 and L2 regularisation)
+
+:::
+
+
+
+
+
+
+
+
+
+# Ridge regression {background-color="#006DAE" .mcenter}
+
+
+
+## Ridge regression
+
+- Ridge regression is similar to except with [constraint]{.monash-blue}:
+
+$${\hat{\boldsymbol\beta}_{ridge} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\ \text{RSS}(\boldsymbol{\beta})} \color{#006DAE}{\quad {\text{subject to } \sum_{j=1}^p\beta_j^2\leq s}}.$$
+
+. . . 
+
+   - $s$ bounds the magnitude of the coefficients.
+   - If $s = 0$, then $\beta_1, \dots, \beta_p$ are equal to zero.
+   - If $s = \infty$, then ridge regression = OLS.
+
+
+
+## Shrinkage for ridge regression
+
+$$\sum_{j=1}^p\beta_j^2\leq s$$
+
+::: incremental
+
+- Think of $s$ as a budget - we allocate $s$ to $p$ predictors.
+- Important predictors get a big part of the budget.
+- In this formulation, $\beta_j$ is *shrunk* towards zero (if the intercept is fitted into the model) but _never actually zero_.
+- Shrinkage is not applied to the intercept coefficient.
+
+:::
+
+## Visualising the ridge regression constraint
+
+::: flex
+
+::: {.w-60}
+
+```{r vis-constraint}
+#| echo: false
+ridge_constraint_space %>% 
+  e_charts(beta1, reorder = FALSE) %>% 
+  e_surface(beta2, rss, name = "constraint") %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+```
+
+
+:::
+
+::: {.w-40 .pl3}
+
+- $\beta_1^2 + \beta_2^2 \leq 1$
+
+* Axis grid
+  * `X`: $\beta_1$
+  * `Y`: $\beta_2$
+  * `Z`: $\text{RSS}(\beta_1, \beta_2)$
+
+
+:::
+:::
+
+
+## Visualising the ridge regression
+
+::: flex
+
+::: {.w-60}
+
+```{r vis-ridge}
+#| echo: false
+#| cache: false
+search_space %>% 
+  bind_rows(ridge_constraint_space) %>% 
+  group_by(type) %>% 
+  e_charts(beta1, reorder = FALSE, elementId = "html-vis-ridge") %>% 
+  e_surface(beta2, rss) %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+
+$${\hat{\boldsymbol\beta} = \underset{\boldsymbol\beta\in\mathbb{R}^{2}}{\mbox{arg min}}\ \text{RSS}(\boldsymbol{\beta})}$$
+
+$$\text{subject to } \beta_1^2 + \beta_2^2\leq s$$
+
+* Axis grid
+  * `X`: $\beta_1$
+  * `Y`: $\beta_2$
+  * `Z`: $\text{RSS}(\beta_1, \beta_2)$
+
+:::
+:::
+
+## Lagrange function 
+
+::: {.incremental .f2}
+
+- **Constrained optimization** problems are much harder than unconstrained ones.
+- Finding points in one surface is much easier than finding points simultaneously on both surfaces.
+- Ridge regression can be re-written as a **Lagrange function**:
+$$\hat{\boldsymbol\beta}_{\text{ridge}} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}~\left\{\text{RSS}(\boldsymbol{\beta}) + \lambda \sum_{j=1}^p \beta_j^2\right\}.$$
+
+
+- $\lambda \geq 0$ is called a [**tuning parameter**]{.monash-blue} and serves a similar role to $s$. 
+- $\lambda \sum_{j=1}^p \beta_j^2$ is referred to as the **shrinkage penalty**.
+:::
+
+## Constrained vs unconstrained optimisation
+
+::: flex
+
+::: {.w-50}
+
+Constrained 
+
+```{r vis-ridge-2}
+#| echo: false
+#| cache: false
+search_space %>% 
+  bind_rows(ridge_constraint_space) %>% 
+  group_by(type) %>% 
+  e_charts(beta1, reorder = FALSE, elementId = "html-vis-ridge2") %>% 
+  e_surface(beta2, rss) %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+```
+
+
+
+
+:::
+
+::: {.w-50 .pl3}
+
+Unconstrained
+
+```{r vis-rss-ridge}
+#| echo: false
+#| cache: false
+search_space %>% 
+  e_charts(beta1, reorder = FALSE, elementId = "ridge_rss") %>% 
+  e_surface(beta2, rss_ridge, name = "Ridge regression objective") %>% 
+  e_visual_map(rss_ridge) %>% 
+  e_tooltip()
+```
+
+:::
+:::
+
+
+## Unconstrained optimization
+
+::: incremental
+
+- This new problem has a closed form solution:
+$$\hat{\boldsymbol\beta}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I}_{p + 1})^{-1}\mathbf{X}^\top\boldsymbol{y}$$
+- Ridge regression will produce a different set of coefficients for each $\lambda$. 
+- As $\lambda\rightarrow\infty$, $\hat{\beta}_1, \dots, \hat{\beta}_p$ will approach zero. 
+- If $\lambda = 0$, ridge regression = OLS.
+- $\lambda$ is determined typically by cross-validation.
+
+
+:::
+
+
+
+
+## Pre-processing data 
+
+::: incremental
+
+- Different measurement units of the predictors yields a different shrinkage penalty. 
+- This is an undesirable result and to avoid this, a common practice in ridge regression is to **standardize** (center and scale) the predictors.
+- The standarisation of predictors may be done automatically for you in the software (read the documentation as always!).
+
+:::
+
+## <i class="fas fa-database"></i> Toyota car prices
+
+```{r toyota-data}
+library(tidyverse)
+toyota <- read_csv("https://emitanaka.org/iml/data/toyota.csv")
+glimpse(toyota)
+```
+
+
+## <i class="fab fa-r-project"></i> Pre-processing data with `recipes` 📦  {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+
+```{r toyota-recipes}
+library(tidymodels)
+library(rsample)
+toyota_splits <- initial_split(toyota, prop = 0.75, strata = model)
+toyota_recipe <- recipe(price ~ ., data = training(toyota_splits)) %>% 
+  # standardising predictors
+  step_normalize(all_numeric_predictors()) %>%  
+  # change categorical variables to dummy variables
+  step_dummy(all_nominal_predictors()) %>% 
+  # remove any predictors with zero variance (i.e. constant)
+  step_zv(all_predictors()) %>% 
+  # log transform the response
+  step_log(all_outcomes(), base = 10) %>% 
+  # now signal that you are done
+  prep()
+
+toyota_recipe
+```
+
+## <i class="fab fa-r-project"></i> Pre-processed data with `recipes` 📦   {.scrollable}
+
+```{r toyota-preprocess-data}
+toyota_train <- toyota_recipe %>% 
+  bake(new_data = NULL)
+
+toyota_test <- toyota_recipe %>% 
+  bake(new_data = testing(toyota_splits))
+
+toyota_test
+```
+
+
+
+## <i class="fab fa-r-project"></i> Ridge regression in R 
+
+- Ridge regression for a particular $\lambda$ can be fit using the `glmnet` package.
+
+
+
+```{r ridge-fit}
+library(glmnet)
+# namespace conflict with MASS::select, so this needs to be overwritten
+select <- dplyr::select 
+
+lambda_vec <- 10^seq(-10, 0, length = 50)
+fit_ridge <- glmnet(x = toyota_train %>% 
+                     select(-price),
+                    y = toyota_train$price,
+                    alpha = 0, # we'll explain this later
+                    lambda = lambda_vec)
+```
+
+* Note: the `glmnet` package doesn't use symbolic model formula and requires categorical variables to be converted to dummy variables.
+
+
+
+
+## Regularisation path for ridge regression
+
+```{r plot-estimate-vs-lambda-ridge}
+#| code-fold: true
+#| fig-height: 6.5
+#| fig-width: 14
+library(broom) # for tidy
+fit_ridge %>% 
+  tidy(return_zeros = TRUE) %>% 
+  filter(term != "(Intercept)") %>%  
+  ggplot(aes(lambda, estimate))  +
+  geom_line(data = ~rename(., term2 = term), 
+            aes(group = term2),
+            color = "grey") + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(color = "royalblue2") + 
+  facet_wrap(~term, nrow = 4) +
+  labs(x = latex2exp::TeX("\\lambda"),
+       y = "Standardised coefficients") +
+  scale_x_log10()
+```
+
+## <i class="fab fa-r-project"></i> Selecting the tuning parameter $\lambda$ {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+```{r toyota-tuning-ridge}
+cv_glmnet_to_toyota <- function(alpha) {
+  # Note: you're applying cross validation to the training dataset!
+  toyota_train %>% 
+    # make the 10-fold cross validation data set
+    vfold_cv(v = 10) %>% 
+    # for each fold, calculate the model metrics
+    mutate(metrics = map(splits, function(.split) {
+      # get the fold training dataset
+      fold_train_data <- training(.split)
+    
+      # fit the model to the fold training dataset
+      fold_fit <- glmnet(x = fold_train_data %>% 
+                                        select(-price),
+                         y = fold_train_data$price,
+                         alpha = alpha,
+                         lambda = lambda_vec)
+        
+      # now get the validation dataset
+      fold_test_data <- testing(.split)
+    
+      # get the predictions for this fold and models
+      fold_preds <- fold_fit %>% 
+          predict(as.matrix(select(fold_test_data, -price))) %>% 
+          as.data.frame() %>% 
+          add_column(price = fold_test_data$price) %>% 
+          pivot_longer(-price, values_to = ".pred", names_to = "name") %>% 
+          left_join(tibble(name = paste0("s", 1:length(lambda_vec) - 1), 
+                           lambda = rev(lambda_vec)),
+                    by = "name")
+        
+      # get the model metrics for this fold
+      fold_preds %>% 
+          group_by(name, lambda) %>% 
+          metric_set(rmse, mae, mape)(., price, .pred) %>% 
+          select(-.estimator) %>% 
+          arrange(.metric, lambda)
+    
+  })) %>% 
+  # summarise the model metrics for each value of lambda
+  unnest(metrics) %>% 
+  group_by(name, .metric) %>% 
+  summarise(lambda = unique(lambda), 
+            mean = mean(.estimate), 
+            se = sd(.estimate))
+}
+
+
+```
+
+
+## Tuning parameter for ridge regression
+
+```{r tune-ridge}
+toyota_tuning_ridge  <- cv_glmnet_to_toyota(alpha = 0)
+
+toyota_tuning_ridge
+```
+
+
+## Selecting the tuning parameter for ridge regression
+
+```{r vis-tuning-cv}
+#| code-fold: true
+#| fig-height: 3
+#| fig-width: 12
+toyota_tuning_ridge_min <- toyota_tuning_ridge %>% 
+               group_by(.metric) %>% 
+               filter(mean == min(mean))
+
+
+toyota_tuning_ridge %>% 
+  ggplot(aes(lambda, mean)) +
+  geom_errorbar(aes(ymin = mean - se,
+                    ymax = mean + se)) +
+  geom_line() +
+  geom_point(data = toyota_tuning_ridge_min,
+             color = 'red') +
+  facet_wrap(~.metric, scales = "free") +
+  scale_x_log10(name = latex2exp::TeX("\\lambda"))
+```
+
+
+```{r table-tuning-cv}
+#| echo: false
+toyota_tuning_ridge_min %>% 
+  select(-name) %>% 
+  knitr::kable(col.names = c("Metric", "$\\lambda$", "Mean", "Std. Error"), escape = FALSE)
+```
+
+## <i class="fab fa-r-project"></i> Fitting the ridge regression model
+
+```{r best-lambda-ridge}
+best_lambda_ridge <- toyota_tuning_ridge_min$lambda[1]
+
+fit_ridge <- glmnet(x = toyota_train %>%
+                      select(-price),
+                    y = toyota_train$price,
+                    alpha = 0,
+                    lambda = best_lambda_ridge)
+```
+
+::: incremental
+
+- Even though the context of this machine learning is _linear regression_, the interface for `glmnet` is different to `lm` that used a symbolic model formula.
+- Ideally these interfaces are standardised, but as methods are developed often by independent parties, differences often arise. 
+- It is important that you learn to make use of documentation and fit toy models to understand what functions are doing. 
+
+:::
+
+## <i class="fab fa-r-project"></i> A tidy, unified interface with `tidymodels` 📦 
+
+
+- `parsnip` (part of `tidymodels`) standardises this interface. 
+
+```{r glmnet-fit}
+workflow(toyota_recipe) %>% 
+  add_model(linear_reg(engine = "glmnet", penalty = best_lambda_ridge, mixture = 0)) %>% 
+  fit(testing(toyota_splits)) %>% 
+  tidy()
+```
+
+
+
+
+## Limitation of ridge regression
+
+- It will always use all $p$ predictors!
+- While it shrinks coefficients towards zero, it does not set it exactly to zero.
+- **Lasso** is an alternative approach that induces a sparse model.
+
+
+# Lasso {background-color="#006DAE" .mcenter}
+
+## Lasso
+
+- **Least absolute shrinkage and selection operator** (lasso) is similar to ridge regression except for the constraint of the optimization problem:
+
+$${\hat{\boldsymbol\beta}_{lasso} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\ \text{RSS}(\boldsymbol{\beta})}\quad \color{#006DAE}{\text{subject to } \sum_{j=1}^p|\beta_j|\le s}.$$
+
+## Visualising the lasso constraint
+
+::: flex
+
+::: {.w-60}
+
+```{r vis-lasso-constraint}
+#| echo: false
+lasso_constraint_space %>% 
+  e_charts(beta1, reorder = FALSE, elementId = "html-lasso-constraint") %>% 
+  e_surface(beta2, rss, name = "Lasso constraint") %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+```
+
+:::
+
+::: {.w-40 .pl3}
+
+
+- $s$ bounds the magnitude of the coefficients.
+- If $s = 0$, all betas are equal to zero.
+- If $s = \infty$, then the LASSO = OLS.
+- Axis grid:
+  - `X`: $\beta_1$
+  - `Y`: $\beta_2$
+
+:::
+:::
+
+
+
+
+## Visualising the lasso
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-lasso}
+#| echo: false
+search_space %>% 
+  bind_rows(lasso_constraint_space) %>% 
+  group_by(type) %>% 
+  e_charts(beta1, reorder = FALSE, elementId = "html-lasso-obj") %>% 
+  e_surface(beta2, rss) %>% 
+  e_visual_map(rss) %>% 
+  e_tooltip()
+```
+
+:::
+
+::: {.w-50 .pl3}
+
+- For LASSO, $\hat{\beta}_2 = 0$!
+- LASSO produces **sparse** models.
+- Axis grid:
+  - `X`: $\beta_1$
+  - `Y`: $\beta_2$
+  - `Z`: $\text{RSS}(\beta_1, \beta_2)$
+
+:::
+:::
+
+## Unconstrained representation for lasso
+
+
+$$\hat{\boldsymbol\beta} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\left\{~\text{RSS}(\boldsymbol{\beta}) + \underbrace{\lambda \sum_{j=1}^p |\beta_j|}_{\large\text{shrinkage penalty}}\right\}$$
+
+- $\lambda \geq 0$ is a tuning parameter.
+- Larger $\lambda$ more shrinkage, smaller $\lambda$ less shrinkage.
+- $\lambda$ can be chosen again via cross-validation.
+
+
+## <i class="fab fa-r-project"></i> Lasso in R 
+
+- Lasso for a particular $\lambda$ can also be fit using the `glmnet` package.
+
+
+```{r lasso-fit}
+#| code-line-numbers: "|4"
+fit_lasso <- glmnet(x = toyota_train %>% 
+                     select(-price),
+                    y = toyota_train$price,
+                    alpha = 1,
+                    lambda = lambda_vec)
+```
+
+- Note here that the `alpha = 1` (again, we'll explain why later).
+
+
+
+
+## Regularisation path for lasso
+
+```{r plot-estimate-vs-lambda-lasso}
+#| code-fold: true
+#| fig-height: 6.5
+#| fig-width: 14
+library(broom) # for tidy
+est_lasso <- fit_lasso %>% 
+  tidy(return_zeros = TRUE)
+
+est_lasso %>% 
+  filter(term != "(Intercept)") %>%  
+  mutate(zero = estimate == 0) %>% 
+  ggplot(aes(lambda, estimate))  +
+  geom_line(data = ~rename(., term2 = term), 
+            aes(group = term2),
+            color = "grey") + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(aes(color = zero, group = term)) + 
+  facet_wrap(~term, nrow = 4) +
+  labs(x = latex2exp::TeX("\\lambda"),
+       y = "Standardised coefficients") +
+  guides(color = "none") +
+  scale_x_log10()
+```
+
+## Selecting the tuning parameter $\lambda$ for lasso
+
+```{r vis-tuning-cv-lasso}
+#| code-fold: true
+#| fig-height: 2.7
+#| fig-width: 12
+toyota_tuning_lasso <- cv_glmnet_to_toyota(alpha = 1)
+
+toyota_tuning_lasso_min <- toyota_tuning_lasso %>% 
+  group_by(.metric) %>% 
+  filter(mean == min(mean))
+
+toyota_tuning_lasso %>% 
+  ggplot(aes(lambda, mean)) +
+  geom_errorbar(aes(ymin = mean - se,
+                    ymax = mean + se)) +
+  geom_line() +
+  geom_point(data = toyota_tuning_lasso_min, 
+             color = 'red') +
+  facet_wrap(~.metric, scales = "free") +
+  scale_x_log10(name = latex2exp::TeX("\\lambda")) 
+```
+
+
+
+```{r table-tuning-cv-lasso}
+#| echo: false
+toyota_tuning_lasso_min %>% 
+  select(-name) %>% 
+  knitr::kable(col.names = c("Metric", "$\\lambda$", "Mean", "Std. Error"), escape = FALSE)
+```
+
+## Lasso limitations
+
+- If a group of predictors are highly correlated, lasso will pick one of them at random, which is not desirable!
+
+. . . 
+
+- There may be a grouping structure amongst the variables (e.g. dummy variables that belong to the same categorical variable) [-- in lasso, **_grouped variables are not simultaneously zero_**, which can result in only a subset of levels of a categorical variable being selected.]{.fragment} 
+
+
+## Group lasso 
+
+
+- We can change the penalty to induce a _group sparsity_.
+
+$$\hat{\boldsymbol\beta}_{glasso} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\left\{~\text{RSS}(\boldsymbol{\beta}) + \lambda \sum_{j}||\boldsymbol{\beta}_j||\right\}$$
+
+- $\boldsymbol{\beta}_j$ denotes the vector of regression coefficients corresponding to the $j$-th group.
+- $\beta_{jk}$ denotes the $k$-th regression coefficient in the $j$-th group.
+- $||\boldsymbol{\beta}_j||$ denotes the Euclidean ($L_2$) norm of $\boldsymbol{\beta}_j$. 
+
+## <i class="fab fa-r-project"></i> Group lasso in R 
+
+- Group lasso for a particular $\lambda$ can be fit using the `grpreg` package.
+
+
+```{r glasso-fit}
+library(grpreg)
+groups <- str_replace(names(toyota_train %>% select(-price)), "_.+", "")
+groups 
+
+fit_glasso <- grpreg(X = toyota_train %>% 
+                        select(-price),
+                     y = toyota_train$price,
+                     group = groups,
+                     alpha = 1,
+                     penalty = "grLasso",
+                     lambda = lambda_vec)
+```
+
+
+
+## Regularisation path for group lasso
+
+```{r plot-estimate-vs-lambda-glasso}
+#| code-fold: true
+#| fig-height: 6.5
+#| fig-width: 14
+est_glasso <- fit_glasso %>% 
+  broom:::tidy.glmnet(return_zeros = TRUE)
+
+est_glasso %>% 
+  mutate(zero = estimate == 0) %>% 
+  filter(term != "(Intercept)") %>%  
+  ggplot(aes(lambda, estimate))  +
+  geom_line(data = ~rename(., term2 = term), 
+            aes(group = term2),
+            color = "grey") + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(aes(color = zero, group = term)) + 
+  facet_wrap(~term, nrow = 4) +
+  labs(x = latex2exp::TeX("\\lambda"),
+       y = "Standardised coefficients") +
+  scale_x_log10() +
+  guides(color = "none")
+```
+
+## Regularisation path: lasso vs group lasso  {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+
+```{r plot-estimate-vs-lambda-comparison}
+#| code-fold: true
+#| fig-height: 5.5
+#| fig-width: 12
+bind_rows(mutate(est_lasso, type = "lasso"),
+          mutate(est_glasso, type = "glasso")) %>% 
+  mutate(type = fct_inorder(type), 
+         zero = estimate == 0) %>% 
+  filter(str_detect(term, "^(model_|transmission_)")) %>%  
+  ggplot(aes(lambda, estimate))  +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(aes(group = interaction(term, type), color = type)) + 
+  facet_wrap(~term) + 
+  labs(x = latex2exp::TeX("\\lambda"),
+       y = "Standardised coefficients") +
+  scale_x_log10() +
+  scale_color_manual("", values = c("royalblue2", "violetred2"))
+```
+
+
+## Visualising the constraints
+
+::: flex
+::: {.w-33}
+
+Lasso
+
+<center>
+<img src="images/yuan-lin-fig1a.png" width="40%">
+</center>
+
+:::
+::: {.w-33 .pl3}
+
+Group lasso
+
+<center>
+<img src="images/yuan-lin-fig1b.png" width="40%">
+</center>
+
+:::
+
+::: {.w-33 .pl3}
+
+Ridge regression
+
+<center>
+<img src="images/yuan-lin-fig1c.png" width="40%">
+</center>
+
+:::
+:::
+
+
+
+
+::: aside
+
+Figures from Yuan & Lin (2006) Model selection and estimation in regression with grouped variables
+
+:::
+
+
+# Elastic net {background-color="#006DAE" .mcenter}
+
+## Elastic net
+
+- **Elastic net** is an approach that combines LASSO and ridge regression.
+ 
+$$\hat{\boldsymbol\beta}_{elastic} = \underset{\boldsymbol\beta\in\mathbb{R}^{p+1}}{\mbox{arg min}}\ \left\{\text{RSS}(\boldsymbol{\beta})+\lambda\left(\frac{1-\alpha}{2}\sum_{j=1}^p\beta_j^2+\alpha\sum_{j=1}^p|\beta_j|\right)\right\}.$$
+
+- $\alpha$ is another tuning parameter. 
+- If $\alpha = 1$, elastic net = lasso. 
+- If $\alpha = 0$, elastic net = ridge regression. 
+- You can pick $\lambda$ and $\alpha$ via cross-validation.
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+- Shrinkage methods are a powerful variable selection approach for regression by shrinking the coefficients predictors towards zero.
+- You can use cross-validation to calibrate these methods for prediction.

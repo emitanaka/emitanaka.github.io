@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5512: Wild Caught Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.6.6/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+    <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/emi.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-01.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-03.png")
+
+# .monash-blue[ETC5512: Wild Caught Data]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Introduction to data collection methods&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+---
+
+class: middle monash-bg-blue
+
+.f-headline[**Starts with a .white[question]**]
+
+---
+
+# What questions do you have ... ? 
+
+.flex[
+.w-33[
+
+* ... about a virus?
+
+&lt;iframe src="https://opendatahandbook.org/value-stories/en/open-sourcing-genomes/" width="100%" height="400px"&gt;
+&lt;/iframe&gt;
+
+]
+.w-33[
+
+* ... forecasting the weather?
+
+&lt;iframe src="http://www.bom.gov.au/climate/data/" width="100%" height="400px"&gt;
+&lt;/iframe&gt;
+
+]
+.w-33[
+
+* ... about the stock prices?
+
+&lt;iframe src="https://www.wsj.com/market-data" width="100%" height="400px"&gt;
+&lt;/iframe&gt;
+
+]
+]
+
+???
+
+* This is an example where the data has been already collected. 
+* Interested in **data collection methods**
+
+---
+
+# Planet Monash
+
+.absolute.w-40[
+
+{{content}}
+]
+
+
+&lt;img src="images/art01.png" width="100%"&gt;
+
+--
+
+&lt;div class="question-box"&gt;
+How many yellow, green and red alien creatures?
+&lt;/div&gt;
+{{content}}
+
+--
+
+&lt;div class="question-box"&gt;
+What is the distribution of the height of the alien creatures?
+&lt;/div&gt;
+{{content}}
+--
+
+&lt;div class="question-box"&gt;
+Are yellow creatures more likely to have hair?
+&lt;/div&gt;
+{{content}}
+--
+
+&lt;div class="question-box"&gt;
+Does the hair growth formula work on these creatures?
+&lt;/div&gt;
+
+---
+
+class: monash-bg-blue middle tr 
+
+.pa5[
+.f-headline[**Now that we have a .white[question] ...**]
+
+]
+
+---
+
+class: no-logo
+
+# What's the population of interest?  
+
+--
+
+
+.flex[
+.w-50[
+.f2[Population]
+
+&lt;img src="images/art01.png" width="100%"&gt;
+
+
+]
+.w-50[
+{{content}}
+
+]
+]
+
+--
+
+&lt;div class="f2"&gt;Sample&lt;/div&gt;
+&lt;img src="images/art02.png" width="100%"&gt;
+
+--
+
+.flex[
+.w-50[
+Parameters: 
+
+.cgreen[Green:] 6/53=0.113, .cyellow[Yellow:] 22/53=0.416,&lt;br&gt; .cred[Red:] 25/53=0.472
+]
+.w-50[
+
+The statistics:
+
+.cgreen[Green:] 1/21=0.048, .cyellow[Yellow:] 10/21=0.476,&lt;Br&gt; .cred[Red:] 10/21=0.476, are estimates of parameters
+
+]
+
+]
+
+---
+# Sampling the population
+
+.info-box.w-50[
+Collecting data on the entire population is normally too expensive or infeasible!
+]
+--
+
+* We therefore collect data only on a subset of the population.
+--
+
+* **How should we sample the population?**
+--
+ There are many sampling schemes.
+---
+
+count: false
+
+# Sampling the population
+
+.info-box.w-50[
+Collecting data on the entire population is normally too expensive or infeasible!
+]
+
+* We therefore collect data only on a subset of the population.
+
+* **How should we sample the population?** There are many sampling schemes.
+
+
+.idea-box.w-45[
+**Simple random sampling**  
+Every unit in the population has the same sample probability to be drawn.
+&lt;center&gt;
+&lt;img src="images/art01.png" width="60%"&gt; 
+&lt;/center&gt;
+]
+--
+ .idea-box.w-45[
+**Stratified random sampling**  
+Units are drawn from non-overlapping sub-populations.
+&lt;center&gt;
+&lt;img src="images/art03.png" width="60%"&gt; 
+&lt;/center&gt;
+]
+
+???
+
+* **Stratified random sampling** requires identifying different subpopulations and may involve SRS on subpopulation
+
+---
+
+
+# Goal of sampling schemes
+
+.w-85[
+.aim-box.w-70[   
+The **goal of a sampling scheme** is to get accurate information from the sample in order to answer your question.
+]
+
+{{content}}
+]
+
+
+--
+
+
+
+* This involves identifying:
+  * the **population of interest** (e.g. if studying about male baldness pattern, your population of interest is the biologically male population),
+  * what **responses** (dependent variables) or **covariates** (explanatory or independent variables) to capture and how to measure it (e.g. do you collect their age? Which range of age they are in? Their hair count? The thickness of the hair?),
+  * the **sample size** (how many samples do we need?),
+  * any **structure** that will be in the data (e.g. population structures, repeated cross-sectional data, panel or longitudinal data), and 
+  * any **restrictions** (e.g. ethical concerns, limitation on collecting data).
+
+---
+
+# Sampling strategies
+
+.w-70[
+* Sampling strategies combine knowledge about the population with statistical methods. 
+{{content}}
+]
+
+--
+
+* For example,
+  * designing so your sample estimates give (theoretically) unbiased estimates of the population parameters,
+  * sample so the data will be representative of the subpopulations (e.g.  stratified random sampling), or
+  * oversampling or undersampling to compensate for imbalance in classes.
+--
+
+.think-box.w-60[
+&lt;img src="images/art03.png" width="40%" class="fl"&gt; What might go wrong with a simple random sampling of 10 creatures from this population?
+]
+
+
+
+
+
+---
+
+# Random and non-random selections
+
+* Units ideally are sampled *randomly*, but more than often selections are non-random.
+--
+.think-box.w-45[
+If I survey every 10th household in a street, is that a random selection? 
+] 
+--
+.think-box.w-45[
+What do you think can go wrong if we don't sample randomly?
+]
+--
+
+&lt;br&gt;
+
+* What's wrong with these examples? 
+
+.flex[
+.work-box.w-45.clear-list[
+* .li-aim[You want to know the attitude of the creatures about working at home.]
+* .li-data[You call phone numbers listed in the order of white pages and stop when you have 20 observations.]
+]
+{{content}}
+]
+--
+&lt;div class="work-box w-45 clear-list"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;span class="li-aim"&gt;You want to get the hair count distribution of the Planet Monash population.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class="li-data"&gt;You sample creatures from the Society of Bald Extraterrestrials.&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+---
+
+# Reality of data collection ... 
+
+* .monash-ruby2[Making an appropriate sampling design is **_hard_**].
+--
+
+  * There may be unknown or hidden structures in the population.
+--
+
+  * You may introduce intentional data structures, e.g.
+      * Cross-sectional data,
+      * Repeated cross-sectional data (e.g. case-control), 
+      * Panel or longitudinal data (e.g. cohort studies), and so on.
+--
+
+  * You may have unintended or unknown structures in the data, e.g. confounded variables.
+    
+--
+
+  * It's further complicated by:
+      * Non-response, 
+      * Missing data, 
+      * Mis-measured data, 
+      * Sample attrition, and so on. 😱
+
+---
+
+# Observational studies
+
+* Studies mentioned so far has been .monash-blue[**observational studies**].
+
+.info-box.w-75[
+* An **observational study** aims to draw inferences about a population from a sample where independent variables are *not* intentionally allocated to units within the sample for the purpose of a study.
+* Data considered in observational studies are **observational data**.  
+]
+
+--
+  
+
+Examples:
+
+.flex[
+.idea-box.w-33[
+.clear-list[
+* .li-aim[Who will win the 2022 Australian federal election?]
+* .li-data[Survey households]
+]]
+
+.idea-box.w-33[
+.clear-list[
+* .li-aim[Where are the best schools?]
+* .li-data[Government administrative data]
+]]
+
+.idea-box.w-33[
+.clear-list[
+* .li-aim[Who are buying my products?]
+* .li-data[Customer database]
+]]
+]
+
+---
+
+# Experimental studies
+
+* A scientific claim generally need to be validated by an *experimental study*. 
+
+.info-box.w-80[
+* In an **experimental study**, a causal variable of interest (referred to as *treatment*) is administered to recipients while holding other covariates at controlled settings to observe responses. 
+* Data from an experiment are referred to as **experimental data**.
+]
+
+--
+
+  
+
+Examples:
+
+.flex[
+.idea-box.w-45[
+.clear-list[
+* .li-aim[Is the vaccine effective against flu?]
+* .li-data[The data of whether the person who was administered the vaccine or placebo caught the flu afterwards.]
+]]
+
+.idea-box.w-45[
+.clear-list[
+* .li-aim[Which fertilizer brand is most effective for wheat yield?]
+* .li-data[Yield data from crop field trial with plots treated with one of the three fertilizer brands.]
+]]
+
+]
+
+---
+
+# Experimental units
+
+.info-box.w-70[
+**Experimental units** are recipients of the allocated treatment such that no sub-division of it can receive another treatment independently.
+
+]
+--
+
+.think-box.w-70[
+* Prof Android delivers their lecture by reciting word-to-word from the text in a monotone. 
+* Prof Alien delivers their lecture by transmitting the information directly to the students mind.
+* You want to see if one of the methods is more effective. 
+* Students in class 1, 3, 4, 7 and 10 have Prof Android.
+* Students in class 2, 5, 6, 8 and 9 have Prof Alien.
+
+**What are the experimental units?** {{content}}
+]
+
+--
+
+It's the classes.
+
+---
+
+# Observational units
+
+.info-box.w-70[
+**Observational units** are units that you measure the response on.
+]
+
+.think-box.w-70[
+Carrying on from the previous example... 
+* Students all sit for the same exam. 
+* You record the exam mark for each student.
+
+**What are the observational units?** {{content}}
+
+]
+
+--
+
+It's the students.
+
+--
+
+* Note: *observational unit* is not the *observation* (the response)!
+
+---
+
+# Wheat Yield Trial &lt;i class="fas fa-seedling"&gt;&lt;/i&gt; 
+
+.flex[
+&lt;img src="images/lecture-01/unnamed-chunk-2-1.png" width="597.6" style="display: block; margin: auto;" /&gt;
+
+* A selective breeding experiment with 107 wheat varieties (or *genotypes*) were conducted in South Australia in a field with plots laid out in a rectangular array with 22 rows and 15 columns.
+* The breeders want to find a variety with *high yield*.
+{{content}}
+
+]
+
+.footnote.f6[
+
+Source: Gilmour et al. (1997) Accounting for natural and extraneous variation in the analysis of field experiments. *Journal of Agric Biol Env Statistics*, 2, 269-293.
+]
+
+--
+* The **treatments** are the *107 wheat varieties*.
+* The **experimental units** are the *330 plots*.
+* The **observational units** are also the *330 plots*.
+
+---
+
+# Replications
+
+.flex[
+
+&lt;img src="images/lecture-01/unnamed-chunk-3-1.png" width="597.6" style="display: block; margin: auto;" /&gt;
+
+* The varieties `VF655`, `TINCURRIN` and `WW1477`  have a **replication** of 6, the remaining 104 varieties each have a replication of 3. 
+{{content}}
+
+]
+--
+* Treatment **replications are essential** in an experiment; without any replication, no treatment variation can be measured nor distinguished from unit variation.
+{{content}}
+--
+* More replications are desirable for accuracy, however, there is always a tension to balance between accuracy and the cost of the experiment.  
+
+---
+
+# Pseudo-replication 
+
+.think-box.w-70[
+Carrying on from the teaching example...
+* Suppose there were 30 students in each class.
+* The treatments were the two teaching method confounded with each professor. 
+* There were two professors and 10 classes. 
+* Each professor was randomly assigned to 5 classes, so each professor manages 150 students.
+
+**What are the replications of each treatment?** {{content}}
+]
+--
+It's 5.
+--
+
+.info-box.w-70[
+The treament of repetition as replication in the analysis is referred to as **pseudo-replication**.
+]
+
+---
+
+# Systematic Design of Experiments
+
+.flex[
+&lt;img src="images/lecture-01/unnamed-chunk-4-1.png" width="597.6" style="display: block; margin: auto;" /&gt;
+
+* The treatments appear to be randomly ordered before.
+{{content}}
+
+]
+--
+* Why don't we order the treatments in a **systematic order** like on the left?
+{{content}}
+--
+* Isn't this easier to manage the experiment?
+{{content}}
+--
+&lt;br&gt;&lt;br&gt;
+&lt;div class="info-box w-90"&gt;
+Systematic designs are prone to &lt;b class="monash-blue"&gt;bias&lt;/b&gt; and &lt;b class="monash-blue"&gt;confounding&lt;/b&gt;.
+&lt;/div&gt;
+
+---
+
+# Randomisation
+
+.w-70[
+* Treatments should be allocated *randomly* to experimental units. 
+* This avoids:
+  * .monash-blue[**systematic bias**] - e.g. all flu vaccine A tested in January (summer) and all flu vaccine B tested in July (winter).
+  * .monash-blue[**selection bias**] - e.g. giving the treatment that you are testing to the sick patients and placebo to those that are healthy.
+  * .monash-blue[**other bias**] - e.g. the lab technician giving the treatment to the first rat that is taken out of the cage. 
+
+]
+
+
+---
+
+# Blocking
+
+.info-box.w-50[
+ .monash-blue[**Blocks**] are used to group the experimental units into alike units.
+]
+--
+.w-70[
+* If well done, blocking can lower the variance of treatment contrasts which increase power.
+* A non-homogeneous block (i.e. units within block are *not* alike) can decrease the power of the experiment.
+
+{{content}}
+
+]
+
+--
+
+You can form blocks from:
+
+
+* **Natural discrete divisions** between experimental units. &lt;br&gt;E.g. in experiments with people, the gender make an obvious block.
+* Grouping experimental units with similar **continuous gradients**. &lt;br&gt;E.g., if the experiment is spread out in time or space and there exists no obvious natural boundaries, then an arbitrary boundary may be chosen to group experimental units that are contiguous in time or space. 
+
+---
+
+# The Salk Vaccine Field Trial
+
+.footnote.f5[
+Source: Freedman, Pisani &amp; Purves (2010) Statistics. 4th edition
+]
+.w-50[
+* The first polio epidemic hit the United States in 1916 claiming hundreds of thousands of victims, especially children.
+* National Foundation for Infantile Paralysis (NFIP) was ready to test the vaccine developed by Jonas Salk in the real world.
+* A controlled experiment was proposed to test the effectiveness of the vaccine on grade 1, 2 and 3 children at selected school districts though the country where the risk of polio was high.
+* In total two million children were involved although not all parents consented to their children to be vaccinated.
+]
+
+---
+
+
+
+.flex[
+.w-45[
+# Design for the NFIP Study
+
+.color-box.monash-bg-blue.white[
+Vaccinate all grade 2 children whose parents would consent, leaving children in grades 1 and 3 as controls.]
+
+* Can grade 2 children whose parents did not consent be included as control?
+* What are the potential issues with such a design?
+* Polio is a contact disease. Would incidences of disease be higher in grade 2?
+]
+{{content}}
+]
+--
+
+ &lt;div class="w-45 pl4"&gt;
+
+&lt;h1&gt;Randomised controlled trial&lt;/h1&gt;
+
+&lt;div class="color-box monash-bg-blue white"&gt;
+An alternate vaccine trial randomly assigned the vaccine and placebo to children.
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+---
+
+# Vaccine Results
+
+.flex[
+&lt;table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;The NFIP Study&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Participants &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Rate &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vaccinated (Grade 2) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 221,998 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Control (Grade 1 &amp;amp; 3) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 725,173 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Not Vaccination&lt;br&gt; (Grade 2, no consent) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 123,605 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Incomplete Vaccination&lt;br&gt;(Grade 2, incomplete) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9,904 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Randomised controlled trial&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Participants &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Rate &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vaccinated &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 200,745 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Placebo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 201,229 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Not Vaccination&lt;br&gt;(no consent) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 338,778 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Incomplete Vaccination &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8,484 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+* The rate is the number of polio cases per 100,000 in each group.
+* RCT and NFIP trial sampled from school districts with similar exposures to the polio virus.
+
+--
+
+.think-box.w-70[
+Both the not vaccinated (no consent) and placebo/control group did not receive the treatment but why is the rate of polio cases less in the not vaccinated (no consent) group?
+]
+
+---
+
+# Possible explanations
+
+.w-70[
+* Higher income parents would more likely consent to treatment than lower-income parents.
+{{content}}
+
+]
+--
+* Children of higher income parents are more vulnerable to polio.
+{{content}}
+--
+* Many forms of polio are hard to diagnose and in borderline cases.
+
+---
+
+
+# Limitations in (social) experiments
+
+* Cooperation needed from participants 
+* Ethical objections
+* Substitution bias 
+* Sample attrition 
+* Hawthorne effect
+
+--
+
+.w-70[
+.f1[Basically, designing and running experiments are *hard*.]
+]
+
+---
+
+class: transition 
+
+
+# Pop Quizzes
+
+---
+
+# Observational or experimental data?
+
+.question-box.w-50[
+The Academic Performance Index is computed for all California schools based on standardised testing of students. The data sets contain information and characteristics for 100 schools.
+]
+
+--
+
+.w-60[
+.fr.animated.bounceIn.f1.small-caps[Observational]
+
+]
+
+---
+
+# Observational or experimental data?
+
+
+.question-box.w-50[
+The response is the length of odontoblasts in 60 guinea pigs. Each animal received one of three dose levels of vitamin C by one of two delivery methods by the technician.
+
+]
+
+--
+
+.w-60[
+.fr.animated.bounceIn.f1.small-caps[Experimental]
+
+]
+
+---
+
+# Observational or experimental data?
+
+
+.question-box.w-50[
+Can people really tell the difference between different flavours associated with the color of the skittles? You blind your friends so they can't see the color and collect data on their guess after giving them one skittle at a time.
+]
+
+--
+
+.w-60[
+.fr.animated.bounceIn.f1.small-caps[Experimental]
+
+]
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-03.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,592 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Initial data analysis"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 3 - Session 2"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week3B/",
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = FALSE,
+  cache.path = "cache/"
+)
+theme_set(ggthemes::theme_gdocs(base_size = 18) +
+            theme(plot.background = element_blank(), 
+                  axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot"
+                  ) )
+```
+
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+
+---
+
+
+# Linear models in R .f4[REVIEW] .f5[Part 1/3]
+
+.f4[
+```{r, echo = TRUE}
+library(tidyverse)
+glimpse(cars)
+```
+]
+--
+
+.f4[
+```{r plot-cars, echo = TRUE, fig.height = 3.5}
+ggplot(cars, aes(speed, dist)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+
+---
+
+# Linear models in R .f4[REVIEW] .f5[Part 2/3]
+
+* We can fit linear models in R with the `lm` function:
+```r
+lm(dist ~ speed, data = cars)
+```
+is the same as
+```r
+lm(dist ~ 1 + speed, data = cars)
+```
+
+--
+
+* The above model is mathematically written as 
+$$y_i = \beta_0 + \beta_1 x_i + e_i$$
+where <ul>
+<li>\\(y_i\\) and \\(x_i\\) are the  stopping distance (in ft) and speed (in mph), respectively, of the \\(i\\)-th car;</li> <li>\\(\beta_0\\) and \\(\beta_1\\) are intercept and slope, respectively; and</li>
+<li>\\(e_i\\) is the random error; usually assuming \\(e_i \sim NID(0, \sigma^2)\\). </li>
+</ul>
+
+---
+
+# Linear models in R .f4[REVIEW] .f5[Part 3/3]
+
+.flex[
+.w-40[
+```{r plot-cars, fig.align="left", fig.height = 4}
+```
+
+]
+.w-60[
+```{r, echo = TRUE}
+fit <- lm(dist ~ 1 + speed, data = cars)
+coef(fit)
+```
+]
+
+]
+
+* So $\hat{\beta}_0 \approx `r scales::comma(coef(fit)[1], 0.01)`$ and $\hat{\beta}_1 \approx `r scales::comma(coef(fit)[2], 0.01)`$.
+
+
+
+--
+
+.w-80[
+* *Assuming* this model is appropriate, .monash-blue[the stopping distance increases by about `r scales::comma(coef(fit)[2], 1)` ft for increase in speed by 1 mph.]
+]
+
+
+---
+
+count: false
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 1/2]
+
+.w-60[
+* Say, we are interested in characterising the price of the diamond in terms of its carat.
+```{r plot-diamonds, fig.height = 5, fig.width = 6}
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(alpha = 1/5) + 
+  ggtitle("Diamonds") #+ 
+  #geom_smooth(method = "lm", se = FALSE) + 
+  #ylim(0, max(diamonds$price))
+```
+* Looking at this plot, would you fit a linear model with formula
+
+.center[
+`price ~ 1 + carat`?
+]
+
+]
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 1/2]
+
+.w-60[
+* Say, we are interested in characterising the price of the diamond in terms of its carat.
+```{r plot-diamonds-lm, fig.height = 5, fig.width = 6}
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(alpha = 1/5) + 
+  ggtitle("Diamonds") + 
+  geom_smooth(method = "lm", se = FALSE, size = 2) + 
+  ylim(0, max(diamonds$price))
+```
+* Looking at this plot, would you fit a linear model with formula
+
+.center[
+`price ~ 1 + carat`?
+]
+
+]
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 2/2]
+
+.flex[
+.w-50[
+```{r plot-diamonds-lm2, fig.height = 5, fig.width = 6}
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(alpha = 1/5) + 
+  ggtitle("Diamonds") + 
+  geom_smooth(method = lm, 
+              formula = y ~ poly(x, 2)) +
+  ylim(0, max(diamonds$price))
+```
+]
+.w-50[
+* What about
+<center>
+<code>price ~ poly(carat, 2)</code>?
+</center>
+which is the same as fitting:
+
+$$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + e_i.$$
+
+{{content}}
+]
+]
+
+
+--
+
+* Should the assumption for error distribution be modified if so?
+{{content}}
+--
+
+
+* Should we make some transformation before modelling?
+{{content}}
+--
+
+
+
+* Are there other candidate models?
+
+
+---
+
+# .circle.bg-black.white[2] Model formulation .f4[Part 2/2]
+
+* Notice that we did _**no formal statistical inference**_ as we initially try to formulate the model.
+--
+
+
+* The goal of the main analysis is to characterise the price of a diamond by its carat. This may involve:
+   * formal inference for model selection;
+   * justification of the selected "final" model; and
+   * fitting the final model.
+--
+
+
+* There may be in fact many, many models considered but discarded at the IDA stage. 
+--
+
+
+* These discarded models are hardly ever reported. Consequently, majority of reported statistics give a distorted view and it's important to remind yourself what might _**not**_ be reported.
+
+
+---
+
+# Model selection
+
+
+.blockquote.w-70[
+All models are _approximate_ and _tentative_; approximate in the sense that no model is exactly true and tentative in that they may be modified in the light of further data
+
+.pull-right[&mdash;Chatfield (1985)] 
+
+]
+
+<br><br>
+
+--
+
+.blockquote[
+All models are wrong but some are useful
+
+.pull-right[&mdash;George Box]
+
+]
+
+
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 1/9]
+
+A wheat breeding trial to test 107 varieties (also called genotype) is conducted in a field experiment laid out in a rectangular array with 22 rows and 15 columns. 
+
+.overflow-scroll.h-70.f4[
+```{r, echo = TRUE, render = knitr::normal_print}
+data("gilmour.serpentine", package = "agridat")
+skimr::skim(gilmour.serpentine)
+```
+]
+
+.footnote.f5[
+Gilmour, Cullis and Verbyla (1997) Accounting for natural and extraneous variation in the analysis of field experiments. *Journal of Agric Biol Env Statistics* **2** 269-293
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 2/9]
+
+**Experimental Design**
+
+* The experiment employs what is referred to as a **randomised complete block design** (RCBD) .f4[(technically it is _near_-complete and not exactly RCBD due to check varieties have double the replicates of test varieties)].
+--
+
+* RCBD means that 
+    * the there are equal number of replicates for each treatment (here it is `gen`); 
+    * each treatment appears exactly once in each block; 
+    * the blocks are of the same size; and
+    * each treatment are randomised within block.
+--
+
+
+* In agricultural field experiments, blocks are formed spatially by grouping plots within contiguous areas (called `rep` here). 
+* The boundaries of blocks may be chosen arbitrary.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 3/9]
+
+**Experimental Design**
+
+.grid[.item[
+```{r, fig.width = 6, fig.height = 7}
+library(gganimate)
+gilmour.serpentine %>% 
+  mutate(row = factor(row), col = factor(col)) %>% 
+  ggplot(aes(col, row, fill = rep)) + 
+  geom_tile(color = "black", size = 2) + 
+  ggtitle("Block structure") + 
+  scale_fill_discrete_qualitative() + 
+  coord_equal()
+```
+
+]
+.item[
+```{r, fig.width = 6, fig.height = 7, out.width ="75%", gganimate = list(fps = 2), cache = TRUE}
+gen <- levels(gilmour.serpentine$gen)
+df <- map_dfr(gen, function(agen) {
+  gilmour.serpentine %>% 
+    mutate(fill = case_when(
+                   gen==agen ~  "#C8008F",
+                   rep=="R1" ~ "#e3e3e3",
+                   rep=="R2" ~ "#A0A0A0",
+                   rep=="R3" ~ "#303030"
+                  ), 
+           state = agen)
+})
+df %>% 
+ mutate(row = factor(row), col = factor(col)) %>% 
+ ggplot(aes(col, row)) + 
+  geom_tile(color = "black", size = 2, aes(fill = I(fill))) + 
+  coord_equal() + 
+  guides(fill = FALSE) + 
+  transition_states(state, 
+                    transition_length = 3, 
+                    state_length = 3) + 
+  labs(title = "gen: {closest_state}")
+```
+
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 4/9]
+
+**Analysis**
+
+* In the main analysis, people would commonly analyse this using what is called **two-way ANOVA** model (with no interaction effect).
+* The two-way ANOVA model has the form
+<center>
+<code>yield = mean + block + treatment + error</code>
+</center>
+* So for this data,
+```{r, echo = TRUE}
+fit <- lm(yield ~ 1 + rep + gen, 
+          data = gilmour.serpentine)
+```
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 5/9]
+
+**Analysis**
+
+.overflow-scroll.h-80.f4[
+```{r, echo = TRUE}
+summary(fit)
+```
+]
+
+
+---
+
+```{r}
+library(tidycat)
+est <- fit %>% 
+  broom::tidy() %>% 
+  tidy_categorical(fit, include_reference = TRUE) %>% 
+  filter(variable == "gen")
+```
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 6/9]
+
+
+.grid[.item[
+```{r, fig.height = 8, fig.width = 5}
+est %>% 
+  mutate(gen = fct_reorder(level, estimate)) %>% 
+  filter(gen %in% levels(gen)[c(1:10, (107 - 9): 107)]) %>% 
+  ggplot(aes(estimate, gen)) + 
+  geom_point(size = 2) +
+  ggtitle("Top 10 and bottom 10\n genotype by model est.")
+```
+
+]
+.item[
+```{r, fig.height = 8, fig.width = 5}
+gilmour.serpentine %>% 
+  mutate(gen = fct_reorder(gen, yield, mean)) %>% 
+  filter(gen %in% levels(gen)[c(1:10, (107 - 9): 107)]) %>% 
+  ggplot(aes(yield, gen)) + 
+  geom_point(size = 2) +
+  ggtitle("Top 10 and bottom 10\n genotype by mean yield")
+```
+
+]
+.item[
+```{r, fig.height = 8, fig.width = 5}
+gilmour.serpentine %>% 
+  mutate(gen = fct_reorder(gen, yield, median)) %>% 
+  filter(gen %in% levels(gen)[c(1:10, (107 - 9): 107)]) %>% 
+  ggplot(aes(yield, gen)) + 
+  geom_point(size = 2) +
+  ggtitle("Top 10 and bottom 10\n genotype by median yield")
+```
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 7/9]
+
+Do you notice anything from below?
+
+<br>
+
+```{r, fig.height = 7, fig.width = 7}
+gilmour.serpentine %>% 
+  mutate(row = factor(row),
+         col = factor(col)) %>% 
+  ggplot(aes(col, row, fill = yield)) + 
+  geom_tile(color = "black", size = 2) + 
+  coord_equal() + 
+  scale_fill_continuous_sequential(palette = "Greens 3")
+```
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 8/9]
+
+```{r, eval = TRUE, fig.width = 12, fig.height = 7}
+library(plotly)
+library(crosstalk)
+
+sdf <- gilmour.serpentine %>% 
+  mutate(gen = fct_reorder(gen, yield, median),
+         id = 1:n()) %>% 
+  SharedData$new(~id, group = "gilmour")
+sdf2 <- gilmour.serpentine %>% 
+  mutate(gen = fct_reorder(gen, yield, median),
+         id = 1:n()) %>% 
+  filter(gen %in% levels(gen)[c(1:10, (107 - 9): 107)]) %>% 
+  droplevels() %>% 
+  SharedData$new(~id, group = "gilmour")
+
+p1 <- plot_ly(sdf, x = ~col, y = ~row, 
+            text = ~gen,  color = ~yield,
+            type = "scatter",
+            mode = "markers", 
+            marker = list(symbol = "square",
+                          size = 10,
+                          line = list(
+                            color = "black",
+                            width = 1
+                          ))) %>% 
+        config(displayModeBar = F) %>% 
+        layout(xaxis=list(fixedrange=TRUE),
+               yaxis=list(fixedrange=TRUE))
+
+p2 <- plot_ly(sdf2) %>%  
+  add_markers(x = ~yield, y = ~gen) %>% 
+        config(displayModeBar = F) %>% 
+        layout(xaxis=list(fixedrange=TRUE),
+               yaxis=list(fixedrange=TRUE))
+
+pp <- bscols(p1, p2)
+htmltools::save_html(pp, file = "lecture-03-supp.html") # note the lib folder
+# saves to the project location -> moved manually
+```
+
+<iframe src="lecture-03-supp.html" width="900", height = "900" frameBorder="0">
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[4]  Wheat yield in South Australia .f4[Part 9/9]
+
+* It's well known in agricultural field trials that spatial variations are introduced in traits; this could be because of the fertility trend, management practices or other reasons.
+* In the IDA stage, you investigate to identify these spatial variations - you cannot just simply fit a two-way ANOVA model!
+
+.grid[.item.center[
+<img src="images/field_harvest.gif" height = "380px">
+]
+.item.center[
+<img src="images/field_spray.gif" height = "380px">
+]
+]
+
+
+
+
+
+---
+
+class: middle center
+
+.blockquote[
+"Teaching of Statistics should provide a more balanced blend of IDA and inference"
+
+.pull-right[Chatfield (1985)]
+]
+
+
+--
+
+<br><br>
+
+Yet there is still very little emphasis of it in teaching and also at times in practice.
+
+--
+
+<br>
+
+So don't forget to do IDA!
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+<ul class="fa-ul">
+{{content}}
+</ul>
+
+
+]
+]
+
+--
+
+  <li><span class="fa-li"><i class="fas fa-paper-plane"></i></span><b><i>Initial data analysis</i></b> (IDA) is a model-focussed exploration of data with two main objectives:
+  <ul>
+  <li><b><i>data description</i></b> including scrutinizing for data quality, and</li>
+  <li><b><i>model formulation</i></b> without any formal statistical inference.</li>
+  </ul>
+</li>
+
+{{content}}
+
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>IDA hardly sees the limelight even if it's the very foundation of what the main analysis is built on.</li>
+
+
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

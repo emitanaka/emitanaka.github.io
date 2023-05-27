@@ -1,0 +1,463 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Resampling"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 3"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 3"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    toc: true
+    toc-title: "[*Resampling*]{.monash-blue} - table of contents"
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+## Resampling 
+
+::: incremental
+
+- **Resampling** is a process of making _new data_ based on _observed data_.  
+- Commonly used resampling methods include:
+  - [**Cross validation**]{.monash-blue}
+      - often used for model assessment.
+  - [**Bootstrapping**]{.monash-blue}
+      - often used to provide a measure of accuracy of a parameter estimate.
+  
+:::
+
+
+## Recall: training, validation and testing data sets
+
+::: incremental
+
+- In [Lecture 1](lecture-01.html#/splitting-data-into-testing-and-training-data), randomly splitting 75% of data into training data and the remaining 25% into testing data, then measured the accuracy of model trained on the training data using the testing data.
+- But the model accuracy changes on a different split. 
+- **Cross-validation** extends this approach to:
+  - several iterations of different splits, and 
+  - combine (typically by averaging) the model accuracy across the iterations. 
+
+:::
+
+
+# Cross validation {.mcenter background-color="#006DAE"}
+
+
+## $k$-fold cross validation
+
+::: flex
+
+::: {.w-60}
+
+![](https://emitanaka.org/blog/2023-01-12-ML-workflow/cross-validation-workflow.png){width="100%"}
+
+:::
+
+::: {.w-40 .pl3}
+
+1. Partition samples into $k$ (near) equal sized subsamples (referred to as **folds**).
+2. Fit the model on $k − 1$ subsets, and compute a metric, e.g. RMSE, on the omitted subset.
+3. Repeat $k$ times omitting a different subset each time.
+
+:::
+:::
+
+
+
+## Cross validation accuracy
+
+- Choice of $k = 10$ is common.
+- Recall from [Lecture 1](lecture-01.html#/predictive-accuracy) there are a number of ways to measure preditive accuracy, e.g. RMSE, MAE, MAPE and MPE.
+- Cross-validation accuracy is calculated:
+  - by calculating the accuracy (based on one metric) on every fold, then 
+  - combining this into a single number, e.g. by taking a simple average.
+
+
+## <i class="fab fa-r-project"></i> $k$-fold cross validation with `rsample`
+
+* $k = 5$ fold cross validation ($k =$ `v` in the `rsample` package) 
+
+```{r toyota-cv}
+#| code-line-numbers: "|5"
+#| output-location: fragment
+library(tidyverse)
+library(rsample)
+toyota <- read_csv("https://emitanaka.org/iml/data/toyota.csv") 
+set.seed(2023) # to replicate result
+toyota_folds <- vfold_cv(toyota, v = 5) 
+toyota_folds
+```
+
+## <i class="fab fa-r-project"></i>  Measuring accuracy for a single fold {.scrollable} 
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+- Each fold is an `rsplit` object:
+
+```{r one-fold}
+toyota_folds$splits[[1]]
+```
+
+. . . 
+
+- So you can extract the training and testing data as before:
+
+```{r toyota-split1}
+toyota_train1 <- training(toyota_folds$splits[[1]])
+toyota_test1 <- testing(toyota_folds$splits[[1]])
+```
+
+. . . 
+
+- And train models as before:
+
+```{r train-model1}
+library(rpart) # for regression tree
+library(kknn) # for k-nearest neighbour
+model_fits <- list(
+  "reg" = lm(log10(price) ~ year,
+             data = toyota_train1),
+  "tree" = rpart(log10(price) ~ year,
+                 data = toyota_train1,
+                 method = "anova"),
+  "knn" = train.kknn(log10(price) ~ year,
+                     data = toyota_train1)
+)
+```
+
+. . . 
+
+- Then predict responses:
+
+```{r predict1}
+results_test1 <- imap_dfr(model_fits, ~{
+    toyota_test1 %>% 
+      select(year, price) %>% 
+      mutate(.model = .y,
+             .pred = 10^predict(.x, .))
+  })
+```
+
+. . . 
+
+- and finally measure predictive accuracy for this fold:
+
+```{r accuracy1}
+library(yardstick)
+results_test1 %>% 
+  group_by(.model) %>% 
+  metric_set(rmse, mae, mape, mpe, rsq)(., price, .pred) %>% 
+  pivot_wider(.model, names_from = .metric, values_from = .estimate)
+```
+
+
+## <i class="fab fa-r-project"></i>  Fitting the models for each fold
+
+```{r multiple-fold-models}
+toyota_models <- toyota_folds %>% 
+  # fit models 
+  mutate(reg = map(splits, ~lm(log10(price) ~ year, data = training(.x))),
+         tree = map(splits, ~rpart(log10(price) ~ year, data = training(.x), method = "anova")),
+         knn = map(splits, ~train.kknn(log10(price) ~ year, data = training(.x))))
+
+toyota_models
+```
+
+## <i class="fab fa-r-project"></i> Measuring accuracy for each fold
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+```{r multiple-fold}
+#| echo: -1
+#| output-location: fragment
+#| code-line-numbers: "|1-2,17|3-4|5-7|8-9|10-15|19"
+options(tibble.width = 85)
+toyota_metrics <- toyota_models %>% 
+  mutate(across(c(reg, tree, knn), function(models) {
+    # now for every fold and model, 
+    map2(splits, models, function(.split, .model) {
+      testing(.split) %>% 
+        # compute prediction for testing set
+        mutate(.pred = 10^predict(.model, .)) %>% 
+        # then get metrics
+        metric_set(rmse, mae, mape, mpe, rsq)(., price, .pred) %>%  
+        # in a one-row data frame such that 
+        # column names are metric, 
+        # values are the accuracy measure
+        pivot_wider(-.estimator,
+                    names_from = .metric, 
+                    values_from = .estimate)
+    })
+  }, .names = "{.col}_metrics"))
+
+toyota_metrics
+toyota_metrics$reg_metrics[[1]]
+```
+
+## <i class="fab fa-r-project"></i>  Examining the fold results
+
+
+```{r toyota-metrics-wide}
+toyota_metrics_wide <- toyota_metrics %>% 
+  # expand to see results
+  unnest_wider(ends_with("_metrics"), names_sep = "_") %>% 
+  # wrangle data into output form below
+  pivot_longer(contains("metrics"), 
+               names_to = c("model", "metric"),
+               names_pattern = "(.*)_metrics_(.*)",
+               values_to = "value") %>% 
+  pivot_wider(c(id, model),
+              names_from = metric,
+              values_from = value) 
+
+toyota_metrics_wide
+```
+
+## <i class="fab fa-r-project"></i>  Getting the cross validation metrics
+
+```{r cv-metrics}
+toyota_metrics_wide %>% 
+  # get the average of each metric columns
+  group_by(model) %>% 
+  summarise(across(rmse:rsq, mean)) 
+```
+
+. . . 
+
+- But a numerical summary alone can be deceiving in understand what is the best model.
+
+## <i class="fab fa-r-project"></i>  Visualising with [parallel coordinate plots]{.monash-blue}
+
+::: flex
+::: {.w-50}
+
+```{r}
+toyota_metrics_wide %>% 
+  GGally::ggparcoord(columns = 3:7,
+                     groupColumn = 2,
+                     showPoints = TRUE) +
+  labs(x = "metric")
+```
+
+:::
+::: {.w-50 .pl3 .f3}
+
+- **Parallel coordinate plots** can be used to visualise high-dimensional data - here our model metrics!
+- Each variable is shown in the $x$-axis.
+- The value of the variable is standardised in this plot.
+- The lines correspond to an observational unit (a fold and a model combination). 
+- The lines are colored by the model here. 
+
+::: fragment
+
+**Results**
+
+- We see that `knn` has a large variation in the metrics - this means this model has a high variance and it is not desirable.
+- The `tree` and `reg` has a large variation in `rmse` and `rsq` - they are somewhat similar in performance.
+
+
+:::
+
+:::
+:::
+
+
+
+
+
+## <i class="fab fa-r-project"></i>  Leave-one-out cross validation (LOOCV)
+
+- LOOCV is a special case of $k$-fold cross validation where $k = n$ (or $n_{Train}$).
+
+```{r loocv-with-vfold}
+#| eval: false
+toyota %>% 
+  vfold_cv(v = n())
+```
+
+. . . 
+
+- The `rsample` package has a specific function for this special case that is essentially similar to above:
+
+
+```{r loocv}
+toyota %>% 
+  loo_cv()
+```
+
+## Bias-variance tradeoff for cross validation 
+
+::: incremental
+
+- $k$-fold cross validation with $k < n$ has a computational advantage over LOOCV ($k = n$).
+- LOOCV is preferred to $k$-fold cross validation in the perspective of **bias reduction** (almost all data are used to estimate the model).
+- $k$-fold cross validation is preferred to LOOCV in the perspective of **lower variance** (the $n$ fitted models in LOOCV are going to be highly positively correlated).
+- We usually select $k=5$ or $k=10$ to balance the bias-variance trade-off.
+
+:::
+
+
+# Bootstrap {.mcenter background-color="#006DAE"}
+
+
+## <i class="fab fa-r-project"></i>  Bootstrap samples
+
+::: flex
+::: {.w-60}
+
+- A bootstrap sample is created by **sampling with replacement** the original data with the same dimension as the original data. 
+
+::: fragment
+
+```{r bootstrap}
+#| echo: -1
+options(tibble.width = 50)
+set.seed(2023) # to replicate results
+toyota %>% 
+  sample_n(size = n(), replace = TRUE)
+```
+
+:::
+
+:::
+::: {.w-40 .pl3 .fragment}
+
+```{r bootstrap-plots}
+#| code-fold: true
+#| fig-height: 7.5
+bind_rows(mutate(toyota, sample = "original"),
+          mutate(toyota, sample = "bootstrap 1") %>% 
+            sample_n(size = n(), replace = TRUE),
+          mutate(toyota, sample = "bootstrap 2") %>% 
+            sample_n(size = n(), replace = TRUE)) %>% 
+  ggplot(aes(year, price)) +
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~sample, ncol = 1)
+```
+
+
+:::
+:::
+
+
+## <i class="fas fa-shopping-bag"></i> Out-of-bag samples for bootstraps
+
+::: flex
+::: {.w-60 .incremental}
+
+- In a bootstrap sample, some observations may appear more than once or even some not at all.
+- <i class="fas fa-exclamation-circle"></i> When constructing a bootstrap sample split into training and testing dataset, becareful to ensure  that the _testing dataset only contains **out-of-bag** (OOB) samples_.
+- OOB samples are observations that are not included in the bootstrap sample. 
+
+:::
+::: {.w-40 .pl3 .fragment}
+
+* `rsample::bootstraps` function ensures testing data only contains OOB samples. 
+
+```{r toyota-bootstrap}
+toyota %>% 
+  bootstraps(times = 10)
+```
+
+:::
+:::
+
+
+
+
+# Nested cross validation {.mcenter background-color="#006DAE"}
+
+## Nested cross validation 
+
+- In practice, you likely need a _validation data_ to optimise the hyperparameters.
+
+. . . 
+
+- **Nested cross validation** (or double resampling) includes two resampling schemes:
+  - `outside`: the initial resampling produces the split into training and testing data for multiple folds/iterations, then
+  - `inside`: the resampling for the initial training data split into training and validation data for multiple folds/iterations.
+  
+
+
+## <i class="fab fa-r-project"></i> Nested cross validation with R
+
+- You can achieve this easily using the `rsample::nested_cv()`
+
+```{r}
+toyota %>% 
+  nested_cv(outside = vfold_cv(v = 5),
+            inside = bootstraps(times = 10))
+```
+
+## <i class="fas fa-exclamation-triangle"></i> Cautionary tale for nested cross validation
+
+- Some combinations of resampling schemes will result in the same observations appearing in both the training and testing/validation set. 
+
+. . . 
+
+- `rsample::nested_cv` gives some warning for bad combination but be cautious of this!
+
+```{r warn-bad-nested-cv}
+#| warning: true
+toyota %>% 
+  nested_cv(outside = bootstraps(times = 10),
+            inside = vfold_cv(v = 5))
+```
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+- Resampling involves repeatedly drawing samples from the training data to create new data. 
+- Resampling can be computationally expensive but it can give:
+  - a more robust estimate of the prediction error or
+  - help with model selection or tune hyperparameters.

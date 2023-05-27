@@ -1,0 +1,242 @@
+
+/* some fixes */
+
+@media print {
+  .remark-slide-scaler {
+    width: 100%!important;
+    height: 100% !important;
+    transform: scale(1) !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+}
+
+p {
+  margin-block-start: 10px;
+  margin-block-end: 0;
+}
+
+pre {
+  margin: 0;
+}
+
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 0.2em;
+    margin-block-end: 0.2em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 0.2em;
+    margin-block-end: 0.2em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+.refresher, .informative, .motivator, .transition {
+  color: white;
+}
+
+.refresher   { background-color: #008A25; } /* monash-bg-green2 */
+.informative { background-color: #746FB2; } /* monash-bg-purple2 */
+.motivator   { background-color: #9651A0; } /* monash-bg-fuchsia2 */
+.transition  { 
+  background-color: #006DAE; /* monash-bg-blue */
+  text-align: center;  
+} 
+
+.motivator .info-box strong { color: #9651A0; }
+.informative .info-box strong { color: #746FB2; }
+.refresher .info-box strong { color: #008A25; }
+.transition .info-box strong { color: #006DAE; }
+
+
+.transition > h1 { font-size: 70pt!important; }
+
+.transition  a, 
+.informative a, 
+.refresher a, 
+.motivator a {
+  color: #969696;
+  text-decoration: none;
+}
+
+
+
+a {
+  color: #027EB6;
+  text-decoration: none;
+}
+
+.footnote {
+  position: absolute;
+  bottom: 0;
+  margin-left: -6em;
+  margin-right: -4em;
+  width: calc(100% + 8em);
+  padding-left:5px;
+  padding-right:5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: rgb(231, 240, 243);
+  background-color: #3D5480;
+  font-size: 18pt;
+  /*border-top: solid 1px #0081c7;*/
+}
+
+.footnote a {
+  color: white!important;
+} 
+
+
+
+.remark-slide-number { font-size: 18pt; }
+/*.remark-slide-content h1:first-of-type { padding-top:20px; } 
+.remark-slide-content { padding: 0 0 0 0; }*/
+
+
+.remark-slide-content:not(.transition):not(.refresher):not(.motivator):not(.informative)  > h1:first-of-type{
+  background-color: #006DAE;
+  color: white;
+  border-bottom: double 5px #3D5480;
+  margin-top: -1em; 
+  margin-left: -4em;
+  margin-right: -4em;
+  text-align: center;
+}
+
+.wider {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.pull-left {
+  float: left;
+  width: 47%;
+}
+.pull-right {
+  float: right;
+  width: 47%;
+}
+
+.grid, .grid-col, .grid-row {
+  display: grid;
+  margin-left: -4em;
+  margin-right: -4em;
+  width: calc(100% + 8em);
+  height: 100%;  
+}
+
+.grid, .grid-col {
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.grid-row {
+  grid-auto-flow: row;
+  grid-auto-rows: 1fr;
+}
+
+
+
+
+.shade_black  {
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    width: 100%;
+    padding: 0;
+}
+
+.shade_black > a {
+  color: white!important;
+}
+
+
+.remark-code { font-size: 24pt; }
+.font_small .remark-code { font-size: 18pt;}
+.font_smaller .remark-code { font-size: 16pt }
+.font_smaller2 .remark-code { font-size: 13pt }
+
+
+li { margin: 10px 0; }
+
+.remark-slide-content h1:first-of-type {
+  padding-top:20px;
+}
+
+
+.shade_black  {
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    width: 100%;
+    padding: 0;
+}
+.shade_black > a {
+  color: white!important;
+}
+
+
+.outline-text {
+  text-shadow: 0 0 20px #000;
+}
+
+.box, .info-box {
+  position: relative;
+  margin: auto;
+  color: black;
+  border: solid 3px black;
+  background-color: white;
+  padding-top: 10px; 
+  /* note margin-block-start: 10px; for p adds 10px automatically */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  border-radius: 7px;
+}
+
+.box {
+  background-color: #D93F00;
+  color: white;
+}
+
+.info-box:before {
+  position: absolute;
+  content: url("../images/info-circle.png");
+  top: 0;
+  left: 0;
+  border-radius:20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  font-size: 12pt;
+  background-color: #f2f2f2;
+}
+
+
+
+
+
+
+blockquote {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-style: italic;
+  font-family: Georgia;
+  padding-left: 10px;
+  border-left: 10px solid #006DAE;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.border-box {
+  border: 5px solid black;
+}
+
+

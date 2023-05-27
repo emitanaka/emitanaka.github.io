@@ -1,6 +1,14 @@
 project:
   type: website
+  render:
+   - "*.qmd"
+   - "!lecture*"
   output-dir: docs
+  post-render:
+  - cp -r teaching/monash-wcd/ docs/teaching/monash-wcd/
+  - cp -r teaching/monash-cwd/ docs/teaching/monash-cwd/
+  - cp -r teaching/monash-eda/ docs/teaching/monash-eda/
+  - cp -r teaching/monash-iml/ docs/teaching/monash-iml/
 
 website:
   title: "emi tanaka"

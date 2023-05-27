@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="lecture-03_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lecture-03_files/libs/quarto-html/tabby.min.js"></script>
+<script src="lecture-03_files/libs/quarto-html/popper.min.js"></script>
+<script src="lecture-03_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="lecture-03_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lecture-03_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="lecture-03_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.0.36">
+
+  <meta name="author" content="Emi Tanaka">
+  <title>ETC5523: Communicating with Data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lecture-03_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="lecture-03_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lecture-03_files/libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link rel="stylesheet" href="assets/tachyons-addon.css">
+  <link rel="stylesheet" href="assets/custom.css">
+  <link href="lecture-03_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="lecture-03_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="lecture-03_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="lecture-03_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-captioned.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-captioned) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-captioned .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-captioned .callout-caption  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-captioned.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-captioned.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-caption {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-caption {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-caption {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-captioned .callout-body > .callout-content > :last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .callout.callout-captioned .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-captioned) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-caption {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-caption {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-caption {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-caption {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-caption {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="lecture-03_files/libs/bootstrap-datepicker-js-1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <script>(function() {
+          var datepicker = $.fn.datepicker.noConflict();
+          $.fn.bsDatepicker = datepicker;
+        })();
+       </script>
+  <link href="lecture-03_files/libs/bootstrap-datepicker-css-1.9.0/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+  <link href="lecture-03_files/libs/selectize-0.12.4/css/selectize.bootstrap3.css" rel="stylesheet">
+  <script src="lecture-03_files/libs/selectize-0.12.4/js/selectize.min.js"></script>
+  <script src="lecture-03_files/libs/selectize-0.12.4/accessibility/js/selectize-plugin-a11y.min.js"></script>
+  <script src="lecture-03_files/libs/ionrangeslider-javascript-2.3.1/js/ion.rangeSlider.min.js"></script>
+  <script src="lecture-03_files/libs/strftime-0.9.2/strftime-min.js"></script>
+  <link href="lecture-03_files/libs/ionrangeslider-css-2.3.1/css/ion.rangeSlider.css" rel="stylesheet">
+  <script src="assets/shiny.min.js"></script> <script src="assets/jqueryui/jquery-ui.min.js"></script> <script src="assets/jquery.min.js"></script> <script src="assets/datepicker/js/bootstrap-datepicker.min.js"></script> <script>(function() { var datepicker = $.fn.datepicker.noConflict(); $.fn.bsDatepicker = datepicker; })(); </script> <link href="assets/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet"> <script src="assets/ionrangeslider/js/ion.rangeSlider.min.js"></script> <link href="assets/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet"> <script src="assets/bootstrap/js/bootstrap.min.js"></script> <script src="assets/strftime/strftime-min.js"></script> <script src="assets/selectize/js/selectize.min.js"></script> <link href="assets/selectize/css/selectize.bootstrap3.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+
+<section id="etc5523-title" class="slide level2" data-background-image="images/bg-01.png">
+<h2><br><span class="monash-blue">ETC5523: Communicating with Data</span></h2>
+<p>Communicating data with interactive web apps</p>
+<p>Lecturer: <em>Emi Tanaka</em></p>
+<p>Department of Econometrics and Business Statistics</p>
+<div class="tl">
+<p><br></p>
+<ul class="fa-ul">
+<li>
+<p><span class="fa-li"><i class="fas fa-envelope"></i></span>emi.tanaka@monash.edu</p>
+</li>
+<li>
+<p><span class="fa-li"><i class="fas fa-calendar-alt"></i></span> Week 3</p>
+</li>
+<li>
+<p><span class="fa-li"><i class="fa-solid fa-globe"></i></span><a href="cwd.numbat.space">cwd.numbat.space</a></p>
+</li>
+</ul>
+<p><br></p>
+</div>
+</section>
+<section id="aim" class="slide level2" data-background="white">
+<h2></h2>
+<div class="callout callout-important callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Aim</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Use interactivity to enable data exploration, understanding and communication</li>
+<li>Design web apps with displays that fit for the purpose</li>
+<li>Make web applications using <code>shiny</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-tip callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Why</strong></p>
+</div>
+<div class="callout-content">
+<p>Interactive web apps can</p>
+<ul>
+<li>connect people and data,</li>
+<li>make systems playful,</li>
+<li>prompt self-reflection,</li>
+<li>personalise the view, and</li>
+<li>reduce cognitive load.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="human-computer-interaction" class="slide level2">
+<h2>Human Computer Interaction</h2>
+<div class="callout callout-note no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
+<p>Open-ended dialogue between the user and the computer</p>
+</div>
+</div>
+</div>
+<div>
+<ul>
+<li class="fragment">Enable audience to some degree <strong>co-author narrative</strong>, i.e.&nbsp;narratives moves away from being author-guided to audience-driven.</li>
+<li class="fragment"><strong>Leverage user interaction techniques</strong> to improve user experience, e.g.&nbsp;
+<ul>
+<li class="fragment">Show details on demand</li>
+<li class="fragment">Reduce overall cognitive load</li>
+<li class="fragment">Personalised view</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="user-interactions" class="slide level2">
+<h2>User Interactions</h2>
+
+<img src="images/lecture-03/actions.svg" class="r-stretch"><div class="f4 absolute bottom-0" style="">
+<p>Image from Spencer (2022, Feb.&nbsp;17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland</p>
+</div>
+</section>
+<section id="user-inputs" class="slide level2">
+<h2>User Inputs</h2>
+
+<img src="images/lecture-03/widgets.svg" class="r-stretch"><div class="f4 absolute bottom-0" style="">
+<p>Image from Spencer (2022, Feb.&nbsp;17). Data in Wonderland. Retrieved from https://ssp3nc3r.github.io/data_in_wonderland</p>
+</div>
+</section>
+<section>
+<section id="criteria-for-the-design-of-interactive-data-visualisation" class="title-slide slide level1 center">
+<h1>Criteria for the Design of Interactive Data Visualisation</h1>
+<p><span class="f3">Tominski, Christian, and Heidrun Schumann (2020) Interactive Visual Data Analysis. CRC Press.</span></p>
+</section>
+<section id="quality-criteria" class="slide level2">
+<h2>Quality criteria</h2>
+<div class="fragment">
+<div class="callout callout-note callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Expressiveness <span class="monash-gray50">(Mandatory Condition)</span></strong></p>
+</div>
+<div class="callout-content">
+<p>An interactive visual representation is expressive if it allows the user to carry out the actions needed to acquire the desired information in the data.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Effectiveness <span class="monash-gray50">(Goal-Oriented Condition)</span></strong></p>
+</div>
+<div class="callout-content">
+<p>A measure of how well the user can convey an interaction intent to the computer.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Efficiency <span class="monash-gray50">(Desired Condition)</span></strong></p>
+</div>
+<div class="callout-content">
+<p>The balance of benefits and costs for using an interactive visualisation approach. E.g. does the human effort of building the interactive visualisation outweigh its benefits? Are the efforts of users to interact with it offset the information gained for users?</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="goals" class="slide level2">
+<h2>Goals</h2>
+<div>
+<ul>
+<li class="fragment"><strong>Exploration</strong> promotes undirected search</li>
+<li class="fragment"><strong>Description</strong> characterises observations by associated data elements</li>
+<li class="fragment"><strong>Explanation</strong> identifies contributing causes behind an observation</li>
+<li class="fragment"><strong>Confirmation</strong> find concrete evidences for or against a hypothesis</li>
+<li class="fragment"><strong>Presentation</strong> communicates results of a confirmed analysis</li>
+</ul>
+</div>
+</section>
+<section id="example-global-temperature" class="slide level2">
+<h2>Example: Global Temperature</h2>
+<p><a href="https://climate.nasa.gov/vital-signs/global-temperature/">https://climate.nasa.gov/vital-signs/global-temperature/</a></p>
+
+<img src="images/lecture-03/global-temperature.png" width="70%" class="r-stretch"></section>
+<section id="example-handwriting-with-neural-network" class="slide level2" data-background-iframe="https://distill.pub/2016/handwriting/" data-background-interactive="true">
+<h2>Example: Handwriting with Neural Network</h2>
+</section>
+<section id="example-how-you-will-die" class="slide level2">
+<h2>Example: How you will die</h2>
+<p><a href="https://flowingdata.com/2016/01/19/how-you-will-die/%22">https://flowingdata.com/2016/01/19/how-you-will-die/</a></p>
+
+<img src="images/lecture-03/how-you-will-die.png" width="70%" class="r-stretch"></section></section>
+<section id="what-is-shiny" class="title-slide slide level1 center">
+<h1>What is <code>shiny</code>?</h1>
+<p><i class="fa-solid fa-gear fa-spin"></i> <a href="https://ebsmonash.shinyapps.io/ETC5523-Covid-19-App-Demo/?showcase=0">Demo App</a></p>
+</section>
+
+<section id="how-to-get-started-with-shiny" class="title-slide slide level1 center">
+<h1>How to get started with <code>shiny</code>?</h1>
+<div class="fragment">
+<ul>
+<li>RStudio &gt; File &gt; New File &gt; Shiny Web App…</li>
+<li>Using snippet: Type <code>shinyapp</code> and Shift + Tab</li>
+</ul>
+</div>
+</section>
+
+<section>
+<section id="user-interface" class="title-slide slide level1 center">
+<h1>User Interface</h1>
+
+</section>
+<section id="writing-html-from-r" class="slide level2">
+<h2>Writing HTML from R</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(shiny) <span class="co"># exported from `htmltools`</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>tags<span class="sc">$</span><span class="fu">html</span>(</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  tags<span class="sc">$</span><span class="fu">body</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="fu">h1</span>(<span class="st">'My first heading'</span>),</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="fu">p</span>(<span class="st">'My first paragraph, with some '</span>, <span class="fu">strong</span>(<span class="st">'bold'</span>), <span class="st">' text.'</span>),</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="fu">div</span>(<span class="at">id =</span> <span class="st">'myDiv'</span>, <span class="at">class =</span> <span class="st">'simpleDiv'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>        <span class="st">'Here is a div with some attributes.'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  )</span>
+<span id="cb1-9"><a href="#cb1-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="fragment">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource html number-lines code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">&lt;html&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="kw">&lt;body&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="kw">&lt;h1&gt;</span>My first heading<span class="kw">&lt;/h1&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="kw">&lt;p&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>      My first paragraph, with some </span>
+<span id="cb2-6"><a href="#cb2-6"></a>      <span class="kw">&lt;strong&gt;</span>bold<span class="kw">&lt;/strong&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>       text.</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    <span class="kw">&lt;/p&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"myDiv"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"simpleDiv"</span><span class="kw">&gt;</span>Here is a div with some attributes.<span class="kw">&lt;/div&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="kw">&lt;/body&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="kw">&lt;/html&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="f3 fragment">
+<ul>
+<li>Use <code>includeCSS()</code> and <code>includeScript()</code> to include CSS and JS files</li>
+</ul>
+</div>
+</section>
+<section id="html-inputs-part-1" class="slide level2">
+<h2>HTML Inputs <span class="f4">Part 1</span></h2>
+<div class="f4">
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-2_92ea923c4918ccbe1c07aed4e945791c">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">actionButton</span>(<span class="st">"id1"</span>, <span class="st">"Push"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<button id="id1" type="button" class="btn btn-default action-button">Push</button>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-3_6050d73e4b42f69ab1bffe2f8711db97">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">actionLink</span>(<span class="st">"id2"</span>, <span class="st">"Link"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<a id="id2" href="#" class="action-button">Link</a>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-4_d636cbc469a4ea903fbabe36352724b5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">checkboxGroupInput</span>(<span class="st">"id3"</span>, <span class="st">"Select"</span>, </span>
+<span id="cb5-2"><a href="#cb5-2"></a>                   <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Mon"</span>, <span class="st">"Tue"</span>, <span class="st">"Wed"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3"></a>                   <span class="at">selected =</span> <span class="st">"Mon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="id3" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="id3-label">
+<label class="control-label" id="id3-label" for="id3">Select</label>
+<div class="shiny-options-group">
+<div class="checkbox">
+<label>
+<input type="checkbox" name="id3" value="Mon" checked="checked">
+<span>Mon</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="id3" value="Tue">
+<span>Tue</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="id3" value="Wed">
+<span>Wed</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-5_f018d47ff30052d74be81f72fb97785e">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">checkboxInput</span>(<span class="st">"id4"</span>, <span class="st">"I accept"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<div class="checkbox">
+<label>
+<input id="id4" type="checkbox">
+<span>I accept</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-6_45dbb86a4963edc86e570e978674aff4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">fileInput</span>(<span class="st">"id5"</span>, <span class="st">"Upload file"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id5-label" for="id5">Upload file</label>
+<div class="input-group">
+<label class="input-group-btn input-group-prepend">
+<span class="btn btn-default btn-file">
+Browse...
+<input id="id5" name="id5" type="file" style="position: absolute !important; top: -99999px !important; left: -99999px !important;">
+</span>
+</label>
+<input type="text" class="form-control" placeholder="No file selected" readonly="readonly">
+</div>
+<div id="id5_progress" class="progress active shiny-file-input-progress">
+<div class="progress-bar"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="html-inputs-part-2" class="slide level2">
+<h2>HTML Inputs <span class="f4">Part 2</span></h2>
+<div class="f4">
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-7_e62532a4c019d542b11dff8025252c6c">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">numericInput</span>(<span class="st">"id6"</span>, <span class="st">"Enter number"</span>, </span>
+<span id="cb8-2"><a href="#cb8-2"></a>             <span class="at">value =</span> <span class="dv">1</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">10</span>, <span class="at">step =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id6-label" for="id6">Enter number</label>
+<input id="id6" type="number" class="form-control" value="1" min="1" max="10" step="1">
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-8_94662ef2c640bcd81a2312f30c93e3f8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">radioButtons</span>(<span class="st">"id7"</span>, <span class="st">"Select one"</span>, </span>
+<span id="cb9-2"><a href="#cb9-2"></a>             <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Pizza"</span>, <span class="st">"Dumplings"</span>, <span class="st">"Sushi"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="id7" class="form-group shiny-input-radiogroup shiny-input-container" role="radiogroup" aria-labelledby="id7-label">
+<label class="control-label" id="id7-label" for="id7">Select one</label>
+<div class="shiny-options-group">
+<div class="radio">
+<label>
+<input type="radio" name="id7" value="Pizza" checked="checked">
+<span>Pizza</span>
+</label>
+</div>
+<div class="radio">
+<label>
+<input type="radio" name="id7" value="Dumplings">
+<span>Dumplings</span>
+</label>
+</div>
+<div class="radio">
+<label>
+<input type="radio" name="id7" value="Sushi">
+<span>Sushi</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-9_3afdb4db36bed82642ebfbbd0cf47168">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">passwordInput</span>(<span class="st">"id8"</span>, <span class="st">"Enter password"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id8-label" for="id8">Enter password</label>
+<input id="id8" type="password" class="form-control" value="">
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-10_e89b17bb8d2a37653abaa37e33844c3c">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">textInput</span>(<span class="st">"id9"</span>, <span class="st">"Enter text"</span>, <span class="at">value =</span> <span class="st">"Enter coments here"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id9-label" for="id9">Enter text</label>
+<input id="id9" type="text" class="form-control" value="Enter coments here">
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="html-input-part-3" class="slide level2">
+<h2>HTML Input <span class="f4">Part 3</span></h2>
+<div class="f4">
+<div class="fragment">
+<p>Note: calendar date picker pop up doesn’t show up here.</p>
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-11_6af66508f0a710791b8afea57a626a47">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">dateInput</span>(<span class="st">"id10"</span>, <span class="st">"Select day"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="id10" class="shiny-date-input form-group shiny-input-container">
+<label class="control-label" id="id10-label" for="id10">Select day</label>
+<input type="text" class="form-control" aria-labelledby="id10-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-date-autoclose="true" data-date-dates-disabled="null" data-date-days-of-week-disabled="null">
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">dateRangeInput</span>(<span class="st">"id11"</span>, <span class="st">"Select days"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="id11" class="shiny-date-range-input form-group shiny-input-container">
+<label class="control-label" id="id11-label" for="id11">Select days</label>
+<div class="input-daterange input-group input-group-sm">
+<input class="form-control" type="text" aria-labelledby="id11-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-date-autoclose="true">
+<span class="input-group-addon input-group-prepend input-group-append">
+<span class="input-group-text"> to </span>
+</span>
+<input class="form-control" type="text" aria-labelledby="id11-label" title="Date format: yyyy-mm-dd" data-date-language="en" data-date-week-start="0" data-date-format="yyyy-mm-dd" data-date-start-view="month" data-date-autoclose="true">
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-12_089f5504d935888097cabae5910660f9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">selectInput</span>(<span class="st">"id12"</span>, <span class="st">"Select a drink"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Tea"</span>, <span class="st">"Coffee"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display no-overflow-x">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id12-label" for="id12">Select a drink</label>
+<div>
+<select id="id12"><option value="Tea" selected="">Tea</option>
+<option value="Coffee">Coffee</option></select>
+<script type="application/json" data-for="id12" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="fragment">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-13_67bea94691e6ed654f7ea49ebe153e9c">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">sliderInput</span>(<span class="st">"id13"</span>, <span class="st">"How many?"</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>, <span class="at">value =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="id13-label" for="id13">How many?</label>
+<input class="js-range-slider" id="id13" data-skin="shiny" data-min="0" data-max="10" data-from="0" data-step="1" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number">
+</div>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="layouts" class="title-slide slide level1 center">
+<h1>Layouts</h1>
+
+</section>
+<section id="fluidrow-columns" class="slide level2 scrollable">
+<h2><code>fluidRow</code> + <code>columns</code></h2>
+<p>This is using <a href="https://getbootstrap.com/docs/3.4/css/">bootstrap</a></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">fluidPage</span>(</span>
+<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">fluidRow</span>(<span class="fu">column</span>(<span class="at">width =</span> <span class="dv">4</span>,</span>
+<span id="cb16-3"><a href="#cb16-3"></a>                  <span class="fu">h3</span>(<span class="st">"Some informative table"</span>),</span>
+<span id="cb16-4"><a href="#cb16-4"></a>                  <span class="fu">tableOutput</span>(<span class="st">"mytable"</span>)),</span>
+<span id="cb16-5"><a href="#cb16-5"></a>           <span class="fu">column</span>(<span class="at">width =</span> <span class="dv">4</span>, <span class="at">offset =</span> <span class="dv">3</span>,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>                  <span class="fu">h3</span>(<span class="st">"Fancy plot"</span>),</span>
+<span id="cb16-7"><a href="#cb16-7"></a>                  <span class="fu">plotOutput</span>(<span class="st">"myplot"</span>))),</span>
+<span id="cb16-8"><a href="#cb16-8"></a>  <span class="fu">fluidRow</span>(<span class="fu">column</span>(<span class="at">width =</span> <span class="dv">12</span>, </span>
+<span id="cb16-9"><a href="#cb16-9"></a>                  <span class="st">"Minimum width is 1 and maximum width is 12"</span>))</span>
+<span id="cb16-10"><a href="#cb16-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource html number-lines code-with-copy"><code class="sourceCode html"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"container-fluid"</span><span class="kw">&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"row"</span><span class="kw">&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"col-sm-4"</span><span class="kw">&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>      <span class="kw">&lt;h3&gt;</span>Some informative table<span class="kw">&lt;/h3&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>      <span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"mytable"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"shiny-html-output"</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>    <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"col-sm-4 offset-md-3 col-sm-offset-3"</span><span class="kw">&gt;</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>      <span class="kw">&lt;h3&gt;</span>Fancy plot<span class="kw">&lt;/h3&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>      <span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"myplot"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"shiny-plot-output"</span> <span class="er">style</span><span class="ot">=</span><span class="st">"width:100%;height:400px;"</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>    <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>  <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb17-12"><a href="#cb17-12"></a>  <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"row"</span><span class="kw">&gt;</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"col-sm-12"</span><span class="kw">&gt;</span>Minimum width is 1 and maximum width is 12<span class="kw">&lt;/div&gt;</span></span>
+<span id="cb17-14"><a href="#cb17-14"></a>  <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a><span class="kw">&lt;/div&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="sidebarlayout" class="slide level2">
+<h2><code>sidebarLayout</code></h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">fluidPage</span>(<span class="fu">sidebarLayout</span>(</span>
+<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">sidebarPanel</span>(<span class="fu">h3</span>(<span class="st">"User control"</span>),</span>
+<span id="cb18-3"><a href="#cb18-3"></a>               <span class="fu">actionButton</span>(<span class="st">"id1"</span>, <span class="st">"Push"</span>)),</span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="fu">mainPanel</span>(<span class="fu">h3</span>(<span class="st">"Main Panel"</span>),</span>
+<span id="cb18-5"><a href="#cb18-5"></a>            <span class="fu">plotOutput</span>(<span class="st">"myplot"</span>))</span>
+<span id="cb18-6"><a href="#cb18-6"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource html number-lines code-with-copy"><code class="sourceCode html"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"container-fluid"</span><span class="kw">&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>  <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"row"</span><span class="kw">&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"col-sm-4"</span><span class="kw">&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a>      <span class="kw">&lt;form</span> <span class="er">class</span><span class="ot">=</span><span class="st">"well"</span> <span class="er">role</span><span class="ot">=</span><span class="st">"complementary"</span><span class="kw">&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>        <span class="kw">&lt;h3&gt;</span>User control<span class="kw">&lt;/h3&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a>        <span class="kw">&lt;button</span> <span class="er">id</span><span class="ot">=</span><span class="st">"id1"</span> <span class="er">type</span><span class="ot">=</span><span class="st">"button"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"btn btn-default action-button"</span><span class="kw">&gt;</span>Push<span class="kw">&lt;/button&gt;</span></span>
+<span id="cb19-7"><a href="#cb19-7"></a>      <span class="kw">&lt;/form&gt;</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>    <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb19-9"><a href="#cb19-9"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"col-sm-8"</span> <span class="er">role</span><span class="ot">=</span><span class="st">"main"</span><span class="kw">&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a>      <span class="kw">&lt;h3&gt;</span>Main Panel<span class="kw">&lt;/h3&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a>      <span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"myplot"</span> <span class="er">class</span><span class="ot">=</span><span class="st">"shiny-plot-output"</span> <span class="er">style</span><span class="ot">=</span><span class="st">"width:100%;height:400px;"</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a>    <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb19-13"><a href="#cb19-13"></a>  <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb19-14"><a href="#cb19-14"></a><span class="kw">&lt;/div&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="server-client-communication" class="title-slide slide level1 center">
+<h1>Server &amp; Client Communication</h1>
+<p><i class="fa-solid fa-gear fa-spin"></i> <a href="https://ebsmonash.shinyapps.io/ETC5523-Covid-19-App-Demo/">Demo App</a></p>
+
+<img src="images/drawn/shiny-server.png" class="r-stretch"></section>
+<section id="server-and-user-interface-outputs" class="slide level2">
+<h2>Server and User Interface Outputs</h2>
+<table>
+<thead>
+<tr class="header">
+<th>server</th>
+<th>ui</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>renderDataTable</code></td>
+<td><code>dataTableOutput</code></td>
+</tr>
+<tr class="even">
+<td><code>renderImage</code></td>
+<td><code>imageOutput</code></td>
+</tr>
+<tr class="odd">
+<td><code>renderPlot</code></td>
+<td><code>plotOutput</code></td>
+</tr>
+<tr class="even">
+<td><code>renderPrint</code></td>
+<td><code>verbatimTextOutput</code></td>
+</tr>
+<tr class="odd">
+<td><code>renderTable</code></td>
+<td><code>tableOutput</code></td>
+</tr>
+<tr class="even">
+<td><code>renderText</code></td>
+<td><code>textOutput</code></td>
+</tr>
+<tr class="odd">
+<td><code>renderUI</code></td>
+<td><code>uiOutput</code> or <code>htmlOutput</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reactivity" class="slide level2">
+<h2>Reactivity</h2>
+<ul>
+<li><code>reactiveValues</code> creates your own reactive values</li>
+<li><code>isolate</code> prevents reactions</li>
+<li><code>reactive</code> caches its value to reduce computation and notifies its dependencies when it has been invalidated</li>
+<li><code>observeEvent</code> runs code when the first argument changes</li>
+<li><code>observe</code> runs code when any reactive elements within it changes</li>
+</ul>
+</section></section>
+<section id="debugging" class="title-slide slide level1 center">
+<h1>Debugging</h1>
+<ul>
+<li><code>browser()</code> + breaking points</li>
+</ul>
+</section>
+
+<section>
+<section id="how-to-deploy-your-shiny-app" class="title-slide slide level1 center">
+<h1>How to deploy your Shiny app?</h1>
+<p><a href="shinyapps.io">shinyapps.io</a></p>
+</section>
+<section id="week-3-lesson" class="slide level2">
+<h2>Week 3 Lesson</h2>
+<div class="callout callout-important callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Summary</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>We went through the benefits of interactivity for communicating data</li>
+<li>We considered how to design displays for web apps</li>
+<li>You learnt how to use make web apps using <code>shiny</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-tip callout-captioned callout-style-default">
+<div class="callout-body">
+<div class="callout-caption">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Resources</strong></p>
+</div>
+<div class="callout-content">
+<div class="cell" data-layout-align="center" data-hash="cache/unnamed-chunk-14_6a105c6ad9105bc0e6e0d7f11ab0719e">
+<style type="text/css">
+.box {
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 3px solid black;
+  background-color: #006DAE;
+  color: white!important;
+  text-align: center;
+  border-radius: 5px;
+  opacity: 0.9;
+  font-size: 0.7em;
+}
+.box:hover {
+  background-color: #EE0220; 
+  opacity: 1;
+}
+</style>
+</div>
+<ul>
+<li><a href="https://distill.pub/2020/communicating-with-interactive-articles/">Hohman, et al., “Communicating with Interactive Articles”, Distill, 2020.</a></li>
+<li>Introduction to Shiny <a href="https://shiny.rstudio.com/tutorial/"><span class="box">Tutorials</span></a> <a href="https://rstudio-education.github.io/shiny-course/"><span class="box">Course</span></a> <a href="https://mastering-shiny.org/"><span class="box">Mastering Shiny</span></a></li>
+<li>Debugging Shiny <a href="https://rstudio.com/resources/shiny-dev-con/debugging-techniques/"><span class="box">Techniques</span></a> <a href="https://shiny.rstudio.com/articles/debugging.html"><span class="box">Article</span></a></li>
+<li>Cheatsheet for Shiny <a href="https://github.com/rstudio/cheatsheets/raw/main/shiny.pdf"><span class="box">Cheatsheet</span></a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<img src="images/monash-one-line-black-rgb.png" class="slide-logo r-stretch"><div class="footer footer-default">
+<p>ETC5523 Week 3</p>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="lecture-03_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="lecture-03_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="lecture-03_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="lecture-03_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'smaller': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: true,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          // dispatch for htmlwidgets
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for reveal
+        if (window.Reveal) {
+          window.Reveal.addEventListener("slidechanged", function(event) {
+            fireSlideChanged(event.previousSlide, event.currentSlide);
+          });
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        setTimeout(function() {
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn) {
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto-reveal',
+          placement: 'bottom-start'
+        };
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          let href = ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+        tippyHover(ref, function() {
+          var popup = window.document.createElement('div');
+          cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    });
+    </script>
+    <link rel="stylesheet" href="assets/syntax-highlight.css"> <link rel="stylesheet" href="assets/monash-after-body.css"> <link rel="stylesheet" href="assets/fontawesome-free-6.1.1-web/css/all.css"> <script src="assets/fontawesome-free-6.1.1-web/js/all.js"></script> <script src="assets/shiny.min.js"></script>
+    
+
+</body></html>

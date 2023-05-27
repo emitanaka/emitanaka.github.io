@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-03A.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Initial data analysis&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 3 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+---
+
+
+# Data Analysis
+
+.info-box.w-60[
+**Data analysis** is a process of cleaning, transforming, inspecting and modelling data with the aim of extracting information.
+]
+
+&lt;br&gt;
+
+* Data analysis includes:
+  * exploratory data analysis,
+  * confirmatory data analysis, and 
+  * _initial data analysis_.
+  
+--
+
+.w-60[
+* Confirmatory data analysis is focussed on statistical inference and includes processes such as testing hypothesis, model selection, or predictive modelling... {{content}}
+
+]
+
+--
+but today's focus will be on **_initial data analysis_**.
+
+---
+
+
+# Initial Data Analysis (IDA)
+
+.w-60[
+* There are various definitions of IDA, much like there are numerous definitions for EDA.
+* Some people would be practicing IDA without realising that it is IDA.
+* Or other cases, a different name is used to describe the same process, such as Chatfield (1985) referring to IDA also as **_"initial examination of data"_** and Cox &amp; Snell (1981) as **_"preliminary data anlysis"_** and Rao (1983) as **_"cross-examination of data"_**.
+
+]
+
+
+
+.footnote.f5[
+Chatfield (1985) The Initial Examination of Data. *Journal of the Royal Statistical Society. Series A (General)* **148** &lt;Br&gt;
+Cox &amp; Snell (1981) Applied Statistics. *London: Chapman and Hall.*&lt;br&gt;
+Rao (1983) Optimum balance between statistical theory and application in teaching. *Proc. of the First Int Conference on Teaching Statistics* 34-49
+]
+
+--
+
+&lt;br&gt;
+
+.w-60.center.monash-blue.f1[
+**So what is IDA?**
+]
+
+
+
+
+---
+
+# What is IDA?
+
+.info-box[
+The two .monash-blue[**main objectives for IDA**] are:
+
+&lt;div style="padding-left: 40px;"&gt;
+&lt;ol&gt;
+&lt;li&gt; &lt;b&gt;data description&lt;/b&gt;, and&lt;/li&gt; 
+&lt;li&gt; &lt;b&gt;model formulation&lt;/b&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+]
+--
+
+.w-60[
+* **_IDA differs from the main analysis_** (i.e. usually fitting the model, conducting significance tests, making inferences or predictions). 
+{{content}}
+]
+--
+
+
+* **_IDA is often unreported_** in the data analysis reports or scientific papers due to it being "uninteresting" or "obvious".
+{{content}}
+--
+
+
+* The role of **_the main analysis is to answer the intended question(s) that the data were collected for_**.
+--
+
+
+* Sometimes IDA alone is sufficient. 
+
+---
+
+# .circle.bg-black.white[1] Data Description .f4[Part 1/2]
+
+.w-70[
+* Data description should be one of the first steps in the data analysis to **_assess the structure and quality of the data_**.
+{{content}}
+]
+--
+
+
+* We refer them to occasionally as **_data sniffing_** or **_data scrutinizing_**.
+{{content}}
+--
+
+
+* These include using common or domain knowledge to check if the recorded data have sensible values. 
+{{content}}
+--
+E.g. 
+  * Are positive values, e.g. height and weight, recorded as positive values with a plausible range?
+{{content}}
+--
+
+  * If the data are counts, do the recorded values contain non-integer values?
+{{content}}
+--
+
+  * For compositional data, do the values add up to 100% (or 1)? If not is that a measurement error or due to rounding? Or is another variable missing?
+
+---
+
+# .circle.bg-black.white[1] Data Description .f4[Part 2/2]
+
+.w-70[
+* In addition, numerical or graphical summaries may reveal that there is unwanted structure in the data. E.g.,
+    * Does the treatment group have different demographic characteristics to the control group? 
+    * Does the distribution of the data imply violations of assumptions for the main analysis?
+{{content}}
+]
+--
+* *Data sniffing* or *data scrutinizing* is a process that you get better at with practice and have familiarity with the domain area. 
+{{content}}
+--
+
+* Aside from checking the _data structure_ or _data quality_, it's important to check how the data are understood by the computer, i.e. checking for _data type_ is also important. E.g.,
+    * Was the date read in as character?
+    * Was a factor read in as numeric?
+    
+    
+---
+
+class: middle
+
+.w-70[
+
+# Next we'll see some _illustrative .blue[examples]_  and _.orange[cases] based on real data_ with some R codes
+
+&lt;Br&gt;
+
+* Note: that there are a variety of ways to do IDA &amp; EDA and you don't need to prescribe to what we show you.
+
+]
+
+
+
+
+---
+
+class: font_smaller
+
+# .blue[Example] .circle.bg-blue.white[1] Checking the data type .f4[Part 1/2]
+
+.grid[
+.item[
+`lecture3-example.xlsx`
+
+&lt;center&gt;
+&lt;img src="images/lecture3-example.png" width = "400px"&gt;
+&lt;/center&gt;
+
+]
+.item.pl2[
+
+
+```r
+library(readxl)
+library(here)
+df &lt;- read_excel(here("data/lecture3-example.xlsx"))
+df
+```
+
+```
+## # A tibble: 5 x 4
+##      id date                loc       temp
+##   &lt;dbl&gt; &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;
+## 1     1 2010-01-03 00:00:00 New York  42  
+## 2     2 2010-02-03 00:00:00 New York  41.4
+## 3     3 2010-03-03 00:00:00 New York  38.5
+## 4     4 2010-04-03 00:00:00 New York  41.1
+## 5     5 2010-05-03 00:00:00 New York  39.8
+```
+
+
+Any issues here?
+
+]
+]
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[1] Checking the data type .f4[Part 2/2]
+
+.grid[
+.item[
+
+```r
+library(lubridate)
+df %&gt;% 
+  mutate(id = as.factor(id),
+         day = day(date),
+         month = month(date),
+         year = year(date)) %&gt;% 
+  select(-date)
+```
+
+```
+## # A tibble: 5 x 6
+##   id    loc       temp   day month  year
+##   &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1     New York  42       3     1  2010
+## 2 2     New York  41.4     3     2  2010
+## 3 3     New York  38.5     3     3  2010
+## 4 4     New York  41.1     3     4  2010
+## 5 5     New York  39.8     3     5  2010
+```
+
+]
+.item[
+* `id` is now a `factor` instead of `integer`
+* `day`, `month` and `year` are now extracted from the `date`
+* Is it okay now?
+
+{{content}}
+
+]
+]
+
+--
+
+* In the United States, it's common to use the date format MM/DD/YYYY &lt;a class="font_small black" href="https://twitter.com/statsgen/status/1257959369448161281"&gt;(gasps)&lt;/a&gt;  while the rest of the world commonly use DD/MM/YYYY or YYYY/MM/DD.
+{{content}}
+--
+
+
+* It's highly probable that the dates are 1st-5th March and not 3rd of Jan-May.
+{{content}}
+--
+
+
+* You can validate this with other variables, say the temperature [here](https://www.wunderground.com/history/monthly/us/ny/new-york-city/KLGA/date/2010-3).
+
+
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[1] Checking the data type with R .f4[Part 1/3]
+
+
+* You can robustify your workflow by ensuring you have a check for the expected data type in your code.
+
+.f4[
+
+```r
+xlsx_df &lt;- read_excel(here("data/lecture3-example.xlsx"),
+                 col_types = c("text", "date", "text", "numeric")) %&gt;% 
+  mutate(id = as.factor(id), 
+         date = as.character(date),
+         date = as.Date(date, format = "%Y-%d-%m"))
+```
+]
+
+* `read_csv` has a broader support for `col_types`
+
+.f4[
+
+```r
+csv_df &lt;- read_csv(here("data/lecture3-example.csv"),
+                 col_types = cols(
+                      id = col_factor(),
+                      date = col_date(format = "%m/%d/%y"),
+                      loc = col_character(),
+                      temp = col_double()))
+```
+]
+
+* The checks (or coercions) ensure that even if the data are updated, you can have some confidence that any data type error will be picked up before further analysis.
+
+
+
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[1] Checking the data type with R .f4[Part 2/3]
+
+
+You can have a quick glimpse of the data type with:
+
+.f4[
+
+```r
+dplyr::glimpse(xlsx_df)
+```
+
+```
+## Rows: 5
+## Columns: 4
+## $ id   &lt;fct&gt; 1, 2, 3, 4, 5
+## $ date &lt;date&gt; 2010-03-01, 2010-03-02, 2010-03-03, 2010-03-04, 2010-03-05
+## $ loc  &lt;chr&gt; "New York", "New York", "New York", "New York", "New York"
+## $ temp &lt;dbl&gt; 42.0, 41.4, 38.5, 41.1, 39.8
+```
+
+```r
+dplyr::glimpse(csv_df)
+```
+
+```
+## Rows: 5
+## Columns: 4
+## $ id   &lt;fct&gt; 1, 2, 3, 4, 5
+## $ date &lt;date&gt; 2010-03-01, 2010-03-02, 2010-03-03, 2010-03-04, 2010-03-05
+## $ loc  &lt;chr&gt; "New York", "New York", "New York", "New York", "New York"
+## $ temp &lt;dbl&gt; 42.0, 41.4, 38.5, 41.1, 39.8
+```
+]
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[1] Checking the data type with R .f4[Part 3/3]
+
+You can also visualise the data type with:
+
+.grid[.item.br[
+
+```r
+library(visdat)
+vis_dat(xlsx_df)
+```
+
+&lt;img src="images/week3A/unnamed-chunk-8-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+
+```r
+library(inspectdf)
+inspect_types(xlsx_df) %&gt;% 
+  show_plot()
+```
+
+&lt;img src="images/week3A/unnamed-chunk-9-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[2] Checking the data quality
+
+.grid[
+.item.f4[
+
+```r
+df2 &lt;- read_csv(here("data/lecture3-example2.csv"),
+    col_types = cols(id = col_factor(),
+                     date = col_date(format = "%m/%d/%y"),
+                     loc = col_character(),
+                     temp = col_double()))
+df2
+```
+
+```
+## # A tibble: 9 x 4
+##   id    date       loc        temp
+##   &lt;fct&gt; &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
+## 1 1     2010-03-01 New York   42  
+## 2 2     2010-03-02 New York   41.4
+## 3 3     2010-03-03 New York   38.5
+## 4 4     2010-03-04 New York   41.1
+## 5 5     2010-03-05 New York   39.8
+## 6 6     2020-03-01 Melbourne  30.6
+## 7 7     2020-03-02 Melbourne  17.9
+## 8 8     2020-03-03 Melbourne  18.6
+## 9 9     2020-03-04 &lt;NA&gt;       21.3
+```
+
+
+]
+.item[
+* Numerical or graphical summaries or even just eye-balling the data helps to uncover some data quality issues.
+* Any issues here?
+{{content}}
+
+]
+]
+
+--
+&lt;br&gt;&lt;br&gt;
+* There's a missing value in `loc`.
+* Temperature is in Farenheit for New York but Celsius in Melbourne (you can validate this again using external sources).
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[1]  Soybean study in Brazil .f4[Part 1/3]
+
+
+
+.overflow-scroll.h-70.f4[
+
+```r
+data("lehner.soybeanmold", package = "agridat")
+*skimr::skim(lehner.soybeanmold)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values            
+## Name                       lehner.soybeanmold
+## Number of rows             382               
+## Number of columns          9                 
+## _______________________                      
+## Column type frequency:                       
+##   factor                   4                 
+##   numeric                  5                 
+## ________________________                     
+## Group variables            None              
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                        
+## 1 study                 0             1 FALSE         35 S01: 13, S02: 13, S03: 13, S04: 13
+## 2 loc                   0             1 FALSE         14 Sao: 56, Mon: 44, Pon: 44, Mau: 34
+## 3 region                0             1 FALSE          2 Nor: 273, Sou: 109                
+## 4 trt                   0             1 FALSE         13 T01: 35, T02: 35, T03: 35, T04: 35
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   mean       sd    p0   p25   p50    p75    p100 hist 
+## 1 year                  0         1     2010.     0.981  2009 2010  2010  2011    2012   ▃▇▁▃▃
+## 2 elev                  0         1      951.    83.6     737  909   947  1027    1050   ▁▂▅▂▇
+## 3 yield                 0         1     3117.   764.     1451 2528. 2994. 3642.   4908   ▂▇▇▃▃
+## 4 mold                  0         1       19.7   18.1       0    7    13    27.2    90.3 ▇▃▂▁▁
+## 5 sclerotia            66         0.827 1854.  2034.        0  421  1082  2606   11000   ▇▂▁▁▁
+```
+]
+
+&lt;center&gt;
+scroll&lt;br&gt;
+&lt;i class="fas fa-angle-double-down"&gt;&lt;/i&gt;
+&lt;/center&gt;
+
+.footnote.f4[
+Lehner, M. S., Pethybridge, S. J., Meyer, M. C., &amp; Del Ponte, E. M. (2016). Meta-analytic modelling of the incidence-yield and incidence-sclerotial production relationships in soybean white mould epidemics. _Plant Pathology_. doi:10.1111/ppa.12590
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1]  Soybean study in Brazil .f4[Part 2/3]
+
+.grid[.item.br[
+
+```r
+vis_miss(lehner.soybeanmold)
+```
+
+&lt;img src="images/week3A/unnamed-chunk-12-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.item[
+
+```r
+inspect_na(lehner.soybeanmold) %&gt;% 
+  show_plot()
+```
+
+&lt;img src="images/week3A/unnamed-chunk-13-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+
+]]
+
+
+---
+
+class: font_smaller
+
+# .orange[Case study] .circle.bg-orange.white[1]  Soybean study in Brazil .f4[Part 3/3]
+
+.grid[.item.br[
+
+Checking if missing values have different yields:
+
+```r
+*library(naniar)
+ggplot(lehner.soybeanmold, 
+       aes(sclerotia, yield)) + 
+* geom_miss_point() +
+  scale_color_discrete_qualitative()
+```
+
+&lt;img src="images/week3A/unnamed-chunk-14-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.item.pl3[
+Compare the new with old data:
+
+
+```r
+soy_old &lt;- lehner.soybeanmold %&gt;% 
+  filter(year %in% 2010:2011)
+soy_new &lt;- lehner.soybeanmold %&gt;% 
+  filter(year == 2012)
+
+*inspect_cor(soy_old, soy_new) %&gt;%
+* show_plot()
+```
+
+&lt;img src="images/week3A/unnamed-chunk-15-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+class: transition 
+
+
+# Sanity check your data
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[2] Employment Data in Australia .f4[Part 1/3]
+
+Below is the data from ABS that shows the total number of people employed in a given month from February 1976 to December 2019 using the original time series.
+
+&lt;br&gt;
+
+
+
+
+
+```r
+glimpse(employed)
+```
+
+```
+## Rows: 509
+## Columns: 4
+## $ date  &lt;date&gt; 1978-02-01, 1978-03-01, 1978-04-01, 1978-05-01, 1978-06-01, 1978-07-01, 1978-08-01, 1978-09-01, 1978-10-01, 1978-11-01, 1978-12-01, 1979-01-01, 1979-02-01, 1979-03-01, 1979-04-01, 197…
+## $ month &lt;dbl&gt; 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, …
+## $ year  &lt;fct&gt; 1978, 1978, 1978, 1978, 1978, 1978, 1978, 1978, 1978, 1978, 1978, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1979, 1980, 1980, 1980, 1980, 1980, 1980, 1980, 1980…
+## $ value &lt;dbl&gt; 5985.660, 6040.561, 6054.214, 6038.265, 6031.342, 6036.084, 6005.361, 6024.313, 6045.855, 6033.797, 6125.360, 5971.329, 6050.693, 6096.175, 6087.654, 6075.611, 6095.734, 6103.922, 6078…
+```
+
+.footnote.f4[
+Australian Bureau of Statistics, 2020, Labour force, Australia, Table 01. Labour force status by Sex, Australia - Trend, Seasonally adjusted and Original, viewed 2021-08-09, [&lt;i class="fas  fa-link"&gt;&lt;/i&gt;](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/6202.0Jul%202020?OpenDocument)
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2]  Employment Data in Australia .f4[Part 2/3]
+
+Do you notice anything?
+
+&lt;img src="images/week3A/unnamed-chunk-18-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+--
+
+Why do you think the number of people employed is going up each year?
+
+???
+
+* Australian population is **25.39 million** in 2019
+* 1.5% annual increase in population
+* Vic population is 6.681 million (Sep 2020) - 26%
+* NSW population is 8.166 (Sep 2020) - 32%
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2]  Employment Data in Australia .f4[Part 3/3]
+
+.grid[.item[
+&lt;img src="images/week3A/unnamed-chunk-19-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+
+{{content}}
+
+]
+]
+
+--
+
+
+* There's a suspicious change in August numbers from 2014.
+
+&lt;img src="images/week3A/unnamed-chunk-20-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+* A potential explanation for this is that there was a _change in the survey from 2014_. 
+
+
+&lt;div class="footnote"&gt;
+Also see https://robjhyndman.com/hyndsight/abs-seasonal-adjustment-2/
+&lt;/div&gt;
+
+
+---
+
+class: transition
+
+
+# Check if the _data collection_ method has been consistent
+
+---
+
+# .blue[Example] .circle.bg-blue.white[3] Experimental layout and data .f4[Part 1/2]
+
+
+
+
+`lecture3-example3.csv`
+.f4[
+
+```r
+df3 &lt;- read_csv(here::here("data/lecture3-example3.csv"),
+                col_types = cols(
+                  row = col_factor(),
+                  col = col_factor(),
+                  yield = col_double(),
+                  trt = col_factor(),
+                  block = col_factor()))
+```
+.overflow-scroll.h5[
+
+```r
+skimr::skim(df3)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df3   
+## Number of rows             48    
+## Number of columns          5     
+## _______________________          
+## Column type frequency:           
+##   factor                   4     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                     
+## 1 row                   0             1 FALSE          6 1: 8, 2: 8, 3: 8, 4: 8         
+## 2 col                   0             1 FALSE          8 1: 6, 2: 6, 3: 6, 4: 6         
+## 3 trt                   0             1 FALSE          9 non: 16, hi : 4, hi : 4, hi : 4
+## 4 block                 0             1 FALSE          4 B3: 12, B1: 12, B2: 12, B4: 12 
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 yield                 0             1  246.  16.0   204   237   248  257.   273 ▂▂▇▇▅
+```
+]
+]
+
+
+---
+
+
+# .blue[Example] .circle.bg-blue.white[3] Experimental layout and data .f4[Part 2/2]
+
+
+.grid[
+.item[
+&lt;img src="images/week3A/unnamed-chunk-24-1.png" width="432" style="display: block; margin: auto;" /&gt;&lt;img src="images/week3A/unnamed-chunk-24-2.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.item[
+
+
+
+* The experiment tests the effects of 9 fertilizer treatments on the yield of brussel sprouts on a field laid out in a rectangular array of 6 rows and 8 columns.  
+
+&lt;img src="images/week3A/unnamed-chunk-25-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* High sulphur and high manure seems to best for the yield of brussel sprouts.
+* Any issues here?
+
+]
+]
+
+
+---
+
+
+class:  transition
+
+
+# Check if experimental layout given in the data and the description match 
+
+In particular, have a check with a plot to see if treatments are _randomised_. 
+
+
+---
+
+# Statistical Value Chain
+
+.blockquote[
+... a **statistical value chain** is constructed by defining a number of meaningful intermediate data products, for which a chosen set of quality attributes are well described ...
+
+.pull-right[&amp;mdash; van der Loo &amp; de Jonge (2018)]
+]
+
+.center[
+&lt;img src="images/stats-value-chain.png"&gt;
+]
+
+.footnote.f4[
+Schema from Mark van der Loo and Edwin de Jonge. 2018. Statistical Data Cleaning with Applications in R. John Wiley and Sons Ltd.
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3]  Dutch supermarket revenue and cost .f4[Part 1/3]
+
+* Data contains the revenue and cost (in Euros) for 60 supermarkets 
+* Data has been anonymised and distorted
+
+
+```
+## Rows: 60
+## Columns: 11
+## $ id          &lt;fct&gt; RET01, RET02, RET03, RET04, RET05, RET06, RET07, RET08, RET09, RET10, RET11, RET12, RET13, RET14, RET15, RET16, RET17, RET18, RET19, RET20, RET21, RET22, RET23, RET24, RET25, RET…
+## $ size        &lt;fct&gt; sc0, sc3, sc3, sc3, sc3, sc0, sc3, sc1, sc3, sc2, sc2, sc2, sc3, sc1, sc1, sc0, sc3, sc1, sc2, sc3, sc0, sc0, sc1, sc1, sc2, sc3, sc2, sc3, sc0, sc2, sc3, sc2, sc3, sc3, sc3, sc3…
+## $ incl.prob   &lt;dbl&gt; 0.02, 0.14, 0.14, 0.14, 0.14, 0.02, 0.14, 0.02, 0.14, 0.05, 0.05, 0.05, 0.14, 0.02, 0.02, 0.02, 0.14, 0.02, 0.05, 0.14, 0.02, 0.02, 0.02, 0.02, 0.05, 0.14, 0.05, 0.14, 0.02, 0.05…
+## $ staff       &lt;int&gt; 75, 9, NA, NA, NA, 1, 5, 3, 6, 5, 5, 5, 13, NA, 3, 52, 10, 4, 3, 8, 2, 3, 2, 4, 3, 6, 2, 16, 1, 6, 29, 8, 13, 9, 15, 14, 6, 53, 7, NA, 20, 2, NA, 1, 3, 1, 60, 8, 10, 12, 7, 24, 2…
+## $ turnover    &lt;int&gt; NA, 1607, 6886, 3861, NA, 25, NA, 404, 2596, NA, 645, 2872, 5678, 931397, 80000, 9067, 1500, 440, 690, 1852, 359, 839, 471, 933, 1665, 2318, 1175, 2946, 492, 1831, 7271, 971, 411…
+## $ other.rev   &lt;int&gt; NA, NA, -33, 13, 37, NA, NA, 13, NA, NA, NA, NA, 12, NA, NA, 622, 20, NA, NA, NA, 9, NA, NA, 2, NA, NA, 12, 7, NA, 1831, 30, NA, 11, NA, 33, 98350, 4, NA, 38, 98, 11, NA, NA, NA,…
+## $ total.rev   &lt;int&gt; 1130, 1607, 6919, 3874, 5602, 25, 1335, 417, 2596, NA, 645, 2872, 5690, 931397, NA, 9689, 1520, 440, 690, 1852, 368, 839, 471, 935, 1665, 2318, 1187, 2953, 492, 1831, 7301, 107, …
+## $ staff.costs &lt;int&gt; NA, 131, 324, 290, 314, NA, 135, NA, 147, NA, 130, 182, 326, 36872, 40000, 1125, 195, 16, 19000, 120, NA, 2, 34, 31, 70, 184, 114, 245, NA, 53, 451, 28, 57, 106, 539, 221302, 64,…
+## $ total.costs &lt;int&gt; 18915, 1544, 6493, 3600, 5530, 22, 136, 342, 2486, NA, 636, 2652, 5656, 841489, NA, 9911, 1384, 379, 464507, 1812, 339, 717, 411, 814, 186, 390, NA, 2870, 470, 1443, 7242, 95, 36…
+## $ profit      &lt;int&gt; 20045, 63, 426, 274, 72, 3, 1, 75, 110, NA, 9, 220, 34, 89908, NA, -222, 136, 60, 225493, 40, 29, 122, 60, 121, 1478, 86, 17, 83, 22, 388, 59, 100, 528, 160, 282, 22457, 37, -160…
+## $ vat         &lt;int&gt; NA, NA, NA, NA, NA, NA, 1346, NA, NA, NA, NA, NA, NA, 863, 813, 964, 733, 296, 486, 1312, 257, 654, 377, 811, 1472, 2082, 1058, 2670, 449, 1695, 6754, 905, 3841, 2668, 2758, 2548…
+```
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3]  Dutch supermarket revenue and cost .f4[Part 2/3]
+
+* Checking for completeness of records
+
+
+```r
+library(validate)
+rules &lt;- validator(
+          is_complete(id),
+          is_complete(id, turnover),
+          is_complete(id, turnover, profit))
+out &lt;- confront(SBS2000, rules)
+summary(out)
+```
+
+```
+##   name items passes fails nNA error warning                        expression
+## 1   V1    60     60     0   0 FALSE   FALSE                   is_complete(id)
+## 2   V2    60     56     4   0 FALSE   FALSE         is_complete(id, turnover)
+## 3   V3    60     52     8   0 FALSE   FALSE is_complete(id, turnover, profit)
+```
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3]  Dutch supermarket revenue and cost .f4[Part 3/3]
+
+* Sanity check derived variables
+
+
+```r
+library(validate)
+rules &lt;- validator(
+    total.rev - profit == total.costs,
+    turnover + other.rev == total.rev,
+    profit &lt;= 0.6 * total.rev
+)
+out &lt;- confront(SBS2000, rules)
+summary(out)
+```
+
+```
+##   name items passes fails nNA error warning                                    expression
+## 1   V1    60     39    14   7 FALSE   FALSE abs(total.rev - profit - total.costs) &lt; 1e-08
+## 2   V2    60     19     4  37 FALSE   FALSE abs(turnover + other.rev - total.rev) &lt; 1e-08
+## 3   V3    60     49     6   5 FALSE   FALSE           (profit - 0.6 * total.rev) &lt;= 1e-08
+```
+
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+&lt;ul class="fa-ul"&gt;
+{{content}}
+&lt;/ul&gt;
+
+
+]
+]
+
+--
+
+  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Sanity check your data:
+  &lt;ul&gt;
+  &lt;li&gt;by validating the variable types&lt;/li&gt;
+  &lt;li&gt;with independent or external sources&lt;/li&gt;
+  &lt;li&gt;by checking the data quality&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/li&gt;
+
+{{content}}
+
+--
+  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Check if the data collection method has been consistent&lt;/li&gt;
+{{content}}
+
+--
+  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Check if experimental layout given in the data and the description match&lt;/li&gt;
+{{content}}
+
+--
+  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-paper-plane"&gt;&lt;/i&gt;&lt;/span&gt;Consider if or how data were derived for further sanity check of your data&lt;/li&gt;
+
+
+---
+
+class: transition
+
+# Next we'll have a look at the &lt;br&gt;&lt;span class="circle bg-blue" style="width:1.5em;height:1.5em;"&gt;2&lt;/span&gt; Model formulation
+
+
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 3 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

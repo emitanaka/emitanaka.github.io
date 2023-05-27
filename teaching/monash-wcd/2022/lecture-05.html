@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5512: Wild Caught Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.11/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="lib/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <link href="lib/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="lib/datatables-binding-0.20/datatables.js"></script>
+    <script src="lib/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+    <link href="lib/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="lib/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="lib/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+    <link href="lib/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="lib/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/emi.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-05.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5512: Wild Caught Data]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Australian election data&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 5
+
+&lt;br&gt;
+
+]
+
+
+
+
+---
+
+# Australian election data 
+
+.w-70[
+
+* Much like the census, .monash-blue[**election**] attempts to collect the data from the population.
+
+{{content}}
+
+]
+
+--
+
+* In Australia, it is compulsory by law to vote in elections if you are an Australian citizen &lt;span class="f6"&gt;(or eligible British subject)&lt;/span&gt; aged 18 years old or over and have lived in your address for at least one month.
+{{content}}
+--
+
+* The Australian Electoral Commission (AEC) is an independent federal agency in charge of federal Australian elections and provides the geographical boundaries of the electoral divisions.
+{{content}}
+
+--
+
+&lt;div class="question-box"&gt;
+&lt;ol&gt;
+&lt;li&gt;When was the last federal election in Australia?&lt;/li&gt;
+&lt;li&gt;How often is the federal election conducted in Australia? &lt;/li&gt;
+&lt;li&gt;How many electoral divisions are there in the last federal election?&lt;/li&gt;
+&lt;li&gt;What is the population for the Australian federal election?&lt;/li&gt;
+&lt;/div&gt;
+
+
+
+---
+
+class: center middle bg-gray
+
+.aim-box.tl[
+Today you will:
+
+- look at the 2019 election results
+- visualise the 2019 election results spatially in a few ways
+- look at reprojecting geographic data into different coordinate reference systems
+
+]
+
+
+---
+
+# 2019 Australian Federal Election
+
+.flex.h-100[
+.w-55[
+* Parliament of Australia comprises two houses: 
+  * **Senate** (upper house) comprising 76 senators
+  * **House of Representatives** (lower house) comprising 151 members
+* Government is formed by the party or coalition with majority of the seats in the lower house
+* The 2019 Australian Federal Election was held on Sat 18th May 2019
+* The next federal election will be likely be held in 2022
+
+
+]
+.w-45.monash-bg-gray10[
+
+* Major parties in Australia:
+  * Coalition:
+      * &lt;img src="images/lecture-08/logo-liberal.png" height="60px"&gt; Liberal
+      * &lt;img src="images/lecture-08/logo-national.png" height="30px"&gt; National 
+  * Labor &lt;img src="images/lecture-08/logo-labor.png" height="40px"&gt;
+* Some minor parties in Australia:
+  * &lt;img src="images/lecture-08/logo-green.png" height="50px"&gt; The Greens
+  * &lt;img src="images/lecture-08/logo-one-nation.png" height="50px"&gt; One Nation
+
+
+]]
+
+---
+
+# Ballots
+
+* **House of Representatives** uses the instant-runoff voting system
+* Senate uses the single transferable voting system
+
+&lt;center&gt;
+&lt;img class = "ba" src="images/lecture-08/hor-paper.jpg"&gt;.white[Senate]&lt;img class = "ba" src="images/lecture-08/senate-atl-sample.png"&gt;
+&lt;/center&gt;
+
+
+
+---
+
+# 2019 Australian Federal Election Data
+
+* Get the distribution of preferences by candidate by division for the 2019 Australian Federal Election
+
+.f2.center[
+&lt;i class="fas fa-download"&gt;&lt;/i&gt; https://results.aec.gov.au
+] 
+&lt;br&gt;
+
+.center[
+.info-box.w-60.tl[
+
+1. 2019 federal election
+1. Downloads
+1. Distribution of preferences by candidate by division
+
+]]
+
+* Or refer directly to the link:
+
+.center[
+https://results.aec.gov.au/24310/Website/Downloads/HouseDopByDivisionDownload-24310.csv
+
+]
+
+---
+
+# House of Representative Voting Data
+
+.f4[
+
+```r
+library(tidyverse)
+votes &lt;- read_csv("https://results.aec.gov.au/24310/Website/Downloads/HouseDopByDivisionDownload-24310.csv", skip = 1)
+glimpse(votes)
+```
+
+```
+## Rows: 26,632
+## Columns: 14
+## $ StateAb          &lt;chr&gt; "ACT", "ACT", "ACT", "ACT", "ACT", "ACT", "ACT", "ACT…
+## $ DivisionID       &lt;dbl&gt; 318, 318, 318, 318, 318, 318, 318, 318, 318, 318, 318…
+## $ DivisionNm       &lt;chr&gt; "Bean", "Bean", "Bean", "Bean", "Bean", "Bean", "Bean…
+## $ CountNumber      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+## $ BallotPosition   &lt;dbl&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5,…
+## $ CandidateID      &lt;dbl&gt; 33426, 33426, 33426, 33426, 32130, 32130, 32130, 3213…
+## $ Surname          &lt;chr&gt; "FAULKNER", "FAULKNER", "FAULKNER", "FAULKNER", "CHRI…
+## $ GivenNm          &lt;chr&gt; "Therese", "Therese", "Therese", "Therese", "Jamie", …
+## $ PartyAb          &lt;chr&gt; "AUP", "AUP", "AUP", "AUP", "IND", "IND", "IND", "IND…
+## $ PartyNm          &lt;chr&gt; "Australian Progressives", "Australian Progressives",…
+## $ Elected          &lt;chr&gt; "N", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"…
+## $ HistoricElected  &lt;chr&gt; "N", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"…
+## $ CalculationType  &lt;chr&gt; "Preference Count", "Preference Percent", "Transfer C…
+## $ CalculationValue &lt;dbl&gt; 2722.00, 2.93, 0.00, 0.00, 7683.00, 8.27, 0.00, 0.00,…
+```
+]
+
+
+---
+
+# Electoral district of .monash-blue[Monash]
+
+* Let's have a look at the electoral district named "Monash"
+
+.f4.overflow-scroll.h-80[
+
+```r
+votes %&gt;% 
+  filter(DivisionNm=="Monash") %&gt;% 
+  DT::datatable(width = 1160, height = 400, options = list(pageLength = 400))
+```
+
+<div id="htmlwidget-28206bf6ecb25aad2d2a" style="width:1160px;height:400px;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-28206bf6ecb25aad2d2a">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168"],["VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC"],[323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323],["Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash"],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],[1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7],[32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281,32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281,32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281,32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281,32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281,32690,32690,32690,32690,32137,32137,32137,32137,32802,32802,32802,32802,32299,32299,32299,32299,32729,32729,32729,32729,33175,33175,33175,33175,32281,32281,32281,32281],["VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY","VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY","VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY","VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY","VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY","VERHOEVEN","VERHOEVEN","VERHOEVEN","VERHOEVEN","FOZARD","FOZARD","FOZARD","FOZARD","WADDELL","WADDELL","WADDELL","WADDELL","O'DONNELL","O'DONNELL","O'DONNELL","O'DONNELL","HORNSTRA","HORNSTRA","HORNSTRA","HORNSTRA","BROADBENT","BROADBENT","BROADBENT","BROADBENT","SHERRY","SHERRY","SHERRY","SHERRY"],["John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew","John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew","John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew","John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew","John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew","John","John","John","John","Michael Stewart","Michael Stewart","Michael Stewart","Michael Stewart","Jeff","Jeff","Jeff","Jeff","Jessica","Jessica","Jessica","Jessica","William","William","William","William","Russell","Russell","Russell","Russell","Matthew","Matthew","Matthew","Matthew"],["IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP","IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP","IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP","IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP","IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP","IND","IND","IND","IND","IND","IND","IND","IND","ON","ON","ON","ON","ALP","ALP","ALP","ALP","GVIC","GVIC","GVIC","GVIC","LP","LP","LP","LP","UAPP","UAPP","UAPP","UAPP"],["Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Independent","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Pauline Hanson's One Nation","Australian Labor Party","Australian Labor Party","Australian Labor Party","Australian Labor Party","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","The Greens (VIC)","Liberal","Liberal","Liberal","Liberal","United Australia Party","United Australia Party","United Australia Party","United Australia Party"],["N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N"],["N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","N","Y","Y","Y","Y","N","N","N","N"],["Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent","Preference Count","Preference Percent","Transfer Count","Transfer Percent"],[2723,2.71,0,0,2870,2.86,0,0,7656,7.62,0,0,29656,29.51,0,0,7047,7.01,0,0,46501,46.28,0,0,4028,4.01,0,0,0,0,-2723,-100,4560,4.54,1690,62.06,7908,7.87,252,9.25,29874,29.73,218,8.01,7120,7.09,73,2.68,46817,46.59,316,11.6,4202,4.18,174,6.39,0,0,0,0,5068,5.04,508,12.09,9252,9.21,1344,31.98,30213,30.07,339,8.07,7366,7.33,246,5.85,48582,48.35,1765,42,0,0,-4202,-100,0,0,0,0,0,0,-5068,-100,11136,11.08,1884,37.17,31415,31.26,1202,23.72,8161,8.12,795,15.69,49769,49.53,1187,23.42,0,0,0,0,0,0,0,0,0,0,0,0,11854,11.8,718,8.8,37554,37.37,6139,75.22,0,0,-8161,-100,51073,50.83,1304,15.98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-11854,-100,42850,42.64,5296,44.68,0,0,0,0,57631,57.36,6558,55.32,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>StateAb<\/th>\n      <th>DivisionID<\/th>\n      <th>DivisionNm<\/th>\n      <th>CountNumber<\/th>\n      <th>BallotPosition<\/th>\n      <th>CandidateID<\/th>\n      <th>Surname<\/th>\n      <th>GivenNm<\/th>\n      <th>PartyAb<\/th>\n      <th>PartyNm<\/th>\n      <th>Elected<\/th>\n      <th>HistoricElected<\/th>\n      <th>CalculationType<\/th>\n      <th>CalculationValue<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":400,"columnDefs":[{"className":"dt-right","targets":[2,4,5,6,14]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,25,50,100,400]}},"evals":[],"jsHooks":[]}</script>
+]
+
+
+
+---
+
+
+# District: Monash
+
+
+
+```r
+votes_monash &lt;- votes %&gt;% 
+  # get the preference count only
+  filter(CalculationType == "Preference Count") %&gt;% 
+  # get the Monash division
+  filter(DivisionNm == "Monash")
+```
+
+<div id="htmlwidget-785e8038fb32b49a30f4" style="width:900px;height:300px;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-785e8038fb32b49a30f4">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42"],["VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC","VIC"],[323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323,323],["Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash","Monash"],[0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5,5,5],[1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7],[32690,32137,32802,32299,32729,33175,32281,32690,32137,32802,32299,32729,33175,32281,32690,32137,32802,32299,32729,33175,32281,32690,32137,32802,32299,32729,33175,32281,32690,32137,32802,32299,32729,33175,32281,32690,32137,32802,32299,32729,33175,32281],["VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY","VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY","VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY","VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY","VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY","VERHOEVEN","FOZARD","WADDELL","O'DONNELL","HORNSTRA","BROADBENT","SHERRY"],["John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew","John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew","John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew","John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew","John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew","John","Michael Stewart","Jeff","Jessica","William","Russell","Matthew"],["IND","IND","ON","ALP","GVIC","LP","UAPP","IND","IND","ON","ALP","GVIC","LP","UAPP","IND","IND","ON","ALP","GVIC","LP","UAPP","IND","IND","ON","ALP","GVIC","LP","UAPP","IND","IND","ON","ALP","GVIC","LP","UAPP","IND","IND","ON","ALP","GVIC","LP","UAPP"],["Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party","Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party","Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party","Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party","Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party","Independent","Independent","Pauline Hanson's One Nation","Australian Labor Party","The Greens (VIC)","Liberal","United Australia Party"],["N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N"],["N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N","N","N","N","N","N","Y","N"],["Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count","Preference Count"],[2723,2870,7656,29656,7047,46501,4028,0,4560,7908,29874,7120,46817,4202,0,5068,9252,30213,7366,48582,0,0,0,11136,31415,8161,49769,0,0,0,11854,37554,0,51073,0,0,0,0,42850,0,57631,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>StateAb<\/th>\n      <th>DivisionID<\/th>\n      <th>DivisionNm<\/th>\n      <th>CountNumber<\/th>\n      <th>BallotPosition<\/th>\n      <th>CandidateID<\/th>\n      <th>Surname<\/th>\n      <th>GivenNm<\/th>\n      <th>PartyAb<\/th>\n      <th>PartyNm<\/th>\n      <th>Elected<\/th>\n      <th>HistoricElected<\/th>\n      <th>CalculationType<\/th>\n      <th>CalculationValue<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"lengthChange":false,"dom":"t","pageLength":42,"scrollX":"100px","scrollY":"300px","columnDefs":[{"className":"dt-right","targets":[2,4,5,6,14]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+&lt;img class = "ba" src="images/lecture-08/hor-paper.jpg" style="position:absolute;top:10%;right:20px;" width = "200px"&gt;
+
+---
+
+# Visualising the counts
+
+
+```r
+ggplot(votes_monash) + 
+  geom_col(aes(x = CalculationValue, y = Surname)) +
+  geom_text(aes(label = paste("Count", CountNumber)), 
+            x = 10000, y = 3, size = 16, color = "#ee64a4",
+            alpha = 0.4, hjust = "left") +
+  facet_wrap(~CountNumber)
+```
+
+&lt;img src="images/lecture-05/vote-counts-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+---
+
+# ... but better to order candidates by counts 
+
+
+```r
+*mutate(votes_monash, Surname = fct_reorder(Surname, CalculationValue, sum)) %&gt;%
+  ggplot() + 
+  geom_col(aes(x = CalculationValue, y = Surname)) +
+  geom_text(aes(label = paste("Count", CountNumber + 1)), 
+            x = 10000, y = 3, size = 16, color = "#ee64a4", alpha = 0.4, hjust = "left") +
+  facet_wrap(~CountNumber)
+```
+
+&lt;img src="images/lecture-05/vote-counts-better-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+--
+
+&lt;div style="position:absolute;right:20px;bottom:20px"&gt;
+&lt;b&gt;Winner&lt;/b&gt;: &lt;br&gt;Russel&lt;br&gt; Broadbent&lt;br&gt;
+&lt;img width = "180px" src="images/lecture-08/broadbent-russel.jpeg" /&gt;
+&lt;/div&gt;
+
+---
+
+# Where is the electoral district of .monash-blue[Monash]?
+
+--
+
+* ...*doesn't* include Monash Clayton campus
+
+&lt;center class="overflow-scroll h-80"&gt;
+&lt;img src="images/lecture-08/2018-vic-monash-detailed-map.jpg" width = "700px"/&gt;
+&lt;/center&gt;
+
+---
+
+# Electoral district of .monash-blue[Hotham]
+
+* *Does* include Monash Clayton campus
+
+&lt;center&gt;
+&lt;img src="images/lecture-08/2018-vic-hotham-detailed-map.jpg" width = "60%"/&gt;
+&lt;/center&gt;
+
+---
+
+# Australian Electorates Divsions
+
+There are 151 electorates in 2019.
+
+.flex[
+.w-60.center[
+&lt;img src="images/lecture-08/Australian_Electoral_Divisions_2019.png" width = "100%"/&gt;
+]
+.w-40[
+
+.info-box[
+The **geographical boundaries of the electoral divisions** are determined by the [Redistribution Committee](https://www.aec.gov.au/footer/glossary.htm#redist-comm) and are [redrawn](https://www.aec.gov.au/Electorates/Redistributions/future.htm) every so often to ensure similar number of electors in each electoral division for a given state or territory.
+]
+
+{{content}}
+]
+
+
+]
+
+--
+
+&lt;div class="warn-box"&gt;
+This means that the geographical boundaries could be different across years.
+&lt;/div&gt;
+
+
+---
+
+
+# Federal electoral boundary GIS data
+
+* GIS (Geographic Information System) is a framework that capture and inspect geographical data.
+--
+
+* This data is found at 
+
+.center.f2[
+&lt;i class="fas fa-download"&gt;&lt;/i&gt; https://www.aec.gov.au/electorates/gis/licence.htm
+]
+--
+
+
+* Agree to the license to get to the download page
+.blockquote[
+The Licensee must make End-users aware the data was sourced from the Australian Electoral Commission and is used under licence.
+]
+.center[
+Note: the federal electoral boundary is provided by Australian Electoral Commission
+
+© Commonwealth of Australia (Australian Electoral Commission) 2021
+]
+--
+
+* We download the ESRI zip file for Victoria.
+--
+
+* To work with spatial data, we use the `sf` R-package.
+
+---
+
+# Working with spatial data
+
+.overflow-scroll.h-80[
+
+```r
+library(sf)
+aec_map &lt;- read_sf(here::here("data/vic-july-2018-esri/E_AUGFN3_region.shp"))
+aec_map
+```
+
+```
+## Simple feature collection with 38 features and 9 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XYZ
+## Bounding box:  xmin: 140.9617 ymin: -39.15919 xmax: 149.9767 ymax: -33.98043
+## z_range:       zmin: 0 zmax: 0
+## Geodetic CRS:  GDA94
+## # A tibble: 38 × 10
+##    E_div_numb Elect_div Numccds Actual Projected Total_Popu Australian Area_SqKm
+##         &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+##  1          1 Aston         377 109405    111014          0          0     114. 
+##  2          2 Ballarat      343 110216    113083          0          0    4322. 
+##  3          3 Bendigo       360 108575    111292          0          0    5496. 
+##  4          4 Bruce         424 109420    111485          0          0      95.9
+##  5          5 Calwell       319 100754    107381          0          0     266. 
+##  6          6 Casey         434 111483    113434          0          0    2466. 
+##  7          7 Chisholm      391 106409    108880          0          0      65.8
+##  8          8 Cooper        347 109048    112299          0          0      60.6
+##  9          9 Corangam…     290 103597    109236          0          0    5442. 
+## 10         10 Corio         370 107954    109503          0          0     773. 
+## # … with 28 more rows, and 2 more variables: Sortname &lt;chr&gt;,
+## #   geometry &lt;MULTIPOLYGON [°]&gt;
+```
+]
+
+---
+
+# Geometry object and visualisation in as `ggplot`
+
+
+
+
+```r
+aec_map$geometry[[1]]
+```
+
+```
+## MULTIPOLYGON Z (((145.3476 -37.85941 0, 145.3468 -37.8595 0, 145.3458 -37.8592 0, 145.3454 -37.85949 0, 145.3455 -37.85968 0, 145.3452 -37.85979 0, 145.3452 -37.8599 0, 145.3449 -37.86066 0, 145.3435 -37.86223 0, 145.3435 -37.86233 0, 145.3432 -37.86178 0, 145.3431 -37.86154 0, 145.3426 -37.86133 0, 145.3411 -37.861 0, 145.3406 -37.86032 0, 145.3406 -37.86027 0, 145.3406 -37.85941 0, 145.3405 -37.8592 0, 145.3399 -37.85879 0, 145.3395 -37.85858 0, 145.3395 -37.85852 0, 145.3405 -37.85742 0, 145.3404 -37.85716 0, 145.339 -37.85695 0, 145.3386 -37.85688 0, 145.3381 -37.85678 0, 145.3377 -37.85669 0, 145.3372 -37.85646 0, 145.3367 -37.85626 0, 145.3366 -37.85619 0, 145.3362 -37.85643 0, 145.3354 -37.85714 0, 145.3353 -37.85751 0, 145.3345 -37.8577 0, 145.3343 -37.85782 0, 145.3342 -37.85789 0, 145.3342 -37.85798 0, 145.3342 -37.85807 0, 145.3342 -37.85834 0, 145.3355 -37.85934 0, 145.3358 -37.8598 0, 145.3361 -37.86076 0, 145.336 -37.8616 0, 145.3361 -37.86224 0, 145.336 -37.86281 0, 145.336 -37.86314 0, 145.3358 -37.86321 0, 145.3349 -37.86285 0, 145.335 -37.8628 0, 145.3353 -37.86245 0, 145.3344 -37.86178 0, 145.3336 -37.86157 0, 145.3332 -37.86157 0, 145.3327 -37.86157 0, 145.3324 -37.86163 0, 145.332 -37.86172 0, 145.3315 -37.86182 0, 145.3311 -37.86192 0, 145.3306 -37.86182 0, 145.3306 -37.86181 0, 145.327 -37.86609 0, 145.327 -37.86609 0, 145.327 -37.8661 0, 145.3267 -37.86646 0, 145.3267 -37.86648 0, 145.3264 -37.86653 0, 145.3266 -37.86605 0, 145.326 -37.86599 0, 145.3246 -37.86582 0, 145.3244 -37.86699 0, 145.3242 -37.86707 0, 145.3244 -37.8658 0, 145.3243 -37.86579 0, 145.323 -37.86563 0, 145.3228 -37.8656 0, 145.3213 -37.86542 0, 145.3213 -37.86566 0, 145.3211 -37.86562 0, 145.3207 -37.8656 0, 145.3195 -37.86554 0, 145.3188 -37.86557 0, 145.3183 -37.8654 0, 145.3183 -37.86539 0, 145.3185 -37.86508 0, 145.3184 -37.86507 0, 145.3176 -37.86498 0, 145.3167 -37.86486 0, 145.3168 -37.86483 0, 145.317 -37.86447 0, 145.317 -37.86444 0, 145.317 -37.86377 0, 145.3169 -37.86321 0, 145.3169 -37.86285 0, 145.3165 -37.86271 0, 145.3157 -37.86276 0, 145.3146 -37.86296 0, 145.3135 -37.8633 0, 145.3133 -37.86351 0, 145.3133 -37.86395 0, 145.3136 -37.86448 0, 145.3114 -37.86422 0, 145.3094 -37.86396 0, 145.3089 -37.86391 0, 145.3084 -37.86384 0, 145.308 -37.86379 0, 145.3078 -37.86377 0, 145.3076 -37.86375 0, 145.3073 -37.86371 0, 145.307 -37.86367 0, 145.3068 -37.86365 0, 145.3064 -37.8636 0, 145.3061 -37.86356 0, 145.3062 -37.86312 0, 145.3061 -37.86311 0, 145.3039 -37.86285 0, 145.3038 -37.86345 0, 145.3033 -37.86345 0, 145.303 -37.8636 0, 145.303 -37.86369 0, 145.3032 -37.86374 0, 145.303 -37.86379 0, 145.3025 -37.86395 0, 145.3021 -37.86422 0, 145.3023 -37.86465 0, 145.3028 -37.86576 0, 145.3033 -37.86644 0, 145.3039 -37.8669 0, 145.3041 -37.86707 0, 145.3053 -37.86773 0, 145.3052 -37.86833 0, 145.3053 -37.8684 0, 145.3058 -37.86859 0, 145.3061 -37.86902 0, 145.3062 -37.86912 0, 145.3065 -37.86966 0, 145.3085 -37.87107 0, 145.3083 -37.87216 0, 145.3083 -37.87216 0, 145.3082 -37.87232 0, 145.3082 -37.87289 0, 145.3079 -37.87421 0, 145.308 -37.87427 0, 145.3082 -37.87432 0, 145.3079 -37.87622 0, 145.3062 -37.87604 0, 145.3061 -37.87656 0, 145.306 -37.877 0, 145.306 -37.87701 0, 145.306 -37.87708 0, 145.306 -37.87715 0, 145.306 -37.87715 0, 145.3058 -37.87814 0, 145.3057 -37.87812 0, 145.3057 -37.87826 0, 145.3056 -37.87872 0, 145.3055 -37.8787 0, 145.3054 -37.87902 0, 145.3053 -37.87914 0, 145.3051 -37.88027 0, 145.3064 -37.8804 0, 145.3064 -37.88041 0, 145.3062 -37.88119 0, 145.3061 -37.88119 0, 145.305 -37.88117 0, 145.3048 -37.88117 0, 145.3042 -37.88151 0, 145.3041 -37.88156 0, 145.3041 -37.88156 0, 145.3049 -37.88207 0, 145.305 -37.88246 0, 145.3048 -37.88281 0, 145.3044 -37.88315 0, 145.304 -37.88381 0, 145.3039 -37.88439 0, 145.3049 -37.88451 0, 145.3049 -37.88471 0, 145.3049 -37.8849 0, 145.3047 -37.88496 0, 145.3048 -37.88545 0, 145.3045 -37.88545 0, 145.3043 -37.88546 0, 145.3035 -37.88546 0, 145.3036 -37.88555 0, 145.3036 -37.88615 0, 145.3039 -37.88689 0, 145.3045 -37.88787 0, 145.3045 -37.88799 0, 145.3047 -37.88802 0, 145.3048 -37.88791 0, 145.3051 -37.88791 0, 145.3052 -37.88784 0, 145.3052 -37.88734 0, 145.3055 -37.88738 0, 145.3054 -37.88776 0, 145.3055 -37.88784 0, 145.3059 -37.88772 0, 145.3056 -37.88826 0, 145.3069 -37.88841 0, 145.3069 -37.8886 0, 145.3071 -37.88862 0, 145.308 -37.88872 0, 145.3079 -37.8891 0, 145.3079 -37.88941 0, 145.3086 -37.88949 0, 145.3092 -37.88956 0, 145.3094 -37.88959 0, 145.3099 -37.88964 0, 145.3098 -37.89009 0, 145.3099 -37.89009 0, 145.3098 -37.8902 0, 145.31 -37.8904 0, 145.3103 -37.89076 0, 145.3106 -37.89099 0, 145.3108 -37.89106 0, 145.3109 -37.89113 0, 145.3112 -37.89119 0, 145.3114 -37.89124 0, 145.3119 -37.89131 0, 145.3119 -37.89156 0, 145.3117 -37.89276 0, 145.3122 -37.89282 0, 145.3125 -37.89283 0, 145.3127 -37.89283 0, 145.313 -37.8928 0, 145.3133 -37.89279 0, 145.3136 -37.89275 0, 145.3139 -37.8927 0, 145.314 -37.89267 0, 145.3142 -37.89262 0, 145.3145 -37.89252 0, 145.3149 -37.89234 0, 145.3152 -37.89227 0, 145.3158 -37.89232 0, 145.3161 -37.89249 0, 145.3157 -37.89282 0, 145.3159 -37.89288 0, 145.316 -37.89303 0, 145.316 -37.89315 0, 145.316 -37.89326 0, 145.3159 -37.89332 0, 145.3159 -37.89341 0, 145.3158 -37.8935 0, 145.3158 -37.89359 0, 145.3158 -37.89371 0, 145.3157 -37.8938 0, 145.3157 -37.8939 0, 145.3157 -37.89399 0, 145.3157 -37.89411 0, 145.3158 -37.89421 0, 145.3158 -37.89433 0, 145.3158 -37.89442 0, 145.3159 -37.89453 0, 145.3159 -37.89462 0, 145.316 -37.89472 0, 145.3161 -37.8948 0, 145.3162 -37.8949 0, 145.3168 -37.89534 0, 145.3184 -37.8961 0, 145.3188 -37.89634 0, 145.3202 -37.89728 0, 145.3219 -37.89818 0, 145.3241 -37.89941 0, 145.3242 -37.89946 0, 145.3242 -37.89972 0, 145.3242 -37.89994 0, 145.3236 -37.89971 0, 145.3227 -37.89917 0, 145.3219 -37.89905 0, 145.3206 -37.8992 0, 145.3207 -37.89976 0, 145.3214 -37.90022 0, 145.3201 -37.90046 0, 145.3192 -37.9004 0, 145.3184 -37.9004 0, 145.3172 -37.9004 0, 145.3166 -37.90056 0, 145.3165 -37.90053 0, 145.3164 -37.90108 0, 145.3151 -37.90133 0, 145.3139 -37.90163 0, 145.3133 -37.90159 0, 145.3127 -37.9014 0, 145.3113 -37.90091 0, 145.3095 -37.89948 0, 145.3089 -37.90192 0, 145.3091 -37.90199 0, 145.3095 -37.90252 0, 145.3097 -37.9033 0, 145.3093 -37.90398 0, 145.3092 -37.904 0, 145.3091 -37.90407 0, 145.309 -37.90411 0, 145.3089 -37.90412 0, 145.3089 -37.90413 0, 145.3088 -37.90414 0, 145.3086 -37.90413 0, 145.3085 -37.90411 0, 145.3085 -37.90408 0, 145.3084 -37.90406 0, 145.3083 -37.904 0, 145.3082 -37.90392 0, 145.3081 -37.90389 0, 145.3081 -37.90384 0, 145.308 -37.90383 0, 145.308 -37.90381 0, 145.3079 -37.90378 0, 145.3076 -37.90375 0, 145.3075 -37.90375 0, 145.3072 -37.90385 0, 145.3069 -37.90416 0, 145.305 -37.90571 0, 145.3048 -37.90549 0, 145.3045 -37.90512 0, 145.3044 -37.90503 0, 145.3043 -37.90494 0, 145.3042 -37.90485 0, 145.3041 -37.90477 0, 145.304 -37.90469 0, 145.3038 -37.90462 0, 145.2997 -37.90255 0, 145.297 -37.90122 0, 145.2954 -37.90049 0, 145.2953 -37.90044 0, 145.2952 -37.90039 0, 145.295 -37.90032 0, 145.2949 -37.90033 0, 145.2945 -37.90035 0, 145.2945 -37.90036 0, 145.2946 -37.90051 0, 145.2947 -37.90062 0, 145.2947 -37.90078 0, 145.2948 -37.9009 0, 145.2951 -37.90151 0, 145.2956 -37.90255 0, 145.296 -37.90321 0, 145.2958 -37.90429 0, 145.2956 -37.90474 0, 145.2956 -37.90475 0, 145.2956 -37.90511 0, 145.2955 -37.90515 0, 145.2955 -37.90516 0, 145.2955 -37.90519 0, 145.2929 -37.9071 0, 145.2927 -37.90722 0, 145.2928 -37.90734 0, 145.2949 -37.90921 0, 145.2963 -37.91047 0, 145.2964 -37.91047 0, 145.2972 -37.91048 0, 145.2977 -37.91065 0, 145.2983 -37.91119 0, 145.2987 -37.91169 0, 145.2988 -37.91209 0, 145.2987 -37.91252 0, 145.2987 -37.91286 0, 145.2982 -37.91326 0, 145.298 -37.91351 0, 145.298 -37.91353 0, 145.2981 -37.91378 0, 145.2984 -37.91414 0, 145.2993 -37.91477 0, 145.2996 -37.9154 0, 145.2996 -37.91549 0, 145.2999 -37.91654 0, 145.3004 -37.91704 0, 145.3006 -37.91727 0, 145.3007 -37.91772 0, 145.3008 -37.918 0, 145.3007 -37.91851 0, 145.3004 -37.92033 0, 145.3004 -37.92039 0, 145.3005 -37.92057 0, 145.3017 -37.9217 0, 145.3017 -37.92176 0, 145.3023 -37.92243 0, 145.3025 -37.92262 0, 145.3028 -37.92318 0, 145.3028 -37.92362 0, 145.3031 -37.92495 0, 145.3033 -37.92626 0, 145.3034 -37.92653 0, 145.3034 -37.92681 0, 145.3034 -37.92708 0, 145.3034 -37.92745 0, 145.3036 -37.92873 0, 145.3035 -37.93098 0, 145.3038 -37.93259 0, 145.3038 -37.93309 0, 145.3039 -37.93343 0, 145.2999 -37.93146 0, 145.2992 -37.93486 0, 145.2987 -37.93757 0, 145.2953 -37.95428 0, 145.2953 -37.95444 0, 145.2934 -37.96398 0, 145.289 -37.96292 0, 145.289 -37.96284 0, 145.289 -37.96265 0, 145.2886 -37.96108 0, 145.2888 -37.95991 0, 145.2886 -37.95916 0, 145.289 -37.95829 0, 145.2892 -37.95826 0, 145.2898 -37.95814 0, 145.2899 -37.9576 0, 145.2872 -37.95714 0, 145.2848 -37.9553 0, 145.2836 -37.95514 0, 145.2838 -37.95412 0, 145.2836 -37.9541 0, 145.2823 -37.95366 0, 145.2821 -37.95059 0, 145.2805 -37.94923 0, 145.2796 -37.94761 0, 145.2796 -37.9476 0, 145.276 -37.94716 0, 145.2713 -37.94659 0, 145.2657 -37.94591 0, 145.2547 -37.94457 0, 145.2532 -37.94438 0, 145.2513 -37.94416 0, 145.2488 -37.94386 0, 145.2476 -37.94372 0, 145.2439 -37.94327 0, 145.2439 -37.94317 0, 145.2348 -37.94207 0, 145.2332 -37.94189 0, 145.2337 -37.94266 0, 145.23 -37.95037 0, 145.2292 -37.95204 0, 145.2292 -37.95201 0, 145.229 -37.9519 0, 145.2288 -37.95179 0, 145.2286 -37.95167 0, 145.2285 -37.95157 0, 145.2283 -37.95147 0, 145.2281 -37.95135 0, 145.2279 -37.95125 0, 145.2278 -37.95114 0, 145.2276 -37.95103 0, 145.2274 -37.9509 0, 145.2274 -37.95088 0, 145.2273 -37.95081 0, 145.2272 -37.95076 0, 145.2271 -37.95072 0, 145.227 -37.95067 0, 145.227 -37.95064 0, 145.227 -37.95061 0, 145.227 -37.95057 0, 145.227 -37.9505 0, 145.227 -37.95031 0, 145.227 -37.9503 0, 145.227 -37.95029 0, 145.227 -37.95028 0, 145.227 -37.95026 0, 145.2269 -37.95012 0, 145.2269 -37.95007 0, 145.2269 -37.95005 0, 145.2269 -37.95004 0, 145.2269 -37.95003 0, 145.2269 -37.95001 0, 145.2268 -37.95 0, 145.2268 -37.94998 0, 145.2267 -37.94994 0, 145.2263 -37.94976 0, 145.2263 -37.94974 0, 145.2262 -37.94971 0, 145.2262 -37.9497 0, 145.2261 -37.94958 0, 145.2261 -37.94957 0, 145.2261 -37.94956 0, 145.2261 -37.94954 0, 145.226 -37.94953 0, 145.226 -37.94952 0, 145.226 -37.94943 0, 145.2259 -37.94938 0, 145.2258 -37.9493 0, 145.2258 -37.94928 0, 145.2258 -37.94926 0, 145.2258 -37.94923 0, 145.2258 -37.94919 0, 145.2258 -37.94917 0, 145.2258 -37.94909 0, 145.2258 -37.94892 0, 145.2258 -37.94881 0, 145.2259 -37.94871 0, 145.2259 -37.94859 0, 145.226 -37.9484 0, 145.226 -37.94822 0, 145.226 -37.94819 0, 145.226 -37.94816 0, 145.226 -37.94813 0, 145.2259 -37.94808 0, 145.2259 -37.94804 0, 145.2259 -37.94801 0, 145.2258 -37.94799 0, 145.2258 -37.94797 0, 145.2258 -37.94797 0, 145.2257 -37.94795 0, 145.2257 -37.94794 0, 145.2257 -37.9479 0, 145.2256 -37.94783 0, 145.2255 -37.94778 0, 145.2254 -37.94774 0, 145.2253 -37.94764 0, 145.2251 -37.94755 0, 145.2251 -37.94754 0, 145.2251 -37.94753 0, 145.225 -37.94748 0, 145.225 -37.94744 0, 145.225 -37.94739 0, 145.225 -37.94732 0, 145.2249 -37.94723 0, 145.2249 -37.94714 0, 145.2249 -37.94702 0, 145.2249 -37.947 0, 145.2249 -37.94699 0, 145.2249 -37.94697 0, 145.2249 -37.94695 0, 145.2248 -37.94691 0, 145.2248 -37.94691 0, 145.2248 -37.94689 0, 145.2248 -37.94687 0, 145.2246 -37.94681 0, 145.2246 -37.9468 0, 145.2246 -37.94678 0, 145.2245 -37.94674 0, 145.2245 -37.94661 0, 145.2244 -37.94651 0, 145.2244 -37.94647 0, 145.2244 -37.94645 0, 145.2244 -37.94642 0, 145.2244 -37.94639 0, 145.2244 -37.94637 0, 145.2243 -37.94635 0, 145.2243 -37.94635 0, 145.2243 -37.94634 0, 145.2243 -37.94633 0, 145.2244 -37.94632 0, 145.2244 -37.94631 0, 145.2243 -37.94629 0, 145.2243 -37.94627 0, 145.2243 -37.94624 0, 145.2243 -37.94622 0, 145.2243 -37.9462 0, 145.2243 -37.94619 0, 145.2243 -37.94618 0, 145.2242 -37.94614 0, 145.2242 -37.94613 0, 145.2241 -37.94613 0, 145.2241 -37.94613 0, 145.2241 -37.94613 0, 145.224 -37.94613 0, 145.224 -37.94615 0, 145.2239 -37.94617 0, 145.2238 -37.94622 0, 145.2238 -37.94625 0, 145.2237 -37.94627 0, 145.2237 -37.94628 0, 145.2237 -37.94628 0, 145.2236 -37.94628 0, 145.2236 -37.94627 0, 145.2236 -37.94626 0, 145.2236 -37.94625 0, 145.2235 -37.94617 0, 145.2235 -37.94616 0, 145.2235 -37.94615 0, 145.2235 -37.94612 0, 145.2235 -37.94611 0, 145.2234 -37.94609 0, 145.2234 -37.94608 0, 145.2234 -37.94606 0, 145.2234 -37.94605 0, 145.2234 -37.94604 0, 145.2234 -37.94601 0, 145.2233 -37.94597 0, 145.2233 -37.94595 0, 145.2233 -37.94591 0, 145.2233 -37.94587 0, 145.2232 -37.9458 0, 145.2231 -37.94577 0, 145.2231 -37.94576 0, 145.2231 -37.94576 0, 145.2231 -37.94575 0, 145.2231 -37.94575 0, 145.2231 -37.94574 0, 145.2231 -37.94572 0, 145.223 -37.94571 0, 145.223 -37.9457 0, 145.223 -37.94566 0, 145.223 -37.94564 0, 145.2229 -37.94558 0, 145.2229 -37.94554 0, 145.2229 -37.9455 0, 145.2229 -37.94544 0, 145.2229 -37.9454 0, 145.2229 -37.94537 0, 145.2229 -37.94533 0, 145.2229 -37.94528 0, 145.2228 -37.94523 0, 145.2228 -37.94522 0, 145.2228 -37.9452 0, 145.2228 -37.94517 0, 145.2228 -37.94515 0, 145.2228 -37.94513 0, 145.2228 -37.94511 0, 145.2228 -37.94507 0, 145.2228 -37.94502 0, 145.2227 -37.94499 0, 145.2227 -37.94495 0, 145.2227 -37.94495 0, 145.2227 -37.94492 0, 145.2227 -37.94491 0, 145.2226 -37.9448 0, 145.2225 -37.94478 0, 145.2225 -37.94476 0, 145.2225 -37.94471 0, 145.2224 -37.9447 0, 145.2224 -37.94469 0, 145.2224 -37.94466 0, 145.2224 -37.94461 0, 145.2224 -37.94456 0, 145.2223 -37.94452 0, 145.2223 -37.94449 0, 145.2223 -37.94445 0, 145.2223 -37.94443 0, 145.2224 -37.9444 0, 145.2224 -37.94436 0, 145.2224 -37.94431 0, 145.2225 -37.94426 0, 145.2225 -37.94424 0, 145.2225 -37.9442 0, 145.2225 -37.94418 0, 145.2225 -37.94416 0, 145.2225 -37.94414 0, 145.2226 -37.94411 0, 145.2226 -37.94408 0, 145.2226 -37.94405 0, 145.2225 -37.94399 0, 145.2225 -37.94396 0, 145.2225 -37.94392 0, 145.2225 -37.94382 0, 145.2225 -37.94377 0, 145.2225 -37.94371 0, 145.2225 -37.94362 0, 145.2225 -37.94355 0, 145.2224 -37.94351 0, 145.2224 -37.94346 0, 145.2224 -37.94343 0, 145.2224 -37.9434 0, 145.2223 -37.94339 0, 145.2223 -37.94336 0, 145.2222 -37.94333 0, 145.2222 -37.9433 0, 145.2222 -37.94328 0, 145.2221 -37.94326 0, 145.2221 -37.94325 0, 145.2221 -37.94325 0, 145.2221 -37.94325 0, 145.222 -37.94327 0, 145.222 -37.94329 0, 145.2219 -37.9433 0, 145.2219 -37.94331 0, 145.2217 -37.94331 0, 145.2216 -37.9433 0, 145.2215 -37.94329 0, 145.2213 -37.94327 0, 145.2212 -37.94326 0, 145.2211 -37.94325 0, 145.2211 -37.94324 0, 145.221 -37.94322 0, 145.221 -37.9432 0, 145.2209 -37.94317 0, 145.2209 -37.94314 0, 145.2208 -37.94309 0, 145.2207 -37.94301 0, 145.2205 -37.94284 0, 145.2205 -37.94281 0, 145.2205 -37.94279 0, 145.2205 -37.94268 0, 145.2205 -37.94259 0, 145.2205 -37.94255 0, 145.2205 -37.94252 0, 145.2207 -37.94226 0, 145.2208 -37.94222 0, 145.2208 -37.94221 0, 145.2208 -37.94219 0, 145.2208 -37.94217 0, 145.2207 -37.94216 0, 145.2204 -37.94202 0, 145.2204 -37.94201 0, 145.2202 -37.94196 0, 145.2202 -37.94196 0, 145.2202 -37.94196 0, 145.2201 -37.94195 0, 145.22 -37.94195 0, 145.22 -37.94195 0, 145.2199 -37.94194 0, 145.2199 -37.94192 0, 145.2197 -37.94184 0, 145.2196 -37.9418 0, 145.2194 -37.94176 0, 145.2194 -37.94174 0, 145.2194 -37.94172 0, 145.2194 -37.9417 0, 145.2195 -37.94159 0, 145.2195 -37.94157 0, 145.2195 -37.94151 0, 145.2195 -37.94149 0, 145.2197 -37.94137 0, 145.2197 -37.94133 0, 145.2197 -37.94132 0, 145.2199 -37.94131 0, 145.22 -37.94132 0, 145.22 -37.94131 0, 145.2201 -37.94129 0, 145.22 -37.94123 0, 145.2201 -37.94117 0, 145.2201 -37.94099 0, 145.22 -37.94089 0, 145.2198 -37.9408 0, 145.2195 -37.94074 0, 145.2193 -37.94079 0, 145.2191 -37.94077 0, 145.2192 -37.94059 0, 145.2193 -37.94048 0, 145.2195 -37.94041 0, 145.2197 -37.94026 0, 145.2195 -37.94017 0, 145.2192 -37.94015 0, 145.2191 -37.94 0, 145.2191 -37.93978 0, 145.2193 -37.93967 0, 145.2195 -37.93967 0, 145.2198 -37.93966 0, 145.22 -37.9396 0, 145.22 -37.93938 0, 145.2201 -37.93922 0, 145.2201 -37.93901 0, 145.2201 -37.93881 0, 145.2199 -37.93891 0, 145.2197 -37.93903 0, 145.2196 -37.93892 0, 145.2194 -37.93879 0, 145.2193 -37.93867 0, 145.2192 -37.93852 0, 145.2194 -37.93843 0, 145.2193 -37.93824 0, 145.2192 -37.9381 0, 145.2191 -37.93796 0, 145.2189 -37.93782 0, 145.2188 -37.9377 0, 145.2187 -37.93756 0, 145.2186 -37.93755 0, 145.2186 -37.9374 0, 145.2184 -37.93706 0, 145.2183 -37.93682 0, 145.2183 -37.93676 0, 145.2182 -37.93677 0, 145.218 -37.93682 0, 145.2178 -37.9368 0, 145.2175 -37.93674 0, 145.2173 -37.93678 0, 145.217 -37.93678 0, 145.2167 -37.9368 0, 145.2164 -37.93681 0, 145.2163 -37.93682 0, 145.2161 -37.93692 0, 145.2159 -37.93704 0, 145.2158 -37.93716 0, 145.2155 -37.93715 0, 145.2154 -37.93705 0, 145.2152 -37.93694 0, 145.215 -37.93684 0, 145.2148 -37.93673 0, 145.2147 -37.93656 0, 145.2148 -37.93643 0, 145.2148 -37.93629 0, 145.2145 -37.93628 0, 145.2143 -37.93628 0, 145.2144 -37.93613 0, 145.2143 -37.93596 0, 145.2142 -37.93581 0, 145.2141 -37.93568 0, 145.214 -37.93586 0, 145.2139 -37.93606 0, 145.2138 -37.93622 0, 145.2135 -37.93623 0, 145.2134 -37.93606 0, 145.2134 -37.93585 0, 145.2133 -37.93572 0, 145.2131 -37.93577 0, 145.2129 -37.93588 0, 145.2127 -37.9358 0, 145.2125 -37.93567 0, 145.2124 -37.93557 0, 145.2123 -37.93538 0, 145.2123 -37.93515 0, 145.2121 -37.93508 0, 145.2118 -37.93517 0, 145.2117 -37.93531 0, 145.2116 -37.93549 0, 145.2115 -37.93568 0, 145.2113 -37.93572 0, 145.2111 -37.93564 0, 145.2109 -37.9355 0, 145.2111 -37.93539 0, 145.2112 -37.93528 0, 145.211 -37.9352 0, 145.2108 -37.9351 0, 145.2107 -37.93498 0, 145.2105 -37.93486 0, 145.2104 -37.93473 0, 145.2104 -37.93455 0, 145.2105 -37.93444 0, 145.2107 -37.93431 0, 145.2104 -37.93424 0, 145.2101 -37.93424 0, 145.2099 -37.9342 0, 145.2096 -37.93415 0, 145.2095 -37.934 0, 145.2095 -37.93383 0, 145.2098 -37.93378 0, 145.2101 -37.9338 0, 145.2104 -37.93383 0, 145.2105 -37.93367 0, 145.2104 -37.93352 0, 145.2101 -37.93358 0, 145.2099 -37.93353 0, 145.2097 -37.93346 0, 145.2095 -37.93336 0, 145.2094 -37.93321 0, 145.2095 -37.93305 0, 145.2096 -37.9329 0, 145.2094 -37.93281 0, 145.2092 -37.93274 0, 145.2089 -37.93281 0, 145.2087 -37.93289 0, 145.2086 -37.93274 0, 145.2087 -37.93254 0, 145.2084 -37.9325 0, 145.2081 -37.93247 0, 145.2079 -37.9324 0, 145.2077 -37.9323 0, 145.2076 -37.93218 0, 145.2074 -37.93204 0, 145.2074 -37.93187 0, 145.2077 -37.93184 0, 145.2079 -37.93176 0, 145.2077 -37.93163 0, 145.2076 -37.93149 0, 145.2075 -37.93134 0, 145.2072 -37.93133 0, 145.2071 -37.93147 0, 145.207 -37.93161 0, 145.2068 -37.93154 0, 145.2067 -37.93136 0, 145.2065 -37.93125 0, 145.2064 -37.93106 0, 145.2065 -37.93087 0, 145.2067 -37.93077 0, 145.2069 -37.93068 0, 145.207 -37.93055 0, 145.2067 -37.93054 0, 145.2064 -37.93054 0, 145.2063 -37.93039 0, 145.2062 -37.93021 0, 145.2062 -37.93003 0, 145.2062 -37.92986 0, 145.2065 -37.92989 0, 145.2067 -37.92983 0, 145.2069 -37.92975 0, 145.207 -37.92959 0, 145.2069 -37.92946 0, 145.2068 -37.92929 0, 145.2069 -37.92914 0, 145.207 -37.92898 0, 145.2068 -37.92888 0, 145.2066 -37.92884 0, 145.2063 -37.92882 0, 145.2062 -37.92867 0, 145.2064 -37.92858 0, 145.2067 -37.92854 0, 145.2068 -37.92837 0, 145.2069 -37.92818 0, 145.2068 -37.928 0, 145.2067 -37.92788 0, 145.2065 -37.92776 0, 145.2063 -37.92785 0, 145.2061 -37.92794 0, 145.2058 -37.92793 0, 145.2056 -37.92788 0, 145.2054 -37.92776 0, 145.2054 -37.92756 0, 145.2056 -37.92744 0, 145.2057 -37.92732 0, 145.2058 -37.92712 0, 145.2057 -37.92693 0, 145.2056 -37.92654 0, 145.2053 -37.92645 0, 145.2051 -37.92637 0, 145.205 -37.92624 0, 145.2049 -37.92607 0, 145.205 -37.92589 0, 145.2051 -37.92578 0, 145.2053 -37.92566 0, 145.2053 -37.92545 0, 145.2054 -37.92526 0, 145.2055 -37.92504 0, 145.2055 -37.92483 0, 145.2056 -37.9244 0, 145.2056 -37.9243 0, 145.2056 -37.9241 0, 145.2057 -37.92388 0, 145.2055 -37.92356 0, 145.2054 -37.92333 0, 145.2054 -37.92314 0, 145.2053 -37.92293 0, 145.2053 -37.9228 0, 145.2053 -37.92274 0, 145.2052 -37.92255 0, 145.2051 -37.92238 0, 145.2049 -37.92227 0, 145.2047 -37.92221 0, 145.2045 -37.92213 0, 145.2046 -37.92201 0, 145.2048 -37.92191 0, 145.2047 -37.9218 0, 145.2045 -37.92168 0, 145.2044 -37.92156 0, 145.2042 -37.92142 0, 145.2043 -37.92123 0, 145.2042 -37.92106 0, 145.204 -37.92096 0, 145.2039 -37.9208 0, 145.2039 -37.92057 0, 145.2038 -37.92041 0, 145.2036 -37.92031 0, 145.2034 -37.92025 0, 145.2036 -37.92014 0, 145.2036 -37.91998 0, 145.2034 -37.91989 0, 145.2034 -37.91968 0, 145.2034 -37.91948 0, 145.2032 -37.91939 0, 145.203 -37.91936 0, 145.2028 -37.91923 0, 145.203 -37.9191 0, 145.2032 -37.91903 0, 145.2034 -37.91894 0, 145.2035 -37.91882 0, 145.2033 -37.91876 0, 145.203 -37.91877 0, 145.203 -37.91858 0, 145.2032 -37.91845 0, 145.2034 -37.91836 0, 145.2035 -37.91825 0, 145.2035 -37.91804 0, 145.2033 -37.91794 0, 145.2031 -37.91798 0, 145.2029 -37.91806 0, 145.2027 -37.91792 0, 145.2029 -37.91781 0, 145.2031 -37.91773 0, 145.2033 -37.91761 0, 145.2034 -37.91747 0, 145.2035 -37.91732 0, 145.2036 -37.91709 0, 145.2036 -37.91686 0, 145.2036 -37.91664 0, 145.2037 -37.91643 0, 145.2038 -37.91631 0, 145.204 -37.91621 0, 145.2041 -37.91607 0, 145.2039 -37.916 0, 145.2038 -37.91587 0, 145.2039 -37.91572 0, 145.2039 -37.91555 0, 145.2037 -37.91549 0, 145.2035 -37.91537 0, 145.2034 -37.91519 0, 145.2035 -37.91499 0, 145.2037 -37.9149 0, 145.2039 -37.91486 0, 145.2042 -37.91484 0, 145.2043 -37.91472 0, 145.2041 -37.91461 0, 145.204 -37.91444 0, 145.2039 -37.91426 0, 145.2041 -37.91414 0, 145.2043 -37.91411 0, 145.2045 -37.91398 0, 145.2047 -37.91405 0, 145.2049 -37.91411 0, 145.2051 -37.914 0, 145.2052 -37.91384 0, 145.2053 -37.91365 0, 145.2052 -37.91348 0, 145.205 -37.91353 0, 145.2048 -37.91366 0, 145.2046 -37.91374 0, 145.2045 -37.9136 0, 145.2045 -37.91336 0, 145.2045 -37.91314 0, 145.2046 -37.91297 0, 145.2048 -37.91307 0, 145.2051 -37.91305 0, 145.2052 -37.91293 0, 145.2052 -37.91276 0, 145.205 -37.91265 0, 145.2049 -37.91251 0, 145.2051 -37.91243 0, 145.2054 -37.91243 0, 145.2055 -37.91238 0, 145.2056 -37.91226 0, 145.2056 -37.91206 0, 145.2055 -37.91187 0, 145.2053 -37.91177 0, 145.2052 -37.91161 0, 145.2051 -37.91143 0, 145.205 -37.91129 0, 145.2049 -37.91113 0, 145.2049 -37.91091 0, 145.2049 -37.9107 0, 145.2051 -37.9106 0, 145.2052 -37.91073 0, 145.2054 -37.91084 0, 145.2055 -37.91069 0, 145.2057 -37.91067 0, 145.2059 -37.91056 0, 145.2058 -37.91038 0, 145.2059 -37.91019 0, 145.2057 -37.91007 0, 145.2056 -37.90992 0, 145.2055 -37.90974 0, 145.2055 -37.90953 0, 145.2055 -37.90931 0, 145.2054 -37.90911 0, 145.2054 -37.90887 0, 145.2053 -37.90868 0, 145.2053 -37.90866 0, 145.2052 -37.90852 0, 145.2052 -37.90832 0, 145.2052 -37.90816 0, 145.2052 -37.90809 0, 145.2051 -37.90802 0, 145.205 -37.90782 0, 145.205 -37.90759 0, 145.205 -37.90736 0, 145.205 -37.90715 0, 145.2051 -37.907 0, 145.2052 -37.90684 0, 145.205 -37.90676 0, 145.2048 -37.90672 0, 145.2048 -37.90652 0, 145.2048 -37.90632 0, 145.2047 -37.90613 0, 145.2046 -37.90595 0, 145.2048 -37.90588 0, 145.205 -37.90597 0, 145.2051 -37.90589 0, 145.2051 -37.90574 0, 145.2052 -37.90554 0, 145.2052 -37.90531 0, 145.2051 -37.90516 0, 145.2049 -37.90505 0, 145.2048 -37.90485 0, 145.2046 -37.9048 0, 145.2043 -37.90482 0, 145.2041 -37.90484 0, 145.2041 -37.90472 0, 145.2043 -37.90463 0, 145.2043 -37.90445 0, 145.2042 -37.90429 0, 145.2042 -37.90409 0, 145.2044 -37.90399 0, 145.2044 -37.90379 0, 145.2043 -37.90362 0, 145.2041 -37.90368 0, 145.2039 -37.90379 0, 145.2037 -37.90384 0, 145.2036 -37.90371 0, 145.2035 -37.90354 0, 145.2034 -37.90339 0, 145.2033 -37.90332 0, 145.2035 -37.90321 0, 145.2037 -37.90327 0, 145.2038 -37.90312 0, 145.2038 -37.90293 0, 145.2037 -37.90273 0, 145.2038 -37.90258 0, 145.2039 -37.90241 0, 145.2041 -37.9024 0, 145.2042 -37.90257 0, 145.2043 -37.90274 0, 145.2045 -37.90284 0, 145.2046 -37.90266 0, 145.2046 -37.90243 0, 145.2048 -37.90238 0, 145.2048 -37.90223 0, 145.205 -37.9021 0, 145.2052 -37.90211 0, 145.2053 -37.90228 0, 145.2054 -37.90238 0, 145.2057 -37.90246 0, 145.206 -37.90246 0, 145.2062 -37.90239 0, 145.2064 -37.90229 0, 145.2065 -37.90216 0, 145.2065 -37.90195 0, 145.2065 -37.90176 0, 145.2067 -37.90162 0, 145.2068 -37.90152 0, 145.2073 -37.90158 0, 145.2073 -37.90156 0, 145.2073 -37.90147 0, 145.2074 -37.9013 0, 145.2076 -37.90118 0, 145.2076 -37.90101 0, 145.2073 -37.90092 0, 145.2071 -37.90087 0, 145.207 -37.90073 0, 145.2069 -37.90058 0, 145.2072 -37.90061 0, 145.2074 -37.90052 0, 145.2073 -37.90032 0, 145.2073 -37.90015 0, 145.2072 -37.89998 0, 145.2071 -37.89976 0, 145.2072 -37.89972 0, 145.2074 -37.89978 0, 145.2075 -37.89994 0, 145.2077 -37.89987 0, 145.2079 -37.89976 0, 145.208 -37.89965 0, 145.2082 -37.89953 0, 145.2083 -37.89935 0, 145.2083 -37.89913 0, 145.2083 -37.89894 0, 145.2081 -37.89879 0, 145.2081 -37.89859 0, 145.2079 -37.89863 0, 145.2077 -37.89872 0, 145.2075 -37.89876 0, 145.2073 -37.89863 0, 145.2074 -37.89842 0, 145.2073 -37.89801 0, 145.2074 -37.8978 0, 145.2073 -37.89777 0, 145.2073 -37.89767 0, 145.2072 -37.89767 0, 145.2072 -37.89766 0, 145.2072 -37.89763 0, 145.2072 -37.89747 0, 145.2072 -37.8974 0, 145.2072 -37.89733 0, 145.2071 -37.8973 0, 145.2071 -37.89724 0, 145.2071 -37.8972 0, 145.207 -37.89709 0, 145.207 -37.89698 0, 145.207 -37.89691 0, 145.207 -37.89681 0, 145.207 -37.89676 0, 145.207 -37.89672 0, 145.2069 -37.89668 0, 145.2068 -37.8967 0, 145.2067 -37.89673 0, 145.2066 -37.89702 0, 145.2064 -37.897 0, 145.2064 -37.89697 0, 145.2063 -37.89693 0, 145.2063 -37.89687 0, 145.2062 -37.89674 0, 145.2062 -37.89669 0, 145.2059 -37.89667 0, 145.2059 -37.89668 0, 145.2057 -37.89666 0, 145.2056 -37.89656 0, 145.2056 -37.89651 0, 145.2054 -37.89648 0, 145.2054 -37.89649 0, 145.2053 -37.89646 0, 145.2052 -37.89643 0, 145.2052 -37.89637 0, 145.2052 -37.89627 0, 145.2053 -37.89622 0, 145.2053 -37.89613 0, 145.2052 -37.89607 0, 145.2051 -37.89599 0, 145.205 -37.89588 0, 145.2048 -37.89582 0, 145.2045 -37.89572 0, 145.2044 -37.89571 0, 145.2044 -37.89567 0, 145.2042 -37.89571 0, 145.2041 -37.89574 0, 145.2041 -37.89579 0, 145.2041 -37.8959 0, 145.2041 -37.89595 0, 145.2041 -37.89601 0, 145.2041 -37.89608 0, 145.204 -37.8961 0, 145.2039 -37.89608 0, 145.2037 -37.89602 0, 145.2037 -37.89596 0, 145.2036 -37.89599 0, 145.2035 -37.89596 0, 145.2035 -37.896 0, 145.2031 -37.89608 0, 145.203 -37.89606 0, 145.203 -37.89608 0, 145.2029 -37.89606 0, 145.2029 -37.89607 0, 145.2028 -37.89601 0, 145.2028 -37.89602 0, 145.2026 -37.89593 0, 145.2026 -37.89592 0, 145.2024 -37.8958 0, 145.2023 -37.89574 0, 145.2022 -37.89571 0, 145.2021 -37.89565 0, 145.2021 -37.89562 0, 145.2018 -37.89547 0, 145.2018 -37.89543 0, 145.2016 -37.89534 0, 145.2017 -37.89525 0, 145.2018 -37.89523 0, 145.2019 -37.89518 0, 145.2018 -37.89514 0, 145.2018 -37.89507 0, 145.2017 -37.89502 0, 145.2016 -37.89499 0, 145.2014 -37.89493 0, 145.2013 -37.89484 0, 145.2011 -37.89475 0, 145.2009 -37.89453 0, 145.2009 -37.89444 0, 145.2009 -37.89407 0, 145.2009 -37.89396 0, 145.2009 -37.89385 0, 145.2009 -37.89379 0, 145.201 -37.89375 0, 145.201 -37.8937 0, 145.2011 -37.89365 0, 145.2012 -37.89364 0, 145.2012 -37.89359 0, 145.2012 -37.89355 0, 145.2009 -37.89339 0, 145.2008 -37.89327 0, 145.2008 -37.8932 0, 145.2008 -37.89315 0, 145.2007 -37.89304 0, 145.2006 -37.89303 0, 145.2004 -37.893 0, 145.2002 -37.89278 0, 145.2002 -37.89273 0, 145.2001 -37.89267 0, 145.2001 -37.89263 0, 145.2001 -37.89257 0, 145.2002 -37.89253 0, 145.2002 -37.8925 0, 145.2003 -37.89246 0, 145.2003 -37.89241 0, 145.2002 -37.89235 0, 145.2002 -37.89229 0, 145.2001 -37.89225 0, 145.2002 -37.89211 0, 145.2002 -37.89205 0, 145.2002 -37.89204 0, 145.2001 -37.892 0, 145.2 -37.89203 0, 145.1999 -37.89203 0, 145.1997 -37.89208 0, 145.1997 -37.89203 0, 145.1996 -37.89206 0, 145.1995 -37.89203 0, 145.1995 -37.89193 0, 145.1997 -37.8919 0, 145.1998 -37.8918 0, 145.1998 -37.89163 0, 145.1998 -37.89152 0, 145.1998 -37.89142 0, 145.1998 -37.89125 0, 145.1999 -37.89116 0, 145.1998 -37.89104 0, 145.1998 -37.89099 0, 145.1997 -37.89094 0, 145.1997 -37.89079 0, 145.1998 -37.89066 0, 145.1997 -37.89055 0, 145.1994 -37.89043 0, 145.1992 -37.89038 0, 145.1991 -37.8903 0, 145.199 -37.89014 0, 145.1989 -37.88996 0, 145.1988 -37.88979 0, 145.1987 -37.88963 0, 145.1986 -37.88951 0, 145.1984 -37.88936 0, 145.1982 -37.88922 0, 145.198 -37.88916 0, 145.1978 -37.88912 0, 145.1977 -37.88908 0, 145.1974 -37.88912 0, 145.1973 -37.88922 0, 145.197 -37.88916 0, 145.1969 -37.88902 0, 145.1968 -37.88887 0, 145.1968 -37.88873 0, 145.1968 -37.88868 0, 145.1968 -37.88868 0, 145.1968 -37.88867 0, 145.1968 -37.88866 0, 145.1968 -37.88865 0, 145.1968 -37.88865 0, 145.1969 -37.88863 0, 145.1969 -37.8886 0, 145.197 -37.88857 0, 145.197 -37.88854 0, 145.1971 -37.88849 0, 145.1971 -37.88848 0, 145.1971 -37.88847 0, 145.1972 -37.88846 0, 145.1972 -37.88845 0, 145.1972 -37.88844 0, 145.1972 -37.88843 0, 145.1972 -37.88842 0, 145.1972 -37.88842 0, 145.1971 -37.88842 0, 145.1971 -37.8884 0, 145.197 -37.88838 0, 145.197 -37.88837 0, 145.197 -37.88836 0, 145.197 -37.88836 0, 145.1969 -37.88836 0, 145.1969 -37.88836 0, 145.1969 -37.88836 0, 145.1969 -37.88837 0, 145.1969 -37.88837 0, 145.1969 -37.88838 0, 145.1968 -37.8884 0, 145.1968 -37.88841 0, 145.1968 -37.88843 0, 145.1967 -37.88846 0, 145.1967 -37.88848 0, 145.1967 -37.88849 0, 145.1967 -37.88849 0, 145.1967 -37.88849 0, 145.1966 -37.8885 0, 145.1965 -37.88847 0, 145.1965 -37.88851 0, 145.1965 -37.88852 0, 145.1965 -37.88853 0, 145.1965 -37.88854 0, 145.1964 -37.8886 0, 145.1962 -37.88866 0, 145.1962 -37.88865 0, 145.1962 -37.88864 0, 145.1962 -37.8886 0, 145.1962 -37.88858 0, 145.1962 -37.88855 0, 145.1962 -37.88853 0, 145.1961 -37.88853 0, 145.1961 -37.8885 0, 145.1962 -37.88833 0, 145.1961 -37.88824 0, 145.1961 -37.88814 0, 145.196 -37.88797 0, 145.1959 -37.88777 0, 145.1957 -37.88775 0, 145.1956 -37.88785 0, 145.1955 -37.88765 0, 145.1954 -37.88749 0, 145.1954 -37.88729 0, 145.1954 -37.88713 0, 145.1956 -37.88706 0, 145.1956 -37.88688 0, 145.1955 -37.88671 0, 145.1956 -37.88661 0, 145.1958 -37.8867 0, 145.1959 -37.88655 0, 145.196 -37.88632 0, 145.196 -37.88611 0, 145.1959 -37.88602 0, 145.1957 -37.88618 0, 145.1956 -37.88628 0, 145.1953 -37.88631 0, 145.1952 -37.88614 0, 145.1953 -37.886 0, 145.1953 -37.88584 0, 145.1952 -37.8857 0, 145.195 -37.8856 0, 145.1947 -37.8856 0, 145.1945 -37.88551 0, 145.1944 -37.88537 0, 145.1945 -37.88536 0, 145.1946 -37.88526 0, 145.1947 -37.88522 0, 145.1948 -37.88518 0, 145.195 -37.88509 0, 145.1952 -37.885 0, 145.1954 -37.88491 0, 145.1955 -37.88475 0, 145.1953 -37.88475 0, 145.1951 -37.88476 0, 145.1949 -37.88466 0, 145.1947 -37.88456 0, 145.1948 -37.88446 0, 145.195 -37.88439 0, 145.1952 -37.88428 0, 145.1951 -37.88413 0, 145.1953 -37.88401 0, 145.1954 -37.88391 0, 145.1953 -37.88374 0, 145.1951 -37.88369 0, 145.1948 -37.88369 0, 145.1947 -37.88355 0, 145.1949 -37.88348 0, 145.1951 -37.88345 0, 145.1953 -37.88339 0, 145.1955 -37.88325 0, 145.1953 -37.88314 0, 145.195 -37.88313 0, 145.1948 -37.88313 0, 145.1946 -37.88305 0, 145.1945 -37.88292 0, 145.1945 -37.88275 0, 145.1945 -37.88267 0, 145.1945 -37.8826 0, 145.1944 -37.8826 0, 145.1944 -37.8826 0, 145.1942 -37.8826 0, 145.194 -37.88269 0, 145.1938 -37.88267 0, 145.1937 -37.88248 0, 145.1937 -37.88229 0, 145.1935 -37.88226 0, 145.1933 -37.88239 0, 145.1931 -37.88248 0, 145.1931 -37.88269 0, 145.1929 -37.88282 0, 145.1928 -37.88268 0, 145.1926 -37.88255 0, 145.1927 -37.88243 0, 145.1929 -37.8824 0, 145.1931 -37.88236 0, 145.1931 -37.88233 0, 145.193 -37.88233 0, 145.1929 -37.8823 0, 145.1929 -37.88213 0, 145.193 -37.88193 0, 145.193 -37.88171 0, 145.193 -37.88165 0, 145.1929 -37.88141 0, 145.1927 -37.88135 0, 145.1924 -37.88133 0, 145.1922 -37.88127 0, 145.1922 -37.88113 0, 145.1924 -37.88106 0, 145.1925 -37.8809 0, 145.1923 -37.88078 0, 145.1921 -37.88083 0, 145.1919 -37.88094 0, 145.1917 -37.88099 0, 145.1914 -37.88094 0, 145.1912 -37.88092 0, 145.1909 -37.88089 0, 145.1908 -37.88075 0, 145.1909 -37.88057 0, 145.1908 -37.88045 0, 145.1909 -37.88038 0, 145.191 -37.88026 0, 145.1912 -37.88019 0, 145.1914 -37.88032 0, 145.1916 -37.88036 0, 145.1917 -37.88021 0, 145.1916 -37.88007 0, 145.1917 -37.87992 0, 145.1918 -37.8798 0, 145.1917 -37.87968 0, 145.1917 -37.87951 0, 145.1919 -37.87942 0, 145.1921 -37.87932 0, 145.1921 -37.87912 0, 145.1921 -37.8789 0, 145.192 -37.87877 0, 145.1917 -37.87881 0, 145.1917 -37.87904 0, 145.1916 -37.8792 0, 145.1914 -37.87918 0, 145.1911 -37.87911 0, 145.191 -37.879 0, 145.1909 -37.87881 0, 145.1911 -37.87868 0, 145.1912 -37.87858 0, 145.1914 -37.87848 0, 145.1916 -37.87839 0, 145.1917 -37.87822 0, 145.1917 -37.87819 0, 145.1915 -37.87816 0, 145.1914 -37.87803 0, 145.1914 -37.87788 0, 145.1916 -37.87778 0, 145.1919 -37.87774 0, 145.192 -37.87758 0, 145.1918 -37.87745 0, 145.1916 -37.87741 0, 145.1914 -37.87733 0, 145.1914 -37.87712 0, 145.1914 -37.87697 0, 145.1915 -37.87679 0, 145.1917 -37.87668 0, 145.1917 -37.87647 0, 145.1919 -37.87633 0, 145.192 -37.8762 0, 145.1921 -37.87605 0, 145.1923 -37.87592 0, 145.1925 -37.87581 0, 145.1926 -37.8757 0, 145.1926 -37.87552 0, 145.1924 -37.87545 0, 145.1923 -37.87534 0, 145.1924 -37.8752 0, 145.1926 -37.87504 0, 145.1927 -37.87487 0, 145.1926 -37.87468 0, 145.1924 -37.87454 0, 145.1924 -37.87435 0, 145.1922 -37.87423 0, 145.1921 -37.87409 0, 145.1923 -37.87398 0, 145.1924 -37.8741 0, 145.1927 -37.87418 0, 145.1929 -37.87422 0, 145.1932 -37.87426 0, 145.1934 -37.87416 0, 145.1934 -37.87393 0, 145.1933 -37.87385 0, 145.1931 -37.87398 0, 145.1929 -37.874 0, 145.1927 -37.87385 0, 145.1929 -37.87371 0, 145.1931 -37.87363 0, 145.1933 -37.87354 0, 145.1934 -37.87349 0, 145.1934 -37.87343 0, 145.1932 -37.8734 0, 145.1932 -37.87342 0, 145.1931 -37.87344 0, 145.1931 -37.87341 0, 145.193 -37.87334 0, 145.1932 -37.87323 0, 145.1932 -37.87316 0, 145.1932 -37.8731 0, 145.1932 -37.87301 0, 145.1931 -37.87294 0, 145.1931 -37.87285 0, 145.1931 -37.87273 0, 145.1931 -37.87264 0, 145.1931 -37.87257 0, 145.1931 -37.87255 0, 145.193 -37.87249 0, 145.1929 -37.87245 0, 145.1928 -37.87242 0, 145.1927 -37.87235 0, 145.1926 -37.8723 0, 145.1925 -37.87224 0, 145.1925 -37.87219 0, 145.1924 -37.87213 0, 145.1923 -37.87209 0, 145.1922 -37.87204 0, 145.1921 -37.87195 0, 145.1921 -37.87183 0, 145.1921 -37.87171 0, 145.1922 -37.87161 0, 145.1922 -37.87155 0, 145.1923 -37.8715 0, 145.1925 -37.87148 0, 145.1926 -37.87152 0, 145.1926 -37.87163 0, 145.1926 -37.8717 0, 145.1928 -37.87169 0, 145.1929 -37.87168 0, 145.1931 -37.87167 0, 145.1932 -37.87164 0, 145.1932 -37.87155 0, 145.1932 -37.87143 0, 145.1932 -37.87134 0, 145.1931 -37.87114 0, 145.1931 -37.87106 0, 145.193 -37.87099 0, 145.1929 -37.87091 0, 145.1929 -37.87084 0, 145.1928 -37.87075 0, 145.1928 -37.87065 0, 145.1929 -37.87059 0, 145.193 -37.87056 0, 145.1933 -37.8705 0, 145.1934 -37.87046 0, 145.1935 -37.87041 0, 145.1936 -37.87035 0, 145.1936 -37.87027 0, 145.1937 -37.87018 0, 145.1937 -37.8701 0, 145.1938 -37.87 0, 145.1938 -37.86988 0, 145.1937 -37.86978 0, 145.1936 -37.86974 0, 145.1935 -37.86969 0, 145.1935 -37.8696 0, 145.1937 -37.86958 0, 145.1938 -37.86954 0, 145.1938 -37.86946 0, 145.1938 -37.86934 0, 145.1938 -37.86926 0, 145.1937 -37.86922 0, 145.1936 -37.86916 0, 145.1937 -37.86912 0, 145.1939 -37.86911 0, 145.194 -37.8691 0, 145.1941 -37.86908 0, 145.1943 -37.86906 0, 145.1944 -37.86901 0, 145.1944 -37.86891 0, 145.1944 -37.86883 0, 145.1945 -37.86877 0, 145.1946 -37.86872 0, 145.1947 -37.8687 0, 145.1948 -37.86866 0, 145.1949 -37.86858 0, 145.1948 -37.86853 0, 145.1946 -37.86853 0, 145.1944 -37.86853 0, 145.1943 -37.86857 0, 145.1942 -37.86862 0, 145.1942 -37.86868 0, 145.1941 -37.86877 0, 145.194 -37.86883 0, 145.1939 -37.86884 0, 145.1938 -37.86877 0, 145.1938 -37.86866 0, 145.1939 -37.8686 0, 145.194 -37.86852 0, 145.194 -37.86842 0, 145.1941 -37.86834 0, 145.1941 -37.86826 0, 145.1942 -37.86821 0, 145.1943 -37.86817 0, 145.1945 -37.86816 0, 145.1946 -37.86813 0, 145.1946 -37.86804 0, 145.1947 -37.86799 0, 145.1947 -37.86789 0, 145.1947 -37.86779 0, 145.1948 -37.86771 0, 145.1948 -37.86762 0, 145.1949 -37.86754 0, 145.1949 -37.86745 0, 145.1949 -37.86739 0, 145.1948 -37.86734 0, 145.1946 -37.86732 0, 145.1945 -37.86735 0, 145.1944 -37.86735 0, 145.1944 -37.86727 0, 145.1944 -37.86719 0, 145.1945 -37.86713 0, 145.1946 -37.86707 0, 145.1947 -37.86704 0, 145.1948 -37.86702 0, 145.1949 -37.867 0, 145.195 -37.86697 0, 145.195 -37.8669 0, 145.1948 -37.86688 0, 145.1947 -37.86689 0, 145.1945 -37.86689 0, 145.1945 -37.86685 0, 145.1946 -37.86681 0, 145.1947 -37.86677 0, 145.1948 -37.86672 0, 145.1949 -37.86667 0, 145.1949 -37.86661 0, 145.195 -37.86653 0, 145.1949 -37.86646 0, 145.1948 -37.86643 0, 145.1946 -37.86643 0, 145.1945 -37.86642 0, 145.1944 -37.86639 0, 145.1942 -37.86636 0, 145.1941 -37.86632 0, 145.1941 -37.86624 0, 145.1942 -37.8662 0, 145.1944 -37.86619 0, 145.1945 -37.86618 0, 145.1947 -37.86617 0, 145.1948 -37.86617 0, 145.195 -37.86616 0, 145.1951 -37.8662 0, 145.1952 -37.86625 0, 145.1953 -37.86623 0, 145.1954 -37.86618 0, 145.1954 -37.86609 0, 145.1955 -37.86598 0, 145.1955 -37.86586 0, 145.1954 -37.86577 0, 145.1953 -37.86578 0, 145.1952 -37.86586 0, 145.1952 -37.86593 0, 145.1951 -37.8659 0, 145.1951 -37.8658 0, 145.195 -37.86571 0, 145.1949 -37.86564 0, 145.1949 -37.86559 0, 145.1947 -37.86554 0, 145.1947 -37.86548 0, 145.1946 -37.8654 0, 145.1947 -37.86535 0, 145.1948 -37.86532 0, 145.195 -37.8653 0, 145.1951 -37.8653 0, 145.1953 -37.8653 0, 145.1954 -37.86529 0, 145.1955 -37.86525 0, 145.1957 -37.86522 0, 145.1957 -37.86518 0, 145.1957 -37.86517 0, 145.1957 -37.86517 0, 145.1957 -37.86516 0, 145.1957 -37.86516 0, 145.1957 -37.86515 0, 145.1957 -37.86514 0, 145.1957 -37.86514 0, 145.1956 -37.8651 0, 145.1954 -37.86503 0, 145.1954 -37.86502 0, 145.1953 -37.86498 0, 145.1953 -37.86497 0, 145.1952 -37.86495 0, 145.1952 -37.86492 0, 145.1952 -37.86492 0, 145.1952 -37.86491 0, 145.1952 -37.8649 0, 145.1952 -37.86489 0, 145.1952 -37.86489 0, 145.1952 -37.86488 0, 145.1952 -37.86487 0, 145.1952 -37.86486 0, 145.1953 -37.86486 0, 145.1953 -37.86485 0, 145.1953 -37.86485 0, 145.1953 -37.86485 0, 145.1954 -37.86485 0, 145.1956 -37.86484 0, 145.1956 -37.86484 0, 145.1957 -37.86485 0, 145.1958 -37.86488 0, 145.1958 -37.86489 0, 145.1958 -37.8649 0, 145.1959 -37.86491 0, 145.1959 -37.86491 0, 145.1959 -37.86491 0, 145.1959 -37.8649 0, 145.1959 -37.8649 0, 145.1959 -37.86489 0, 145.1959 -37.86488 0, 145.1959 -37.86486 0, 145.1959 -37.86482 0, 145.1959 -37.86478 0, 145.196 -37.86474 0, 145.196 -37.86471 0, 145.196 -37.86468 0, 145.196 -37.86467 0, 145.196 -37.86466 0, 145.196 -37.86465 0, 145.196 -37.86464 0, 145.196 -37.86463 0, 145.1961 -37.86462 0, 145.1961 -37.86461 0, 145.1961 -37.86461 0, 145.1961 -37.86461 0, 145.1961 -37.8646 0, 145.1962 -37.86461 0, 145.1962 -37.86461 0, 145.1962 -37.86462 0, 145.1963 -37.86463 0, 145.1963 -37.86464 0, 145.1963 -37.86465 0, 145.1964 -37.86465 0, 145.1964 -37.86466 0, 145.1964 -37.86466 0, 145.1965 -37.86467 0, 145.1965 -37.86467 0, 145.1965 -37.86468 0, 145.1965 -37.86469 0, 145.1965 -37.8647 0, 145.1965 -37.86471 0, 145.1965 -37.86471 0, 145.1965 -37.86473 0, 145.1965 -37.86474 0, 145.1965 -37.86475 0, 145.1965 -37.86477 0, 145.1965 -37.86477 0, 145.1964 -37.86486 0, 145.1963 -37.86493 0, 145.1963 -37.86496 0, 145.1963 -37.86497 0, 145.1963 -37.86499 0, 145.1963 -37.86502 0, 145.1963 -37.86504 0, 145.1962 -37.86508 0, 145.1962 -37.8651 0, 145.1962 -37.86511 0, 145.1962 -37.86513 0, 145.1962 -37.86514 0, 145.1963 -37.86515 0, 145.1963 -37.86516 0, 145.1963 -37.86517 0, 145.1963 -37.86517 0, 145.1963 -37.86518 0, 145.1963 -37.86519 0, 145.1963 -37.8652 0, 145.1963 -37.8652 0, 145.1964 -37.8652 0, 145.1964 -37.86519 0, 145.1965 -37.86519 0, 145.1966 -37.86521 0, 145.1966 -37.86521 0, 145.1966 -37.8652 0, 145.1966 -37.8652 0, 145.1967 -37.86519 0, 145.1967 -37.86518 0, 145.1967 -37.86517 0, 145.1967 -37.86516 0, 145.1967 -37.86516 0, 145.1967 -37.86511 0, 145.1967 -37.86509 0, 145.1967 -37.86507 0, 145.1967 -37.86506 0, 145.1967 -37.86504 0, 145.1967 -37.86503 0, 145.1967 -37.865 0, 145.1967 -37.86498 0, 145.1967 -37.86496 0, 145.1967 -37.86494 0, 145.1967 -37.86493 0, 145.1967 -37.86492 0, 145.1967 -37.86491 0, 145.1967 -37.8649 0, 145.1968 -37.86489 0, 145.1968 -37.86488 0, 145.1968 -37.86488 0, 145.1968 -37.86488 0, 145.1968 -37.86488 0, 145.1968 -37.86488 0, 145.1968 -37.86488 0, 145.1969 -37.86489 0, 145.1969 -37.8649 0, 145.197 -37.86494 0, 145.197 -37.86495 0, 145.197 -37.86496 0, 145.197 -37.86496 0, 145.197 -37.86496 0, 145.1971 -37.86496 0, 145.1971 -37.86496 0, 145.1971 -37.86495 0, 145.1971 -37.86494 0, 145.1971 -37.86492 0, 145.1971 -37.86491 0, 145.1971 -37.86491 0, 145.1971 -37.86489 0, 145.1971 -37.86488 0, 145.1971 -37.86486 0, 145.1971 -37.86483 0, 145.1971 -37.8648 0, 145.1971 -37.86478 0, 145.197 -37.86476 0, 145.197 -37.86474 0, 145.197 -37.86469 0, 145.197 -37.86467 0, 145.1969 -37.86465 0, 145.1969 -37.86452 0, 145.1968 -37.86451 0, 145.1968 -37.8645 0, 145.1968 -37.86449 0, 145.1968 -37.86444 0, 145.1968 -37.86441 0, 145.1968 -37.8644 0, 145.1967 -37.86438 0, 145.1967 -37.86432 0, 145.1967 -37.86429 0, 145.1967 -37.86427 0, 145.1967 -37.86412 0, 145.1967 -37.8641 0, 145.1967 -37.86409 0, 145.1967 -37.86408 0, 145.1967 -37.86408 0, 145.1968 -37.86408 0, 145.1968 -37.86408 0, 145.1968 -37.86408 0, 145.1968 -37.86409 0, 145.1968 -37.8641 0, 145.1969 -37.86414 0, 145.1969 -37.86415 0, 145.1969 -37.86416 0, 145.1969 -37.86417 0, 145.197 -37.86417 0, 145.197 -37.86418 0, 145.197 -37.86418 0, 145.197 -37.86418 0, 145.197 -37.86418 0, 145.197 -37.86417 0, 145.197 -37.86417 0, 145.197 -37.86416 0, 145.197 -37.86415 0, 145.197 -37.86414 0, 145.197 -37.86412 0, 145.197 -37.8641 0, 145.197 -37.86409 0, 145.197 -37.86408 0, 145.197 -37.86407 0, 145.197 -37.86405 0, 145.197 -37.86404 0, 145.197 -37.86403 0, 145.197 -37.86401 0, 145.197 -37.864 0, 145.197 -37.86399 0, 145.197 -37.86398 0, 145.1971 -37.86396 0, 145.1971 -37.86395 0, 145.1971 -37.86394 0, 145.1972 -37.86391 0, 145.1972 -37.86388 0, 145.1973 -37.86387 0, 145.1973 -37.86386 0, 145.1973 -37.86385 0, 145.1974 -37.86384 0, 145.1974 -37.86384 0, 145.1974 -37.86383 0, 145.1975 -37.86383 0, 145.1975 -37.86384 0, 145.1975 -37.86384 0, 145.1977 -37.86391 0, 145.1977 -37.86391 0, 145.1977 -37.86392 0, 145.1978 -37.86392 0, 145.1978 -37.86392 0, 145.1978 -37.86391 0, 145.1978 -37.8639 0, 145.1978 -37.8639 0, 145.1979 -37.86389 0, 145.1979 -37.86387 0, 145.1979 -37.86386 0, 145.1979 -37.86385 0, 145.1979 -37.86383 0, 145.1979 -37.86382 0, 145.1979 -37.86381 0, 145.198 -37.86378 0, 145.198 -37.86377 0, 145.198 -37.86374 0, 145.198 -37.86372 0, 145.198 -37.8637 0, 145.198 -37.86369 0, 145.198 -37.86367 0, 145.198 -37.86366 0, 145.198 -37.86365 0, 145.198 -37.86364 0, 145.1979 -37.86363 0, 145.1979 -37.86362 0, 145.1979 -37.86361 0, 145.1979 -37.8636 0, 145.1979 -37.8636 0, 145.1978 -37.86358 0, 145.1978 -37.86357 0, 145.1976 -37.86355 0, 145.1976 -37.86354 0, 145.1976 -37.86354 0, 145.1976 -37.86353 0, 145.1976 -37.86352 0, 145.1976 -37.86351 0, 145.1976 -37.86351 0, 145.1976 -37.8635 0, 145.1976 -37.86348 0, 145.1976 -37.86346 0, 145.1976 -37.86345 0, 145.1976 -37.86344 0, 145.1976 -37.86343 0, 145.1976 -37.86342 0, 145.1976 -37.86342 0, 145.1977 -37.86341 0, 145.1977 -37.86341 0, 145.1977 -37.8634 0, 145.1977 -37.8634 0, 145.1977 -37.86341 0, 145.1978 -37.86341 0, 145.1979 -37.86342 0, 145.1979 -37.86343 0, 145.198 -37.86344 0, 145.198 -37.86345 0, 145.198 -37.86345 0, 145.198 -37.86346 0, 145.198 -37.86346 0, 145.198 -37.86347 0, 145.198 -37.86348 0, 145.198 -37.86353 0, 145.1981 -37.86361 0, 145.1981 -37.86361 0, 145.1981 -37.86362 0, 145.1981 -37.86363 0, 145.1981 -37.86364 0, 145.1981 -37.86364 0, 145.1982 -37.86365 0, 145.1982 -37.86365 0, 145.1982 -37.86365 0, 145.1982 -37.86365 0, 145.1982 -37.86364 0, 145.1983 -37.86364 0, 145.1984 -37.86357 0, 145.1985 -37.86351 0, 145.1986 -37.86351 0, 145.1986 -37.8635 0, 145.1986 -37.8635 0, 145.1986 -37.8635 0, 145.1987 -37.8635 0, 145.1987 -37.86351 0, 145.1989 -37.86352 0, 145.1989 -37.86352 0, 145.1989 -37.86352 0, 145.1989 -37.86351 0, 145.1989 -37.86351 0, 145.199 -37.86351 0, 145.199 -37.8635 0, 145.199 -37.86349 0, 145.199 -37.86348 0, 145.199 -37.86345 0, 145.199 -37.86342 0, 145.199 -37.8634 0, 145.199 -37.86335 0, 145.199 -37.86332 0, 145.199 -37.8633 0, 145.199 -37.86326 0, 145.1991 -37.86323 0, 145.1991 -37.86321 0, 145.1991 -37.86318 0, 145.1991 -37.86314 0, 145.1992 -37.86312 0, 145.1992 -37.8631 0, 145.1993 -37.86304 0, 145.1993 -37.86303 0, 145.1993 -37.86301 0, 145.1993 -37.86298 0, 145.1994 -37.86295 0, 145.1994 -37.86294 0, 145.1994 -37.86291 0, 145.1994 -37.8629 0, 145.1994 -37.86289 0, 145.1994 -37.86288 0, 145.1994 -37.86287 0, 145.1994 -37.86286 0, 145.1994 -37.86285 0, 145.1994 -37.86283 0, 145.1993 -37.86281 0, 145.1993 -37.8628 0, 145.1993 -37.86279 0, 145.1993 -37.86278 0, 145.1993 -37.86277 0, 145.1992 -37.86276 0, 145.1992 -37.86275 0, 145.1992 -37.86274 0, 145.1992 -37.86274 0, 145.1992 -37.86274 0, 145.1991 -37.86274 0, 145.1991 -37.86274 0, 145.199 -37.86274 0, 145.1989 -37.86277 0, 145.1988 -37.86279 0, 145.1987 -37.86279 0, 145.1987 -37.86279 0, 145.1987 -37.86279 0, 145.1987 -37.86278 0, 145.1987 -37.86278 0, 145.1986 -37.86277 0, 145.1986 -37.86276 0, 145.1986 -37.86275 0, 145.1986 -37.86274 0, 145.1986 -37.86273 0, 145.1986 -37.86272 0, 145.1986 -37.86271 0, 145.1986 -37.86269 0, 145.1986 -37.86268 0, 145.1986 -37.86267 0, 145.1986 -37.86265 0, 145.1986 -37.86263 0, 145.1986 -37.86261 0, 145.1987 -37.8626 0, 145.1987 -37.86259 0, 145.1987 -37.86257 0, 145.1989 -37.86251 0, 145.1989 -37.86248 0, 145.199 -37.86245 0, 145.199 -37.86243 0, 145.1991 -37.8624 0, 145.1991 -37.86239 0, 145.1991 -37.86234 0, 145.1991 -37.86234 0, 145.1991 -37.86233 0, 145.1992 -37.86232 0, 145.1992 -37.86229 0, 145.1992 -37.86228 0, 145.1992 -37.86227 0, 145.1993 -37.86225 0, 145.1993 -37.86221 0, 145.1993 -37.8622 0, 145.1993 -37.86218 0, 145.1993 -37.86217 0, 145.1993 -37.86215 0, 145.1993 -37.86214 0, 145.1993 -37.8621 0, 145.1993 -37.86206 0, 145.1993 -37.86203 0, 145.1994 -37.86201 0, 145.1994 -37.86197 0, 145.1994 -37.86195 0, 145.1994 -37.86192 0, 145.1994 -37.8619 0, 145.1994 -37.86189 0, 145.1994 -37.86186 0, 145.1994 -37.86183 0, 145.1995 -37.86182 0, 145.1995 -37.86181 0, 145.1995 -37.86181 0, 145.1996 -37.86177 0, 145.1996 -37.86175 0, 145.1996 -37.86174 0, 145.1996 -37.86173 0, 145.1996 -37.86172 0, 145.1996 -37.86171 0, 145.1997 -37.86169 0, 145.1997 -37.86168 0, 145.1997 -37.86165 0, 145.1997 -37.86162 0, 145.1997 -37.86162 0, 145.1998 -37.8616 0, 145.1998 -37.86159 0, 145.1998 -37.86159 0, 145.1998 -37.8616 0, 145.1998 -37.8616 0, 145.1998 -37.86161 0, 145.1998 -37.86161 0, 145.1998 -37.86162 0, 145.1999 -37.86166 0, 145.1999 -37.86169 0, 145.1999 -37.86169 0, 145.1999 -37.8617 0, 145.1999 -37.86172 0, 145.1999 -37.86173 0, 145.1999 -37.86174 0, 145.1999 -37.86175 0, 145.1999 -37.86175 0, 145.1999 -37.86175 0, 145.2 -37.86176 0, 145.2 -37.86176 0, 145.2 -37.86175 0, 145.2 -37.86175 0, 145.2 -37.86174 0, 145.2 -37.86174 0, 145.2 -37.86173 0, 145.2001 -37.8617 0, 145.2001 -37.86169 0, 145.2001 -37.86168 0, 145.2001 -37.86168 0, 145.2001 -37.86163 0, 145.2001 -37.8616 0, 145.2002 -37.86157 0, 145.2002 -37.86154 0, 145.2002 -37.86153 0, 145.2003 -37.8615 0, 145.2003 -37.86149 0, 145.2003 -37.86149 0, 145.2003 -37.86147 0, 145.2003 -37.86146 0, 145.2003 -37.86145 0, 145.2003 -37.86145 0, 145.2003 -37.86143 0, 145.2003 -37.86143 0, 145.2003 -37.86141 0, 145.2003 -37.8614 0, 145.2003 -37.8614 0, 145.2003 -37.86139 0, 145.2003 -37.86139 0, 145.2003 -37.86138 0, 145.2003 -37.86138 0, 145.2003 -37.86138 0, 145.2003 -37.86138 0, 145.2004 -37.86138 0, 145.2004 -37.8614 0, 145.2004 -37.8614 0, 145.2004 -37.86141 0, 145.2004 -37.86141 0, 145.2004 -37.86142 0, 145.2005 -37.86146 0, 145.2005 -37.86149 0, 145.2005 -37.8615 0, 145.2005 -37.86151 0, 145.2006 -37.86151 0, 145.2006 -37.86153 0, 145.2006 -37.86156 0, 145.2006 -37.86158 0, 145.2006 -37.86161 0, 145.2007 -37.86168 0, 145.2007 -37.86169 0, 145.2007 -37.86172 0, 145.2007 -37.86174 0, 145.2007 -37.86177 0, 145.2007 -37.86178 0, 145.2007 -37.8618 0, 145.2008 -37.86185 0, 145.2008 -37.86187 0, 145.2008 -37.8619 0, 145.2008 -37.86192 0, 145.2008 -37.86194 0, 145.2008 -37.86196 0, 145.2008 -37.86203 0, 145.2009 -37.86205 0, 145.2009 -37.86207 0, 145.2009 -37.86209 0, 145.2009 -37.8621 0, 145.2009 -37.86212 0, 145.2009 -37.86213 0, 145.2009 -37.86213 0, 145.2009 -37.86214 0, 145.201 -37.86214 0, 145.201 -37.86214 0, 145.201 -37.86214 0, 145.201 -37.86213 0, 145.201 -37.86213 0, 145.201 -37.86212 0, 145.201 -37.86211 0, 145.201 -37.8621 0, 145.201 -37.86209 0, 145.201 -37.86207 0, 145.201 -37.86206 0, 145.201 -37.86205 0, 145.201 -37.86188 0, 145.201 -37.86186 0, 145.201 -37.86185 0, 145.201 -37.86183 0, 145.201 -37.86182 0, 145.201 -37.8618 0, 145.201 -37.86177 0, 145.201 -37.86174 0, 145.201 -37.86171 0, 145.201 -37.86168 0, 145.2011 -37.86166 0, 145.2011 -37.86163 0, 145.2011 -37.86161 0, 145.2011 -37.86159 0, 145.2011 -37.86156 0, 145.2011 -37.86153 0, 145.2011 -37.86149 0, 145.2011 -37.86142 0, 145.2011 -37.86136 0, 145.2011 -37.86132 0, 145.2011 -37.86123 0, 145.2011 -37.86114 0, 145.2011 -37.86112 0, 145.2011 -37.8611 0, 145.2011 -37.86109 0, 145.2011 -37.86108 0, 145.2011 -37.86107 0, 145.2011 -37.86107 0, 145.2011 -37.86106 0, 145.2011 -37.86106 0, 145.2011 -37.86106 0, 145.2011 -37.86106 0, 145.2012 -37.86106 0, 145.2012 -37.86106 0, 145.2013 -37.86111 0, 145.2013 -37.86115 0, 145.2014 -37.86115 0, 145.2014 -37.86116 0, 145.2014 -37.86116 0, 145.2014 -37.86116 0, 145.2014 -37.86115 0, 145.2014 -37.86115 0, 145.2014 -37.86114 0, 145.2014 -37.86113 0, 145.2014 -37.86112 0, 145.2014 -37.86111 0, 145.2014 -37.86106 0, 145.2014 -37.86104 0, 145.2014 -37.86102 0, 145.2014 -37.86099 0, 145.2013 -37.86091 0, 145.2013 -37.86088 0, 145.2013 -37.86086 0, 145.2012 -37.86077 0, 145.2012 -37.86071 0, 145.2011 -37.86065 0, 145.2011 -37.86063 0, 145.2011 -37.86062 0, 145.2011 -37.86061 0, 145.2011 -37.8606 0, 145.2011 -37.8606 0, 145.2011 -37.8606 0, 145.201 -37.8606 0, 145.201 -37.8606 0, 145.201 -37.8606 0, 145.2009 -37.86064 0, 145.2008 -37.86068 0, 145.2008 -37.8607 0, 145.2008 -37.8607 0, 145.2007 -37.86071 0, 145.2007 -37.86071 0, 145.2007 -37.8607 0, 145.2007 -37.8607 0, 145.2006 -37.86069 0, 145.2006 -37.86068 0, 145.2006 -37.86065 0, 145.2005 -37.86058 0, 145.2005 -37.86057 0, 145.2005 -37.86055 0, 145.2005 -37.86055 0, 145.2005 -37.86054 0, 145.2005 -37.86053 0, 145.2005 -37.86053 0, 145.2004 -37.86049 0, 145.2004 -37.86048 0, 145.2004 -37.86045 0, 145.2004 -37.86043 0, 145.2005 -37.8604 0, 145.2005 -37.86037 0, 145.2005 -37.86035 0, 145.2005 -37.86033 0, 145.2005 -37.86031 0, 145.2005 -37.86029 0, 145.2005 -37.86026 0, 145.2004 -37.86024 0, 145.2004 -37.86023 0, 145.2004 -37.86022 0, 145.2004 -37.86019 0, 145.2004 -37.86018 0, 145.2004 -37.86017 0, 145.2004 -37.86016 0, 145.2003 -37.86015 0, 145.2003 -37.86014 0, 145.2003 -37.86013 0, 145.2003 -37.86013 0, 145.2003 -37.86012 0, 145.2002 -37.86011 0, 145.2002 -37.8601 0, 145.2002 -37.8601 0, 145.2002 -37.86008 0, 145.2002 -37.86007 0, 145.2002 -37.86006 0, 145.2002 -37.86006 0, 145.2002 -37.86004 0, 145.2002 -37.86003 0, 145.2002 -37.86002 0, 145.2001 -37.86002 0, 145.2001 -37.86 0, 145.2001 -37.85999 0, 145.2001 -37.85997 0, 145.2001 -37.85995 0, 145.2 -37.85994 0, 145.2 -37.85992 0, 145.2 -37.85991 0, 145.2 -37.85991 0, 145.2 -37.8599 0, 145.2 -37.85988 0, 145.1999 -37.85987 0, 145.1999 -37.85985 0, 145.1999 -37.85983 0, 145.1999 -37.85981 0, 145.1999 -37.8598 0, 145.1999 -37.85979 0, 145.1999 -37.85979 0, 145.1999 -37.85979 0, 145.1998 -37.85979 0, 145.1998 -37.85979 0, 145.1997 -37.85981 0, 145.1997 -37.85982 0, 145.1997 -37.85981 0, 145.1997 -37.85981 0, 145.1997 -37.85981 0, 145.1997 -37.8598 0, 145.1996 -37.85979 0, 145.1996 -37.85978 0, 145.1996 -37.85977 0, 145.1996 -37.85976 0, 145.1996 -37.85975 0, 145.1996 -37.85975 0, 145.1996 -37.85974 0, 145.1997 -37.85972 0, 145.1997 -37.85968 0, 145.1997 -37.85967 0, 145.1997 -37.85966 0, 145.1998 -37.85964 0, 145.1998 -37.85963 0, 145.1998 -37.85962 0, 145.1998 -37.8596 0, 145.1998 -37.85958 0, 145.1998 -37.85957 0, 145.1998 -37.85953 0, 145.1997 -37.85951 0, 145.1997 -37.85948 0, 145.1997 -37.85947 0, 145.1997 -37.85945 0, 145.1998 -37.85943 0, 145.1998 -37.85941 0, 145.1998 -37.8594 0, 145.1998 -37.85938 0, 145.1998 -37.85937 0, 145.1998 -37.85936 0, 145.1998 -37.85936 0, 145.1998 -37.85935 0, 145.1998 -37.85935 0, 145.1998 -37.85935 0, 145.1999 -37.85935 0, 145.1999 -37.85935 0, 145.1999 -37.85936 0, 145.1999 -37.85938 0, 145.2 -37.8594 0, 145.2 -37.85941 0, 145.2 -37.85942 0, 145.2001 -37.85943 0, 145.2001 -37.85944 0, 145.2001 -37.85944 0, 145.2002 -37.85944 0, 145.2002 -37.85944 0, 145.2002 -37.85944 0, 145.2002 -37.85944 0, 145.2002 -37.85943 0, 145.2002 -37.85943 0, 145.2002 -37.85942 0, 145.2003 -37.85939 0, 145.2004 -37.85909 0, 145.2005 -37.85899 0, 145.2005 -37.85896 0, 145.2006 -37.85892 0, 145.2006 -37.85886 0, 145.2006 -37.85883 0, 145.2006 -37.85879 0, 145.2007 -37.85872 0, 145.2007 -37.85865 0, 145.2008 -37.8586 0, 145.2009 -37.85858 0, 145.201 -37.85861 0, 145.201 -37.85868 0, 145.201 -37.85874 0, 145.2011 -37.85879 0, 145.2011 -37.85879 0, 145.2012 -37.85875 0, 145.2012 -37.85869 0, 145.2013 -37.85861 0, 145.2013 -37.85854 0, 145.2014 -37.85845 0, 145.2014 -37.85838 0, 145.2014 -37.85836 0, 145.2015 -37.85835 0, 145.2016 -37.85838 0, 145.2016 -37.85842 0, 145.2017 -37.85847 0, 145.2018 -37.85847 0, 145.2019 -37.85848 0, 145.2021 -37.85848 0, 145.2023 -37.85846 0, 145.2024 -37.85839 0, 145.2025 -37.85831 0, 145.2026 -37.85821 0, 145.2026 -37.85812 0, 145.2028 -37.85802 0, 145.2029 -37.85793 0, 145.203 -37.85786 0, 145.2031 -37.85777 0, 145.2032 -37.85764 0, 145.2034 -37.85747 0, 145.2034 -37.85745 0, 145.2034 -37.8574 0, 145.2034 -37.85733 0, 145.2035 -37.85721 0, 145.2035 -37.85709 0, 145.2036 -37.85698 0, 145.2036 -37.85695 0, 145.2036 -37.85693 0, 145.2036 -37.85692 0, 145.2037 -37.85691 0, 145.2037 -37.85691 0, 145.2038 -37.8569 0, 145.2038 -37.85689 0, 145.2038 -37.85687 0, 145.2039 -37.85686 0, 145.204 -37.85683 0, 145.204 -37.85685 0, 145.204 -37.85692 0, 145.204 -37.85697 0, 145.204 -37.85703 0, 145.204 -37.8571 0, 145.2039 -37.85712 0, 145.2039 -37.85714 0, 145.2039 -37.85715 0, 145.204 -37.85715 0, 145.204 -37.85716 0, 145.2043 -37.85721 0, 145.2047 -37.8573 0, 145.2048 -37.85733 0, 145.2049 -37.8573 0, 145.205 -37.85722 0, 145.2051 -37.85708 0, 145.2051 -37.85701 0, 145.2053 -37.85691 0, 145.2057 -37.8567 0, 145.2057 -37.85667 0, 145.2057 -37.85665 0, 145.2057 -37.85661 0, 145.2057 -37.85657 0, 145.2056 -37.85648 0, 145.2056 -37.85644 0, 145.2057 -37.85644 0, 145.2059 -37.85651 0, 145.206 -37.85652 0, 145.206 -37.85647 0, 145.206 -37.85637 0, 145.2058 -37.85618 0, 145.2058 -37.85613 0, 145.2058 -37.85608 0, 145.2059 -37.85601 0, 145.2061 -37.85598 0, 145.2062 -37.85594 0, 145.2063 -37.85596 0, 145.2063 -37.85601 0, 145.2062 -37.85634 0, 145.2062 -37.85646 0, 145.2063 -37.85648 0, 145.2063 -37.85643 0, 145.2065 -37.85625 0, 145.2066 -37.85605 0, 145.2066 -37.85604 0, 145.2067 -37.85608 0, 145.2067 -37.85621 0, 145.2068 -37.85631 0, 145.2069 -37.85637 0, 145.207 -37.85638 0, 145.2071 -37.85636 0, 145.2072 -37.85634 0, 145.2073 -37.85629 0, 145.2074 -37.85618 0, 145.2075 -37.85612 0, 145.2076 -37.85606 0, 145.2075 -37.85598 0, 145.2073 -37.85592 0, 145.2071 -37.85585 0, 145.2071 -37.85579 0, 145.2071 -37.85564 0, 145.207 -37.85562 0, 145.2069 -37.85562 0, 145.2067 -37.85576 0, 145.2066 -37.85578 0, 145.2066 -37.85574 0, 145.2066 -37.85569 0, 145.2067 -37.8556 0, 145.2068 -37.85552 0, 145.2067 -37.85548 0, 145.2066 -37.85543 0, 145.2064 -37.85539 0, 145.2063 -37.85535 0, 145.2062 -37.8553 0, 145.2062 -37.85524 0, 145.2063 -37.85517 0, 145.2064 -37.85515 0, 145.2066 -37.85517 0, 145.2067 -37.85513 0, 145.2067 -37.8551 0, 145.2067 -37.85503 0, 145.2067 -37.8548 0, 145.2067 -37.85474 0, 145.2066 -37.85473 0, 145.2065 -37.85477 0, 145.2064 -37.8548 0, 145.2062 -37.85481 0, 145.2061 -37.85482 0, 145.2061 -37.8548 0, 145.2061 -37.85476 0, 145.2062 -37.85469 0, 145.2063 -37.8546 0, 145.2064 -37.85452 0, 145.2064 -37.85447 0, 145.2063 -37.85445 0, 145.2062 -37.85448 0, 145.2061 -37.85449 0, 145.2061 -37.85445 0, 145.206 -37.85438 0, 145.2059 -37.85429 0, 145.2059 -37.85425 0, 145.2059 -37.85419 0, 145.2059 -37.85416 0, 145.206 -37.85412 0, 145.206 -37.85407 0, 145.2061 -37.85395 0, 145.2062 -37.8538 0, 145.2063 -37.85377 0, 145.2063 -37.85376 0, 145.2063 -37.85377 0, 145.2065 -37.85385 0, 145.2066 -37.85387 0, 145.2067 -37.85383 0, 145.2068 -37.85374 0, 145.2068 -37.85363 0, 145.2068 -37.85347 0, 145.2068 -37.85341 0, 145.2068 -37.85336 0, 145.2066 -37.85326 0, 145.2067 -37.85287 0, 145.2068 -37.85275 0, 145.2069 -37.85264 0, 145.2069 -37.85251 0, 145.2068 -37.8524 0, 145.2068 -37.85237 0, 145.2068 -37.85234 0, 145.2069 -37.85228 0, 145.2071 -37.85227 0, 145.2072 -37.85227 0, 145.2074 -37.85225 0, 145.2074 -37.85228 0, 145.2075 -37.85231 0, 145.2074 -37.85236 0, 145.2073 -37.85242 0, 145.2072 -37.85247 0, 145.2071 -37.85252 0, 145.2072 -37.85256 0, 145.2073 -37.85258 0, 145.2074 -37.8526 0, 145.2075 -37.85261 0, 145.2077 -37.85264 0, 145.2078 -37.85267 0, 145.2079 -37.85267 0, 145.208 -37.85268 0, 145.2081 -37.85259 0, 145.2081 -37.8524 0, 145.2082 -37.85233 0, 145.2082 -37.8523 0, 145.2084 -37.85229 0, 145.2085 -37.85234 0, 145.2086 -37.85243 0, 145.2086 -37.85258 0, 145.2086 -37.85262 0, 145.2087 -37.85267 0, 145.2087 -37.85272 0, 145.2088 -37.85263 0, 145.2089 -37.85247 0, 145.2088 -37.85236 0, 145.2087 -37.85229 0, 145.2087 -37.85212 0, 145.2086 -37.85195 0, 145.2085 -37.8519 0, 145.2082 -37.85189 0, 145.2082 -37.85189 0, 145.2081 -37.85185 0, 145.2082 -37.85181 0, 145.2083 -37.85179 0, 145.2084 -37.85174 0, 145.2085 -37.85168 0, 145.2085 -37.85156 0, 145.2086 -37.85149 0, 145.2087 -37.85146 0, 145.2087 -37.85144 0, 145.2087 -37.85144 0, 145.2088 -37.85147 0, 145.2088 -37.8515 0, 145.2088 -37.85163 0, 145.2088 -37.85182 0, 145.2088 -37.85187 0, 145.2088 -37.85191 0, 145.2089 -37.85189 0, 145.209 -37.85185 0, 145.2091 -37.8518 0, 145.2091 -37.85176 0, 145.2092 -37.85173 0, 145.2092 -37.85168 0, 145.209 -37.85155 0, 145.2091 -37.85151 0, 145.2094 -37.85147 0, 145.2095 -37.85143 0, 145.2097 -37.85133 0, 145.2097 -37.85126 0, 145.2097 -37.85119 0, 145.2096 -37.85115 0, 145.2095 -37.85113 0, 145.2094 -37.85117 0, 145.2093 -37.85117 0, 145.2092 -37.85115 0, 145.2092 -37.85112 0, 145.2092 -37.85107 0, 145.2092 -37.85102 0, 145.2093 -37.85087 0, 145.2093 -37.85077 0, 145.2093 -37.85067 0, 145.2093 -37.8506 0, 145.2092 -37.85052 0, 145.2092 -37.85049 0, 145.2092 -37.85042 0, 145.2092 -37.85039 0, 145.2093 -37.85037 0, 145.2095 -37.85036 0, 145.2096 -37.85039 0, 145.2098 -37.85042 0, 145.2099 -37.85044 0, 145.21 -37.85046 0, 145.21 -37.85044 0, 145.21 -37.85041 0, 145.21 -37.85036 0, 145.2099 -37.8503 0, 145.2098 -37.85023 0, 145.2098 -37.85018 0, 145.2098 -37.85014 0, 145.2098 -37.85007 0, 145.2098 -37.84992 0, 145.2098 -37.84981 0, 145.2098 -37.84974 0, 145.2099 -37.84967 0, 145.21 -37.8496 0, 145.2101 -37.84958 0, 145.2101 -37.84954 0, 145.2101 -37.84948 0, 145.2101 -37.84946 0, 145.21 -37.84944 0, 145.2099 -37.84941 0, 145.2099 -37.84938 0, 145.2101 -37.84925 0, 145.2101 -37.84918 0, 145.2102 -37.84912 0, 145.2102 -37.84904 0, 145.2103 -37.84897 0, 145.2103 -37.84891 0, 145.2104 -37.84885 0, 145.2103 -37.8488 0, 145.2103 -37.84878 0, 145.2102 -37.84876 0, 145.2101 -37.84877 0, 145.2101 -37.84874 0, 145.2101 -37.84861 0, 145.21 -37.84851 0, 145.21 -37.84849 0, 145.21 -37.84844 0, 145.2101 -37.84837 0, 145.2101 -37.8483 0, 145.2102 -37.84814 0, 145.2103 -37.84803 0, 145.2105 -37.84784 0, 145.2106 -37.84766 0, 145.2107 -37.84756 0, 145.2107 -37.8475 0, 145.2106 -37.84743 0, 145.2106 -37.84739 0, 145.2106 -37.84739 0, 145.2105 -37.8474 0, 145.2105 -37.84744 0, 145.2105 -37.84746 0, 145.2105 -37.84758 0, 145.2105 -37.84762 0, 145.2105 -37.84764 0, 145.2104 -37.84764 0, 145.2104 -37.84763 0, 145.2104 -37.8476 0, 145.2104 -37.84758 0, 145.2103 -37.84756 0, 145.2103 -37.84756 0, 145.2102 -37.84756 0, 145.2102 -37.84759 0, 145.2102 -37.84762 0, 145.2102 -37.84765 0, 145.2101 -37.84767 0, 145.2101 -37.84767 0, 145.2101 -37.84767 0, 145.21 -37.84767 0, 145.21 -37.84766 0, 145.21 -37.84765 0, 145.21 -37.84762 0, 145.2099 -37.8476 0, 145.2099 -37.84753 0, 145.2099 -37.84745 0, 145.2099 -37.84741 0, 145.2099 -37.84736 0, 145.2099 -37.84731 0, 145.21 -37.84722 0, 145.21 -37.84719 0, 145.21 -37.8471 0, 145.21 -37.84706 0, 145.2101 -37.84701 0, 145.2101 -37.84695 0, 145.2102 -37.84692 0, 145.2102 -37.84691 0, 145.2102 -37.84693 0, 145.2103 -37.84697 0, 145.2104 -37.84701 0, 145.2104 -37.84703 0, 145.2105 -37.84706 0, 145.2106 -37.8471 0, 145.2106 -37.84712 0, 145.2107 -37.84717 0, 145.2107 -37.84717 0, 145.2108 -37.84714 0, 145.2108 -37.84711 0, 145.2108 -37.84709 0, 145.2108 -37.84704 0, 145.2108 -37.84703 0, 145.2107 -37.84701 0, 145.2107 -37.84697 0, 145.2107 -37.84694 0, 145.2107 -37.84692 0, 145.2107 -37.8469 0, 145.2106 -37.84687 0, 145.2106 -37.84685 0, 145.2106 -37.84681 0, 145.2106 -37.84676 0, 145.2105 -37.84669 0, 145.2105 -37.84663 0, 145.2104 -37.84657 0, 145.2104 -37.84651 0, 145.2104 -37.84641 0, 145.2103 -37.8463 0, 145.2102 -37.84623 0, 145.2102 -37.84618 0, 145.2102 -37.84613 0, 145.2102 -37.84612 0, 145.2101 -37.84606 0, 145.2101 -37.84605 0, 145.2101 -37.84603 0, 145.2101 -37.84599 0, 145.2101 -37.84593 0, 145.2102 -37.84583 0, 145.2102 -37.84579 0, 145.2102 -37.84578 0, 145.2102 -37.84577 0, 145.2103 -37.84576 0, 145.2103 -37.84574 0, 145.2103 -37.84573 0, 145.2104 -37.8457 0, 145.2104 -37.84568 0, 145.2105 -37.84565 0, 145.2105 -37.84563 0, 145.2106 -37.84562 0, 145.2106 -37.84559 0, 145.2106 -37.84558 0, 145.2106 -37.84557 0, 145.2106 -37.84557 0, 145.2107 -37.84556 0, 145.2107 -37.84555 0, 145.2107 -37.84553 0, 145.2107 -37.84549 0, 145.2108 -37.84543 0, 145.2108 -37.84532 0, 145.2108 -37.84505 0, 145.2109 -37.84493 0, 145.211 -37.84481 0, 145.211 -37.84471 0, 145.2111 -37.84461 0, 145.2112 -37.84453 0, 145.2112 -37.84446 0, 145.212 -37.84351 0, 145.2122 -37.84316 0, 145.2124 -37.84245 0, 145.2125 -37.84223 0, 145.2125 -37.84217 0, 145.2125 -37.8421 0, 145.2126 -37.84205 0, 145.2126 -37.84202 0, 145.2126 -37.84196 0, 145.2128 -37.84172 0, 145.2129 -37.84159 0, 145.213 -37.8415 0, 145.213 -37.84144 0, 145.2131 -37.84139 0, 145.2131 -37.84131 0, 145.2131 -37.84126 0, 145.2132 -37.84121 0, 145.2132 -37.84116 0, 145.2133 -37.84112 0, 145.2133 -37.84108 0, 145.2133 -37.84102 0, 145.2135 -37.84091 0, 145.2135 -37.84087 0, 145.2135 -37.84076 0, 145.2136 -37.84072 0, 145.2136 -37.84065 0, 145.2137 -37.84061 0, 145.2137 -37.84056 0, 145.2137 -37.84047 0, 145.2138 -37.84043 0, 145.2138 -37.8404 0, 145.2139 -37.84033 0, 145.2139 -37.84029 0, 145.214 -37.8402 0, 145.214 -37.84016 0, 145.214 -37.84013 0, 145.214 -37.84011 0, 145.214 -37.84008 0, 145.2141 -37.84001 0, 145.2141 -37.83997 0, 145.2141 -37.83992 0, 145.2142 -37.83986 0, 145.2142 -37.83977 0, 145.2143 -37.83973 0, 145.2143 -37.83962 0, 145.2144 -37.8396 0, 145.2145 -37.83952 0, 145.2145 -37.83945 0, 145.2145 -37.83943 0, 145.2146 -37.83941 0, 145.2146 -37.83937 0, 145.2147 -37.83929 0, 145.2148 -37.83926 0, 145.2148 -37.83922 0, 145.215 -37.83912 0, 145.215 -37.83908 0, 145.2151 -37.83905 0, 145.2152 -37.83899 0, 145.2152 -37.83897 0, 145.2153 -37.83889 0, 145.2154 -37.83882 0, 145.2154 -37.8388 0, 145.2155 -37.83875 0, 145.2158 -37.83859 0, 145.2158 -37.83857 0, 145.2159 -37.83853 0, 145.2159 -37.83851 0, 145.2161 -37.83842 0, 145.2162 -37.83834 0, 145.2162 -37.83833 0, 145.2162 -37.83832 0, 145.2163 -37.83827 0, 145.2164 -37.83825 0, 145.2164 -37.83825 0, 145.2165 -37.83823 0, 145.2165 -37.83821 0, 145.2166 -37.83819 0, 145.2167 -37.83816 0, 145.2167 -37.83816 0, 145.2168 -37.83815 0, 145.217 -37.83813 0, 145.217 -37.83812 0, 145.2171 -37.83812 0, 145.2171 -37.83811 0, 145.2173 -37.83809 0, 145.2174 -37.83809 0, 145.2174 -37.8381 0, 145.2176 -37.8381 0, 145.2176 -37.8381 0, 145.2178 -37.8381 0, 145.2178 -37.8381 0, 145.2179 -37.8381 0, 145.2179 -37.83809 0, 145.218 -37.83809 0, 145.2181 -37.83809 0, 145.2182 -37.83809 0, 145.2185 -37.83807 0, 145.2186 -37.83807 0, 145.2186 -37.83806 0, 145.2188 -37.83805 0, 145.2189 -37.83804 0, 145.2191 -37.83802 0, 145.2193 -37.83802 0, 145.2195 -37.83801 0, 145.2197 -37.838 0, 145.2199 -37.83799 0, 145.22 -37.83798 0, 145.2201 -37.83798 0, 145.2203 -37.83797 0, 145.2204 -37.83797 0, 145.2204 -37.83796 0, 145.221 -37.83792 0, 145.2211 -37.8379 0, 145.2212 -37.8379 0, 145.2213 -37.83791 0, 145.2215 -37.83791 0, 145.2217 -37.83791 0, 145.2218 -37.83791 0, 145.222 -37.83791 0, 145.2221 -37.83791 0, 145.2222 -37.8379 0, 145.2223 -37.8379 0, 145.2224 -37.83788 0, 145.2225 -37.83788 0, 145.2227 -37.83787 0, 145.2227 -37.83787 0, 145.2228 -37.83788 0, 145.2229 -37.83791 0, 145.223 -37.83792 0, 145.2231 -37.83794 0, 145.2231 -37.83794 0, 145.2231 -37.83795 0, 145.2232 -37.83797 0, 145.2233 -37.83801 0, 145.2234 -37.83803 0, 145.2235 -37.83807 0, 145.2236 -37.8381 0, 145.2236 -37.83812 0, 145.2237 -37.83815 0, 145.2238 -37.83819 0, 145.2239 -37.83819 0, 145.2239 -37.83822 0, 145.224 -37.83824 0, 145.2241 -37.83828 0, 145.2242 -37.8383 0, 145.2242 -37.83832 0, 145.2243 -37.83834 0, 145.2243 -37.83835 0, 145.2244 -37.83837 0, 145.2244 -37.83841 0, 145.2245 -37.83843 0, 145.2245 -37.83844 0, 145.2245 -37.83844 0, 145.2246 -37.83845 0, 145.2246 -37.83846 0, 145.2248 -37.83851 0, 145.2249 -37.83855 0, 145.2249 -37.83858 0, 145.225 -37.8386 0, 145.2251 -37.83862 0, 145.2251 -37.83864 0, 145.2252 -37.8387 0, 145.2253 -37.83874 0, 145.2255 -37.83881 0, 145.2256 -37.83884 0, 145.2259 -37.83897 0, 145.226 -37.839 0, 145.2261 -37.83907 0, 145.2262 -37.83911 0, 145.2263 -37.83914 0, 145.2264 -37.83917 0, 145.2264 -37.8392 0, 145.2265 -37.83923 0, 145.2266 -37.83926 0, 145.2267 -37.83929 0, 145.2267 -37.8393 0, 145.2268 -37.83931 0, 145.2269 -37.83934 0, 145.227 -37.83934 0, 145.2271 -37.83934 0, 145.2272 -37.83934 0, 145.2272 -37.83934 0, 145.2274 -37.83934 0, 145.2277 -37.83934 0, 145.2278 -37.83934 0, 145.2279 -37.83934 0, 145.228 -37.83934 0, 145.2282 -37.83935 0, 145.2282 -37.83935 0, 145.2282 -37.83936 0, 145.2282 -37.83937 0, 145.2283 -37.83937 0, 145.2283 -37.83937 0, 145.2283 -37.83937 0, 145.2283 -37.83938 0, 145.2283 -37.83938 0, 145.2284 -37.83938 0, 145.2287 -37.83943 0, 145.2289 -37.83947 0, 145.229 -37.83949 0, 145.2291 -37.8395 0, 145.2291 -37.8395 0, 145.2292 -37.83953 0, 145.2295 -37.83959 0, 145.2297 -37.83963 0, 145.2299 -37.83966 0, 145.2301 -37.83969 0, 145.2301 -37.83971 0, 145.2303 -37.83974 0, 145.2306 -37.8398 0, 145.2311 -37.8399 0, 145.2313 -37.83995 0, 145.2316 -37.84002 0, 145.2318 -37.84006 0, 145.2319 -37.84007 0, 145.2319 -37.84007 0, 145.2319 -37.84007 0, 145.232 -37.84008 0, 145.232 -37.84008 0, 145.2321 -37.84007 0, 145.2321 -37.84007 0, 145.2322 -37.84006 0, 145.2322 -37.84005 0, 145.2323 -37.84004 0, 145.2324 -37.84 0, 145.2324 -37.83999 0, 145.2324 -37.83999 0, 145.2324 -37.83997 0, 145.2325 -37.83994 0, 145.2325 -37.8399 0, 145.2328 -37.83971 0, 145.2328 -37.83969 0, 145.2329 -37.83965 0, 145.2329 -37.83963 0, 145.233 -37.83959 0, 145.2331 -37.83955 0, 145.2331 -37.83951 0, 145.2332 -37.83949 0, 145.2332 -37.83948 0, 145.2332 -37.83947 0, 145.2333 -37.83946 0, 145.2333 -37.83946 0, 145.2333 -37.83945 0, 145.2335 -37.83945 0, 145.2336 -37.83945 0, 145.2336 -37.83944 0, 145.2338 -37.83944 0, 145.2338 -37.83944 0, 145.2339 -37.83945 0, 145.2339 -37.83946 0, 145.2339 -37.83946 0, 145.234 -37.83947 0, 145.2341 -37.83951 0, 145.2342 -37.83953 0, 145.2343 -37.83953 0, 145.2343 -37.83953 0, 145.2344 -37.83953 0, 145.2344 -37.83953 0, 145.2344 -37.83953 0, 145.2344 -37.83952 0, 145.2345 -37.83951 0, 145.2345 -37.83949 0, 145.2346 -37.83947 0, 145.2346 -37.83947 0, 145.2346 -37.83945 0, 145.2347 -37.83944 0, 145.2347 -37.83942 0, 145.2348 -37.83941 0, 145.2349 -37.83939 0, 145.2349 -37.83938 0, 145.2349 -37.83938 0, 145.235 -37.83937 0, 145.235 -37.83937 0, 145.2351 -37.83937 0, 145.2351 -37.83936 0, 145.2352 -37.83936 0, 145.2352 -37.83936 0, 145.2353 -37.83937 0, 145.2354 -37.83938 0, 145.2354 -37.83939 0, 145.2354 -37.8394 0, 145.2355 -37.83941 0, 145.2355 -37.83944 0, 145.2356 -37.83945 0, 145.2357 -37.83946 0, 145.2358 -37.83946 0, 145.2361 -37.83946 0, 145.2361 -37.83946 0, 145.2361 -37.83946 0, 145.2362 -37.83948 0, 145.2366 -37.83953 0, 145.2366 -37.83955 0, 145.2367 -37.83956 0, 145.2368 -37.83956 0, 145.2368 -37.83957 0, 145.2368 -37.83957 0, 145.237 -37.83958 0, 145.237 -37.83959 0, 145.237 -37.83958 0, 145.2371 -37.83958 0, 145.2371 -37.83956 0, 145.2371 -37.83955 0, 145.2371 -37.83954 0, 145.2372 -37.83953 0, 145.2372 -37.83952 0, 145.2372 -37.8395 0, 145.2372 -37.83948 0, 145.2372 -37.83939 0, 145.2373 -37.83935 0, 145.2373 -37.83931 0, 145.2373 -37.83928 0, 145.2373 -37.83926 0, 145.2373 -37.83924 0, 145.2374 -37.83915 0, 145.2375 -37.83912 0, 145.2375 -37.8391 0, 145.2376 -37.83899 0, 145.2377 -37.83897 0, 145.2377 -37.83893 0, 145.2378 -37.83889 0, 145.2378 -37.83888 0, 145.2378 -37.83887 0, 145.2378 -37.83886 0, 145.238 -37.83878 0, 145.238 -37.83877 0, 145.2381 -37.83875 0, 145.2383 -37.83869 0, 145.2384 -37.83867 0, 145.2384 -37.83866 0, 145.2386 -37.83862 0, 145.2387 -37.83861 0, 145.2387 -37.8386 0, 145.2388 -37.83859 0, 145.2388 -37.83859 0, 145.2388 -37.83859 0, 145.239 -37.83857 0, 145.2391 -37.83855 0, 145.2391 -37.83855 0, 145.2391 -37.83855 0, 145.2392 -37.83855 0, 145.2392 -37.83856 0, 145.2393 -37.83858 0, 145.2395 -37.83859 0, 145.2398 -37.83865 0, 145.2399 -37.83866 0, 145.2401 -37.83868 0, 145.2402 -37.8387 0, 145.2402 -37.8387 0, 145.2403 -37.8387 0, 145.2403 -37.8387 0, 145.2404 -37.8387 0, 145.2404 -37.8387 0, 145.2405 -37.83871 0, 145.2405 -37.83871 0, 145.2406 -37.83872 0, 145.2408 -37.83873 0, 145.2409 -37.83873 0, 145.241 -37.83873 0, 145.2412 -37.83872 0, 145.2412 -37.83872 0, 145.2413 -37.83872 0, 145.2414 -37.83871 0, 145.2415 -37.83871 0, 145.2416 -37.8387 0, 145.2418 -37.8387 0, 145.2418 -37.8387 0, 145.2419 -37.83869 0, 145.2419 -37.83869 0, 145.242 -37.83869 0, 145.2421 -37.83868 0, 145.2423 -37.83868 0, 145.2423 -37.83868 0, 145.2424 -37.83868 0, 145.2425 -37.83866 0, 145.2425 -37.83866 0, 145.2426 -37.83866 0, 145.2427 -37.83865 0, 145.2429 -37.83865 0, 145.243 -37.83864 0, 145.2431 -37.83864 0, 145.2433 -37.83862 0, 145.2435 -37.8386 0, 145.2436 -37.83859 0, 145.2439 -37.83857 0, 145.2441 -37.83855 0, 145.2442 -37.83854 0, 145.2443 -37.83853 0, 145.2444 -37.83853 0, 145.2444 -37.83852 0, 145.2445 -37.83851 0, 145.2446 -37.8385 0, 145.2447 -37.83848 0, 145.2448 -37.83847 0, 145.2449 -37.83845 0, 145.245 -37.83845 0, 145.245 -37.83843 0, 145.245 -37.83841 0, 145.2451 -37.83838 0, 145.2452 -37.83832 0, 145.2453 -37.83828 0, 145.2453 -37.83827 0, 145.2453 -37.83826 0, 145.2453 -37.83825 0, 145.2454 -37.83821 0, 145.2454 -37.8382 0, 145.2454 -37.83822 0, 145.2455 -37.83816 0, 145.2457 -37.83805 0, 145.2457 -37.83803 0, 145.2459 -37.83791 0, 145.2459 -37.8379 0, 145.246 -37.83789 0, 145.2461 -37.83778 0, 145.2461 -37.83777 0, 145.2461 -37.83776 0, 145.2461 -37.83776 0, 145.2462 -37.83776 0, 145.2462 -37.83775 0, 145.2462 -37.83775 0, 145.2463 -37.83774 0, 145.2463 -37.83775 0, 145.2463 -37.83775 0, 145.2465 -37.83776 0, 145.2465 -37.83777 0, 145.2466 -37.83778 0, 145.2466 -37.83779 0, 145.2468 -37.8378 0, 145.2468 -37.8378 0, 145.2472 -37.83781 0, 145.2473 -37.83781 0, 145.2473 -37.83781 0, 145.2474 -37.83782 0, 145.2474 -37.83783 0, 145.2476 -37.83783 0, 145.2478 -37.83784 0, 145.2478 -37.83784 0, 145.2479 -37.83783 0, 145.2479 -37.83783 0, 145.248 -37.83783 0, 145.248 -37.83784 0, 145.2481 -37.83785 0, 145.2481 -37.83785 0, 145.2483 -37.83786 0, 145.2483 -37.83786 0, 145.2484 -37.83785 0, 145.2486 -37.83785 0, 145.2486 -37.83784 0, 145.249 -37.8378 0, 145.2491 -37.8378 0, 145.2494 -37.83778 0, 145.2495 -37.83777 0, 145.2497 -37.83776 0, 145.2498 -37.83774 0, 145.25 -37.83773 0, 145.2501 -37.83773 0, 145.2502 -37.83772 0, 145.2503 -37.83771 0, 145.2505 -37.83769 0, 145.2505 -37.83769 0, 145.2506 -37.83768 0, 145.2506 -37.83766 0, 145.2507 -37.83764 0, 145.2508 -37.83763 0, 145.2509 -37.8376 0, 145.251 -37.83758 0, 145.251 -37.83757 0, 145.2511 -37.83755 0, 145.2511 -37.83754 0, 145.2511 -37.83753 0, 145.2511 -37.83752 0, 145.2512 -37.8375 0, 145.2512 -37.83749 0, 145.2512 -37.83749 0, 145.2512 -37.83748 0, 145.2513 -37.83747 0, 145.2513 -37.83745 0, 145.2513 -37.83745 0, 145.2515 -37.83739 0, 145.2516 -37.83738 0, 145.2516 -37.83737 0, 145.2516 -37.83735 0, 145.2516 -37.83734 0, 145.2517 -37.83734 0, 145.2517 -37.83734 0, 145.2517 -37.83733 0, 145.2517 -37.83733 0, 145.2517 -37.83732 0, 145.2518 -37.83729 0, 145.2518 -37.83729 0, 145.2519 -37.83727 0, 145.2519 -37.83727 0, 145.2519 -37.83726 0, 145.252 -37.83725 0, 145.252 -37.83725 0, 145.252 -37.83725 0, 145.2521 -37.83722 0, 145.2521 -37.83721 0, 145.2522 -37.83716 0, 145.2523 -37.83715 0, 145.2523 -37.83713 0, 145.2524 -37.83713 0, 145.2524 -37.83711 0, 145.2524 -37.8371 0, 145.2525 -37.83709 0, 145.2525 -37.83708 0, 145.2525 -37.83708 0, 145.2526 -37.83707 0, 145.2526 -37.83705 0, 145.2526 -37.83704 0, 145.2527 -37.83703 0, 145.2527 -37.83701 0, 145.2528 -37.837 0, 145.2528 -37.83699 0, 145.2528 -37.83699 0, 145.2528 -37.83699 0, 145.2528 -37.83698 0, 145.2528 -37.83698 0, 145.2529 -37.83698 0, 145.2529 -37.83697 0, 145.2529 -37.83696 0, 145.253 -37.83695 0, 145.253 -37.83694 0, 145.253 -37.83694 0, 145.253 -37.83693 0, 145.2531 -37.83692 0, 145.2531 -37.8369 0, 145.2531 -37.83689 0, 145.2532 -37.83689 0, 145.2532 -37.83689 0, 145.2532 -37.83688 0, 145.2532 -37.83687 0, 145.2532 -37.83687 0, 145.2533 -37.83685 0, 145.2533 -37.83684 0, 145.2533 -37.83683 0, 145.2534 -37.83682 0, 145.2534 -37.83682 0, 145.2534 -37.83682 0, 145.2534 -37.83682 0, 145.2535 -37.8368 0, 145.2535 -37.8368 0, 145.2536 -37.83677 0, 145.2536 -37.83675 0, 145.2537 -37.83673 0, 145.2537 -37.83673 0, 145.2538 -37.8367 0, 145.2538 -37.83669 0, 145.2538 -37.83669 0, 145.2538 -37.83669 0, 145.2538 -37.83668 0, 145.2539 -37.83667 0, 145.2539 -37.83667 0, 145.2539 -37.83666 0, 145.2539 -37.83665 0, 145.254 -37.83664 0, 145.254 -37.83663 0, 145.254 -37.83662 0, 145.2541 -37.83659 0, 145.2542 -37.83658 0, 145.2542 -37.83657 0, 145.2543 -37.83655 0, 145.2543 -37.83655 0, 145.2543 -37.83655 0, 145.2543 -37.83653 0, 145.2544 -37.83651 0, 145.2544 -37.83651 0, 145.2546 -37.83648 0, 145.2546 -37.83645 0, 145.2549 -37.83635 0, 145.255 -37.83634 0, 145.255 -37.83631 0, 145.2551 -37.83629 0, 145.2552 -37.83628 0, 145.2553 -37.83625 0, 145.2553 -37.83623 0, 145.2555 -37.83617 0, 145.2555 -37.83616 0, 145.2555 -37.83615 0, 145.2556 -37.83613 0, 145.2557 -37.83611 0, 145.256 -37.83595 0, 145.2561 -37.83591 0, 145.2561 -37.8359 0, 145.2562 -37.83587 0, 145.2562 -37.83586 0, 145.2563 -37.83585 0, 145.2563 -37.83584 0, 145.2565 -37.8358 0, 145.2566 -37.8358 0, 145.2566 -37.8358 0, 145.2567 -37.8358 0, 145.2567 -37.8358 0, 145.2567 -37.83581 0, 145.2569 -37.83582 0, 145.2569 -37.83584 0, 145.2569 -37.83584 0, 145.257 -37.83586 0, 145.257 -37.83586 0, 145.257 -37.83588 0, 145.2573 -37.83597 0, 145.2575 -37.8361 0, 145.2576 -37.83613 0, 145.2577 -37.83617 0, 145.2577 -37.8362 0, 145.2578 -37.83624 0, 145.258 -37.83638 0, 145.2581 -37.8364 0, 145.2581 -37.83642 0, 145.2582 -37.83646 0, 145.2583 -37.83652 0, 145.2584 -37.83655 0, 145.2584 -37.83656 0, 145.2585 -37.83657 0, 145.2585 -37.83658 0, 145.2585 -37.83659 0, 145.2586 -37.83662 0, 145.2588 -37.83666 0, 145.259 -37.83667 0, 145.2591 -37.83666 0, 145.2593 -37.83662 0, 145.2594 -37.83656 0, 145.2596 -37.83649 0, 145.2602 -37.83623 0, 145.2604 -37.83612 0, 145.2605 -37.83611 0, 145.2605 -37.8361 0, 145.2605 -37.83609 0, 145.2605 -37.83608 0, 145.2607 -37.83607 0, 145.2612 -37.83603 0, 145.2614 -37.83602 0, 145.2615 -37.83602 0, 145.2616 -37.83602 0, 145.2618 -37.83605 0, 145.262 -37.8361 0, 145.2621 -37.83613 0, 145.2622 -37.83617 0, 145.2623 -37.83624 0, 145.2624 -37.83627 0, 145.2625 -37.83629 0, 145.2627 -37.83634 0, 145.2628 -37.83634 0, 145.2629 -37.83637 0, 145.263 -37.83633 0, 145.2631 -37.83632 0, 145.2631 -37.8363 0, 145.2631 -37.8363 0, 145.2632 -37.8363 0, 145.2632 -37.83631 0, 145.2633 -37.83632 0, 145.2633 -37.83633 0, 145.2634 -37.83636 0, 145.2635 -37.83637 0, 145.2635 -37.83639 0, 145.2636 -37.83642 0, 145.2637 -37.83644 0, 145.2641 -37.83655 0, 145.2643 -37.83658 0, 145.265 -37.83664 0, 145.2651 -37.83664 0, 145.2656 -37.83668 0, 145.2658 -37.83674 0, 145.2661 -37.83683 0, 145.2663 -37.8369 0, 145.2664 -37.83693 0, 145.2664 -37.83693 0, 145.2665 -37.83694 0, 145.2665 -37.83695 0, 145.2666 -37.83699 0, 145.2667 -37.83701 0, 145.2668 -37.83701 0, 145.2668 -37.83702 0, 145.2668 -37.83703 0, 145.2669 -37.83703 0, 145.2669 -37.83703 0, 145.267 -37.83704 0, 145.2671 -37.83704 0, 145.2671 -37.83704 0, 145.2671 -37.83704 0, 145.2671 -37.83704 0, 145.2672 -37.83703 0, 145.2673 -37.83703 0, 145.2673 -37.83702 0, 145.2674 -37.837 0, 145.2674 -37.83699 0, 145.2675 -37.83698 0, 145.2675 -37.83695 0, 145.2676 -37.83694 0, 145.2676 -37.83693 0, 145.2676 -37.83691 0, 145.2677 -37.83689 0, 145.2678 -37.83684 0, 145.2679 -37.8368 0, 145.2679 -37.83678 0, 145.2679 -37.83676 0, 145.2679 -37.83674 0, 145.268 -37.83671 0, 145.268 -37.83669 0, 145.2681 -37.83668 0, 145.2681 -37.83666 0, 145.2682 -37.83665 0, 145.2682 -37.83663 0, 145.2682 -37.83662 0, 145.2683 -37.8366 0, 145.2683 -37.8366 0, 145.2684 -37.83653 0, 145.2684 -37.83651 0, 145.2685 -37.83643 0, 145.2686 -37.83636 0, 145.2689 -37.8362 0, 145.2689 -37.83618 0, 145.2689 -37.83616 0, 145.2689 -37.83614 0, 145.269 -37.83612 0, 145.269 -37.83611 0, 145.269 -37.8361 0, 145.269 -37.8361 0, 145.2691 -37.83607 0, 145.2692 -37.83606 0, 145.2693 -37.83603 0, 145.2693 -37.83602 0, 145.2693 -37.83602 0, 145.2694 -37.836 0, 145.2695 -37.83597 0, 145.2695 -37.83596 0, 145.2696 -37.83595 0, 145.2697 -37.83593 0, 145.2698 -37.8359 0, 145.2698 -37.8359 0, 145.2699 -37.83589 0, 145.2699 -37.83589 0, 145.2699 -37.83589 0, 145.27 -37.83589 0, 145.27 -37.8359 0, 145.2702 -37.83592 0, 145.2703 -37.83593 0, 145.2703 -37.83595 0, 145.2704 -37.83596 0, 145.2704 -37.83597 0, 145.2705 -37.83599 0, 145.2705 -37.83602 0, 145.2708 -37.83611 0, 145.271 -37.83617 0, 145.2711 -37.83624 0, 145.2713 -37.8363 0, 145.2714 -37.83633 0, 145.2715 -37.83635 0, 145.2716 -37.83636 0, 145.2717 -37.83635 0, 145.2718 -37.83634 0, 145.2718 -37.83633 0, 145.2718 -37.83632 0, 145.2719 -37.8363 0, 145.272 -37.83627 0, 145.2721 -37.83625 0, 145.2722 -37.83623 0, 145.2723 -37.8362 0, 145.2724 -37.83619 0, 145.2724 -37.83618 0, 145.2725 -37.83616 0, 145.2727 -37.83611 0, 145.273 -37.83604 0, 145.273 -37.83603 0, 145.2731 -37.83602 0, 145.2732 -37.836 0, 145.2733 -37.83597 0, 145.2735 -37.83592 0, 145.2735 -37.83591 0, 145.2736 -37.83589 0, 145.2737 -37.83588 0, 145.2738 -37.83587 0, 145.2738 -37.83586 0, 145.2739 -37.83585 0, 145.274 -37.83584 0, 145.2741 -37.8358 0, 145.2743 -37.83576 0, 145.2743 -37.83575 0, 145.2744 -37.83574 0, 145.2744 -37.83573 0, 145.2745 -37.83574 0, 145.2747 -37.83576 0, 145.2748 -37.83577 0, 145.275 -37.83577 0, 145.2751 -37.83578 0, 145.2752 -37.83578 0, 145.2753 -37.83579 0, 145.2754 -37.8358 0, 145.2754 -37.83581 0, 145.2755 -37.83581 0, 145.2757 -37.8358 0, 145.2758 -37.83579 0, 145.276 -37.83578 0, 145.2761 -37.83575 0, 145.2764 -37.83574 0, 145.2764 -37.83574 0, 145.2765 -37.83574 0, 145.2766 -37.83574 0, 145.2768 -37.83574 0, 145.2769 -37.83575 0, 145.277 -37.83576 0, 145.2771 -37.83577 0, 145.2772 -37.83578 0, 145.2773 -37.8358 0, 145.2774 -37.83582 0, 145.2775 -37.83584 0, 145.2778 -37.83588 0, 145.2778 -37.83589 0, 145.2778 -37.83589 0, 145.2779 -37.8359 0, 145.278 -37.83589 0, 145.2781 -37.83587 0, 145.2782 -37.83586 0, 145.2788 -37.83579 0, 145.2788 -37.83578 0, 145.2789 -37.83576 0, 145.2789 -37.83575 0, 145.2791 -37.83571 0, 145.2792 -37.83565 0, 145.2793 -37.8356 0, 145.2793 -37.83556 0, 145.2794 -37.83544 0, 145.2795 -37.83532 0, 145.2796 -37.83522 0, 145.2797 -37.83506 0, 145.2798 -37.83492 0, 145.28 -37.83472 0, 145.2801 -37.83461 0, 145.2802 -37.83438 0, 145.2802 -37.83423 0, 145.2802 -37.83418 0, 145.2803 -37.83371 0, 145.2803 -37.83365 0, 145.2804 -37.8335 0, 145.2805 -37.83332 0, 145.2805 -37.8333 0, 145.2807 -37.83322 0, 145.2807 -37.83318 0, 145.281 -37.83314 0, 145.2815 -37.83304 0, 145.2816 -37.83303 0, 145.2819 -37.83305 0, 145.2827 -37.83314 0, 145.2828 -37.83317 0, 145.2831 -37.83322 0, 145.2832 -37.83322 0, 145.2834 -37.83325 0, 145.2834 -37.83328 0, 145.2835 -37.83329 0, 145.2836 -37.8333 0, 145.2836 -37.83331 0, 145.2837 -37.83332 0, 145.2837 -37.83334 0, 145.2838 -37.83334 0, 145.2838 -37.83334 0, 145.2839 -37.83336 0, 145.2841 -37.83339 0, 145.2842 -37.8334 0, 145.2844 -37.83343 0, 145.2846 -37.83344 0, 145.2846 -37.83344 0, 145.2847 -37.83346 0, 145.2847 -37.83348 0, 145.285 -37.83353 0, 145.2851 -37.83355 0, 145.2852 -37.83357 0, 145.2855 -37.8336 0, 145.2855 -37.8336 0, 145.2857 -37.83362 0, 145.2857 -37.83363 0, 145.2858 -37.83366 0, 145.2859 -37.83368 0, 145.2859 -37.83368 0, 145.286 -37.83368 0, 145.2861 -37.83367 0, 145.2862 -37.83366 0, 145.2862 -37.83365 0, 145.2863 -37.83364 0, 145.2864 -37.83364 0, 145.2865 -37.83365 0, 145.2865 -37.83365 0, 145.2866 -37.83363 0, 145.2867 -37.83362 0, 145.2868 -37.83362 0, 145.2868 -37.83361 0, 145.2869 -37.83359 0, 145.287 -37.83358 0, 145.2871 -37.83358 0, 145.2871 -37.83358 0, 145.2872 -37.83357 0, 145.2873 -37.83356 0, 145.2873 -37.83333 0, 145.2889 -37.83352 0, 145.289 -37.83353 0, 145.2891 -37.83355 0, 145.29 -37.83365 0, 145.291 -37.83377 0, 145.2915 -37.83383 0, 145.2935 -37.83406 0, 145.2941 -37.83433 0, 145.2958 -37.83519 0, 145.2958 -37.8352 0, 145.2963 -37.83544 0, 145.2973 -37.83595 0, 145.3011 -37.83784 0, 145.3012 -37.83792 0, 145.3014 -37.838 0, 145.3033 -37.83894 0, 145.3063 -37.84047 0, 145.3089 -37.84175 0, 145.3087 -37.84268 0, 145.3135 -37.84328 0, 145.3178 -37.84389 0, 145.318 -37.84392 0, 145.3178 -37.84486 0, 145.3178 -37.84496 0, 145.3202 -37.84489 0, 145.323 -37.8462 0, 145.3238 -37.8463 0, 145.3239 -37.84632 0, 145.3241 -37.84635 0, 145.3253 -37.84653 0, 145.326 -37.84664 0, 145.3328 -37.84743 0, 145.3321 -37.85102 0, 145.3324 -37.85106 0, 145.3352 -37.85139 0, 145.3362 -37.85105 0, 145.3363 -37.85111 0, 145.3385 -37.85236 0, 145.3378 -37.85319 0, 145.3412 -37.85378 0, 145.3425 -37.85491 0, 145.3435 -37.85578 0, 145.3431 -37.85631 0, 145.3431 -37.85655 0, 145.3437 -37.85679 0, 145.3444 -37.85689 0, 145.3449 -37.8572 0, 145.3452 -37.85722 0, 145.3457 -37.8576 0, 145.3459 -37.85764 0, 145.3476 -37.85862 0, 145.3476 -37.85941 0)))
+```
+--
+
+
+
+```r
+ggplot(aec_map) + 
+  # or geom_sf(aes(geometry = geometry))
+  geom_sf() 
+```
+
+&lt;img src="images/lecture-05/plain-aec-map-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+# Integrating data of election winners
+
+.f4[
+
+```r
+winners &lt;- votes %&gt;% 
+  # get the winner
+  filter(Elected=="Y" &amp; CountNumber==0 &amp; CalculationType=="Preference Count") %&gt;% 
+  # join the data
+  right_join(aec_map, by = c("DivisionNm" = "Elect_div")) %&gt;% 
+  select(DivisionNm, PartyAb, PartyNm, geometry)
+
+ggplot(winners) + geom_sf(aes(fill = PartyAb, geometry = geometry)) 
+```
+
+&lt;img src="images/lecture-05/winner-map-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.center[
+Is there something wrong here?
+]
+
+---
+
+# Investigating missing observation
+
+
+```r
+winners %&gt;% 
+  filter(is.na(PartyAb))
+```
+
+```
+## # A tibble: 1 × 4
+##   DivisionNm PartyAb PartyNm                                            geometry
+##   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;                                    &lt;MULTIPOLYGON [°]&gt;
+## 1 Mcewen     &lt;NA&gt;    &lt;NA&gt;    Z (((145.3664 -37.54513 0, 145.3663 -37.5459 0, 14…
+```
+--
+
+
+```r
+votes %&gt;% 
+  # approximate string matching (or fuzzy matching)
+  filter(agrepl("Mcewen", DivisionNm))
+```
+
+```
+## # A tibble: 224 × 14
+##    StateAb DivisionID DivisionNm CountNumber BallotPosition CandidateID Surname 
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;   
+##  1 VIC            226 McEwen               0              1       32426 BARKER  
+##  2 VIC            226 McEwen               0              1       32426 BARKER  
+##  3 VIC            226 McEwen               0              1       32426 BARKER  
+##  4 VIC            226 McEwen               0              1       32426 BARKER  
+##  5 VIC            226 McEwen               0              2       33225 PARRAMO…
+##  6 VIC            226 McEwen               0              2       33225 PARRAMO…
+##  7 VIC            226 McEwen               0              2       33225 PARRAMO…
+##  8 VIC            226 McEwen               0              2       33225 PARRAMO…
+##  9 VIC            226 McEwen               0              3       32338 MITCHELL
+## 10 VIC            226 McEwen               0              3       32338 MITCHELL
+## # … with 214 more rows, and 7 more variables: GivenNm &lt;chr&gt;, PartyAb &lt;chr&gt;,
+## #   PartyNm &lt;chr&gt;, Elected &lt;chr&gt;, HistoricElected &lt;chr&gt;, CalculationType &lt;chr&gt;,
+## #   CalculationValue &lt;dbl&gt;
+```
+
+--
+
+.absolute.bottom-3.right-2.bg-white.ba.pa3[
+So what went wrong here?
+]
+
+---
+
+# Victoria map of election winners
+
+
+```r
+winners_fix &lt;- votes %&gt;% 
+  mutate(DivisionNm = ifelse(DivisionNm=="McEwen", "Mcewen", DivisionNm)) %&gt;% 
+  # get the winner
+  filter(Elected=="Y" &amp; CountNumber==0 &amp; CalculationType=="Preference Count") %&gt;% 
+  # join the data
+  right_join(aec_map, by = c("DivisionNm" = "Elect_div")) %&gt;% 
+  select(DivisionNm, PartyAb, PartyNm, geometry)
+
+ggplot(winners_fix) + geom_sf(aes(fill = PartyAb, geometry = geometry)) 
+```
+
+&lt;img src="images/lecture-05/winner-map-fix-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: transition 
+
+# Maps visualisation
+
+---
+
+# National map of election winners
+
+
+```r
+ausmap &lt;- read_sf(here::here("data/national-esri-fe2019/COM_ELB_region.shp"))
+
+all_winners &lt;- votes %&gt;% 
+  mutate(DivisionNm = case_when(DivisionNm=="McEwen" ~ "Mcewen",
+                                DivisionNm=="McPherson" ~ "Mcpherson",
+                                DivisionNm=="Eden-Monaro " ~ "Eden-monaro",
+                                DivisionNm=="McMahon" ~ "Mcmahon",
+                                DivisionNm=="O'Connor" ~ "O'connor",
+                                TRUE ~ DivisionNm)) %&gt;% 
+  # another way to select the winner
+  filter(Elected=="Y") %&gt;% 
+  group_by(DivisionID) %&gt;% 
+  slice(1) %&gt;% 
+  ungroup() %&gt;% 
+  # then join the map data
+  right_join(ausmap, by = c("DivisionNm" = "Elect_div"))
+```
+
+
+
+---
+
+
+
+# Using colors wisely
+
+.f4[
+
+```r
+auscolours &lt;- c("ALP" = "#DE3533", "LNP" = "#ADD8E6", "KAP" = "#8B0000", 
+                "GVIC" = "#10C25B", "XEN" = "#ff6300", "LP" = "#0047AB", 
+                "NP" = "#0a9cca", "IND" = "#000000")
+
+ggplot(all_winners) + 
+  geom_sf(aes(fill = PartyAb, geometry = geometry)) +
+  scale_fill_manual(name = "Party", values = auscolours) +
+  theme_void() + 
+  theme(legend.position="bottom") 
+```
+
+&lt;img src="images/lecture-05/electoral_map_wins-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# .monash-blue[Choropleth Map]
+
+Which party won from looking at this map and by how much?
+
+&lt;center&gt;
+&lt;img src="images/lecture-08/electoral_map_wins.png" width = "550px"&gt;
+&lt;/center&gt;
+
+--
+
+&lt;div class="border-box bg-white" style="position:absolute;top:20%;right:10px;width:320px;padding:5px;font-size:18pt;"&gt;
+&lt;span class="blue"&gt;Liberal/National Coalition: &lt;b&gt;77&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+&lt;span class="red"&gt;Labor: &lt;b&gt;68&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+Greens: &lt;b&gt;1&lt;/b&gt;&lt;br&gt;
+Katter's Australian: &lt;b&gt;1&lt;/b&gt;&lt;br&gt;
+Centre Alliance: &lt;b&gt;1&lt;/b&gt;&lt;br&gt;
+Independents: &lt;b&gt;3&lt;/b&gt;
+&lt;/div&gt;
+
+---
+
+# Mapping the centroids
+
+.f4[
+
+```r
+all_winners_centroid &lt;- all_winners %&gt;% 
+  # some issues with 122 and 137
+  slice(-122, -137) %&gt;% 
+  mutate(centroid = st_centroid(geometry)) 
+
+ggplot(all_winners_centroid) + 
+  geom_sf(aes(geometry = geometry)) + 
+  geom_sf(aes(geometry = centroid, color = PartyAb)) +
+  theme_void() + 
+  theme(legend.position="bottom") 
+```
+
+&lt;img src="images/lecture-05/dorling-map-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# .monash-blue[Non-Contiguous, Dorling Cartogram]
+
+
+&lt;center&gt;
+&lt;img src="images/lecture-08/electoral_map_wins_dorling.png" width = "550px"&gt;
+&lt;/center&gt;
+
+---
+
+# Improving the national map of election winners
+
+.f4.oveflow.overflow-scroll.h-90[
+
+```r
+library(sugarbag)
+centroids &lt;- all_winners_centroid %&gt;%
+  select(DivisionNm, longitude = x, latitude = y)
+grid &lt;- create_grid(centroids = centroids, hex_size = 0.9, buffer_dist = 5)
+hex_allocated &lt;- allocate(centroids = centroids,
+                          sf_id = "DivisionNm",
+                          hex_grid = grid,
+                          hex_size = 0.9, # same size used in create_grid
+                          hex_filter = 10,
+                          focal_points = capital_cities,
+                          width = 30, verbose = TRUE)
+
+
+hex_map &lt;- hex_allocated %&gt;%
+  fortify_hexagon(hex_size = 0.9, sf_id = "DivisionNm") %&gt;%
+  left_join(all_winners_centroid, by = "DivisionNm") 
+
+ggplot(hex_map) + 
+  geom_sf(data = all_winners, aes(geometry = geometry)) +
+  geom_polygon(aes(longitude, latitude, fill = PartyAb, group = DivisionNm), color = "black") + 
+  scale_fill_manual(name = "Party", values = auscolours) +
+  theme_void() + 
+  theme(legend.position = "bottom")
+```
+
+&lt;img src="images/lecture-05/sugarbag-map-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# .monash-blue[Tessellated Hexagon Map] 
+
+
+&lt;center&gt;
+&lt;img src="images/lecture-08/electoral_map_wins_hex.png" width = "550px"&gt;
+&lt;/center&gt;
+
+.bottom_abs.font_small.width100[
+Kobakian, Stephanie (2020) New Algorithms For Effectively Visualising Australian Spatio-Temporal Disease Data. &lt;br&gt;Supervised by Dianne Cook. *Master of Philosophy (Statistics), Queensland University of Technology*.
+]
+
+---
+
+class: transition 
+
+# Coordinate reference system (CRS)
+
+
+---
+
+# Geographic coordinate reference systems
+
+* **Geographic CRSs** identify a location on the Earth's surface by *longitude* and *latitude*.
+* **Longitude** is the East-West direction in angular distance from the Prime Meridian plane.
+* **Latitude** is the angular distance North or South of the equatorial plane.
+
+&lt;center&gt;
+&lt;img src="images/lecture-05/simple-geomap.png"&gt;
+&lt;/center&gt;
+
+---
+
+# Projected coordinate reference systems
+
+.flex[
+.w-50[
+* All projected CRSs are based on a geographic CRS.
+* Map projections convert the three-dimensional surface of the Earth into Easting and Northing (x and y) values (typically meters) in a projected CRS. 
+* These projected CRSs are based on Cartesian coordinates on a implicitly flat surface.
+* Some deformations are introduced in the process, e.g. area, direction, distance or shape, while preserving one or two of these properties. 
+
+]
+.w-50[
+
+&lt;img src="images/lecture-05/world-maps-1.png" width="432" style="display: block; margin: auto;" /&gt;&lt;img src="images/lecture-05/world-maps-2.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+
+.footnote.f4[
+[Lovelace, Robin, Jakub Nowosad and Jannes Muenchow (2019). Geocomputation with R. The R Series. CRC Press.](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro)
+]
+
+---
+
+# Well Known Text (WKT)
+
+* Open Geospatial Consortium (OGC) developed an open standard format for describing CRSs called [**WKT**](https://portal.opengeospatial.org/files/18-010r7)
+
+.f4[
+.overflow-scroll.h5[
+
+```r
+st_crs(ausmap)
+```
+
+```
+## Coordinate Reference System:
+##   User input: GDA94 
+##   wkt:
+## GEOGCRS["GDA94",
+##     DATUM["Geocentric Datum of Australia 1994",
+##         ELLIPSOID["GRS 1980",6378137,298.257222101,
+##             LENGTHUNIT["metre",1]]],
+##     PRIMEM["Greenwich",0,
+##         ANGLEUNIT["degree",0.0174532925199433]],
+##     CS[ellipsoidal,2],
+##         AXIS["geodetic latitude (Lat)",north,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         AXIS["geodetic longitude (Lon)",east,
+##             ORDER[2],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##     USAGE[
+##         SCOPE["Horizontal component of 3D system."],
+##         AREA["Australia including Lord Howe Island, Macquarie Islands, Ashmore and Cartier Islands, Christmas Island, Cocos (Keeling) Islands, Norfolk Island. All onshore and offshore."],
+##         BBOX[-60.56,93.41,-8.47,173.35]],
+##     ID["EPSG",4283]]
+```
+]
+
+
+
+
+```r
+ggplot(ausmap) + geom_sf(aes(fill = Area_SqKm))
+```
+
+&lt;img src="images/lecture-05/ausmap-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Changing map projections
+
+* Map projections may be modified in multiple methods (it's beyond this unit to delve deep into this).
+* Below uses the Lambert azimuthal equal-area projection centered on the longitude and latitude of (rough) Melbourne coordinates via [`proj4string`](https://proj.org/index.html):
+
+
+```r
+ausmap %&gt;% 
+  st_transform(crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=145 +lat_0=-38") %&gt;% 
+  ggplot() + geom_sf(aes(fill = Area_SqKm))
+```
+
+&lt;img src="images/lecture-05/ausmap-proj-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: bg-gray middle center
+
+
+
+.idea-box.tl.w-70[
+
+## Summary
+
+* We had a look a the 2019 federal election data
+* We looked at visualising this data on a map in various ways 
+* We looked at reprojecting geographic data into different coordinate reference systems
+
+]
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5512.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 5
+
+&lt;br&gt;
+
+]
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

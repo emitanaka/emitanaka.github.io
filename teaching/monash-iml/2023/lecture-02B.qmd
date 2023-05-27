@@ -1,0 +1,596 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Variable selection"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 2"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 2"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    toc: true
+    toc-title: "[*Variable selection*]{.monash-blue} - table of contents"
+    auto-stretch: false
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(patchwork)
+library(mvtnorm)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 6,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+
+
+# <i class="fas fa-database"></i> Predicting the insurance cost 
+
+```{r insurance-data}
+library(tidyverse)
+insurance <- read_csv("https://emitanaka.org/iml/data/insurance.csv")
+insurance
+```
+
+- This data is sourced from 
+[Medical Cost Personal Datasets](https://www.kaggle.com/datasets/mirichoi0218/insurance)
+
+## <i class="fab fa-r-project"></i> Pair plots
+
+::: flex
+
+::: w-70
+
+```{r pair-plot}
+#| echo: -1
+theme_set(theme_bw(base_size = 6) + theme(strip.text = element_text(size = 12)))
+GGally::ggpairs(insurance)
+```
+
+
+:::
+
+::: {.w-30 .f3 .pl3 .incremental}
+
+- This plot shows the marginal and pairwise joint distribution of variables.
+- `age`, `bmi` and `children` are significantly correlated with `charges`.
+- `bmi` is significantly correlated with `age`.
+- `smoker` appears to make significant difference in the charge.
+- `region` and `sex` don't make seem to be significantly different in distribution for `charges`.
+- `charges` is right skewed.
+
+
+:::
+
+:::
+
+
+
+## <i class="fab fa-r-project"></i> Investigating further
+
+::: flex
+
+::: w-70
+
+```{r medical-plot}
+#| code-fold: true
+#| echo: -1
+theme_set(theme_bw(base_size = 18))
+ggplot(insurance, aes(bmi, charges, color = age)) +
+  geom_point(data = ~select(.x, -c(smoker, children)),
+             color = "grey", size = 1.5) +
+  geom_point(size = 1.5) +
+  colorspace::scale_color_continuous_divergingx(mid = mean(insurance$age)) +
+  facet_grid(smoker ~ children, labeller = label_both) +
+  scale_y_log10()
+```
+:::
+
+::: {.w-30 .f3 .pl3 .incremental}
+
+- A pair plot only show certain aspects of data.
+  - You can't see higher order interaction effects say.
+- The data does not contain many individuals with higher number of `children`.
+- The `charges` are higher for `smoker`s.
+- The higher `age`d individuals appears to have higher `charges`.
+- There seems to be a jump in `charges` for smokers with `bmi` higher than 30.
+
+:::
+
+:::
+
+
+# Variable selection {background-color="#006DAE" .mcenter}
+
+
+## <i class="fab fa-r-project"></i>  Initial proposed regression model
+
+$$\begin{align*}\color{#027EB6}{\mathcal{M}_1}&: \log_{10}(\texttt{charges}_i) = \beta_0 + \beta_1\texttt{bmi}_{i} + \beta_2\texttt{age}_{i} + \beta_3\texttt{bmi}_{i} \times \texttt{age}_{i}\\& \qquad\qquad + \beta_4\texttt{children}_i + \beta_{52}\underline{\texttt{smoker}}_{i2} + e_i\end{align*}$$
+
+```{r m1-fit}
+#| code-line-numbers: 1|2
+#| output-location: fragment
+M1 <- lm(log10(charges) ~ bmi + age + bmi:age + children + smoker, data = insurance)
+broom::tidy(M1)
+```
+
+. . . 
+
+* What is the `p.value` here?
+
+## Review: $t$-test for regression coefficients  {.smaller}
+
+$$H_0: \beta_j = 0\qquad\text{vs}\qquad H_1: \beta_j\neq 0$$
+
+- Assume that $\boldsymbol{e} \sim N(\boldsymbol{0}, \sigma^2\mathbf{I}_n)$.
+- The slope `estimate`s is given as $\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\boldsymbol{y}$. 
+- The `std.error` is the square root of the diagonal elements of $var(\hat{\boldsymbol{\beta}}) = \sigma^2(\mathbf{X}^\top\mathbf{X})^{-1}$.
+- The test `statistic` for the $t$-test is given as:
+$$t^* = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)} \sim t_{n - p_1 - 1}\text{ under } H_0.$$
+
+   - where $p_1$ is the number of coefficients, excluding intercept, in $\mathcal{M}_1$. 
+   
+- The $t$-test `p.value` is then give as $P(|t_{n - p_1 - 1}| \geq |t^*|)$.
+
+
+
+
+## Proposed multiple linear regression models
+
+
+$$\begin{align*}\color{#027EB6}{\mathcal{M}_1}&: \log_{10}(\texttt{charges}_i) = \beta_0 + \beta_1\texttt{bmi}_{i} + \beta_2\texttt{age}_{i} + \beta_3\texttt{bmi}_{i} \times \texttt{age}_{i}\\& \qquad\qquad + \beta_4\texttt{children}_i + \beta_{52}\underline{\texttt{smoker}}_{i2} + e_i\\ \color{#D93F00}{\mathcal{M}_2}&: \log_{10}(\texttt{charges}_i)  = \beta_0 + \beta_1\texttt{bmi}_{i} + \beta_2\texttt{age}_{i} + \beta_3\texttt{bmi}_{i} \times \texttt{age}_{i}\\& \qquad + \beta_4\texttt{children}_i + \beta_{52}\underline{\texttt{smoker}}_{i2} + \color{#D93F00}{\beta_{62}\underline{\texttt{bmi30}}_{i2}}\\&\qquad \color{#D93F00}{+ \beta_{72} \underline{\texttt{smoker}}_{i2}\times \underline{\texttt{bmi30}}_{i2}}  + e_i\end{align*}$$
+
+- where `bmi30` is a _feature engineered binary variable_ where `bmi` $> 30$
+- $\color{#027EB6}{\mathcal{M}_1}$ is a nested model of $\color{#D93F00}{\mathcal{M}_2}$ (where $\beta_{62} = \beta_{72} = 0$)
+
+## <i class="fab fa-r-project"></i>  Comparing nested regression models
+
+```{r proposed-models}
+#| code-line-numbers: "|1-2|4|5-6|8"
+#| output-location: fragment
+insurance30 <- insurance %>% 
+  mutate(bmi30 = as.numeric(bmi > 30))
+
+M1 <- lm(log10(charges) ~ bmi + age + bmi:age + children + smoker, data = insurance)
+M2 <- lm(log10(charges) ~ bmi + age + bmi:age + children + smoker + 
+           bmi30 + smoker:bmi30, data = insurance30)
+
+anova(M1, M2)
+```
+
+
+
+## Comparing nested models using the $F$-test
+
+$$\color{#027EB6}{H_0}: \beta_{62} = \beta_{72} = 0\qquad\text{ vs }\qquad\color{#D93F00}{H_1}: \beta_{62} \neq 0 \text{ and/or }\beta_{72} \neq 0$$
+
+- The $F$-statistic is given as:
+$$F^* = \frac{(\color{#027EB6}{RSS_{\mathcal{M}_1}}-\color{#D93F00}{RSS_{\mathcal{M}_2}})/(\color{#D93F00}{p_{2}}-\color{#027EB6}{p_{1}})}{\color{#D93F00}{RSS_{\mathcal{M}_2}}/(n-\color{#D93F00}{p_{2}}-1)} \tilde \cal{F}_{\color{#D93F00}{p_{2}}-\color{#027EB6}{p_{1}},n-\color{#D93F00}{p_{2}}-1}$$
+
+  - where $p_2$ is the number of coefficients (minus one) in $\mathcal{M}_2$.
+
+- The $p$-value for the $F$-test is given as $P(F_{p_2 - p_1, n - p_2 - 1} > F^*)$.
+
+
+## Selecting predictors
+
+::: incremental
+
+- What predictors do we use?
+- For prediction, ideally those that improve prediction of new records.
+- Why not use all predictors?
+  - If you add predictors that are irrelevant, you add noise to the parameter estimation.
+  - This may affect the predictive accuracy of new records.
+- We discuss two approaches: 
+  * [**exhaustive search**]{.monash-blue} and 
+  * [**subset selection algorithms**]{.monash-blue}.
+
+:::
+
+
+# Exhaustive search {background-color="#006DAE" .mcenter}
+
+
+## Exhaustive search
+
+::: incremental
+
+- In an **exhaustive search**, we fit models with *all possible combinations* of the predictors.
+- For $p$ predictors these include:
+  - all $p$ models with one predictor,
+  - all $p\choose 2$ models with two predictors, and so on, ...
+  - a model with $p$ predictors.
+- There are a total of $p + {p \choose 2} + \dots + 1 = \sum_{k=1}^p {p \choose k} =  \color{#006DAE}{2^p - 1}$ [models]{.monash-blue} to consider.
+- We can then select the model with the best metrics.
+
+:::
+
+## <i class="fab fa-r-project"></i> Exhaustive search with `leaps` package
+
+- The `leaps` package can do an exhaustive search for regression models.
+
+```{r leaps}
+library(leaps)
+res <- regsubsets(log10(charges) ~ ., data = insurance, method = "exhaustive",
+                  nvmax = ncol(insurance), # maximum number of variables - use NULL for no limit
+                  nbest = 1) # report the best model for each number of variables
+resout <- summary(res)
+```
+
+
+- The best model for a given number of variable is efficiently found using the [leaps and bound approach](https://www.jstor.org/stable/1267601?seq=1#metadata_info_tab_contents) (out of the scope for this unit).
+
+
+
+## <i class="fas fa-exclamation-triangle"></i> Caveats in automated searches
+
+
+::: incremental 
+
+- Selection algorithms can treat variables without structure so it can result in undesirable searches.
+-   **Categorical variables** are often converted to dummy variables, but no group selection occurs. E.g. the variable `region` has the levels `northeast`, `northwest`, `southeast`, and `southwest`, but the automated search may select `southeast` only, instead of the whole `region` variable. 
+- Similarly, *main effects* may be omitted when the **interaction effect** is included.
+- For **polynomial effects**, the *lower order effects* may be excluded even if the higher order effects are included.
+
+:::
+
+
+## <i class="fab fa-r-project"></i> Best models per number of variables
+
+
+```{r leaps-result, R.options=list(width = 120)}
+resout$outmat
+```
+
+::: incremental
+
+- The best model with one variable is `log10(charge) ~ smoker`.
+- The best model with two variables is `log10(charge) ~ age + smoker`.
+- The best model with three variables is `log10(charge) ~ age + smoker + bmi`.
+
+:::
+
+## Comparing models with different number of variables
+
+
+::: incremental
+
+- Comparison between models with the same number of variables is straight forward (e.g. $RSS$, $R^2$, or $t$-test).
+- Comparison between models across different number of variables is less so due to the different model complexity.
+- We could compare nested models (which have different number of variables) using the $F$-test, but this doesn't work when models are not nested.
+- We need model metrics that allow comparison for different number of variables.
+
+:::
+
+
+
+
+# Model metrics {background-color="#006DAE" .mcenter}
+
+## Visualising model metrics
+
+```{r plot-model-metrics}
+#| code-fold: true
+#| fig-height: 3
+#| fig-width: 13
+tibble(nvar = factor(1:length(resout$rsq)),
+       `R squared` = resout$rsq,
+       `Adjusted R squared` = resout$adjr2,
+       `RSS` = resout$rss,
+       `Mallow's Cp` = resout$cp, # proportional to AIC
+       `BIC` = resout$bic) %>% 
+  pivot_longer(-nvar, names_to = "metric") %>% 
+  mutate(metric = fct_inorder(metric), 
+         sign = ifelse(metric %in% c("R squared", "Adjusted R squared"), -1, 1),
+         optvalue = value * sign) %>% 
+  group_by(metric) %>% 
+  mutate(optimal = optvalue == min(optvalue)) %>% 
+  ggplot(aes(nvar, value)) +
+  geom_point(aes(color = optimal)) +
+  facet_wrap(~metric, scale = "free_y", nrow = 1) +
+  labs(x = "Number of variables", y = "") +
+  guides(color = "none")
+```
+
+
+::: incremental
+
+- Adjusted $R^2$ and Mallow's $C_p$ suggests the best model with six variables, while BIC is suggesting best model with four variables. 
+- We don't use $R^2$ and $RSS$ to select models for different number of variables (why?)
+
+:::
+
+
+## $R^2$ and adjusted $R^2$
+
+For model $\mathcal{M}$ with $p_\mathcal{M}$ predictors:
+
+$$R^2(\mathcal{M}) = 1 - \frac{RSS(\mathcal{M})}{TSS}\quad \text{and} \quad R^2_a(\mathcal{M}) =  1 - \frac{RSS(\mathcal{M})/(n-p_\mathcal{M})}{TSS/(n - 1)}$$
+
+::: incremental
+
+- Would the $R^2$ (or $RSS$) be a good accuracy measure?
+- No! As mentioned last week, the $R^2$ always increases with $p$ so it will just chose the model with all $p$ predictors.
+- Instead we can use the adjusted $R^2$.
+
+:::
+
+
+## Other goodness of fit criteria
+
+- Adjusted $R^2$ is a function of $RSS = \sum_{i=1}^n\hat{e}_i^2$ but why not use $\sum_{i=1}^n|\hat{e}_i|$ or some other loss function instead?
+
+. . . 
+
+- We can construct a criteria with the structure $$\sum_{i=1}^n\rho(\hat{e}_i) + \lambda(p_\mathcal{M}, n)$$ where $\rho(z)$ is a non-negative loss function (e.g. $z^2$) and $\lambda$ is a penalty term for the complexity of the model.
+
+
+## Akaike information criterion {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- The Akaike information criterion (**AIC**) is defined as 
+
+$$\text{AIC}(\mathcal{M}) = -2~\text{log-likelihood} + 2p_\mathcal{M}.$$
+
+- If $e_i \sim NID(0, \sigma^2)$ then 
+
+<details><summary>Mathematical derivation</summary>
+
+::: {.f4 style="background-color: #FFFDD0; padding:10px; border-radius: 10px;"}
+
+Recall $y_i \sim N(\sum_{j = 0}^px_{ij}\beta_j, \sigma^2)$. 
+
+Then 
+
+\begin{align*}
+\text{AIC}(\mathcal{M}) &= -2~\text{log-likelihood} + 2p_\mathcal{M} \\
+& = -2 \sum_{i=1}^n \ln \left(\frac{1}{\sigma \sqrt{2\pi}} \exp\left(-\frac{1}{2\sigma^2} \left(y_i - \sum_{j=1}^p x_{ij}\beta_j\right)^2\right) \right) + 2p_\mathcal{M} \\
+&= n\ln (2\pi) + n \ln (\sigma^2) + \frac{1}{\sigma^2} \sum_{i=1}^n \left(y_i - \sum_{j=1}^p x_{ij}\beta_j\right)^2 + 2p_\mathcal{M}. \\
+\end{align*}
+
+We use the _maximum likelihood estimators_ for $\beta_j$ and $\sigma$ then $RSS = \sum_{i=1}^n \left(y_i - \sum_{j=1}^p x_{ij}\hat{\beta}_j\right)^2$ and $\hat{\sigma}^2 = RSS / n$.
+
+:::
+
+</details>
+
+$$\hat{\text{AIC}}(\mathcal{M}) = n\log\left(\frac{RSS(\mathcal{M})}{n}\right) + 2 p_\mathcal{M} + \text{constant}.$$
+
+
+## Mallows's $C_p$
+
+
+- A reasonable estimate of the test MSE is measured by Mallows's $C_p$ as: $$\hat{C}_p = \frac{1}{n} (RSS+2p_\mathcal{M}\hat{\sigma}^2)$$ where $\hat{\sigma}^2$ is an estimate of the variance of the error $e$ in the full model containing all $p$ predictors. 
+
+. . . 
+
+- An alternative (normalised) form is given as 
+
+$$\hat{C}_p = \frac{RSS}{\hat{\sigma}^2} - n + 2(p_\mathcal{M} + 1).$$
+
+## Mallows's $C_p$ and AIC 
+
+- The two forms of Mallows's $C_p$ do not give equivalent values but the same model will be selected based on the smallest $\hat{C}_p$.
+
+
+. . . 
+
+- If $\sigma$ is known, AIC can also be written as
+
+$$AIC = \frac{1}{\sigma^2}SSE + 2p_\mathcal{M} + \text{constant}.$$
+
+
+. . . 
+
+- If $\sigma$ is known, then $C_p = AIC + \text{constant}$ so [AIC is often considered equivalent to $C_p$]{.monash-blue} for linear regression models with Normally distributed errors.
+
+
+## Bayesian information criterion
+
+::: incremental
+
+
+- AIC and $C_p$ have a tendency to include too many variables. 
+- Bayesian information criterion (**BIC**) is defined as $$\text{BIC}(\mathcal{M}) = -2~\text{log-likelihood} + \log(n)\cdot p_\mathcal{M}.$$
+
+- BIC penalises the inclusion of more variables. 
+- BIC is derived to find the "true" model amongst the candidate models.
+
+:::
+
+
+
+## <i class="fab fa-r-project"></i> Computing AIC and BIC in R
+
+- The computation of AIC (or Mallows's $C_p$) and BIC can differ by a constant across different packages.
+
+. . . 
+
+- <i class="fas fa-exclamation-circle"></i> Therefore take caution comparing these metrics across different packages! They are often not comparable.
+
+
+. . . 
+
+- In R you can find the AIC and BIC using the `extractAIC` function:
+
+```{r}
+extractAIC(M1, k = 2) # default is AIC
+extractAIC(M1, k = log(nrow(insurance))) # BIC
+```
+
+
+
+
+# Subset selection algorithms {background-color="#006DAE" .mcenter}
+
+
+
+## Too many models to consider
+
+
+
+- How many (additive) models to consider when $p = 20$?
+
+. . . 
+
+
+$$2^{20} = `r scales::comma(2^20)` \text{ models}$$
+
+. . . 
+
+- It quickly becomes infeasible to consider all models.
+
+
+```{r nmodels}
+#| echo: false
+#| fig-height: 3
+tibble(p = 1:20) %>% 
+  mutate(nmodels = 2^p) %>% 
+  ggplot(aes(p, nmodels)) +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(y = "Number of models")
+```
+
+
+
+
+
+## Automated subset selection algorithms
+
+
+::: incremental
+
+- Automated subset selection algorithms "walk along" a "path":
+  1. Choose a model to start with (null or full model).
+  2. Test to see if there is an advantage to add/drop variables. 
+  3. Repeat adding/dropping variables until there is no change in the model.
+- This search strategy requires us to consider only a **_quadratic order_** of the number of models, but are there is **_no guarantee to result in the optimal solution_**.
+- These algorithms include [**forward selection**]{.monash-blue}, [**backward elimination**]{.monash-blue} and [**stepwise regression**]{.monash-blue}.
+
+:::
+
+##  Forward selection
+
+
+::: incremental
+
+1. Start with the model with no variables (the null model).
+2. For each variable, investigate the advantage of _adding_ into the current model. 
+3. _Add the most informative or significant variable_, unless this variable is not supplying significant information about the response.
+4. Repeat step 2-3 until none of the non-included variables are important.
+
+:::
+
+
+##  Backward elimination
+
+::: incremental
+
+1. Start with the model with all variables (the full model).
+2. For each variable, investigate the advantage of _removing_ from the current model. 
+3. _Remove the least informative variable_, unless this variable is supplying significant information about the response.
+4. Repeat 2-3 until all variables are important.
+
+:::
+
+##  Stepwise regression
+
+::: incremental
+
+1. Start with either the null or full model.
+2. For each variable, investigate the advantage of _removing_ from the current model. 
+3. _Remove the least informative variable_, unless this variable is supplying significant information about the response.
+4. For each variable, investigate the advantage of _adding_ into the current model. 
+5. _Add the most informative or significant variable_, unless this variable is not supplying significant information about the response.
+6. Repeat step 2-5 until there is no change in the model.
+
+:::
+
+
+
+
+## <i class="fab fa-r-project"></i>  Variable selection with R {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+```{r}
+null <- lm(log10(charges) ~ 1, data = insurance)
+full <- lm(log10(charges) ~ ., data = insurance)
+scope <- list(lower = formula(null),
+              upper = formula(full))
+# forward selection with AIC
+step(null, scope = scope, direction = "forward", k = 2)
+# backward selection with BIC
+step(full, scope = scope, direction = "backward", k = log(nrow(insurance)))
+# stepwise regression with AIC starting with full model
+step(full, scope = scope, direction = "both", k = 2)
+```
+
+
+
+## Drawbacks of these methods
+
+- The main issue is that these subset selection procedures potentially identify models that are only locally optimal so there is guarantee to provide optimal solution. 
+- These methods might disagree with each other and select different models.
+- Backwards elimination methods are not feasible when $p > n$.
+
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+- Multiple linear regression is an intuitive and useful tool in prediction.
+- When selecting a model, there are many aspects such as non-linearity and interactions between predictors that must be considered.
+- Model selection algorithms can help, but they also have some limitations.
+
+
+
+
+
+
+

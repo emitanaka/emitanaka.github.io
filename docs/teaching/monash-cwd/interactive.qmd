@@ -1,0 +1,24 @@
+---
+title: Interactive
+date: 2022-10-17
+format: html
+html: 'monash-cwd/2022/lecture-12.html'
+---
+
+```{r}
+#| echo: false
+htmllink <- gsub("monash-cwd/", "", rmarkdown::metadata$html)
+```
+
+
+This was taught as part of the lecture for the Communicating with Data.
+
+<a href='`r htmllink`'><i class="fa-solid fa-link"></i></a>
+
+
+
+
+<iframe width="600px" src="`r htmllink`" height="337.5px" style="border: 1px solid black;"></iframe>
+
+
+

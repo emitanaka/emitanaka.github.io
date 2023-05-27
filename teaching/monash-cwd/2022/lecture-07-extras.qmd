@@ -1,0 +1,250 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Captivating statistical presentations"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 7 Extra"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+format: 
+  revealjs:
+    slide-number: false
+    transition: convex
+    width: 1280
+    height: 720
+    logo: images/monash-one-line-black-rgb.png
+    theme: assets/monash.scss
+    css: [assets/tachyons-addon.css, assets/custom.css, assets/extra-07.css]
+    include-after-body: "assets/after-body.html"
+execute:
+  echo: false
+---
+
+
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+library(tidyverse)
+library(kableExtra)
+library(tidyverse)
+library(patchwork)
+library(showtext)
+font_add_google(name = "Marck Script", family = "marck")
+showtext_auto()
+df <- read_csv(here::here("lectures/data/census-birthplace.csv"))
+df2021 <- df %>% 
+  filter(census == 2021) %>% 
+  filter(!birth %in% c("Total")) %>% 
+  select(-census)
+df2 <- df %>% 
+  filter(census %in% c(2021, 2016)) %>% 
+  filter(!birth %in% c("Total")) %>% 
+  filter(!birth %in% c("Not Stated", "Other", "Australia")) %>% 
+  group_by(census) %>% 
+  mutate(rank = rank(-percentage)) %>% 
+  filter(rank %in% 1:5) %>% 
+  ungroup()
+
+dfsex <- read_csv(here::here("lectures/data/census-birthplace-by-sex.csv")) %>% 
+  filter(!birth %in% c("Total")) %>% 
+  filter(!birth %in% c("Not Stated", "Other", "Australia")) %>% 
+  mutate(birth = fct_reorder(birth, count, mean)) %>% 
+  group_by(sex) %>% 
+  mutate(rank = rank(-percentage)) %>% 
+  filter(rank %in% 1:5) %>% 
+  ungroup()
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## India now third most common place of birth
+
+
+```{r census2021-birth, fig.height = 2.5, fig.width = 6}
+df2021 %>% 
+  arrange(desc(percentage)) %>% 
+  filter(!birth %in% c("Other", "Not Stated")) %>% 
+  slice(1:5) %>% 
+  mutate(birth = fct_reorder(birth, count)) %>% 
+  ggplot(aes(count, birth)) +
+  geom_col() +
+  geom_text(aes(label = scales::percent(percentage/100, 0.1)),
+            nudge_x = -0.5, color = "white") +
+  scale_x_log10(labels = scales::comma) +
+  theme(text = element_text(size = 16),
+        axis.text.y = element_text(size = 8),
+        plot.title.position = "plot") + 
+  labs(y = "Birth place", x = "Number of Australian residents")
+```
+
+::: aside
+
+Data source: Australian Census 2021
+
+:::
+
+## India now third most common place of birth
+
+
+```{r census2021-birth2, fig.height = 2.5, fig.width = 6}
+df2021 %>% 
+  arrange(desc(percentage)) %>% 
+  filter(!birth %in% c("Other", "Not Stated")) %>% 
+  slice(1:5) %>% 
+  mutate(birth = fct_reorder(birth, count)) %>% 
+  ggplot(aes(count, birth)) +
+  geom_col(aes(fill = birth)) +
+  geom_text(aes(label = scales::percent(percentage/100, 0.1)),
+            nudge_x = -0.5, color = "white") +
+  scale_x_log10(labels = scales::comma) +
+  theme(text = element_text(size = 16),
+        axis.text.y = element_text(size = 8),
+        plot.title.position = "plot") + 
+  labs(y = "Birth place", x = "Number of Australian residents") +
+  guides(fill = "none") +
+  colorspace::scale_fill_discrete_qualitative()
+```
+
+::: aside
+
+Data source: Australian Census 2021
+
+:::
+
+
+## [India]{.monash-blue} now third most common place of birth
+
+
+```{r census2021-birth-revamp, fig.height = 2.5, fig.width = 6}
+df2021 %>% 
+  arrange(desc(percentage)) %>% 
+  filter(!birth %in% c("Other", "Not Stated")) %>% 
+  slice(1:5) %>% 
+  mutate(birth = fct_reorder(birth, count)) %>% 
+  ggplot(aes(count, birth)) +
+  geom_col() +
+  geom_col(data = ~filter(.x, birth=="India"),
+           fill = "#006DAE") + 
+  geom_text(aes(label = scales::percent(percentage/100, 0.1)),
+            nudge_x = -0.5, color = "white") +
+  scale_x_log10(labels = scales::comma) +
+  theme(text = element_text(size = 16),
+        axis.text.y = element_text(size = 8),
+        plot.title.position = "plot") + 
+  labs(y = "Birth place", x = "Number of Australian residents")
+```
+
+::: aside
+
+Data source: Australian Census 2021
+
+:::
+
+
+## [[India]{.monash-blue} now third most common place of birth]{.f2}
+
+
+```{r type-1, fig.height = 2.5, fig.width = 6}
+df2021 %>% 
+  arrange(desc(percentage)) %>% 
+  filter(!birth %in% c("Other", "Not Stated")) %>% 
+  slice(1:5) %>% 
+  mutate(birth = fct_reorder(birth, count)) %>% 
+  ggplot(aes(count, birth)) +
+  geom_col() +
+  geom_col(data = ~filter(.x, birth=="India"),
+           fill = "#006DAE") + 
+  geom_text(aes(label = scales::percent(percentage/100, 0.1)),
+            nudge_x = -0.5, color = "white", size = 1) +
+  scale_x_log10(labels = scales::comma) +
+  theme(plot.title.position = "plot",
+        text = element_text(size = 6)) + 
+  labs(y = "Birth place", x = "Number of Australian residents")
+```
+
+::: {.aside .f3 .font-marck}
+
+Data source: Australian Census 2021
+
+:::
+
+
+## [[India]{.monash-blue} now third most common place of birth]{.font-marck}
+
+
+```{r type-2, fig.height = 2.5, fig.width = 6}
+df2021 %>% 
+  arrange(desc(percentage)) %>% 
+  filter(!birth %in% c("Other", "Not Stated")) %>% 
+  slice(1:5) %>% 
+  mutate(birth = fct_reorder(birth, count)) %>% 
+  ggplot(aes(count, birth)) +
+  geom_col() +
+  geom_col(data = ~filter(.x, birth=="India"),
+           fill = "#006DAE") + 
+  geom_text(aes(label = scales::percent(percentage/100, 0.1)),
+            nudge_x = -0.5, color = "white",
+            family = "marck") +
+  scale_x_log10(labels = scales::comma) +
+  theme(text = element_text(size = 16, family = "marck"),
+        axis.text.y = element_text(size = 8),
+        plot.title.position = "plot") + 
+  labs(y = "Birth place", x = "Number of Australian residents")
+
+```
+
+::: {.aside .f3 }
+
+[Data source: Australian Census 2021]{.font-marck}
+
+:::
+

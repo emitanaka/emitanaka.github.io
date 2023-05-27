@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="grViz_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="grViz_libs/viz-1.8.2/viz.js"></script>
+<link href="grViz_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="grViz_libs/grViz-binding-1.0.9/grViz.js"></script>
+<script src="grViz_libs/pymjs-1.3.2/pym.v1.min.js"></script>
+  <title>grViz</title>
+</head>
+<body>
+<div id="htmlwidget_container">
+  <div id="htmlwidget-ae3145b5dfb20e0ca247" style="width:100%;height:400px;" class="grViz html-widget "></div>
+  <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+</div>
+<script type="application/json" data-for="htmlwidget-ae3145b5dfb20e0ca247">{"x":{"diagram":"\ndigraph grcombined2 {\n  rankdir=LR\n  splines=false\n  node [shape = circle]\n  A1 [label=\"1\"]; \n  A2 [label=\"x₁\"]; \n  B1 [label=\"ReLU\", color=\"#027EB6\", style=\"filled\",fontcolor=white]; \n  B2 [label=\"ReLU\", color=\"#EE0220\", style=\"filled\",fontcolor=white]; \n  C [label = \"Linear\nb=0\", fontcolor=\"#D93F00\"];\n  A1->B1 [label=\"3\", color=\"#027EB6\", fontcolor=\"#027EB6\"]\n  A2->B1 [label=\"-5\", color=\"#027EB6\", fontcolor=\"#027EB6\"]\n  A1->B2 [label=\"1\", color=\"#EE0220\", fontcolor=\"#EE0220\"]\n  A2->B2 [label=\"0.5\", color=\"#EE0220\", fontcolor=\"#EE0220\"]\n  B1->C [label=\"0.5\"]\n  B2->C [label=\"0.9\"]\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-ae3145b5dfb20e0ca247">{"viewer":{"width":"100%","height":400,"padding":0,"fill":false},"browser":{"width":"100%","height":400,"padding":0,"fill":false}}</script>
+</body>
+</html>

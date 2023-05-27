@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="grViz_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="grViz_libs/viz-1.8.2/viz.js"></script>
+<link href="grViz_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="grViz_libs/grViz-binding-1.0.9/grViz.js"></script>
+<script src="grViz_libs/pymjs-1.3.2/pym.v1.min.js"></script>
+  <title>grViz</title>
+</head>
+<body>
+<div id="htmlwidget_container">
+  <div id="htmlwidget-0a484e694de4aa70cb98" style="width:100%;height:500px;" class="grViz html-widget "></div>
+  <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+</div>
+<script type="application/json" data-for="htmlwidget-0a484e694de4aa70cb98">{"x":{"diagram":"\ndigraph softmax2 {\n  rankdir=LR\n  splines=false\n  node [shape = circle, width=1.3,height=1.3,fixedsize=true]\n  A1 [label=\"1\"]; \n  A2 [label=\"Income\"]; \n  B1 [label=\"ReLU\", color=\"#027EB6\", style=\"filled\",fontcolor=white]; \n  B2 [label=\"ReLU\", color=\"#EE0220\", style=\"filled\",fontcolor=white]; \n  B3 [label=\"ReLU\", color=\"#008A25\", style=\"filled\",fontcolor=white]; \n  C1 [label = \"Softmax\n(0 = cheap)\"];\n  C2 [label = \"Softmax\n(1 = average)\"];\n  C3 [label = \"Softmax\n(2 = expensive)\"];\n  A1->B1 [label=\"49.62\", color=\"#027EB6\", fontcolor=\"#027EB6\"]\n  A2->B1 [label=\"-0.37\", color=\"#027EB6\", fontcolor=\"#027EB6\"]\n  A1->B2 [label=\"27.62\", color=\"#EE0220\", fontcolor=\"#EE0220\"]\n  A2->B2 [label=\"-0.19\", color=\"#EE0220\", fontcolor=\"#EE0220\"]\n  A1->B3 [label=\"-1.72\", color=\"#008A25\", fontcolor=\"#008A25\"]\n  A2->B3 [label=\"0.35\", color=\"#008A25\", fontcolor=\"#008A25\"]\n  B1->C1 [color=\"#027EB6\", fontcolor=\"#027EB6\", label = \"1\"]\n  B1->C2 [color=\"#027EB6\", fontcolor=\"#027EB6\", label = \"0\"]\n  B1->C3 [color=\"#027EB6\", fontcolor=\"#027EB6\", label = \"0\"]\n  B2->C1 [color=\"#EE0220\", fontcolor=\"#EE0220\", label = \"0\"]\n  B2->C2 [color=\"#EE0220\", fontcolor=\"#EE0220\", label = \"1\"]\n  B2->C3 [color=\"#EE0220\", fontcolor=\"#EE0220\", label = \"0\"]\n  B3->C1 [color=\"#008A25\", fontcolor=\"#008A25\", label = \"0\"]\n  B3->C2 [color=\"#008A25\", fontcolor=\"#008A25\", label = \"0\"]\n  B3->C3 [color=\"#008A25\", fontcolor=\"#008A25\", label = \"1\"]\n  \n\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-0a484e694de4aa70cb98">{"viewer":{"width":"100%","height":500,"padding":0,"fill":false},"browser":{"width":"100%","height":500,"padding":0,"fill":false}}</script>
+</body>
+</html>

@@ -1,0 +1,1127 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Working with a single variable, making transformations, detecting outliers, using robust statistics"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 4 - Session 2"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week4B/",
+  fig.width = 6,
+  fig.height = 3.5,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  #out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week4B/"
+)
+theme_set(ggthemes::theme_gdocs(base_size = 12) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 16),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+
+---
+
+class: transition 
+
+# Bins and Bandwidths
+
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[3] Boston housing data .f4[Part 1/4]
+
+
+```{r boston-data, include = FALSE}
+data(bostonc, package = "DAAG")
+df3 <- read_tsv(bostonc[10:length(bostonc)]) 
+skimr::skim(df3)
+```
+
+```{r boston-data-longer, include = FALSE}
+df3long <- df3 %>% pivot_longer(MEDV:LSTAT,
+                             names_to = "var",
+                             values_to = "value") %>% 
+  filter(!var %in% c("CHAS", "B", "ZN"))
+skimr::skim(df3long)
+```
+
+
+.panelset[
+.panel[.panel-name[📊]
+.grid[
+.item[
+```{r boston-plot1, fig.width = 6.4}
+ggplot(df3, aes(MEDV)) + 
+  geom_histogram(binwidth = 1, color = "black", fill = "#008A25") + 
+  labs(x = "Median housing value (US$1000)", y = "Frequency")
+
+```
+
+]
+.item[
+
+{{content}}
+
+
+]
+]
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r boston-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f5[
+```{r, ref.label = c("boston-plot1"), echo = TRUE, eval = FALSE}
+```
+
+]]
+]
+
+.footnote.f6[
+Harrison, David, and Daniel L. Rubinfeld (1978) Hedonic Housing Prices and the Demand for Clean Air, *Journal of Environmental Economics and Management* **5** 81-102. Original data.<br>
+Gilley, O.W. and R. Kelley Pace (1996) On the Harrison and Rubinfeld Data. *Journal of Environmental Economics and Management* **31** 403-405. Provided corrections and examined censoring.<br>
+Maindonald, John H. and Braun, W. John (2020). DAAG: Data Analysis and Graphics Data and Functions. R package version 1.24
+]
+
+--
+
+* Thre is a large frequency in the final bin.
+* There is a decline in observations in the $40-49K range as well as dip in observations around $26K and $34K.
+* The histogram is using a bin width of 1 unit and is **left-open** (or **right-closed**): (4.5, 5.5], (5.5, 6.5] ... (49.5, 50.5].
+* Occasionally, whether it is left- or right-open can make a difference.
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Boston housing data .f4[Part 2/4]
+
+
+
+.panelset[
+.panel[.panel-name[📊]
+.grid[
+.item[
+```{r boston-plot2, fig.height = 2}
+ggplot(df3, aes(MEDV, y = "")) + 
+  geom_boxplot(fill = "#008A25") + 
+  labs(x = "Median housing value (US$1000)", y = "") + 
+  theme(axis.line.y = element_blank())
+
+```
+```{r boston-plot3, fig.height = 2}
+ggplot(df3, aes(MEDV, y = "")) + 
+  geom_jitter() + 
+  labs(x = "Median housing value (US$1000)", y = "") + 
+  theme(axis.line.y = element_blank())
+
+```
+```{r boston-plot4, fig.height = 3.5}
+ggplot(df3, aes(MEDV)) + 
+  geom_density() + 
+  geom_rug() + 
+  labs(x = "Median housing value (US$1000)", y = "") + 
+  theme(axis.line.y = element_blank())
+
+```
+]
+.item[
+
+* Density plots depend on the bandwidth chosen and more than often do not estimate well at boundary cases
+* There are various way to present features of the data using a plot and what works for one person, may not be as straightforward for another
+* Be prepared to do multiple plots!
+
+]
+]
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r boston-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r, ref.label = paste0("boston-plot", 2:4), echo = TRUE, eval = FALSE}
+```
+]
+]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Boston housing data .f4[Part 3/4]
+
+
+
+.panelset[
+.panel[.panel-name[📊]
+.grid[
+.item[
+```{r boston-plot5, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0",  color = "black", binwidth = 0.2) + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin width = 0.2, Left-open") 
+
+```
+```{r boston-plot6, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0",  color = "black", binwidth = 0.5) + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin width = 0.5, Left-open") 
+
+```
+```{r boston-plot7, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0",  color = "black", bins = 30) + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin number = 30, Left-open") 
+
+```
+
+
+]
+.item[
+
+```{r boston-plot8, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0", color = "black", binwidth = 0.2, closed = "left") + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin width = 0.2, Right-open") 
+
+```
+```{r boston-plot9, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0", color = "black", binwidth = 0.5, closed = "left") + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin width = 0.5, Right-open") 
+
+```
+```{r boston-plot10, fig.height = 2}
+ggplot(df3, aes(PTRATIO)) + 
+  geom_histogram(fill = "#9651A0", color = "black",
+                 bins = 30, closed = "left") + 
+  labs(x = "Pupil-teacher ratio by town", y = "",
+       title = "Bin number = 30, Right-open") 
+
+```
+
+
+
+]
+]
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r boston-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4.scroll-sign[.s500[
+```{r, ref.label = paste0("boston-plot", 5:10), echo = TRUE, eval = FALSE}
+```
+]]]
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Boston housing data .f4[Part 4/4]
+
+
+.panelset[
+.panel[.panel-name[📊]
+.grid[
+.item[
+```{r boston-plotx, fig.height = 6, fig.width = 8}
+ggplot(df3long, aes(value)) +
+  geom_histogram(color = "white") +
+  facet_wrap( ~var, scale = "free") + 
+  labs(x = "", y = "") + 
+  theme(axis.text = element_text(size = 12))
+
+```
+
+]
+.item.f4[
+
+* CRIM: per capita crime rate by town 
+* INDUS: proportion of non-retail business acres per town
+* NOX: nitrogen oxides concentration (parts per 10 million)
+* RM: average number of room per dwelling
+* AGE: proportion of owner-occupied units built prior to 1940
+* DIS: weighted mean of distances to 5 Boston employment centres
+* RAD: index of accessibility to radial highways
+* TAX: full-value property tax rate per $10K
+* PTRATIO: pupil-teacher ratio by town 
+* LSTAT: lower status of the population (%)
+* MEDV: median value of owner-occupied homes in $1000s
+
+]
+]
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r boston-data-longer, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r, ref.label = c("boston-plotx"), echo = TRUE, eval = FALSE}
+```
+]
+]
+]
+
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[4] Hidalgo stamps thickness 
+
+```{r hidalgo-data, include = FALSE}
+load(here::here("data/Hidalgo1872.rda"))
+skimr::skim(Hidalgo1872)
+```
+
+
+.panelset[
+.panel[.panel-name[📊]
+```{r hidalgo-plot, fig.height = 4, fig.width = 8}
+ggplot(Hidalgo1872, aes(thickness)) +
+  geom_histogram(binwidth = 0.001, aes(y = stat(density))) + 
+  labs(x = "Thickness (0.001 mm)", y = "Density") + 
+  geom_density(color = "#E16A86", size = 2) + 
+  geom_density(color = "#00AD9A", size = 2, bw = "SJ")
+
+```
+
+* A stamp collector, Walton von Winkle, bought several collections of Mexican stamps from 1872-1874 and measured the thickness of all of them.
+* The different bandwidth for the density plot suggest either that there are two or seven modes.
+
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r hidalgo-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r, ref.label = c("hidalgo-plot"), echo = TRUE, eval = FALSE}
+```
+]
+]
+]
+
+
+---
+
+class: transition 
+
+
+# Focus
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[5] Movie length
+
+```{r movies-data, include = FALSE}
+data(movies, package = "ggplot2movies")
+skimr::skim(movies)
+```
+
+
+.panelset[
+.panel[.panel-name[📊]
+.grid[
+.item[
+```{r movies-plot1}
+ggplot(movies, aes(length)) +
+  geom_histogram(color = "white") + 
+  labs(x = "Length of movie (minutes)", y = "Frequency")
+
+```
+```{r movies-plot2, fig.width = 5.3}
+ggplot(movies, aes(length)) +
+  geom_histogram(color = "white") + 
+  labs(x = "Length of movie (minutes)", y = "Frequency") + 
+  scale_x_log10()
+
+```
+
+]
+.item[
+
+{{content}}
+]
+]
+
+
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r movies-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r, ref.label = paste0("movies-plot", 1:3), echo = TRUE, eval = FALSE}
+```
+]
+]
+]
+
+--
+
+* Upon further exploration, you can find the two movies that are well over 16 hours long are `r knitr::combine_words(paste0('"<i>', str_replace(pull(filter(movies, length > 1000), title), ", The", ""), '</i>"'))`
+
+{{content}}
+--
+
+* We can restrict our attention to films under 3 hours:
+
+```{r movies-plot3, fig.width = 9}
+movies %>% 
+  filter(length < 180) %>% 
+  ggplot(aes(length)) +
+  geom_histogram(binwidth = 1, fill = "#795549", color = "black") + 
+  labs(x = "Length of movie (minutes)", y = "Frequency") 
+
+```
+
+{{content}}
+
+--
+
+* Notice that there is a peak at particular times. Why do you think so?
+
+
+---
+
+
+
+class: transition middle
+
+# Categorical variables
+
+<br><br>
+
+
+This lecture is based on Chapter 4  of <br><br>Unwin (2015) Graphical Data Analysis with R
+
+---
+
+class: middle
+
+# There are two types of categorical variables
+
+--
+
+<br><br>
+
+.monash-blue[**Nominal**] where there is no intrinsic ordering to the categories<br>
+**E.g.** blue, grey, black, white.
+
+--
+
+<br>
+
+.monash-blue[**Ordinal**] where there is a clear order to the categories.<Br>
+**E.g.** Strongly disagree, disagree, neutral, agree, strongly agree.
+
+
+---
+
+# Categorical variables in R
+
+.grid[
+.item.br[
+* In R, categorical variables may be encoded as **factors**.
+.f4[
+```{r factors, echo = TRUE}
+data <- c(2, 2, 1, 1, 3, 3, 3, 1)
+factor(data)
+```
+]
+* You can easily change the labels of the variables:
+.f4[
+```{r factor-labels, echo = TRUE}
+factor(data, labels = c("I", "II", "III"))
+```
+]
+]
+.item.f4[
+
+{{content}}
+
+]
+]
+
+--
+
+* Order of the factors are determined by the input:
+
+
+```{r factor-input, echo = TRUE}
+# numerical input are ordered in increasing order #<<
+factor(c(1, 3, 10))
+# character input are ordered alphabetically #<<
+factor(c("1", "3", "10"))
+# you can specify order of levels explicitly #<<
+factor(c("1", "3", "10"),  
+       levels = c("1", "3", "10"))
+```
+
+
+---
+
+# Numerical factors in R
+
+```{r, echo = TRUE, warning = TRUE}
+x <- factor(c(10, 20, 30, 10, 20))
+mean(x)
+```
+
+--
+
+<i class="fas fa-exclamation-triangle"></i> `as.numeric` function returns the internal integer values of the factor
+```{r, echo = TRUE}
+mean(as.numeric(x))
+```
+
+--
+
+You probably want to use:
+
+.flex[
+.w-50[
+```{r, echo = TRUE}
+mean(as.numeric(levels(x)[x]))
+```
+
+]
+.w-50[
+```{r, echo = TRUE}
+mean(as.numeric(as.character(x)))
+```
+
+]
+]
+
+---
+
+# .orange[Revisiting Case study] .circle.bg-orange.white[1] 2019 Australian Federal Election
+
+```{r aus-election-data1}
+df1 <- read_csv(here::here("data/HouseFirstPrefsByCandidateByVoteTypeDownload-24310.csv"), 
+                skip = 1,
+                col_types = cols(
+                      .default = col_character(),
+                      OrdinaryVotes = col_double(),
+                      AbsentVotes = col_double(),
+                      ProvisionalVotes = col_double(),
+                      PrePollVotes = col_double(),
+                      PostalVotes = col_double(),
+                      TotalVotes = col_double(),
+                      Swing = col_double()))
+```
+```{r aus-election-data3}
+tdf3 <- df1 %>% 
+  group_by(DivisionID) %>% 
+  summarise(DivisionNm = unique(DivisionNm),
+            State = unique(StateAb),
+            votes_GRN = TotalVotes[which(PartyAb=="GRN")],
+            votes_total = sum(TotalVotes)) %>% 
+  mutate(perc_GRN = votes_GRN / votes_total * 100)
+```
+.panelset[
+.panel[.panel-name[📊]
+
+.flex[
+.w-50[
+```{r aus-election-plot1, fig.height = 5}
+tdf3 %>% 
+  ggplot(aes(perc_GRN, State)) +
+  ggbeeswarm::geom_quasirandom(groupOnX = FALSE, varwidth = TRUE) +
+  labs(x = "Percentage of first preference votes per division",
+       y = "State", 
+       title = "First preference votes for the Greens party")
+```
+
+
+
+
+]
+.w-50[
+```{r aus-election-plot2, fig.height = 5}
+tdf3 %>% 
+  mutate(State = fct_reorder(State, perc_GRN)) %>% 
+  ggplot(aes(perc_GRN, State)) +
+  ggbeeswarm::geom_quasirandom(groupOnX = FALSE, varwidth = TRUE) +
+  labs(x = "Percentage of first preference votes per division",
+       y = "State", 
+       title = "First preference votes for the Greens party")
+```
+]
+
+]
+
+]
+.panel[.panel-name[data]
+.scroll-sign[.s400.f4[
+```{r, ref.label = c("aus-election-data1", "aus-election-data3"), echo = TRUE}
+```
+]]]
+.panel[.panel-name[R]
+.f4[
+```{r, ref.label=paste0("aus-election-plot", 1:2), echo = TRUE, eval = FALSE}
+```
+]]
+]
+
+
+---
+
+class:  middle
+
+# Order nominal variables meaningfully
+
+<i class="fas fa-code"></i> **Coding tip**: use below functions to easily change the order of factor levels
+
+```{r, eval = FALSE, echo = TRUE}
+stats::reorder(factor, value, mean)
+forcats::fct_reorder(factor, value, median)
+forcats::fct_reorder2(factor, value1, value2, func)
+```
+
+
+
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[6] Aspirin use after heart attack
+
+```{r meta-data, include = FALSE}
+data("Fleiss93", package = "meta")
+df6 <- Fleiss93 %>% 
+  mutate(total = n.e + n.c)
+skimr::skim(df6)
+```
+
+.panelset[
+.panel[.panel-name[📊]
+
+.grid[
+.item[
+```{r meta-plot1, fig.height = 3}
+df6 %>% 
+  mutate(study = fct_reorder(study, desc(total))) %>% 
+  ggplot(aes(study, total)) + 
+  geom_col() + 
+  labs(x = "", y = "Frequency") + 
+  guides(x = guide_axis(n.dodge = 2))
+
+```
+
+```{r meta-plot2, fig.height = 3}
+df6 %>% 
+  mutate(study = ifelse(total < 2000, "Other", study),
+         study = fct_reorder(study, desc(total))) %>% 
+  ggplot(aes(study, total)) + 
+  geom_col() + 
+  labs(x = "", y = "Frequency") 
+
+```
+
+]
+.item[
+
+* Meta-analysis is a statistical analysis that combines the results of multiple scientific studies.
+* This data studies the use of aspirin for death prevention after myocardial infarction, or in plain terms, a heart attack.
+* The ISIS-2 study has more patients than all other studies combined.
+* You could consider lumping the categories with low frequencies together.
+]
+
+
+]
+
+]
+.panel[.panel-name[data]
+.h300.f4.scroll-sign[
+```{r meta-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r , ref.label=paste0("meta-plot", 1:2), echo = TRUE, eval = FALSE}
+```
+]]
+]
+
+.f5.footnote[
+Fleiss JL (1993): The statistical basis of meta-analysis. *Statistical Methods in Medical Research* **2** 121–145<br>
+Balduzzi S, Rücker G, Schwarzer G (2019), How to perform a meta-analysis with R: a practical tutorial, Evidence-Based Mental Health.
+]
+
+---
+
+class: nostripheader middle
+
+
+# Consider combining factor levels with low frequencies
+
+<i class="fas fa-code"></i> **Coding tip**: the following family of functions help to easily lump factor levels together:
+
+```{r fct_lump, echo = TRUE, eval = FALSE}
+forcats::fct_lump()
+forcats::fct_lump_lowfreq()
+forcats::fct_lump_min()
+forcats::fct_lump_n()
+forcats::fct_lump_prop()
+# if conditioned on another variable
+ifelse(cond, "Other", factor)
+dplyr::case_when(cond1 ~ "level1",
+                 cond2 ~ "level2",
+                 TRUE ~ "Other")
+```
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[7] Anorexia
+
+```{r anorexia-data, include = FALSE}
+data(anorexia, package = "MASS")
+
+df9tab <- table(anorexia$Treat) %>% 
+  as.data.frame() %>% 
+  rename(Treatment = Var1, Frequency = Freq)
+
+skimr::skim(anorexia)
+```
+
+.panelset[
+.panel[.panel-name[📊]
+
+.grid[
+.item[
+```{r anorexia-plot1}
+ggplot(anorexia, aes(Treat)) + 
+  geom_bar() + 
+  labs(x = "", y = "Frequency") 
+
+```
+
+```{r anorexia-table}
+df9tab %>% 
+  knitr::kable() %>% 
+  kableExtra::kable_classic(full_width = FALSE)
+```
+
+]
+.item[
+
+**Table or Plot?**
+
+{{content}}
+
+]
+
+
+]
+
+]
+.panel[.panel-name[data]
+.h200.f4.scroll-sign[
+```{r anorexia-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r , ref.label="anorexia-plot1", echo = TRUE, eval = FALSE}
+```
+```{r anorexia-plot2, echo = TRUE, eval = FALSE}
+ggplot(anorexia, aes(Treat)) + 
+  stat_count(geom = "point", size = 4) +
+  stat_count(geom = "line", group = 1) +
+  labs(y = "Frequency", x = "")
+```
+
+]]
+]
+
+.f6.footnote[
+
+Hand, D. J., Daly, F., McConway, K., Lunn, D. and Ostrowski, E. eds (1993) A Handbook of Small Data Sets. Chapman & Hall, Data set 285 (p. 229) <br>
+Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+
+]
+
+--
+
+* Table for accuracy, plot for visual communication
+
+{{content}}
+
+--
+
+**Why not a point or line?**
+
+```{r anorexia-plot2, fig.height = 2.5}
+```
+
+{{content}}
+
+--
+
+<div class="f4">
+<ul>
+<li>This can be appropriate depending on what you want to communicate </li>
+<li>A barplot occupies more area compared to a point and the area does a better job of communicating size</li>
+<li>A line is suggestive of a trend </li>
+</ul>
+</div>
+
+---
+
+
+# .orange[Case study] .circle.bg-orange.white[8] Titanic
+
+```{r titanic-data, include = FALSE}
+df9 <- as_tibble(Titanic)
+skimr::skim(df9)
+```
+
+.panelset[
+.panel[.panel-name[📊]
+
+.flex[
+.w-50[
+.flex[
+.w-50[
+```{r titanic-plot1, fig.height = 2, fig.width = 4}
+df9 %>% 
+  group_by(Class) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Class, total)) + 
+  geom_col(fill = "#ee64a4") + 
+  labs(x = "", y = "Frequency") 
+
+```
+
+```{r titanic-plot2, fig.height = 2, fig.width = 3}
+df9 %>% 
+  group_by(Sex) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Sex, total)) + 
+  geom_col(fill = "#746FB2") + 
+  labs(x = "", y = "Frequency") 
+
+```
+
+]
+.w-50[
+```{r titanic-plot3, fig.height = 2, fig.width = 3}
+df9 %>% 
+  group_by(Age) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Age, total)) + 
+  geom_col(fill = "#C8008F") + 
+  labs(x = "", y = "Frequency") 
+
+```
+
+```{r titanic-plot4, fig.height = 2, fig.width = 3}
+df9 %>% 
+  group_by(Survived) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Survived, total)) + 
+  geom_col(fill = "#795549") + 
+  labs(x = "Survived", y = "Frequency") 
+
+```
+
+]
+]
+
+
+]
+.w-50[
+
+**What does the graphs for each categorical variable tell us?**
+
+* There were more crews than 1st to 3rd class passengers
+* There were far more males on ship; possibly because majority of crew members were male. You can further explore this by constructing two-way tables or graphs that consider both variables.
+* Most passengers were adults. 
+* More than two-thirds of passengers died. 
+
+]
+
+
+]
+
+]
+.panel[.panel-name[data]
+.h350.f4.scroll-sign[
+```{r titanic-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4.scroll-sign[.s500[
+```{r , ref.label=paste0("titanic-plot", 1:4), echo = TRUE, eval = FALSE}
+```
+]]
+]]
+
+.f5.footnote[
+British Board of Trade (1990), Report on the Loss of the ‘Titanic’ (S.S.). British Board of Trade Inquiry Report (reprint). Gloucester, UK: Allan Sutton Publishing
+]
+
+
+---
+
+
+class: nostripheader middle
+
+# Coloring bars
+
+
+```{r, fig.width = 10}
+g1 <- df9 %>% 
+  group_by(Class) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Class, total)) + 
+  geom_col() + 
+  labs(x = "", y = "Frequency") 
+
+g2 <- df9 %>% 
+  group_by(Class) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Class, total)) + 
+  geom_col(fill = "#006DAE") + 
+  guides(fill = FALSE) + 
+  labs(x = "", y = "Frequency") + 
+  scale_fill_discrete_qualitative()
+
+g3 <- df9 %>% 
+  group_by(Class) %>% 
+  summarise(total = sum(n)) %>% 
+  ggplot(aes(Class, total)) + 
+  geom_col(aes(fill = Class)) + 
+  guides(fill = FALSE) + 
+  labs(x = "", y = "Frequency") + 
+  scale_fill_discrete_qualitative()
+
+g1 + g2 + g3
+```
+
+--
+
+* Colour here doesn't add information as the x-axis already tells us about the categories, but colouring bars can make it more visually appealing. 
+* If you have too many categories colour won't work well to differentiate the categories. 
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[9] Opinion poll in Ireland Aug 2013
+
+```{r poll-data, include = FALSE}
+df9 <- tibble(party = c("Fine Gael", "Labour", "Fianna Fail",
+                         "Sinn Fein", "Indeps", "Green", "Undecided"),
+               nos = c(181, 51, 171, 119, 91, 4, 368)) 
+df9v2 <- df9 %>% filter(party != "Undecided")
+df9
+```
+
+.panelset[
+.panel[.panel-name[📊]
+
+.grid[
+.item[
+```{r poll-plot1, fig.width = 7}
+g9 <- df9 %>% 
+  ggplot(aes("", nos, fill = party)) + 
+  geom_col(color = "black") + 
+  labs(y = "", x = "") + 
+  coord_polar("y") +
+  theme(axis.line = element_blank(),
+        axis.line.y = element_blank(),
+        axis.text = element_blank(),
+        panel.grid.major = element_blank()) +
+  scale_fill_discrete_qualitative(name = "Party")
+g9
+
+```
+
+```{r poll-plot2, fig.width = 7}
+g9 %+% df9v2 + 
+  # below is needed to keep the same color scheme as before
+  scale_fill_manual(values = qualitative_hcl(7)[1:6])
+
+```
+
+]
+.item[
+
+* Pie chart is popular in mainstream media but are not generally recommended as people are generally poor at comparing angles.
+* 3D pie charts should definitely be avoided!
+* Here you can see that there are many people that are "Undecided" for which political party to support and failing to account for this paints a different picture. 
+
+]
+
+
+]
+
+]
+.panel[.panel-name[data]
+.f4[
+```{r poll-data, echo = TRUE, render = knitr::normal_print}
+```
+]]
+.panel[.panel-name[R]
+.f4[
+```{r , ref.label=paste0("poll-plot", 1:2), echo = TRUE, eval = FALSE}
+```
+]]]
+
+
+
+
+---
+
+class: middle
+
+# Piechart is a stacked barplot just with a transformed coordinate system
+
+--
+
+```{r barplot, echo = TRUE, fig.height = 2, fig.width = 3}
+df <- data.frame(var = c("A", "B", "C"), perc = c(40, 40, 20))
+g <- ggplot(df, aes("", perc, fill = var)) + 
+  geom_col()
+g
+```
+--
+
+```{r piechart, echo = TRUE, fig.height = 2, fig.width = 3}
+g + coord_polar("y")
+```
+
+---
+
+class: middle
+
+# Roseplot is a barplot just with a transformed coordinate system
+
+--
+
+```{r nonstacked-barplot, echo = TRUE, fig.height = 2, fig.width = 10}
+dummy <- data.frame(var = LETTERS[1:20], 
+                 n = round(rexp(20, 1/100)))
+g <- ggplot(dummy, aes(var, n)) + geom_col(fill = "pink", color = "black")
+g
+```
+--
+
+```{r roseplot, echo = TRUE, fig.height = 2, fig.width = 3}
+g + coord_polar("x") + theme_void()
+```
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+<ul class="fa-ul">
+{{content}}
+</ul>
+
+
+]
+]
+
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Again, be prepared to do multiple plots</li>
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Changing bins or bandwidth in histogram, violin or density plots can paint a different picture</li>
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Consider different representations of categorical variables (reordering meaningfully, lumping low frequencies together, plot or table, pie or barplot, missing categories)</li>
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

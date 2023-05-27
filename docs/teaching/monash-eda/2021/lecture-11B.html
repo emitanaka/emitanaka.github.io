@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.11/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-11B.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Using computational tools to determine whether what is seen in the data can be assumed to apply more broadly&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 11 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+&lt;style type="text/css"&gt;
+.gray80 {
+  color: #505050!important;
+  font-weight: 300;
+}
+.bg-gray80 {
+  background-color: #DCDCDC!important;
+}
+.font18 {
+  font-size: 18pt;
+}
+&lt;/style&gt;
+
+---
+
+class: transition 
+
+# Visual inference with the nullabor 📦
+
+
+---
+
+# `nullabor` + `ggplot2`
+
+* You can construct the null data "by hand" as you have done for Exercise 4 (d) in tutorial 9. 
+--
+
+* You will then need to create null plots and then randomly place the data plot to present the lineup. 
+--
+
+* You'll need to know which one is the data plot so you can tell if viewer's chose the data plot or not.
+--
+
+* The `nullabor` package makes it easy to create the data for the lineup and you can use `ggplot2` to construct the lineup.
+
+
+```r
+library(nullabor)
+library(tidyverse) # which includes ggplot2
+```
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 1/4]
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week11B/ex1-plot-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign[
+
+```r
+data(cochran.crd, package = "agridat")
+skimr::skim(cochran.crd)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values     
+## Name                       cochran.crd
+## Number of rows             32         
+## Number of columns          4          
+## _______________________               
+## Column type frequency:                
+##   factor                   1          
+##   numeric                  3          
+## ________________________              
+## Group variables            None       
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                
+## 1 trt                   0             1 FALSE          7 O: 8, F12: 4, F3: 4, F6: 4
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 inf                   0             1  15.7  8.22     4  9     16   19.5     32 ▇▃▇▃▃
+## 2 row                   0             1   2.5  1.14     1  1.75   2.5  3.25     4 ▇▇▁▇▇
+## 3 col                   0             1   4.5  2.33     1  2.75   4.5  6.25     8 ▇▃▇▃▇
+```
+
+]]
+.panel[.panel-name[R]
+
+```r
+cochran.crd %&gt;% 
+  ggplot(aes(factor(col), factor(row), fill = inf)) +
+  geom_tile(color = "black", size = 2) +
+  geom_text(aes(label = trt)) +
+  labs(x = "Column", y = "Row", fill = "Infection\npercent") +
+  scale_fill_continuous_sequential(palette = "Reds 3")
+```
+]
+
+]
+
+
+
+
+]
+.item[
+
+* Experiment was conducted to investigate the effect of sulfur on controlling scab disease in potatoes.
+* There were seven treatments in total: control plus spring and fall application of 300, 600 or 1200 lbs/acres of sulfur. 
+* Employs a completely randomised design with 8 replications for control and 4 replications for other treatments.
+
+]
+
+]
+
+.footnote[
+W.G. Cochran and G. Cox, 1957. Experimental Designs, 2nd ed. John Wiley, New York.
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 2/4]
+
+* We are testing `\(H_0: \mu_1 = \mu_2 = ... = \mu_7\)` vs. `\(H_1:\)` at least one mean is different to others.
+--
+
+* Here we don't have to many observation per treatment so we can use a dotplot.
+--
+
+* For the method to generate null, we consider permuting the treatment labels. 
+
+```r
+method &lt;- null_permute("trt")
+```
+--
+
+* Then we generate the null data, also embedding the actual data in a random position. .font_small[Make sure to `set.seed` to get the same random instance.]
+
+```r
+set.seed(1)
+line_df &lt;- lineup(method, true = cochran.crd, n = 10)
+```
+
+```
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 ua")
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 3/4]
+
+.f4[
+
+```r
+glimpse(line_df)
+```
+
+```
+## Rows: 320
+## Columns: 5
+## $ inf     &lt;int&gt; 9, 12, 18, 10, 24, 17, 30, 16, 10, 7, 4, 10, 21, 24, 29, 12, 9, 7, 18, 30, 18, 16, 16, 4, 9, 18, 17, 19, 32, 5, 26, 4, 9, 12, 18, 10, 24, 17, 30, 16, 10, 7, 4, 10, 21, 24, 29, 12, 9,…
+## $ trt     &lt;fct&gt; S3, F12, S3, F3, O, F3, F12, O, S12, F6, O, F6, S3, F3, O, F12, O, O, S6, S12, S6, F6, S3, F12, S6, F6, S12, S12, O, S6, O, F3, S6, S12, S3, F12, O, O, O, O, F6, F3, S6, F6, F12, S12…
+## $ row     &lt;int&gt; 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,…
+## $ col     &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5,…
+## $ .sample &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,…
+```
+]
+
+* The `.sample` variable has information of which sample it is. 
+* One of the `.sample` number belongs to the real data. 
+
+.f4[
+
+```r
+line_df %&gt;% 
+  ggplot(aes(trt, inf)) +
+  geom_point(size = 3, alpha = 1/2) + 
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(), # remove data context
+        axis.title = element_blank())
+```
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[2] Potato scab infection .font_small[Part 4/4]
+
+.grid[
+.item[
+&lt;img src="images/week11B/ex1-lineplot-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+{{content}}
+]
+]
+
+--
+
+
+```r
+decrypt("bhMq KJPJ 62 sSQ6P6S2 ua")
+```
+
+```
+## [1] "True data in position  5"
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 1/4]
+
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week11B/ex2-plot-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign[
+
+```r
+skimr::skim(trees)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       trees 
+## Number of rows             31    
+## Number of columns          3     
+## _______________________          
+## Column type frequency:           
+##   numeric                  3     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 Girth                 0             1  13.2  3.14   8.3  11.0  12.9  15.2  20.6 ▃▇▃▅▁
+## 2 Height                0             1  76    6.37  63    72    76    80    87   ▃▃▆▇▃
+## 3 Volume                0             1  30.2 16.4   10.2  19.4  24.2  37.3  77   ▇▅▁▂▁
+```
+
+]]
+.panel[.panel-name[R]
+
+```r
+g1 &lt;- trees %&gt;% 
+  ggplot(aes(Girth, Volume)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+
+g2 &lt;- trees %&gt;% 
+  ggplot(aes(Height, Volume)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10()
+
+g1 + g2
+```
+]
+
+]
+
+
+
+
+]
+.item[
+
+* Data measures the diameter,  height and volume of timber in 31 felled black cherry trees.
+* We fit the model
+
+
+```r
+fit &lt;- lm(log(Volume) ~ log(Girth) + log(Height),
+          data = trees)
+
+fit_df &lt;- trees %&gt;% 
+  # below are needed for lineup
+  mutate(.resid = residuals(fit),
+         .fitted = fitted(fit))
+```
+
+
+]
+
+]
+
+.footnote[
+Atkinson, A. C. (1985) Plots, Transformations and Regression. Oxford University Press.
+
+
+]
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 2/4]
+
+
+* We are testing `\(H_0:\)` errors are `\(NID(0, \sigma^2)\)` vs. `\(H_1:\)` errors are not `\(NID(0, \sigma^2)\)`.
+--
+
+* We will use the residual plot as the visual statistic.
+--
+
+* For the method to generate null, we generate residuals from random draws from `\(N(0, \hat{\sigma}^2)\)`.
+
+```r
+method &lt;- null_lm(log(Volume) ~ log(Girth) + log(Height),
+                  method = "pboot")
+```
+--
+
+* Then we generate the lineup data.
+
+```r
+set.seed(2020)
+line_df &lt;- lineup(method, true = fit_df, n = 10)
+```
+
+```
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 uT")
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 3/4]
+
+.grid[
+.item[
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week11B/ex2-lineplot-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[R]
+
+```r
+line_df %&gt;% 
+  ggplot(aes(.fitted, .resid)) +
+  geom_point(size = 1.2) + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(), # remove data context
+        axis.title = element_blank())
+```
+]]
+]
+]
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[3] Black Cherry Trees .font_small[Part 4/4]
+
+
+* We can have:
+   * `method = "pboot"`,
+   * `method = "boot"` or 
+   * `method = "rotate"`   
+for different (and valid) methods to generate null data when fitting a linear model.
+
+
+```r
+method &lt;- null_lm(log(Volume) ~ log(Girth) + log(Height),
+*                 method = "boot")
+```
+--
+
+* We can also consider using a different visual statisitc, e.g. QQ-plot to assess normality.
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[4] Temperatures of stars .font_small[Part 1/2]
+
+* The data consists of the surface temperature in Kelvin degrees of 96 stars.
+--
+
+* We want to check if the surface temperature has an exponential distribution. 
+--
+
+* We use histogram with 30 bins as our visual test statistic.
+--
+
+* For the null data, we will generate from an exponential distribution.
+
+
+```r
+line_df &lt;- lineup(null_dist("temp", "exp", list(rate = 1/mean(dslabs::stars$temp))),
+                  true = dslabs::stars,
+                  n = 10)
+```
+
+```
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 ug")
+```
+* Note: the rate in an exponential distribution can be estimated from the inverse of the sample mean.
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[4] Temperatures of stars .font_small[Part 2/2]
+
+.grid[
+.item[
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week11B/stars-lineup-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[R]
+
+```r
+ggplot(line_df, aes(temp)) +
+  geom_histogram(color = "white") +
+  facet_wrap(~.sample, nrow = 2) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+```
+]]
+]]
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[5] Foreign exchange rate .font_small[Part 1/2]
+
+* The data contains the daily exchange rate of 1 AUD to 1 USD between 9th Jan 2018 to 21st Feb 2018.
+* Does the rate follow an ARIMA model?
+
+
+
+```r
+data(aud, package = "nullabor")
+line_df &lt;- lineup(null_ts("rate", forecast::auto.arima), true = aud, n = 10)
+```
+
+```
+## Registered S3 method overwritten by 'quantmod':
+##   method            from
+##   as.zoo.data.frame zoo
+```
+
+```
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 um")
+```
+
+
+```r
+ggplot(line_df, aes(date, rate)) +
+  geom_line() + 
+  facet_wrap(~ .sample, scales = "free_y", nrow = 2) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+```
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[5] Foreign exchange rate .font_small[Part 2/2]
+
+.grid[
+.item[
+&lt;img src="images/week11B/ts-plot-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+
+# Resources and Acknowledgement
+
+.font18[
+- Buja, Andreas, Dianne Cook, Heike Hofmann, Michael Lawrence, Eun-Kyung Lee, Deborah F. Swayne, and Hadley Wickham. 2009. “Statistical Inference for Exploratory Data Analysis and Model Diagnostics.” Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 367 (1906): 4361–83.
+- Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” IEEE Transactions on Visualization and Computer Graphics 16 (6): 973–79.
+- Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+- Majumder, M., Heiki Hofmann, and Dianne Cook. 2013. “Validation of Visual Statistical Inference, Applied to Linear Models.” Journal of the American Statistical Association 108 (503): 942–56.
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+]
+
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 11 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

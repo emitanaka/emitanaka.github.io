@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.11/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-12B.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Extending beyond the data, what can and cannot be inferred more generally, given the data collection&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 12 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+---
+
+class: transition
+
+# Sample size calculation 
+
+---
+
+# How many people should you survey?
+
+.flex[
+.w-60[
+
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week12B/plot-1.png" width="648" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200) %&gt;% 
+  mutate(y = rgamma(n(), shape = 3, rate = 4))
+```
+
+]
+.panel[.panel-name[R]
+
+```r
+set.seed(1)
+g &lt;- lineup(null_dist("y", dist = "exp", params = list(rate = 1/mean(df$y))), true = df, n = 20, pos = 15) %&gt;% 
+  ggplot(aes(y)) +
+  geom_histogram(color = "white") + 
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt")) 
+g
+```
+
+]
+]
+]
+.w-40[
+
+* Here we are testing `\(H_0: Y \sim exp(\lambda)\)`.
+{{content}}
+
+]]
+
+--
+* Suppose we only have one person to assess the lineup.
+{{content}}
+
+--
+* If there is only a single response, then there are only two scenarios possible:
+   * **Scenario 1**: the person detects the data plot
+   * **Scenario 2**: the person does *not* detect the data plot
+{{content}}
+
+--
+* The visual inference p-value under:
+   * **Scenario 1** is 0.05
+   * **Scenario 2** is 1
+{{content}}
+
+--
+* Neither scenario yield `\(p\)`-values &lt; 0.05!
+
+---
+
+# Power of a binary hypothesis test
+
+.info-box.w-70[
+The statistical **power** of a binary hypothesis test is the probability that the test correctly rejects the null hypothesis `\((H_0)\)` when a _specific_ alternative hypothesis `\((H_1)\)` is true.
+
+]
+.flex[
+.w-50[
+* Since `\(m \geq 2\)`, i.e. under `\(H_0\)`, `\(0 &lt; p = 1/m \leq 0.5\)`. 
+* Recall visual inference `\(p\)`-value is `\(P(X \geq x) = \sum_{k = x}^n {n\choose k} (1/m)^k(1 - 1/m)^{n-k}\)`.
+* So for `\(m = 20\)` and `\(n = 10\)`,
+
+
+&lt;img src="images/week12B/unnamed-chunk-3-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-50[
+{{content}}
+]
+
+]
+
+--
+
+* So if we have `\(X &gt; 2\)`, then `\(p\)`-value &lt; 0.05. 
+{{content}}
+
+--
+* Suppose then the true detection probability is 0.9, therefore `\(H_1\)` is true.
+{{content}}
+
+--
+* Under `\(p = 0.9\)`, 
+`$$P(X &gt; 2) = \sum_{k = 3}^{10} 0.9^k0.1^{(10 - k)} = 0.9999996$$`
+{{content}}
+
+--
+* Therefore the power of the test is 0.9999996 if `\(p = 0.9\)`. 
+
+
+---
+
+# Power analysis
+
+* Let's suppose `\(H_1\)` is true and that specifically `\(p = 0.9\)`.
+* Let's fix `\(m = 20\)` and reject `\(H_0\)` if `\(p\)`-value `\(&lt; \alpha = 0.05\)`. 
+&lt;img src="images/week12B/power-analysis-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Estimating the detection probability `\(p\)`
+
+.w-60[
+* For a fixed power `\((1-\beta)\)`, the minimum sample size `\(n\)` we need depends on the detection probability `\(p\)`
+{{content}}
+]
+--
+
+* Generally if `\(p\)` is larger, less `\(n\)` is sufficient to get equivalent or larger power.
+{{content}}
+--
+
+* But we don't know what the true `\(p\)` is! (If we did, we don't need to test for it.)
+{{content}}
+--
+
+* Either you will need to make a guess from past experience or run a pilot test.
+{{content}}
+--
+
+* If you find in the pilot test, `\(x_p\)` out of `\(n_p\)` participants detected the data plot then an estimate of `\(\hat{p} = x_p / n_p\)`. 
+
+---
+
+# Sample size calculation
+
+.flex[
+.w-45[
+* The sample size calculation depends on:
+   * the selected false positive rate `\((\alpha)\)`
+   * the detection probability `\(p\)`
+   * the number of plots in the lineup `\(m\)`
+   * the minimum power `\((1 - \beta)\)` desired
+   * the expected dropout rate `\(d\)` (i.e. proportion of samples that cannot be used due to incomplete results or other quality issues)
+   
+{{content}}
+]
+.w-55[
+.f4[
+
+```r
+p &lt;- 0.1
+m &lt;- 20
+d &lt;- 0.95
+power_df &lt;- tibble(n = 2:200) %&gt;% 
+  mutate(power = map_dbl(n, function(n) {
+      x &lt;- 1:n
+      pval &lt;- map_dbl(x, ~1 - pbinom(.x - 1, n, 1/m))
+      xmin &lt;- x[which.max(pval &lt; alpha)]
+      1 - pbinom(xmin - 1, n, p)
+    })) 
+
+power_df %&gt;% 
+  filter(power &gt; 0.8) %&gt;% 
+  pull(n) %&gt;% 
+  min() %&gt;% 
+  magrittr::divide_by(d) %&gt;% 
+  ceiling()
+```
+
+```
+## [1] 178
+```
+
+]
+]]
+
+--
+
+   
+* Say if `\(\alpha = 0.05\)`, `\(p = 0.1\)`, `\(m = 20\)`, `\(d=0.95\)` and at least `\(80\%\)` power is desired then at least `\(178\)` samples is required. 
+   
+---
+
+
+class: transition
+
+# Simulating from the null distribution
+
+---
+
+# Recap: Simulating data from parametric models
+
+* Recall in lecture 8, we studied how to simulate data from parametric models.
+
+.f4[
+
+```r
+set.seed(1)
+df1 &lt;- tibble(id = 1:200) %&gt;% 
+  mutate(x = runif(n(), 0, 5),
+         y = 2 * x + 1 + rnorm(n()))
+
+ggplot(df1, aes(x, y)) + geom_point()
+```
+
+&lt;img src="images/week12B/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+
+
+* We also briefly discussed how to simulate data from the null distribution in lecture 11. 
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] Testing for normality
+
+.flex[
+.w-60[
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week12B/plot2-1.png" width="648" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+
+```r
+set.seed(1)
+df &lt;- tibble(id = 1:200) %&gt;% 
+  mutate(y = runif(n(), -4, 4))
+```
+
+]
+.panel[.panel-name[R]
+
+```r
+set.seed(1)
+ldf &lt;- lineup(null_dist("y", dist = "norm", params = list(mean = mean(df$y), sd = sd(df$y))), 
+                      true = df, n = 20, pos = 4)
+ggplot(ldf, aes(y)) +
+  geom_histogram(color = "white") + 
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt")) 
+```
+
+]
+]
+]
+.w-40[
+
+* We are testing `\(H_0: Y \sim N(\mu, \sigma^2)\)`.
+{{content}}
+
+]]
+
+--
+
+* An estimate of `\(\hat{\mu} = \bar{Y}\)` is estimated the sample mean
+* An estimate of `\(\hat{\sigma} = sd(Y)\)` is estimated the sample standard deviation
+{{content}}
+--
+
+* A null data here is simply simulated from `\(N(\hat{\mu}, \hat{\sigma})\)`.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2] Testing for a distribution 
+
+
+.flex[
+.w-60[
+&lt;img src="images/week12B/qqplot-1.png" width="648" style="display: block; margin: auto;" /&gt;
+]
+.w-40[
+* It is easier to compare a distribution using Q-Q plot
+{{content}}
+]]
+
+--
+
+* Plot 4 is in indeed the data plot.
+* In fact the data is generated from a uniform distribution.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Checking if there is a pattern in residual plot
+
+
+.flex[
+.w-50[
+
+&lt;img src="images/week12B/resplot-1.png" width="576" style="display: block; margin: auto;" /&gt;
+]
+.w-50[
+
+* In the left lineup, we are testing the data plot to see if there is any pattern.
+* When the null distribution is imprecise, for example in search of a pattern in residual plot, you need to choose a null generation method that mimics an appropriate distribution under the null.
+
+]]
+
+---
+
+# Selecting an appropriate null generation method
+
+
+.flex[
+.w-50[
+&lt;img src="images/week12B/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50[
+&lt;img src="images/week12B/resplot2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+]]
+
+---
+
+# Mis-specifying the null distribution
+
+.flex[
+.w-50[
+&lt;img src="images/week12B/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
+]
+.w-50[
+
+* If the null distribution is mis-specified, this can make the detection probability larger.
+* This however can result in an incorrect conclusion.
+
+]]
+
+---
+
+class: transition
+
+.f2[While today's focus was on data collection from visual inference surveys, concepts such as data quality checks and sufficient sample size to draw inference is applicable to other data collection.]
+
+--
+
+.f2[There's always more to learn but .f1[**stay curious**] and make sure you .f1[**plot your data**] before rushing off to fitting some models!]
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 12 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

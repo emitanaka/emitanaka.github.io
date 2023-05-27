@@ -2,6 +2,27 @@
 title: "Teaching"
 page-layout: article
 title-block-banner: true
+listing: 
+  - id: monash-wcd
+    template: listing.ejs
+    sort: "date"
+    contents:
+      - "monash-wcd/*.qmd"
+  - id: monash-cwd
+    template: listing.ejs
+    sort: "date"
+    contents:
+      - "monash-cwd/*.qmd"
+  - id: monash-eda
+    template: listing.ejs
+    sort: "date"
+    contents:
+      - "monash-eda/*.qmd"
+  - id: monash-iml
+    template: listing.ejs
+    sort: "date"
+    contents:
+      - "monash-iml/*.qmd"
 ---
 
 ```{r setup, include = FALSE}
@@ -17,6 +38,10 @@ div.callout-important.callout {
   background-color: #f5e1eb;
 }
 
+h3 {
+  color: black!important;
+}
+
 .callout-caption-container {
   color: #ad0059;
   padding-bottom: 10px;
@@ -24,24 +49,14 @@ div.callout-important.callout {
 ```
 
 
-::: {.callout-important icon=false appearance="simple"}
-
-## <i class="fas fa-poll"></i> Do you use my teaching materials?
-
-If yes, it would be awesome if you could fill out [this very short survey](https://docs.google.com/forms/d/e/1FAIpQLSdVnpDphyWnBeMw21Rs8vMySi5RGYN7kQh_VHU6rT83t8CDbA/viewform?usp=sf_link) for me to get statistics of its use!
-
-
-:::
 
 
 ## Teaching
 
-At Monash University, I teach or develop:
-
-* [**ETC3250/5250 Introduction to Machine Learning**](https://emitanaka.org/iml/) (100%)
 
 In the past I have taught or developed:
 
+* [**ETC3250/5250 Introduction to Machine Learning**](https://emitanaka.org/iml/) (100%) at Monash University,
 * [**ETC5521 Exploratory Data Analysis**](https://eda.numbat.space/) (50%) at Monash University,
 * [**ETC5512 Wild Caught Data**](https://wcd.numbat.space/) (25%) at Monash University,
 * [**ETC5523 Communicating with Data**](https://cwd.numbat.space/) (100%) at Monash University,
@@ -55,6 +70,38 @@ In the past I have taught or developed:
 
 and tutored various mathematics and statistics courses.
 
+
+## Materials
+
+::: {.callout-important icon=false appearance="simple"}
+
+## <i class="fas fa-poll"></i> Do you use my teaching materials?
+
+If yes, it would be awesome if you could fill out [this very short survey](https://docs.google.com/forms/d/e/1FAIpQLSdVnpDphyWnBeMw21Rs8vMySi5RGYN7kQh_VHU6rT83t8CDbA/viewform?usp=sf_link) for me to get statistics of its use!
+
+
+:::
+
+
+### Wild-Caught Data
+
+:::{#monash-wcd}
+:::
+
+### Communicating with Data
+
+:::{#monash-cwd}
+:::
+
+### Exploratory Data Analysis
+
+:::{#monash-eda}
+:::
+
+### Introduction to Machine Learning
+
+:::{#monash-iml}
+:::
 
 ## Workshop
 

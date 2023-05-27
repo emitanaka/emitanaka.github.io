@@ -1,0 +1,53 @@
+.blockquote {
+  display: inline-block;
+  margin: 10px auto;
+  font-family:Open Sans;
+  font-style:italic;
+  color: #555555;
+  padding: 1.2em 30px 1.2em 100px;
+  border-left: 8px solid #006DAE ;
+  line-height:1.6;
+  position: relative;
+  background:#EDEDED;
+}
+
+.blockquote::before{
+  font-family: Arial;
+  content: "\201C";
+  color: #006DAE;
+  font-size: 4em;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  margin: auto;
+  width: 1.1em;
+  height: 1.1em;
+  text-align: center;
+  line-height: 1em;
+}
+
+
+.reveal table td {
+
+ border-bottom-width: 0;
+}
+
+
+.reveal .center {
+  text-align: center;
+}
+
+.vcenter {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

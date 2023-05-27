@@ -1,0 +1,500 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Extending beyond the data, what can and cannot be inferred more generally, given the data collection"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 12 - Session 2"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+      - "assets/datatables.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+library(broom)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week12B/",
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  #out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week12/"
+)
+theme_set(theme_bw(base_size = 18) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 24),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+---
+
+class: transition
+
+# Sample size calculation 
+
+---
+
+# How many people should you survey?
+
+.flex[
+.w-60[
+```{r data}
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+  mutate(y = rgamma(n(), shape = 3, rate = 4))
+```
+.panelset[
+.panel[.panel-name[📊]
+
+```{r plot, fig.height = 7, fig.width = 9}
+set.seed(1)
+g <- lineup(null_dist("y", dist = "exp", params = list(rate = 1/mean(df$y))), true = df, n = 20, pos = 15) %>% 
+  ggplot(aes(y)) +
+  geom_histogram(color = "white") + 
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt")) 
+g
+```
+]
+.panel[.panel-name[data]
+```{r data, eval = FALSE, echo = TRUE}
+```
+
+]
+.panel[.panel-name[R]
+```{r plot, eval = FALSE, echo = TRUE}
+```
+
+]
+]
+]
+.w-40[
+
+* Here we are testing $H_0: Y \sim exp(\lambda)$.
+{{content}}
+
+]]
+
+--
+* Suppose we only have one person to assess the lineup.
+{{content}}
+
+--
+* If there is only a single response, then there are only two scenarios possible:
+   * **Scenario 1**: the person detects the data plot
+   * **Scenario 2**: the person does *not* detect the data plot
+{{content}}
+
+--
+* The visual inference p-value under:
+   * **Scenario 1** is `r 1 - pbinom(0, 1, 1/20)`
+   * **Scenario 2** is `r 1 - pbinom(-1, 1, 1/20)`
+{{content}}
+
+--
+* Neither scenario yield $p$-values < 0.05!
+
+---
+
+# Power of a binary hypothesis test
+
+.info-box.w-70[
+The statistical **power** of a binary hypothesis test is the probability that the test correctly rejects the null hypothesis $(H_0)$ when a _specific_ alternative hypothesis $(H_1)$ is true.
+
+]
+.flex[
+.w-50[
+* Since $m \geq 2$, i.e. under $H_0$, $0 < p = 1/m \leq 0.5$. 
+* Recall visual inference $p$-value is $P(X \geq x) = \sum_{k = x}^n {n\choose k} (1/m)^k(1 - 1/m)^{n-k}$.
+* So for $m = 20$ and $n = 10$,
+
+
+```{r, fig.height = 3}
+n <- 10
+m <- 20
+
+tibble(x = 0:n) %>% 
+  mutate(pval = map_dbl(0:n, ~1 - pbinom(.x - 1, n, 1/m))) %>% 
+  ggplot(aes(x, pval)) +
+  geom_hline(yintercept = 0.05, linetype = "dotted") + 
+  geom_line() + 
+  scale_y_log10() + 
+  scale_x_continuous(breaks = 0:n) + 
+  labs(y = "P-value")
+```
+]
+.w-50[
+{{content}}
+]
+
+]
+
+--
+
+* So if we have $X > 2$, then $p$-value < 0.05. 
+{{content}}
+
+--
+* Suppose then the true detection probability is 0.9, therefore $H_1$ is true.
+{{content}}
+
+--
+* Under $p = 0.9$, 
+$$P(X > 2) = \sum_{k = 3}^{10} 0.9^k0.1^{(10 - k)} = `r 1 - pbinom(2, 10, 0.9)`$$
+{{content}}
+
+--
+* Therefore the power of the test is `r 1 - pbinom(2, 10, 0.9)` if $p = 0.9$. 
+
+
+---
+
+# Power analysis
+
+* Let's suppose $H_1$ is true and that specifically $p = 0.9$.
+* Let's fix $m = 20$ and reject $H_0$ if $p$-value $< \alpha = 0.05$. 
+```{r power-analysis, fig.width = 12}
+m <- 20
+alpha <- 0.05
+power_df <- map_dfr(seq(0.1, 0.9, 0.05), function(pa) {
+  tibble(n = 2:20) %>% 
+  mutate(power = map_dbl(n, function(n) {
+  x <- 0:n
+  pval <- map_dbl(x, ~1 - pbinom(.x - 1, n, 1/m))
+  xmin <- x[which.max(pval < alpha)]
+  1 - pbinom(xmin - 1, n, pa)
+})) %>% 
+    mutate(pa = pa)
+}) 
+
+power_df %>% 
+  ggplot(aes(n, power, color = factor(pa))) + 
+  geom_line() + 
+  labs(y = "Power of the test") + 
+  scale_x_continuous(breaks = 2:20) +
+  labs(color = "p")
+
+
+
+```
+
+---
+
+# Estimating the detection probability $p$
+
+.w-60[
+* For a fixed power $(1-\beta)$, the minimum sample size $n$ we need depends on the detection probability $p$
+{{content}}
+]
+--
+
+* Generally if $p$ is larger, less $n$ is sufficient to get equivalent or larger power.
+{{content}}
+--
+
+* But we don't know what the true $p$ is! (If we did, we don't need to test for it.)
+{{content}}
+--
+
+* Either you will need to make a guess from past experience or run a pilot test.
+{{content}}
+--
+
+* If you find in the pilot test, $x_p$ out of $n_p$ participants detected the data plot then an estimate of $\hat{p} = x_p / n_p$. 
+
+---
+
+# Sample size calculation
+
+.flex[
+.w-45[
+* The sample size calculation depends on:
+   * the selected false positive rate $(\alpha)$
+   * the detection probability $p$
+   * the number of plots in the lineup $m$
+   * the minimum power $(1 - \beta)$ desired
+   * the expected dropout rate $d$ (i.e. proportion of samples that cannot be used due to incomplete results or other quality issues)
+   
+{{content}}
+]
+.w-55[
+.f4[
+```{r, echo = TRUE}
+p <- 0.1
+m <- 20
+d <- 0.95
+power_df <- tibble(n = 2:200) %>% 
+  mutate(power = map_dbl(n, function(n) {
+      x <- 1:n
+      pval <- map_dbl(x, ~1 - pbinom(.x - 1, n, 1/m))
+      xmin <- x[which.max(pval < alpha)]
+      1 - pbinom(xmin - 1, n, p)
+    })) 
+
+power_df %>% 
+  filter(power > 0.8) %>% 
+  pull(n) %>% 
+  min() %>% 
+  magrittr::divide_by(d) %>% 
+  ceiling()
+```
+
+]
+]]
+
+--
+
+   
+* Say if $\alpha = 0.05$, $p = 0.1$, $m = 20$, $d=0.95$ and at least $80\%$ power is desired then at least $178$ samples is required. 
+   
+---
+
+
+class: transition
+
+# Simulating from the null distribution
+
+---
+
+# Recap: Simulating data from parametric models
+
+* Recall in lecture 8, we studied how to simulate data from parametric models.
+
+.f4[
+```{r, echo = TRUE, fig.height = 4}
+set.seed(1)
+df1 <- tibble(id = 1:200) %>% 
+  mutate(x = runif(n(), 0, 5),
+         y = 2 * x + 1 + rnorm(n()))
+
+ggplot(df1, aes(x, y)) + geom_point()
+```
+]
+
+
+* We also briefly discussed how to simulate data from the null distribution in lecture 11. 
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] Testing for normality
+
+.flex[
+.w-60[
+```{r data2}
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+  mutate(y = runif(n(), -4, 4))
+```
+.panelset[
+.panel[.panel-name[📊]
+```{r plot2, cache = FALSE, fig.height = 7, fig.width = 9}
+set.seed(1)
+ldf <- lineup(null_dist("y", dist = "norm", params = list(mean = mean(df$y), sd = sd(df$y))), 
+                      true = df, n = 20, pos = 4)
+ggplot(ldf, aes(y)) +
+  geom_histogram(color = "white") + 
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt")) 
+```
+]
+.panel[.panel-name[data]
+```{r data2, eval = FALSE, echo = TRUE}
+```
+
+]
+.panel[.panel-name[R]
+```{r plot2, eval = FALSE, echo = TRUE}
+```
+
+]
+]
+]
+.w-40[
+
+* We are testing $H_0: Y \sim N(\mu, \sigma^2)$.
+{{content}}
+
+]]
+
+--
+
+* An estimate of $\hat{\mu} = \bar{Y}$ is estimated the sample mean
+* An estimate of $\hat{\sigma} = sd(Y)$ is estimated the sample standard deviation
+{{content}}
+--
+
+* A null data here is simply simulated from $N(\hat{\mu}, \hat{\sigma})$.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[2] Testing for a distribution 
+
+
+.flex[
+.w-60[
+```{r qqplot, fig.height = 7, fig.width = 9}
+ldf %>% 
+  ggplot(aes(sample = y)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt")) 
+```
+]
+.w-40[
+* It is easier to compare a distribution using Q-Q plot
+{{content}}
+]]
+
+--
+
+* Plot 4 is in indeed the data plot.
+* In fact the data is generated from a uniform distribution.
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[3] Checking if there is a pattern in residual plot
+
+
+.flex[
+.w-50[
+```{r data3}
+set.seed(1)
+df3 <- tibble(id = 1:200) %>% 
+  mutate(x = rnorm(n(), 5, 10),
+         y = 2 * x +  2* sin(x) + 1 + rnorm(n())) %>% 
+  lm(y ~ x, data = .) %>% 
+  augment()
+```
+```{r resplot, cache = FALSE, fig.height = 7, fig.width = 8}
+g1 <- lineup(null_lm(y ~ x, method = "pboot"), 
+       true = df3, pos = 3) %>% 
+  ggplot(aes(x, .resid)) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  geom_point() +
+  facet_wrap(~.sample) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "pt"))
+g1
+```
+]
+.w-50[
+
+* In the left lineup, we are testing the data plot to see if there is any pattern.
+* When the null distribution is imprecise, for example in search of a pattern in residual plot, you need to choose a null generation method that mimics an appropriate distribution under the null.
+
+]]
+
+---
+
+# Selecting an appropriate null generation method
+
+
+.flex[
+.w-50[
+```{r, fig.height = 7, fig.width = 8}
+g1 + labs(title = "Parametric bootstrap")
+```
+
+]
+.w-50[
+```{r resplot2, cache = FALSE, fig.height = 7, fig.width = 8}
+g1 %+% lineup(null_lm(y ~ x, method = "boot"), 
+       true = df3, pos = 3) +
+  labs(title = "(Non-parametric) Bootstrap")
+```
+]]
+
+---
+
+# Mis-specifying the null distribution
+
+.flex[
+.w-50[
+```{r, fig.height = 7, fig.width = 8}
+g1 %+% lineup(null_dist(".resid", "uniform", params = list(min = -1, max = 1)), true = df3, pos = 5) + 
+  labs(title = "Null distribution is set to a uniform distribution")
+```
+]
+.w-50[
+
+* If the null distribution is mis-specified, this can make the detection probability larger.
+* This however can result in an incorrect conclusion.
+
+]]
+
+---
+
+class: transition
+
+.f2[While today's focus was on data collection from visual inference surveys, concepts such as data quality checks and sufficient sample size to draw inference is applicable to other data collection.]
+
+--
+
+.f2[There's always more to learn but .f1[**stay curious**] and make sure you .f1[**plot your data**] before rushing off to fitting some models!]
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

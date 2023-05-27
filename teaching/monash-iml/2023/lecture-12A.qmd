@@ -1,0 +1,2944 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Neural network II"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 12"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 12"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Neural network II*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+theme_set(theme_bw(base_size = 18))
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+# Acknowledgement 
+
+This lecture benefited from the lecture notes by **Dr. Ruben Loaiza-Maya**.
+
+
+```{css, echo = FALSE}
+nav > ul > li:nth-child(4) > ul > li:nth-child(2), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(3), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(4), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(5), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(6), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(7), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(8), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(9), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(10), 
+nav > ul > li:nth-child(4) > ul > li:nth-child(11) {
+  display: none!important;
+}
+```
+
+
+# Wide and deep neural networks {.mcenter background-color="#006DAE"}
+
+
+## Neural network layers
+
+::: flex
+::: {.w-55}
+
+- The neural network we saw last week had 3 layers:
+    - [**Input layer**]{.monash-blue} (2 nodes)
+    - Middle or [**hidden layer**]{.monash-blue} (3 nodes) 
+    - [**Output layer** ]{.monash-blue} (3 nodes)
+
+::: fragment
+- The number of nodes in the input and output layer are constrained by the input data and desired output (regression or classification).
+:::
+
+:::
+::: {.w-45 .pl3}
+
+```{r vis-AN}
+#| echo: false
+library(DiagrammeR)
+grViz("
+digraph gr1 {
+  fontname = 'helvetica'
+  fontsize = 20
+  rankdir=LR
+  splines=false
+  node [shape = circle, width=1.8,height=1.8,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18]
+  edge [fontname='helvetica']
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='Income']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    label='Hidden layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='ReLU', fillcolor='#027EB6', style='filled',fontcolor=white]; 
+    B2 [label='ReLU', fillcolor='#EE0220', style='filled',fontcolor=white]; 
+    B3 [label='ReLU', fillcolor='#008A25', style='filled',fontcolor=white]; 
+  }
+
+  subgraph cluster2 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    C1 [label = 'Softmax\n(0 = cheap)'];
+    C2 [label = 'Softmax\n(1 = average)'];
+    C3 [label = 'Softmax\n(2 = expensive)'];
+  }
+
+  A1->B1 [ fontcolor='#027EB6']
+  A2->B1 [ fontcolor='#027EB6']
+  A1->B2 [ fontcolor='#EE0220']
+  A2->B2 [ fontcolor='#EE0220']
+  A1->B3 [ fontcolor='#008A25']
+  A2->B3 [ fontcolor='#008A25']
+  B1->C1 [color='#027EB6']
+  B1->C2 [color='#027EB6']
+  B1->C3 [color='#027EB6']
+  B2->C1 [color='#EE0220']
+  B2->C2 [color='#EE0220']
+  B2->C3 [color='#EE0220']
+  B3->C1 [color='#008A25']
+  B3->C2 [color='#008A25']
+  B3->C3 [color='#008A25']
+  A3->B3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+:::
+
+
+    
+    
+
+    
+    
+## Wide neural network    
+    
+
+::: flex
+::: {.w-60}
+
+::: incremental
+
+- We refer to neural network with large number of neurons (nodes) in the hidden layer as a **wide neural network**. 
+- The number of parameters in the neural network model generally increases exponentially as the number of neurons increase.
+- Wide neural networks are however harder to calibrate as the number of neurons increase. 
+
+:::
+
+:::
+::: {.w-40 .pl3}
+
+```{r vis-AN2}
+#| echo: false
+grViz("
+digraph gr2 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.8,height=1.8,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18]
+  edge [fontname='helvetica']
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    A4 [style=invisible];
+    A5 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    label='Hidden layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='ReLU']; 
+    B2 [label='ReLU']; 
+    B3 [label='ReLU']; 
+    B4 [label='ReLU']; 
+    B5 [label='ReLU']; 
+
+  }
+
+  subgraph cluster2 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    C1 [label = 'Softmax'];
+    C2 [label = 'Softmax'];
+    C3 [label = 'Softmax'];
+    C4 [style=invisible];
+    C5 [style=invisible];
+  }
+
+  A1->B1
+  A2->B1
+  A1->B2
+  A2->B2
+  A1->B3
+  A2->B3 
+  A1->B4
+  A2->B4 
+  A1->B5
+  A2->B5 
+
+  B1->C1 
+  B2->C1 
+  B3->C1 
+  B4->C1 
+  B5->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B4->C2 
+  B5->C2 
+  B1->C3 
+  B2->C3 
+  B3->C3 
+  B4->C3 
+  B5->C3 
+
+  A3->B3 [style=invisible,arrowhead=none]
+  B3->C3 [style=invisible,arrowhead=none]
+  A4->B4 [style=invisible,arrowhead=none]
+  B4->C4 [style=invisible,arrowhead=none]
+  A5->B5 [style=invisible,arrowhead=none]
+  B5->C5 [style=invisible,arrowhead=none]
+
+}
+", width = 500, height = 600)
+```
+
+::: {.fragment .f3}
+
+Here, the addition of 2 neurons increases the number of parameters by 10.
+
+:::
+
+:::
+:::
+
+
+
+## Deep neural network
+
+::: flex
+::: {.w-50}
+
+::: incremental
+
+- Deep neural networks, also called **feed forward neural networks**, add more layers.
+- The number of parameters also can increase exponentially.
+- But it can achieve flexibility with _less neuron_ and it can be _faster to calibrate_. 
+
+:::
+
+:::
+::: {.w-50 .pl3}
+
+```{r vis-AN3}
+#| echo: false
+grViz("
+digraph gr3 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18]
+  edge [fontname='helvetica']
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    nodeAI1 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    label='Hidden layer 1';
+    style=filled;
+    color=lightgrey;
+    B1 [label='ReLU']; 
+    B2 [label='ReLU']; 
+    B3 [label='ReLU']; 
+  }
+
+  subgraph cluster2 {
+    label='Hidden layer 2';
+    style=filled;
+    color=lightgrey;
+    nodeCI0 [style=invisible,height=0.505,width=0.505];
+    C1 [label = 'Tanh'];
+    C2 [label = 'Tanh'];
+    nodeCI1 [style=invisible,height=0.505,width=0.505];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1 [label = 'Softmax'];
+    D2 [label = 'Softmax'];
+    D3 [label = 'Softmax'];
+  }
+
+  A1->B1
+  A2->B1
+  A1->B2
+  A2->B2
+  A1->B3
+  A2->B3 
+
+  B1->C1 
+  B2->C1 
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1
+  C2->D2
+  C2->D3
+
+}
+", width = 500)
+```
+
+:::
+:::
+
+
+# Feed forward neural networks {background-color="#006DAE" .mcenter}
+
+## Mathematical notation 
+
+- We now use a new mathematical notation for neural networks:
+  - $L$ denotes the total number of layers,
+  - $a^{(l)}_k$ denotes the value for layer $l$ for $k$-th node,
+  - $K_l$ denotes the total number of nodes in layer $l$, 
+  - $h_l$ denotes the activation function in layer $l$,
+  - $b_k^{(l)}$ denotes the bias in node $k$ of layer $l$,
+  - $\boldsymbol{w}_k^{(l)}$ denotes the weights for $k$-th node of layer $l$.
+  
+  
+## Forward evaluation 
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN4}
+#| echo: false
+grViz("
+digraph gr4 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1; 
+    B2; 
+    B3;
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1;
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n',fontcolor='transparent']
+  A2->B2 
+  A2->B3 
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 
+  C2->D2 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+
+:::
+
+:::
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN5}
+#| echo: false
+grViz("
+digraph gr5 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e',fontcolor=red]; 
+    B2; 
+    B3;
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1;
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 [color='red']
+  A1->B2
+  A1->B3
+  A2->B1 [color='red',label='\u03B2\u2081\n\n',fontcolor='red']
+  A2->B2 
+  A2->B3 
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- [$a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$]{.monash-red2}
+
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN6}
+#| echo: false
+grViz("
+digraph gr6 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e',fontcolor=red]; 
+    B3 [label='a\u2083\u207d\u00B2\u207e',fontcolor=white];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1;
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2 [color='red']
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n',fontcolor='red',color=red]
+  A2->B3 
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, [$a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$]{.monash-red2}
+
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN7}
+#| echo: false
+grViz("
+digraph gr7 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e',fontcolor=red];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1;
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3 [color='red']
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n',fontcolor='red',color=red]
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, [$a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$]{.monash-red2}
+
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN8}
+#| echo: false
+grViz("
+digraph gr8 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=red;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1;
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  B3->C1 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- [$\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$]{.monash-red2}
+
+:::
+
+:::
+
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN9}
+#| echo: false
+grViz("
+digraph gr9 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e',fontcolor=red];
+    C2;
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 [color='red']
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e',color='red',fontcolor='red']
+  B3->C1 [color='red'] 
+  B1->C2 
+  B2->C2 
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- [$a^{(3)}_1 = h_2(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$]{.monash-red2}
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN10}
+#| echo: false
+grViz("
+digraph gr10 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e'];
+    C2 [label='a\u2082\u207d\u00B3\u207e\n\nb\u2082\u207d\u00B3\u207e',fontcolor=red];
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e']
+  B3->C1 
+  B1->C2 [color='red']
+  B2->C2 [label='w\u2082\u207d\u00B3\u207e',color='red',fontcolor='red']
+  B3->C2 [color='red'] 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- $a^{(3)}_1 = h_3(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$, [$a^{(3)}_2 = h_3(b_2^{(3)}+\boldsymbol{w}_2^{(3)\top}\boldsymbol{a}^{(2)})$]{.monash-red2}
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN11}
+#| echo: false
+grViz("
+digraph gr11 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=red;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e'];
+    C2 [label='a\u2082\u207d\u00B3\u207e\n\nb\u2082\u207d\u00B3\u207e'];
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1;
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e']
+  B3->C1 
+  B1->C2 
+  B2->C2 [label='w\u2082\u207d\u00B3\u207e']
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u00B3\u207e',fontcolor='transparent']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- $a^{(3)}_1 = h_3(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$, $a^{(3)}_2 = h_3(b_2^{(3)}+\boldsymbol{w}_2^{(3)\top}\boldsymbol{a}^{(2)})$
+- [$\boldsymbol{a}^{(3)} = (a^{(3)}_1, a^{(3)}_2)^\top$]{.monash-red2}
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN12}
+#| echo: false
+grViz("
+digraph gr12 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e'];
+    C2 [label='a\u2082\u207d\u00B3\u207e\n\nb\u2082\u207d\u00B3\u207e'];
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1 [label='f\u2081(x)\n\nb\u2081\u207d\u2074\u207e',fontcolor='red'];
+    D2;
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e']
+  B3->C1 
+  B1->C2 
+  B2->C2 [label='w\u2082\u207d\u00B3\u207e']
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1 [color='red']
+  C1->D2
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u2074\u207e',fontcolor='red',color='red']
+  C2->D2
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- $a^{(3)}_1 = h_3(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$, $a^{(3)}_2 = h_3(b_2^{(3)}+\boldsymbol{w}_2^{(3)\top}\boldsymbol{a}^{(2)})$
+- $\boldsymbol{a}^{(3)} = (a^{(3)}_1, a^{(3)}_2)^\top$
+
+**Output layer**
+
+- The activation function $h_4$ is Softmax. 
+- [$f_1(\boldsymbol{x}) = h_4(b_1^{(4)}+\boldsymbol{w}_1^{(4)\top}\boldsymbol{a}^{(3)})$]{.monash-red2}
+
+:::
+
+:::
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN13}
+#| echo: false
+grViz("
+digraph gr13 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e'];
+    C2 [label='a\u2082\u207d\u00B3\u207e\n\nb\u2082\u207d\u00B3\u207e'];
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1 [label='f\u2081(x)\n\nb\u2081\u207d\u2074\u207e'];
+    D2 [label='f\u2082(x)\n\nb\u2081\u207d\u2074\u207e',fontcolor='red'];
+    D3;
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e']
+  B3->C1 
+  B1->C2 
+  B2->C2 [label='w\u2082\u207d\u00B3\u207e']
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1 
+  C1->D2 [color='red']
+  C1->D3
+  C2->D1 [label='w\u2081\u207d\u2074\u207e']
+  C2->D2 [label='w\u2082\u207d\u2074\u207e\n\n',fontcolor='red',color='red']
+  C2->D3
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- $a^{(3)}_1 = h_3(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$, $a^{(3)}_2 = h_3(b_2^{(3)}+\boldsymbol{w}_2^{(3)\top}\boldsymbol{a}^{(2)})$
+- $\boldsymbol{a}^{(3)} = (a^{(3)}_1, a^{(3)}_2)^\top$
+
+**Output layer**
+
+- The activation function $h_4$ is Softmax. 
+- $f_1(\boldsymbol{x}) = h_4(b_1^{(4)}+\boldsymbol{w}_1^{(4)\top}\boldsymbol{a}^{(3)})$, [$f_2(\boldsymbol{x}) = h_4(b_2^{(4)}+\boldsymbol{w}_2^{(4)\top}\boldsymbol{a}^{(3)})$]{.monash-red2}
+
+:::
+
+:::
+
+
+
+## Forward evaluation {visibility="uncounted"}
+
+::: flex
+
+::: {.w-50}
+
+```{r vis-AN14}
+#| echo: false
+grViz("
+digraph gr14 {
+  rankdir=LR
+  splines=false
+  fontname = 'helvetica'
+  fontsize = 20
+  node [shape = circle, width=1.3,height=1.3,fixedsize=true,fillcolor=white,style=filled, fontname = 'helvetica',fontsize=18, label='']
+  edge [fontname='helvetica']
+
+
+
+  subgraph cluster0 {
+    style=filled;
+    color=lightblue;
+    A1 [label='1']; 
+    A2 [label='x\u2081']; 
+    A3 [style=invisible];
+    label='Input layer';
+  }
+
+  subgraph cluster1 {
+    newrank=true;
+    label='ReLU layer';
+    style=filled;
+    color=lightgrey;
+    B1 [label='a\u2081\u207d\u00B2\u207e']; 
+    B2 [label='a\u2082\u207d\u00B2\u207e']; 
+    B3 [label='a\u2083\u207d\u00B2\u207e'];
+  }
+
+
+  subgraph cluster2 {
+    label='Tanh layer';
+    style=filled;
+    color=lightgrey;
+    C1 [label='a\u2081\u207d\u00B3\u207e\n\nb\u2081\u207d\u00B3\u207e'];
+    C2 [label='a\u2082\u207d\u00B3\u207e\n\nb\u2082\u207d\u00B3\u207e'];
+    C3 [style=invisible];
+  }
+
+  subgraph cluster3 {
+    label='Output layer';
+    style=filled;
+    color=lightyellow;
+    D1 [label='f\u2081(x)\n\nb\u2081\u207d\u2074\u207e'];
+    D2 [label='f\u2082(x)\n\nb\u2081\u207d\u2074\u207e'];
+    D3 [label='f\u2083(x)\n\nb\u2081\u207d\u2074\u207e',fontcolor='red'];
+  }
+
+  A1->B1 
+  A1->B2
+  A1->B3
+  A2->B1 [label='\u03B2\u2081\n\n']
+  A2->B2 [label='\u03B2\u2082\n\n']
+  A2->B3 [label='\u03B2\u2083\n\n']
+  A2->B2 [style=invisible,arrowhead=none]
+  A3->B1 [style=invisible,arrowhead=none]
+  A3->B2 [style=invisible,arrowhead=none]
+  A3->B3 [style=invisible,arrowhead=none]
+
+  B1->C1 
+  B2->C1 [label='w\u2081\u207d\u00B3\u207e']
+  B3->C1 
+  B1->C2 
+  B2->C2 [label='w\u2082\u207d\u00B3\u207e']
+  B3->C2 
+  B1->C3 [style=invisible,arrowhead=none]
+  B2->C3 [style=invisible,arrowhead=none] 
+  B3->C3 [style=invisible,arrowhead=none]
+
+  C1->D1 
+  C1->D2
+  C1->D3 [color='red']
+  C2->D1 [label='w\u2081\u207d\u2074\u207e']
+  C2->D2 [label='w\u2082\u207d\u2074\u207e\n\n']
+  C2->D3 [label='w\u2083\u207d\u2074\u207e\n\n',fontcolor='red',color='red']
+  C3->D3 [style=invisible,arrowhead=none]
+
+}
+", width = 500)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f4}
+
+**Input layer**
+
+$\boldsymbol{x} = (1, x_1)^\top$
+
+**Layer 2**
+
+- The activation function $h_2$ is ReLU.
+- $a^{(2)}_1 = h_2(\boldsymbol{\beta}_1^\top\boldsymbol{x})$, $a^{(2)}_2 = h_2(\boldsymbol{\beta}_2^\top\boldsymbol{x})$, $a^{(2)}_3 = h_2(\boldsymbol{\beta}_3^\top\boldsymbol{x})$
+- $\boldsymbol{a}^{(2)} = (a^{(2)}_1, a^{(2)}_2, a^{(2)}_3)^\top$
+
+**Layer 3**
+
+- The activation function $h_3$ is Tanh.
+- $a^{(3)}_1 = h_3(b_1^{(3)}+\boldsymbol{w}_1^{(3)\top}\boldsymbol{a}^{(2)})$, $a^{(3)}_2 = h_3(b_2^{(3)}+\boldsymbol{w}_2^{(3)\top}\boldsymbol{a}^{(2)})$
+- $\boldsymbol{a}^{(3)} = (a^{(3)}_1, a^{(3)}_2)^\top$
+
+**Output layer**
+
+- The activation function $h_4$ is Softmax. 
+- $f_1(\boldsymbol{x}) = h_4(b_1^{(4)}+\boldsymbol{w}_1^{(4)\top}\boldsymbol{a}^{(3)})$, $f_2(\boldsymbol{x}) = h_4(b_2^{(4)}+\boldsymbol{w}_2^{(4)\top}\boldsymbol{a}^{(3)})$, [$f_3(\boldsymbol{x}) = h_4(b_3^{(4)}+\boldsymbol{w}_3^{(4)\top}\boldsymbol{a}^{(3)})$]{.monash-red2}
+
+:::
+
+:::
+
+
+## General feed forward neural network
+
+::: {.f3 .incremental}
+
+<ul class='w-100'>
+
+- [Input layer:]{style="width:20%;display:inline-block;"} $\boldsymbol{x} = (1, x_1, \dots, x_p)^\top$
+- [Layer 2:]{style="width:20%;display:inline-block;"} $\boldsymbol{a}^{(2)} = (h_2(\boldsymbol{\beta}^\top_1\boldsymbol{x}), \dots, h_2(\boldsymbol{\beta}^\top_{K_2}\boldsymbol{x}))^\top$
+- [Layer 3:]{style="width:20%;display:inline-block;"} $\boldsymbol{a}^{(3)} = (h_3(b_1^{(3)}+\boldsymbol{w}^{(3)\top}_1\boldsymbol{a}^{(2)}), \dots, h_3(b_{K_3}^{(3)}+\boldsymbol{w}^{(3)\top}_{K_3}\boldsymbol{a}^{(2)}))^\top$
+- $\cdots$
+- [Layer $l$:]{style="width:20%;display:inline-block;"}$\boldsymbol{a}^{(l)} = (h_l(b_1^{(l)}+\boldsymbol{w}^{(l)\top}_1\boldsymbol{a}^{(l - 1)}), \dots, h_l(b_{K_l}^{(l)}+\boldsymbol{w}^{(l)\top}_{K_l}\boldsymbol{a}^{(l-1)}))^\top$
+- $\cdots$
+- [Layer $L -1$:]{style="width:20%;display:inline-block;"} $\boldsymbol{a}^{(L-1)} = (h_{L-1}(b_1^{(L-1)}+\boldsymbol{w}^{(L-1)\top}_1\boldsymbol{a}^{(L-2)}), \dots, h_{L-1}(b_{K_{L-1}}^{({L-1})}+\boldsymbol{w}^{({L-1})\top}_{K_{L-1}}\boldsymbol{a}^{(L-2)}))^\top$
+- [Output layer:]{style="width:20%;display:inline-block;"} $f_k(\boldsymbol{x}) = h_L(b^{(L)}+\boldsymbol{w}_k^{(L)\top}\boldsymbol{a}^{(L-1)})$.
+</ul>
+
+::: fragment
+
+- The output actually depends on the parameters: $\boldsymbol{\theta} = (\underbrace{\beta_1, \dots, \beta_{K_2}}_{\text{coefficients}}, \underbrace{b_1^{(3)}, \dots, b_{K_{L-1}}^{(L-1)}}_{\text{biases}},\underbrace{\boldsymbol{w}_1^{(3)\top}, \dots, \boldsymbol{w}_k^{(L)\top}}_{\text{weights}})^\top.$ 
+- We can write this dependency more explicitly as $f_k(\boldsymbol{x}~|~\boldsymbol{\theta})$.
+
+:::
+
+
+::: fragment 
+
+- How do we calibrate (or train) these parameters $\boldsymbol{\theta}$?
+
+:::
+
+:::
+
+
+
+
+# Calibration {background-color="#006DAE" .mcenter}
+
+
+## Calibration 
+
+::: incremental
+
+- As like other models, we:
+  - define a loss function, and 
+  - find parameters that minimise this loss function.
+- What loss function we use depends on the problem.
+
+:::
+
+## Regression loss
+
+- Find $\boldsymbol{\theta}$ that minimises the mean squared error:
+
+$$\text{MSE}(\boldsymbol{\theta}) = \frac{1}{n}\sum_{i=1}^n\left(y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta})\right)^2$$
+
+
+## Binary classification loss
+
+- Find $\boldsymbol{\theta}$ that minimises the binary cross-entropy (BCE):
+
+
+[$$\text{BCE}(\boldsymbol{\theta}) = -\frac{1}{n}\sum_{i=1}^n\left\{y_i\log(P(y_i=1~|~\boldsymbol{x}_i,\boldsymbol{\theta})) + (1-y_i)\log(1 - P(y_i=1~|~\boldsymbol{x}_i,\boldsymbol{\theta}))\right\}$$]{.f3}
+
+
+## Multi-class classification loss
+
+- Find $\boldsymbol{\theta}$ that minimises the cross-entropy (CE):
+
+$$\text{CE}(\boldsymbol{\theta}) = -\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^my_{ij}\log(P(y_{ij} = 1~|~\boldsymbol{x}_i,\boldsymbol{\theta}))$$
+
+## Optimisation 
+
+::: incremental
+
+- Regardless of whether it is regression or classification, we must find hyperparameters that optimise a loss function. 
+- Finding these hyperparameters is often _hard_ with no closed-form solution. 
+- There are various optimisation methods to find these hyperparameters -- we discuss:
+   - **gradient descent**, and 
+   - **stochastic gradient descent**. 
+
+:::
+
+## Illustrative example 
+
+- Suppose that we have a regression problem that require callibration of _one hyperparameter_ with _MSE loss function_. 
+
+. . . 
+
+- Our goal is to find $\theta$ that corresponds to the bottom of the curve.
+
+```{r opt0}
+#| echo: false
+library(ggsvg)
+stickman <- function(hat = "black", rotate = 0, rotate_shiftx = 50, rotate_shifty = 100) glue::glue('
+  <svg viewBox="-30 -30 130 130 ">
+  <g transform="rotate({rotate} {rotate_shiftx} {rotate_shifty})">
+    <circle id="face" cx="50" cy="20" r="20" fill="white" stroke="black" stroke-width="3"/>
+    <circle id="eye1" cx="42" cy="20" r="3" fill="white" stroke="black"  stroke-width="3"/>
+    <circle id="eye2" cx="58" cy="20" r="3" fill="white" stroke="black"  stroke-width="3"/>
+    <polygon id="hat" points="35,5 65,5 50,-20" fill="{hat}"/>
+    <line id="body" x1="50" y1="40" x2="50" y2="70" stroke="black"  stroke-width="3"/>
+  <line id="leftarm" x1="50" y1="45" x2="70" y2="48" stroke="black"  stroke-width="3"/>
+  <line id="rightarm" x1="50" y1="45" x2="30" y2="48" stroke="black"  stroke-width="3"/>
+  <line id="leftleg" x1="50" y1="70" x2="65" y2="90" stroke="black"  stroke-width="3"/>
+  <line id="rightleg" x1="50" y1="70" x2="35" y2="90" stroke="black"  stroke-width="3"/>
+  
+  </g>
+  </svg>
+  ')
+
+gbase <- tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 2) +
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5)
+
+points <- tibble(x = c(-0.1, 0.75, -1.55),
+                 y = c(0.23, 0.4, 0.95),
+                 person = letters[1:3])
+
+# the css("polygon#hat, fill = person") didn't work
+# so do separate data instead
+gstickmans <- gbase +
+  geom_point_svg(data = points[1,],
+                 aes(x, y), 
+                 svg = stickman("red", rotate = 0), size = 20, angle = 0) +
+  geom_point_svg(data = points[2,],
+                 aes(x, y), 
+                 svg = stickman("blue", rotate = -30), size = 20, angle = 3) +
+  geom_point_svg(data = points[3,],
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 55, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3)
+
+gstickmans
+```
+
+
+## Finding the zero slope
+
+::: flex
+
+::: {.w-50}
+
+```{r stickmans}
+#| echo: false
+gstickmans +
+  annotate("line", x = c(-0.2, 0.2), y = -0.01, color = "red", linewidth = 1.3) +
+  annotate("line", x = c(0.68, 1.0), y = c(0.09, 0.22), color = "blue", linewidth = 1.3) +
+  annotate("line", x = c(-2, -1.7), y = c(0.96, 0.685), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = 0, y = c(-0.5,-0.01), color = "red", linewidth = 1, linetype = "dashed") +
+  annotate("line", x = 0.84, y = c(-0.5, 0.15), color = "blue", linewidth = 1, linetype = "dashed") +
+  annotate("line", x = -1.85, y = c(-0.5, 0.8), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black"))
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+::: incremental
+
+- Suppose that we calculate $\text{MSE}(\theta)$ for three values of $\theta$.
+- For this function, the optimal $\theta$ is where the individual with the [red hat]{.monash-red2} is.
+- This is also where the slope (or derivative) is zero: $$\frac{\partial \text{MSE}(\theta)}{\partial \theta} = 0.$$
+
+:::
+
+:::
+
+:::
+
+## Optimising a multi-variable function
+
+::: incremental 
+
+- In practice, $\boldsymbol{\theta}$ is typically a vector of length $d$ with $d > 1$. 
+- The optimal value of $\boldsymbol{\theta}$ is then found by solving for $\boldsymbol{\theta}$ such that $$\nabla \text{MSE}(\boldsymbol{\theta}) = 0$$ where $\nabla \text{MSE}(\boldsymbol{\theta}) = \left(\frac{\partial\text{MSE}(\boldsymbol{\theta})}{\partial\theta_1}, \dots, \frac{\partial\text{MSE}(\boldsymbol{\theta})}{\partial\theta_d}\right)^\top$ is the vector of slopes for all parameters (**gradient**).
+- Finding $\boldsymbol{\theta}$  such that $\nabla \text{MSE}(\boldsymbol{\theta}) = 0$ is hard! 
+- We use [**gradient descent**]{.monash-blue} to find this. 
+
+:::
+
+
+## Searching for the optimal value
+
+::: flex
+
+::: {.w-50}
+
+
+```{r search}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = points[2,],
+                 aes(x, y), 
+                 svg = stickman("blue", rotate = -30), size = 20, angle = 3) +
+  geom_point_svg(data = points[3,],
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 55, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(0.68, 1.0), y = c(0.09, 0.22), color = "blue", linewidth = 1.3) +
+  annotate("line", x = c(-2, -1.7), y = c(0.96, 0.685), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = 0.84, y = c(-0.5, 0.15), color = "blue", linewidth = 1, linetype = "dashed") +
+  annotate("line", x = -1.85, y = c(-0.5, 0.8), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+
+
+:::
+
+::: {.w-50 .pl3}
+
+::: incremental
+
+- To search for the optimal value of $\theta$, we choose some _starting points_. 
+- We can calculate the slope at the starting points giving us a guide where to search next: $$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}},$$ where $r > 0$ is the length of the step. 
+
+:::
+:::
+
+:::
+
+
+## Illustrative example: Step 0 
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step0}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = points[3,],
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 55, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-2, -1.7), y = c(0.96, 0.685), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -1.85, y = c(-0.5, 0.8), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- Suppose 
+  - $\frac{\partial\text{MSE}(\theta)}{\partial\theta} = 4\theta$,
+  - $r = 0.1$, and 
+  - the starting point $$\theta^{[0]} = -1.8.$$
+
+::: fragment  
+
+- $\theta^{[1]} = -1.8 - 0.1 \times 4 \times (-1.8) = -1.08.$
+
+:::
+:::
+
+:::
+
+
+## Illustrative example: Step 1
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step1}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = tibble(x = -0.9, y = 1.08^2*0.25+0.2),
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 30, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-1.08-0.25, -1.08+0.25), y = c((1.08+0.25)^2*0.25-0.03, (1.08-0.25)^2*0.25-0.03), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -1.08, y = c(-0.5, 1.08^2*0.25), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- $\theta^{[1]} = -1.08$
+
+::: fragment  
+
+- $\theta^{[2]} = -1.08 - 0.1 \times 4 \times (-1.08) = -0.648.$
+
+:::
+:::
+
+:::
+
+
+## Illustrative example: Step 2
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step2}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = tibble(x = -0.58, y = 0.648^2*0.25+0.25),
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 21, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-0.648-0.25, -0.648+0.25), y = c((0.648+0.25)^2*0.25-0.03, (0.648-0.25)^2*0.25-0.03), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -0.648, y = c(-0.5, 0.648^2*0.25), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- $\theta^{[2]} = -0.648$
+
+::: fragment  
+
+- $\theta^{[3]} = -0.648 - 0.1 \times 4 \times (-0.648) = -0.3888.$
+
+:::
+:::
+
+:::
+
+
+
+## Illustrative example: Step 3
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step3}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = tibble(x = -0.32, y = 0.3888^2*0.25+0.25),
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 21, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-0.3888-0.25, -0.3888+0.25), y = c((0.3888+0.25)^2*0.25-0.03, (0.3888-0.25)^2*0.25-0.03), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -0.3888, y = c(-0.5, 0.3888^2*0.25), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- $\theta^{[3]} = -0.3888$
+
+::: fragment  
+
+- $\theta^{[4]} = -0.3888 - 0.1 \times 4 \times (-0.3888) = -0.23328$
+
+:::
+:::
+
+:::
+
+
+## Illustrative example: Step 4
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step4}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = tibble(x = -0.2, y = 0.23328^2*0.25+0.25),
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 15, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-0.23328-0.25, -0.23328+0.25), y = c((0.23328+0.25)^2*0.25-0.03, (0.23328-0.25)^2*0.25-0.03), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -0.23328, y = c(-0.5, 0.23328^2*0.25), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- $\theta^{[4]} = -0.23328$
+
+::: fragment  
+
+- $\theta^{[5]} = -0.23328 - 0.1 \times 4 \times (-0.23328) = -0.139968$
+
+:::
+
+::: fragment 
+
+$\cdots$
+
+:::
+
+:::
+
+:::
+
+
+## Illustrative example: Step 20
+
+
+::: flex
+
+::: {.w-50}
+
+
+```{r step20}
+#| echo: false
+tibble(id = 1:30) %>% 
+  mutate(x = seq(-2, 2, length.out = n()),
+         y = 0.25 * x^2) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(linewidth = 1.3) + 
+  theme_void() +
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)") +
+  ylim(-0.5, 0.25 * 2^2 + 0.5) +
+  geom_point_svg(data = tibble(x = -0.08, y = 6.581085e-05^2*0.25+0.25),
+                 aes(x, y), 
+                 svg = stickman("green", rotate = 0, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) +
+  annotate("line", x = c(-6.581085e-05-0.25, -6.581085e-05+0.25), y = c((6.581085e-05+0.25)^2*0.25-0.03, (6.581085e-05-0.25)^2*0.25-0.03), color = "forestgreen", linewidth = 1.3) +
+  annotate("line", x = -6.581085e-05, y = c(-0.5, 6.581085e-05^2*0.25), color = "forestgreen", linewidth = 1, linetype = "dashed") +
+  theme(axis.text.x = element_text(color = "black", margin = margin(t = 10)),
+        axis.ticks.length.x = unit(3, "mm"),
+        axis.ticks.x = element_line(color = "black")) +
+  xlim(-2, 2)
+```
+
+$$\theta^{[s+1]} = \theta^{[s]} - r \left.\frac{\partial\text{MSE}(\theta)}{\partial\theta}\right\vert_{\theta=\theta^{[s]}}$$
+
+
+:::
+
+::: {.w-50 .pl3}
+
+
+- $\theta^{[20]} = -0.00006581085$
+
+::: fragment
+
+- What if there are more than one parameter?
+
+:::
+
+:::
+
+:::
+
+## Gradient descent
+
+::: incremental
+
+- In the multi-variable version: [$$\boldsymbol{\theta}^{[s+1]} = \left.\boldsymbol{\theta}^{[s]} - r\nabla \text{MSE}(\boldsymbol{\theta})\right\vert_{\theta=\theta^{[s]}}.$$]{.monash-blue} where $r>0$ is the learning rate.
+- You need a starting value $\boldsymbol{\theta}^{[0]}$ and take a number of steps.
+- This is known as the [**gradient descent method**]{.monash-blue}.
+
+:::
+
+## <i class='fas fa-times-circle'></i> Limitations of gradient descent 
+
+::: flex
+
+::: {.w-60}
+
+::: incremental
+
+- In practice, the loss function generally _**involves valuation for each observation**_, e.g. for MSE:
+$$\nabla \text{MSE}(\boldsymbol{\theta}) = \frac{1}{n}\sum_{i=1}^n\nabla\left(y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta})\right)^2.$$
+- This can be computationally expensive if $n$ is large.
+- Gradient descent optimisation can get **_stuck in local optima_**. 
+
+:::
+
+
+
+:::
+
+::: {.w-40 .pl3 .fragment}
+
+
+```{r local}
+#| echo: false
+#| fig-width: 4
+tibble(x = seq(-2, 2, length.out = 40)) %>% 
+  mutate(y = (x - 1) * (2 * x + 1) * (0.5 * x + 1) * (0.1 * x - 0.5) * (-x + 1)) %>% 
+  ggplot(aes(x,  y)) +
+  geom_line() +
+  theme_void() + 
+  theme(axis.line = element_line(color = "black", linewidth = 1),
+        axis.title = element_text(color = "black", size = 20, margin = margin(t = 10, r = 5))) +
+  labs(x = "θ", y = "MSE(θ)")+
+  geom_point_svg(data = tibble(x = 0.48, y = (x - 1) * (2 * x + 1) * (0.5 * x + 1) * (0.1 * x - 0.5) * (-x + 1)) + 0.35,
+                 aes(x, y), 
+                 svg = stickman("red", rotate = 0, rotate_shiftx = 50, rotate_shifty = 0), size = 20, angle = 3) 
+```
+
+
+:::
+
+:::
+
+# Stochastic gradient descent  {background-color="#006DAE" .mcenter}
+
+
+## Stochastic gradient descent 
+
+- In a stochastic gradient descent (SGD) considers at each step $$\boldsymbol{\theta}^{[s+1]} = \boldsymbol{\theta}^{[s]} - r \left.\nabla \hat{\text{MSE}}(\boldsymbol{\theta})\right\vert_{\boldsymbol{\theta}=\boldsymbol{\theta}^{[s]}}$$ [where $$\left.\nabla \hat{\text{MSE}}(\boldsymbol{\theta})\right\vert_{\boldsymbol{\theta}=\boldsymbol{\theta}^{[s]}}=\frac{1}{M}\sum_{i\in B^{[s]}}\nabla\left(y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}^{[s]})\right)^2.$$]{.fragment} [where $B^{[s]}$ denotes a set of random **batch** of $M \ll n$ observations at iteration $s$.]{.fragment}
+
+## Batch illustration
+
+
+::: incremental
+
+- Suppose we have $n = 1000$. 
+- We draw a (random without replacement) batch of size 3, say resulting in $B^{[1]} = \{133, 606, 851\}$.
+- With gradient descent, [$$\nabla\text{MSE}(\boldsymbol{\theta}) = \frac{1}{1000}\left(\nabla(y_1 - f(\boldsymbol{x}_1~|~\boldsymbol{\theta})^2 + \nabla(y_2 - f(\boldsymbol{x}_2~|~\boldsymbol{\theta})^2 + \cdots + \nabla(y_{1000} - f(\boldsymbol{x}_{1000}~|~\boldsymbol{\theta})^2\right).$$]{.f3}
+- But for stochastic gradient descent, we replace this with: [$$\nabla\hat{\text{MSE}}(\boldsymbol{\theta}) = \frac{1}{3}\left(\nabla(y_{133} - f(\boldsymbol{x}_{133}~|~\boldsymbol{\theta})^2 + \nabla(y_{606} - f(\boldsymbol{x}_{606}~|~\boldsymbol{\theta})^2 + \nabla(y_{851} - f(\boldsymbol{x}_{851}~|~\boldsymbol{\theta})^2\right).$$]{.f3}
+- The latter is faster to calculate and can escape from local optima.
+
+:::
+
+## Epoch
+
+::: incremental
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: $y_1$, $y_2$, $y_3$, $y_4$, $y_5$, $y_6$, $y_7$, $y_8$, $y_9$, $y_{10}$, $y_{11}$, $y_{12}$ 
+
+:::
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: $y_1$, $y_2$, $y_3$, [$y_4$]{.monash-red2}, $y_5$, $y_6$, $y_7$, [$y_8$]{.monash-red2}, $y_9$, [$y_{10}$]{.monash-red2}, $y_{11}$, $y_{12}$ 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \color{red}{\{4, 8, 10\}}$
+
+:::
+
+::: {.w-50 .pl3}
+
+:::
+
+:::
+
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: [$y_1$]{.monash-red2}, $y_2$, $y_3$, [$y_4$]{.monash-red2}, [$y_5$]{.monash-red2}, $y_6$, $y_7$, [$y_8$]{.monash-red2}, $y_9$, [$y_{10}$]{.monash-red2}, $y_{11}$, [$y_{12}$]{.monash-red2} 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \{4, 8, 10\}$
+2. $s = 2$, $B^{[2]} = \color{red}{\{1, 5, 12\}}$
+
+:::
+
+::: {.w-50 .pl3}
+
+:::
+
+:::
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: [$y_1$]{.monash-red2}, [$y_2$]{.monash-red2}, [$y_3$]{.monash-red2}, [$y_4$]{.monash-red2}, [$y_5$]{.monash-red2}, [$y_6$]{.monash-red2}, $y_7$, [$y_8$]{.monash-red2}, $y_9$, [$y_{10}$]{.monash-red2}, $y_{11}$, [$y_{12}$]{.monash-red2} 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \{4, 8, 10\}$
+2. $s = 2$, $B^{[2]} = \{1, 5, 12\}$
+3. $s = 3$, $B^{[3]} = \color{red}{\{2, 3, 6\}}$
+
+:::
+
+::: {.w-50 .pl3}
+
+:::
+
+:::
+
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: [$y_1$]{.monash-red2}, [$y_2$]{.monash-red2}, [$y_3$]{.monash-red2}, [$y_4$]{.monash-red2}, [$y_5$]{.monash-red2}, [$y_6$]{.monash-red2}, [$y_7$]{.monash-red2}, [$y_8$]{.monash-red2}, [$y_9$]{.monash-red2}, [$y_{10}$]{.monash-red2}, [$y_{11}$]{.monash-red2} , [$y_{12}$]{.monash-red2} 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \{4, 8, 10\}$
+2. $s = 2$, $B^{[2]} = \{1, 5, 12\}$
+3. $s = 3$, $B^{[3]} = \{2, 3, 6\}$
+4. $s = 4$, $B^{[4]} = \color{red}{\{7, 9, 11\}}$
+:::
+
+::: {.w-50 .pl3}
+
+:::
+
+:::
+
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: [$y_1$]{.monash-red2}, [$y_2$]{.monash-red2}, [$y_3$]{.monash-red2}, [$y_4$]{.monash-red2}, [$y_5$]{.monash-red2}, [$y_6$]{.monash-red2}, [$y_7$]{.monash-red2}, [$y_8$]{.monash-red2}, [$y_9$]{.monash-red2}, [$y_{10}$]{.monash-red2}, [$y_{11}$]{.monash-red2} , [$y_{12}$]{.monash-red2} 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \{4, 8, 10\}$
+2. $s = 2$, $B^{[2]} = \{1, 5, 12\}$
+3. $s = 3$, $B^{[3]} = \{2, 3, 6\}$
+4. $s = 4$, $B^{[4]} = \{7, 9, 11\}$
+
+[Epoch 1]{.monash-red2}
+
+:::
+
+::: {.w-50 .pl3}
+
+:::
+
+:::
+
+
+## Epoch {visibility="uncounted"}
+
+
+- The number of [**epochs**]{.monash-blue} is the number of times that the algorithm has used all observations in the data. 
+- Illustrative data: [$y_1$]{.monash-red2}, [$y_2$]{.monash-red2}, [$y_3$]{.monash-red2}, [$y_4$]{.monash-red2}, [$y_5$]{.monash-red2}, [$y_6$]{.monash-red2}, [$y_7$]{.monash-red2}, [$y_8$]{.monash-red2}, [$y_9$]{.monash-red2}, [$y_{10}$]{.monash-red2}, [$y_{11}$]{.monash-red2} , [$y_{12}$]{.monash-red2} 
+
+::: flex
+
+::: {.w-50}
+
+1. $s = 1$, $B^{[1]} = \{4, 8, 10\}$
+2. $s = 2$, $B^{[2]} = \{1, 5, 12\}$
+3. $s = 3$, $B^{[3]} = \{2, 3, 6\}$
+4. $s = 4$, $B^{[4]} = \{7, 9, 11\}$
+
+[Epoch 1]{.monash-red2}
+
+:::
+
+::: {.w-50 .pl3}
+
+5. $s = 5$, $B^{[5]} = \{3, 4, 11\}$
+6. $s = 6$, $B^{[6]} = \{2, 7, 9\}$
+7. $s = 7$, $B^{[7]} = \{6, 10, 12\}$
+8. $s = 8$, $B^{[8]} = \{1, 5, 8\}$
+
+[Epoch 2]{.monash-red2}
+
+:::
+
+:::
+
+
+
+
+
+## Backpropagation 
+
+::: incremental
+
+- In evaluating $\nabla \hat{\text{MSE}}(\boldsymbol{\theta})$, we must evaluate $\nabla (y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}))^2$.
+- Now we have: [$$\nabla (y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}))^2 = - 2(y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}))\times \underbrace{\frac{\partial f(\boldsymbol{x}_i|\boldsymbol{\theta})}{\partial \boldsymbol{a}_i^{(L - 1)}}}_{\text{Layer }L -1}\times \underbrace{\frac{\partial \boldsymbol{a}_i^{(L - 1)}}{\partial \boldsymbol{a}_i^{(L - 2)}}}_{\text{Layer }L -2}\times \underbrace{\frac{\partial \boldsymbol{a}_i^{(L - 2)}}{\partial \boldsymbol{a}_i^{(L - 3)}}}_{\text{Layer }L -3}\times \cdots \times \underbrace{\frac{\partial \boldsymbol{a}_i^{(2)}}{\partial \boldsymbol{\theta}}}_{\text{Layer }1}.$$]{.f3}
+
+- The gradient of the later layers is calculated earlier.
+- For parameter $\theta$, we can show [$$\frac{\partial (y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}))^2}{\partial \theta}  = \text{constant}\times \underbrace{\frac{\partial h_L(a_i^{(L-1)})}{\partial a_i^{(L-1)}}}_{\text{Layer }L -1}\times \underbrace{\frac{\partial h_L(a_i^{(L-2)})}{\partial a_i^{(L-2)}}}_{\text{Layer }L -2}\times \underbrace{\frac{\partial h_L(a_i^{(L-3)})}{\partial a_i^{(L-3)}}}_{\text{Layer }L -3}\times \cdots \times \underbrace{\frac{\partial h_2(x_i| \theta)}{\partial \theta}}_{\text{Layer }1}.$$]{.f3}
+
+
+:::
+
+## Vanishing gradient problem
+
+[$$\frac{\partial (y_i - f(\boldsymbol{x}_i~|~\boldsymbol{\theta}))^2}{\partial \theta}  = \text{constant}\times \underbrace{\frac{\partial h_L(a_i^{(L-1)})}{\partial a_i^{(L-1)}}}_{\text{Layer }L -1}\times \underbrace{\frac{\partial h_L(a_i^{(L-2)})}{\partial a_i^{(L-2)}}}_{\text{Layer }L -2}\times \underbrace{\frac{\partial h_L(a_i^{(L-3)})}{\partial a_i^{(L-3)}}}_{\text{Layer }L -3}\times \cdots \times \underbrace{\frac{\partial h_2(x_i| \theta)}{\partial \theta}}_{\text{Layer }1}.$$]{.f3}
+
+::: incremental
+
+- If $h_l$ is the Sigmoid activation function then $0 < \frac{\partial h_l(a_i^{(l -1)})}{\partial a_i^{(l -1)}} < 1$.
+- If the $L$ is large then this can result in $\nabla (y_i - f(\boldsymbol{x}_i | \boldsymbol{\theta}))^2 \approx 0$. 
+- This phenomenon is referred to as the [**vanishing gradient problem**]{.monash-blue} and results in difficulty with calibrating the neural network.
+- To avoid this problem, you can use a different activation function that does not have the same issue, e.g. ReLU.
+
+:::
+
+
+
+
+# <i class='fas fa-tshirt'></i> An application to fashion MNIST data {background-color="#006DAE" .mcenter}
+
+
+
+## <i class='fas fa-database'></i> Fashion MNIST data {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+```{r fashion-data}
+#| code-fold: true
+library(tidyverse)
+fashion <- read_csv("https://emitanaka.org/iml/data/fashion-mnist_train.csv.gz")
+fashion_test <- read_csv("https://emitanaka.org/iml/data/fashion-mnist_test.csv")
+```
+
+
+- The [fashion MNIST data by Zalando SE](https://github.com/zalandoresearch/fashion-mnist) contains $28 \times 28$ pixel images of fashion items labelled as:
+
+Label | Description
+--- | ---
+0 | T-shirt/top
+1 | Trouser
+2 | Pullover
+3 | Dress
+4 | Coat
+5 | Sandal
+6 | Shirt
+7 | Sneaker
+8 | Bag
+9 | Ankle boot
+
+```{r display1}
+#| echo: false
+#| fig-height: 2
+#| fig-width: 12
+#| cache: false
+set.seed(2)
+fashion %>% 
+  mutate(id = 1:n()) %>% 
+  group_by(label) %>% 
+  slice(1) %>% 
+  ungroup() %>% 
+  arrange(label) %>% 
+  pivot_longer(-c(label, id)) %>% 
+  group_by(id) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  facet_wrap(~label, nrow = 1) + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+```
+
+- So this is a multi-class classification problem with $m = 10$ classes (or levels).
+- The training data contains `r scales::comma(nrow(fashion))` observations with 784 variables (`pixel1`, ..., `pixel784`) and 1 response variable (`label`) labelled from 0-9.
+- The testing data contains `r scales::comma(nrow(fashion_test))` observations (note: this testing data also contains `label`!).
+
+```{css, echo = FALSE}
+.circle {
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  padding: 1px;
+}
+```
+
+
+## <i class='fab fa-r-project'></i> Neural network in R [1]{.circle} prepare the data
+
+- To fit a neural network model, we use the `keras` package. 
+
+. . . 
+
+- We first need to prepare the data:
+  - convert categorical data to dummy variables, and
+  - normalise the predictors. 
+  
+```{r normalise}
+fashion_train_y <- model.matrix(~factor(label) - 1, data = fashion)
+
+fashion_train_x <- fashion %>% 
+  select(-label) %>% 
+  scale()
+
+fashion_test_y <- model.matrix(~factor(label) - 1, data = fashion_test)
+
+fashion_test_x <- fashion_test %>% 
+  select(-label) %>% 
+  scale()
+```
+  
+## <i class='fab fa-r-project'></i> Neural network in R [2]{.circle} Define architechture
+
+
+```{r architechture}
+#| cache: false
+library(keras)
+NN <- keras_model_sequential() %>% 
+  # hidden layer
+  layer_dense(units = 128, # number of nodes in hidden layer
+              activation = "relu",
+              # number of predictors
+              input_shape = 784) %>% 
+  # output layer
+  layer_dense(units = 10, # the number of classes
+              # we need to use softmax for multi-class classification
+              activation = "softmax")
+
+NN
+```
+
+## <i class='fab fa-r-project'></i> Neural network in R [3]{.circle} Choose loss function
+
+::: incremental
+
+- For regression, you can use `mean_squared_error`.
+- For binary classification, you can use `binary_crossentropy`.
+- For multi-class classfication, you can use `categorical_crossentropy`. 
+- For the full list of loss functions, see `help("loss-functions")`.
+
+:::
+
+::: fragment
+
+
+```{r loss-function2}
+NNl <- NN %>% 
+  compile(loss = "categorical_crossentropy",
+          metrics = "accuracy")
+```
+
+:::
+
+
+## <i class='fab fa-r-project'></i> Neural network in R [4]{.circle} Fit model
+
+<i class='fas fa-exclamation-circle'></i> This model takes long to fit!
+
+```{r fit-NN, echo = -1}
+NNl <- NN %>% 
+  compile(loss = "categorical_crossentropy",
+          metrics = "accuracy")
+learnNNl <- NNl %>% 
+  fit(x = fashion_train_x,
+      y = fashion_train_y,
+      epochs = 20,
+      batch_size = 40,
+      validation_split = 0.2)
+```
+
+- Typically `epochs` is a large number. 
+
+
+## Model diagnostic
+
+- We can plot the loss (and other metrics specified) of the neural network using the `plot` function on the training history.
+
+::: flex
+
+::: {.w-50}
+
+```{r fit-diagnostic}
+#| cache: false
+class(learnNNl)
+plot(learnNNl)
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+::: incremental
+
+- This model actually is not doing well for the validation set!
+- This suggests that the model is overfitted.
+
+:::
+
+:::
+
+:::
+
+## <i class='fab fa-r-project'></i> Predicting from neural network
+
+- Notice we are using `NNl` and not `learnNNl` here!
+
+```{r prediction}
+#| cache: false
+test_predict <- predict(NNl, fashion_test_x)
+
+test_predict[1:3, ]
+```
+
+::: incremental
+
+- Each row corresponds to the observation in the test data.
+- Column $c$ corresponds to the probability of the label $c - 1$.
+- Sum of each row is 1.
+
+:::
+
+## Visually checking the prediction: observation 1
+
+::: flex
+
+::: {.w-50}
+
+```{r test1}
+#| echo: false
+#| cache: false
+
+fashion_test %>% 
+  slice(1) %>% 
+  pivot_longer(-label) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r pred-test1}
+#| code-fold: true
+#| cache: false
+
+tibble(label = 0:9,
+       desc = c("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")) %>% 
+  mutate(prob = test_predict[1, ]) %>% 
+  ggplot(aes(prob, desc)) +
+  geom_col() +
+  labs(y = "", x= "Probability")
+```
+
+
+:::
+
+:::
+
+## Visually checking the prediction: observation 2
+
+::: flex
+
+::: {.w-50}
+
+```{r test2}
+#| echo: false
+#| cache: false
+
+fashion_test %>% 
+  slice(2) %>% 
+  pivot_longer(-label) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r pred-test2}
+#| code-fold: true
+#| cache: false
+
+tibble(label = 0:9,
+       desc = c("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")) %>% 
+  mutate(prob = test_predict[2, ]) %>% 
+  ggplot(aes(prob, desc)) +
+  geom_col() +
+  labs(y = "", x= "Probability")
+```
+
+
+:::
+
+:::
+
+
+## Visually checking the prediction: observation 3
+
+::: flex
+
+::: {.w-50}
+
+```{r test3}
+#| echo: false
+#| cache: false
+fashion_test %>% 
+  slice(3) %>% 
+  pivot_longer(-label) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r pred-test3}
+#| code-fold: true
+#| cache: false
+tibble(label = 0:9,
+       desc = c("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")) %>% 
+  mutate(prob = test_predict[3, ]) %>% 
+  ggplot(aes(prob, desc)) +
+  geom_col() +
+  labs(y = "", x= "Probability")
+```
+
+
+:::
+
+:::
+
+
+## Visually checking the prediction: observation 4
+
+::: flex
+
+::: {.w-50}
+
+```{r test4}
+#| echo: false
+#| cache: false
+
+fashion_test %>% 
+  slice(4) %>% 
+  pivot_longer(-label) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r pred-test4}
+#| code-fold: true
+#| cache: false
+
+tibble(label = 0:9,
+       desc = c("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")) %>% 
+  mutate(prob = test_predict[4, ]) %>% 
+  ggplot(aes(prob, desc)) +
+  geom_col() +
+  labs(y = "", x= "Probability")
+```
+
+
+:::
+
+:::
+
+
+## Visually checking the prediction: observation 5
+
+::: flex
+
+::: {.w-50}
+
+```{r test5}
+#| echo: false
+#| cache: false
+
+fashion_test %>% 
+  slice(5) %>% 
+  pivot_longer(-label) %>% 
+  mutate(row = rep(1:28, each = 28),
+         col = rep(1:28, times = 28)) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  scale_y_reverse() + 
+  coord_equal() +
+  scale_fill_distiller(palette = 1, direction = 1) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks.length = unit(0, "mm")) +
+  guides(fill = "none")
+
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r pred-test5}
+#| code-fold: true
+#| cache: false
+
+tibble(label = 0:9,
+       desc = c("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")) %>% 
+  mutate(prob = test_predict[5, ]) %>% 
+  ggplot(aes(prob, desc)) +
+  geom_col() +
+  labs(y = "", x= "Probability")
+```
+
+
+:::
+
+:::
+
+
+
+# Limitations {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-times-circle'></i> Cons of neural network 
+
+::: incremental
+
+- Minimal interpretability.
+- Requires the number of observations to be larger than the number of features. 
+- Computationally intensive
+  - Many calculations are required to estimate all of the parameters in many neural networks.
+  - Deep learning involves huge amounts of matrix multiplications and other operations.
+  - Often used in conjuction with GPUs to parallellise computations.
+
+:::
+
+
+
+# <i class="fas fa-key"></i> Takeaways  {.mcenter background-color="#006DAE"}
+
+- To build a feed-forward neural network, we need the key components:
+  1. Input data,
+  2. A pre-defined network architecture,
+  3. A feedback mechanism (e.g. loss function) to enable the network to learn, and 
+  4. Model training.
+- Deep neural networks are faster to calibrate than wide neural networks via stochastic gradient descent and backpropogation algorithms.

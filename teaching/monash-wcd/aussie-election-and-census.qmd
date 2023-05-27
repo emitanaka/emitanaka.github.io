@@ -1,0 +1,25 @@
+---
+title: Combining Australian Census and Election Data
+date: 2022-04-05
+format: html
+html: 'monash-wcd/2022/lecture-06.html#2'
+pdf: 'monash-wcd/2022/lecture-06.pdf'
+---
+
+```{r}
+#| echo: false
+htmllink <- gsub("monash-wcd/", "", rmarkdown::metadata$html)
+```
+
+
+This was taught as part of the lecture for the Wild-Caught Data.
+
+<a href='`r htmllink`'><i class="fa-solid fa-link"></i></a>
+
+
+
+
+<iframe width="600px" src="`r htmllink`" height="337.5px" style="border: 1px solid black;"></iframe>
+
+
+

@@ -1,0 +1,879 @@
+---
+title: "ETC5512: Wild Caught Data"
+subtitle: "Combining Australian census and election data"
+author: "Emi Tanaka"
+email: "ETC5512.Clayton-x@monash.edu"
+date: "Week 6"
+length: "120 minutes"
+department: "Department of Econometrics and Business Statistics"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/custom.css"
+      - "assets/emi.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    includes:
+      in_header: "assets/head.html"
+    lib_dir: lib
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+
+if(!identical(getOption("bitmapType"), "cairo") && isTRUE(capabilities()[["cairo"]])){
+  options(bitmapType = "cairo")
+}
+```
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+---
+
+class: center middle bg-gray
+
+
+.aim-box.tl.w-70[
+Today you will:
+
+- look at the ABS geographical boundaries for the 2016 census
+- integrate data from different sources (census and election) to make exploratory inferences
+]
+
+---
+
+
+# Recall <i class="fas fa-database"></i> 2019 Federal Election Data
+
+.f6[
+```{r aec-map, eval = FALSE}
+library(tidyverse)
+library(sf)
+aec_map <- read_sf(here::here("data/vic-july-2018-esri/E_AUGFN3_region.shp")) #<<
+votes <- read_csv("https://results.aec.gov.au/24310/Website/Downloads/HouseDopByDivisionDownload-24310.csv", skip = 1) #<<
+
+winners_fix <- votes %>% 
+  mutate(DivisionNm = ifelse(DivisionNm=="McEwen", "Mcewen", DivisionNm)) %>% 
+  filter(Elected=="Y" & CountNumber==0 & CalculationType=="Preference Count") %>% # get the winner
+  right_join(aec_map, by = c("DivisionNm" = "Elect_div")) # join the data
+
+auscolours <- c("ALP" = "#DE3533", "LNP" = "#ADD8E6", "KAP" = "#8B0000", "GVIC" = "#10C25B", "XEN" = "#ff6300", 
+                "LP" = "#0047AB", "NP" = "#0a9cca", "IND" = "#000000")
+
+ggplot(winners_fix) + 
+  geom_sf(aes(fill = PartyAb, geometry = geometry)) +
+  scale_fill_manual(values = auscolours)
+```
+
+]
+
+.flex[
+.w-50[
+```{r aec-map, echo = FALSE}
+```
+
+]
+.w-50[
+
+There are two sources of data:
+
+1. Electoral boundary
+2. The votes for candidates in each electorate
+
+]
+]
+
+
+---
+
+# Recall <i class="fas fa-database"></i> 2016 ABS Census Data
+
+* DataPacks <i class="fas fa-download"></i> https://datapacks.censusdata.abs.gov.au/datapacks/
+* GeoPackages <i class="fas fa-download"></i> https://datapacks.censusdata.abs.gov.au/geopackages/
+
+<img src="images/lecture-07/datapack-download.png" width = "70%"/>
+---
+
+
+class: transition
+
+# ABS Census 2016
+
+# GeoPackages
+
+---
+
+# GeoPackage
+
+.blockquote[
+A **GeoPackage** (GPKG) is an open, non-proprietary, platform-independent and standards-based data format for geographic information system implemented as a SQLite database container. Defined by the **Open Geospatial Consortium** (OGC) with the backing of the US military and published in 2014, GeoPackage has seen widespread support from various government, commercial, and open source organizations.
+
+.right[
+&mdash; Wikipedia
+]
+]
+
+<br>
+
+Recall: OGC also defines the WKT
+
+---
+
+# ABS GeoPackage
+
+.info-box[
+<i class="fas fa-download"></i> https://datapacks.censusdata.abs.gov.au/geopackages/
+
+1. Victoria
+2. Employment, Income and Unpaid Work (EIUW)
+3. EIUW GeoPackage A
+]
+
+* **Or use the [`strayr`](https://github.com/runapp-aus/strayr) package!** We'll use the one from the ABS website instead.
+
+
+.f4.overflow-scroll.h-40[
+
+```{r sa1-layers}
+geopath <- here::here("data/Geopackage_2016_EIUWA_for_VIC/census2016_eiuwa_vic_short.gpkg")
+st_layers(geopath)
+```
+]
+---
+
+# The Australian Statistical Geography Standard (ASGS)
+
+.center[
+<img src="images/lecture-08/acgs-structures.png" width="75%">
+
+]
+
+---
+
+# The number of regions for each layer
+
+.f5[
+```{r}
+st_layers(geopath) %>% 
+  # make it into a data.frame first
+  tibble(!!!.) %>% 
+  # then you can the dplyr operations 
+  dplyr::arrange(features) 
+```
+
+]
+
+---
+
+# <i class="fas fa-search-dollar"></i> Data in the layer
+
+.f5.overflow-scroll.h-90[
+```{r}
+vicmap_ste <- read_sf(geopath, layer = "census2016_eiuwa_vic_sa1_short") 
+vicmap_ste$geom
+str(vicmap_ste)
+```
+
+]
+
+
+---
+
+name: ste
+
+# State or Territory (STE)
+
+```{r map-ste}
+vicmap_ste <- read_sf(geopath, layer = "census2016_eiuwa_vic_ste_short") 
+ggplot(vicmap_ste) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_ste)
+```
+
+
+---
+
+name: gccsa
+
+# Greater Capital City Statistical Areas (GCCSA)
+
+* Each region with variable population
+
+```{r map-gccsa}
+vicmap_gccsa <- read_sf(geopath, layer = "census2016_eiuwa_vic_gccsa_short")
+ggplot(vicmap_gccsa) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_gccsa)
+```
+
+---
+
+name: sos
+
+# Section of State (SOS)
+
+* Major urban, other urban, bounded locally & rural balance
+
+```{r map-sos}
+vicmap_sos <- read_sf(geopath, layer = "census2016_eiuwa_vic_sos_short")
+ggplot(vicmap_sos) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sos)
+```
+
+---
+
+name: ra
+
+# Remoteness Areas (RA)
+
+```{r map-ra}
+vicmap_ra <- read_sf(geopath, layer = "census2016_eiuwa_vic_ra_short")
+ggplot(vicmap_ra) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_ra)
+```
+
+---
+
+name: sosr
+
+# Section of State Ranges (SOSR)
+
+```{r map-sosr}
+vicmap_sosr <- read_sf(geopath, layer = "census2016_eiuwa_vic_sosr_short")
+ggplot(vicmap_sosr) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sosr)
+```
+
+---
+
+name: sa4
+
+# Statistical Area Level 4 (SA4)
+
+* Each region with population of 100,000 - 500,000
+
+```{r map-sa4}
+vicmap_sa4 <- read_sf(geopath, layer = "census2016_eiuwa_vic_sa4_short")
+ggplot(vicmap_sa4) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sa4)
+```
+
+
+
+---
+
+name: sua
+
+# Significant Urban Areas (SUA)
+
+```{r map-sua}
+vicmap_sua <- read_sf(geopath, layer = "census2016_eiuwa_vic_sua_short")
+ggplot(vicmap_sua) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sua)
+```
+
+---
+
+name: ced
+
+# Commonwealth Electoral Division (CED)
+
+
+```{r map-ced}
+vicmap_ced <- read_sf(geopath, layer = "census2016_eiuwa_vic_ced_short")
+ggplot(vicmap_ced) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_ced)
+```
+---
+
+name: sa3
+
+# Statistical Area Level 3 (SA3)
+
+* Each region with population of 30,000 - 130,000
+
+```{r map-sa3}
+vicmap_sa3 <- read_sf(geopath, layer = "census2016_eiuwa_vic_sa3_short") 
+ggplot(vicmap_sa3) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sa3)
+```
+---
+
+name: lga
+
+# Local Government Area (LGA)
+
+
+```{r map-lga}
+vicmap_lga <- read_sf(geopath, layer = "census2016_eiuwa_vic_lga_short")
+ggplot(vicmap_lga) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_lga)
+```
+
+---
+
+name: sed
+
+# State Electoral Division (SED)
+
+```{r map-sed}
+vicmap_sed <- read_sf(geopath, layer = "census2016_eiuwa_vic_sed_short") 
+ggplot(vicmap_sed) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sed)
+```
+---
+
+# Urban Centres and Localities (UCL)
+
+```{r map-ucl}
+vicmap_ucl <- read_sf(geopath, layer = "census2016_eiuwa_vic_ucl_short")
+ggplot(vicmap_ucl) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons)) 
+
+nrow(vicmap_ucl)
+```
+
+---
+
+name: sa2
+
+# Statistical Area Level 2 (SA2)
+
+* Each region with populations in the range of 3,000-25,000
+
+```{r map-sa2}
+vicmap_sa2 <- read_sf(geopath, layer = "census2016_eiuwa_vic_sa2_short")
+ggplot(vicmap_sa2) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sa2)
+```
+
+---
+
+name: poa
+
+# Postal Areas (POA)
+
+```{r map-poa}
+vicmap_poa <- read_sf(geopath, layer = "census2016_eiuwa_vic_poa_short")
+ggplot(vicmap_poa) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_poa)
+```
+
+---
+
+name: ssc
+
+# State Suburbs (SSC)
+
+```{r map-ssc}
+vicmap_ssc <- read_sf(geopath, layer = "census2016_eiuwa_vic_ssc_short") 
+ggplot(vicmap_ssc) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_ssc)
+```
+
+
+---
+
+name: sa1
+
+# Statistical Area Level 1 (SA1)
+
+* Each region with a population of range 200-800
+
+```{r map-sa1}
+vicmap_sa1 <- read_sf(geopath, layer = "census2016_eiuwa_vic_sa1_short")
+ggplot(vicmap_sa1) +
+  geom_sf(aes(geometry = geom, fill = Median_age_persons))
+
+nrow(vicmap_sa1)
+```
+
+---
+
+class: transition
+
+
+# Electorate boundary <br>vs <br>Census boundary
+
+🎯 Estimate a median age for an electorate 
+
+
+
+---
+
+# Comparing SED 2016 and electorates divisions 2019
+
+.f4[See [here](https://wcd.numbat.space/lectures/lecture-05.html#35) for  `winners_fix` data was.]
+
+```{r zoomed-map, fig.width = 8}
+ggplot(winners_fix) + 
+  geom_sf(data = vicmap_sed, aes(geometry = geom, fill = Median_age_persons), 
+          alpha = 1, color = "white", size = 2) +
+  geom_sf(aes(geometry = geometry), 
+          fill = "transparent", color = "red") +
+  coord_sf(xlim = c(144.95, 145.24), ylim = c(-38.05, -37.85))
+```
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[1]
+
+
+.flex[
+.w-50[
+.f5[
+```{r district-map, fig.show='hide'}
+electorate <- winners_fix %>% 
+  filter(DivisionNm=="Hotham")
+
+sed_intersect <- vicmap_sed %>% #<<
+            filter(st_intersects(geom, #<<
+                                 electorate$geometry, #<<
+                                 sparse = FALSE)[,1]) #<<
+
+
+ggplot(electorate, aes(geometry = geometry)) +
+  geom_sf() +
+  geom_sf_text(aes(label = DivisionNm)) +
+  geom_sf(data = sed_intersect,
+          aes(geometry = geom),
+          color = "red", fill = "transparent") + 
+  geom_sf_text(data = sed_intersect,
+            aes(label = sed_code_2016, 
+                geometry = geom),
+            color = "red") 
+```
+
+
+
+]
+
+* There are `r nrow(sed_intersect)` SED regions that intersect with Hotham electorate.
+
+
+]
+.w-50[
+```{r district-map, echo = FALSE, fig.width = 7, fig.height = 7}
+```
+]
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[2]
+
+.flex[
+.w-60[
+.f5[
+
+```{r district-map2, fig.show='hide'}
+sed_intersect2 <- sed_intersect %>% #<<
+  mutate(geometry = st_intersection(geom, electorate$geometry), #<<
+         perc_area = 100 * st_area(geometry) / st_area(geom), #<<
+         perc_area = as.numeric(perc_area))  %>% #<<
+  filter(perc_area > 5) #<<
+
+ggplot(sed_intersect2, aes(geometry = geometry)) +
+  geom_sf(data = electorate) +
+  geom_sf_text(data = electorate,
+               aes(label = DivisionNm)) +
+  geom_sf(color = "red", aes(fill = Median_age_persons)) +
+  geom_sf_text(aes(
+    label = glue::glue("{sed_code_2016}
+                        ({scales::comma(perc_area, 1)}%, {Median_age_persons})")),
+    color = "red") +
+  theme(legend.position = "bottom")
+```
+
+]
+
+* There are `r nrow(sed_intersect2)` SED areas with at least 5% intersection with the electoral area.
+* **How would you characterise the median age for Hotham?**
+]
+.w-40[
+```{r district-map2, echo = FALSE, fig.height = 6, fig.width = 6}
+```
+]
+
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[3]
+
+.flex[
+.w-40[
+```{r district-map2, echo = FALSE, fig.height = 6, fig.width = 6}
+```
+]
+.w-60.f5[
+**Strategy 1**
+
+```{r}
+sort(sed_intersect2$Median_age_persons)
+```
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 2**
+
+```{r}
+mean(sed_intersect2$Median_age_persons)
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+```{r}
+weighted.mean(sed_intersect2$Median_age_persons, 
+              sed_intersect2$perc_area)
+```
+
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[4]
+
+.flex[
+.w-50[
+.f5[
+```{r sa1-intersect, eval = FALSE}
+sa1_intersect <- vicmap_sa1 %>% #<<
+            filter(st_intersects(geom, 
+                                 electorate$geometry, 
+                                 sparse = FALSE)[,1]) 
+sa1_intersect2 <- sa1_intersect %>% 
+  mutate(geometry = st_intersection(geom, electorate$geometry), 
+         perc_area = 100 * st_area(geometry) / st_area(geom), 
+         perc_area = as.numeric(perc_area))  %>% #<<
+  filter(perc_area > 5) 
+
+ggplot(sa1_intersect) +
+  geom_sf(color = "red", 
+          aes(fill = Median_age_persons,
+              geometry = geom)) +       
+  geom_sf(data = electorate, color = "white", size = 2,
+          fill = "transparent",
+          aes(geometry = geometry)) +
+  theme(legend.position = "bottom")
+```
+]]
+
+.w-50[
+```{r sa1-intersect, echo = FALSE,fig.width = 6, fig.height = 6}
+```
+]]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[5]
+
+.flex[
+.w-40[
+```{r sa1-intersect, echo = FALSE, fig.height = 6, fig.width = 6}
+```
+]
+.w-60.f5[
+**Strategy 1**
+
+```{r}
+fivenum(sa1_intersect2$Median_age_persons)
+```
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 2**
+
+```{r}
+mean(sa1_intersect2$Median_age_persons)
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+```{r}
+weighted.mean(sa1_intersect2$Median_age_persons, sa1_intersect2$perc_area)
+```
+
+{{content}}
+
+--
+
+**Strategy 4**
+
+```{r sa1-region-histogram, fig.height=2}
+ggplot(sa1_intersect2, aes(x = Median_age_persons)) +
+  geom_histogram(binwidth = 1)
+```
+
+---
+
+# Closer look 🕵️ Zero median age
+
+.flex[
+.w-50[
+```{r strange-result}
+sa1_intersect2 %>% 
+  filter(Median_age_persons==0) %>% 
+  ggplot() + 
+  geom_sf() + 
+  geom_sf(data = electorate, color = "red",
+          fill = "transparent",
+          aes(geometry = geometry))
+```
+]
+.w-50[
+<center>
+<img src="images/lecture-08/2018-vic-hotham-detailed-map.jpg" width = "100%"/>
+</center>
+
+]
+]
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[6]
+
+.flex[
+.w-40.f5[
+
+## Before
+
+**Strategy 1**
+
+```{r}
+fivenum(sa1_intersect2$Median_age_persons)
+```
+
+**Strategy 2**
+
+```{r}
+mean(sa1_intersect2$Median_age_persons)
+```
+
+**Strategy 3**
+
+```{r}
+weighted.mean(sa1_intersect2$Median_age_persons, sa1_intersect2$perc_area)
+```
+]
+.w-60.f5.pl3[
+
+## After
+
+```{r}
+sa1_intersect3 <- sa1_intersect2 %>% 
+  filter(Median_age_persons != 0)
+```
+
+
+
+{{content}}
+
+]]
+
+--
+
+**Strategy 1**
+
+```{r}
+fivenum(sa1_intersect3$Median_age_persons)
+```
+
+{{content}}
+
+--
+
+**Strategy 2**
+
+```{r}
+mean(sa1_intersect3$Median_age_persons)
+```
+
+{{content}}
+
+--
+
+
+**Strategy 3**
+
+```{r}
+weighted.mean(sa1_intersect3$Median_age_persons, sa1_intersect3$perc_area)
+```
+
+
+
+---
+
+# Dorling Cartogram 
+
+```{r zoomed-map-income-dorling, fig.width = 8}
+sa1_intersect4 <- sa1_intersect %>% 
+  mutate(centroid = st_centroid(geom))
+ggplot(sa1_intersect4) +
+  geom_sf(data = electorate,
+          aes(geometry = geometry), size = 2, fill = "grey60") +
+  geom_sf(aes(geometry = centroid, color = Median_age_persons),
+          size = 0.5, shape = 3) +
+  scale_color_viridis_c(name = "Median age", option = "magma")
+```
+
+---
+
+# Closer look 🔬 Hotham electorate .circle.monash-bg-black.white[7]
+
+
+.flex[
+.w-50.f5.pr3[
+```{r}
+sa1_intersect5 <- sa1_intersect4 %>% 
+  filter(st_intersects(centroid, 
+                       electorate$geometry, 
+                       sparse = FALSE)[,1],
+         Median_age_persons!=0)
+```
+
+**Strategy 1**
+
+```{r, cache = FALSE}
+fivenum(sa1_intersect5$Median_age_persons)
+```
+
+**Strategy 2**
+
+```{r, cache = FALSE}
+mean(sa1_intersect5$Median_age_persons)
+```
+
+**Strategy 4**
+
+```{r sa1-region-histogram2, fig.height=2, cache = FALSE}
+ggplot(sa1_intersect5, aes(x = Median_age_persons)) +
+  geom_histogram(binwidth = 1)
+```
+
+
+]
+.w-60[
+
+{{content}}
+
+
+]]
+
+--
+
+<div class="idea-box">
+<ul>
+<li>There are many ways to characterise an electorate.</li>
+<li>Estimates of median age of an electorate is more consistent using SA1 map data than SED map data.</li>
+</ul>
+</div>
+
+
+---
+
+class: bg-gray middle center
+
+.idea-box.tl.w-70[
+
+## Summary
+
+* We looked at mapping the 2016 census boundaries and projected a summary of the census variable (i.e. median age) onto a 2019 electoral district
+
+
+]
+
+.info-box.tl.w-70[
+Read [Forbes, Cook & Hyndman (2020) Spatial modelling of the two-party preferred vote in Australian federal elections: 2001–2016. *Australian & New Zealand Journal of Statisitcs*. ](https://onlinelibrary.wiley.com/doi/abs/10.1111/anzs.12292) for a more sophisticated approach to studying the census variables and election results together.
+]
+
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```
+
+

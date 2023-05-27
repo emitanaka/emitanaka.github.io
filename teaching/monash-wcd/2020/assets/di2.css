@@ -1,0 +1,47 @@
+li {
+  position: relative;
+  display: list-item;
+  text-align: left;
+  padding-left: 45px!important;
+}
+
+.padtop0 {
+  padding-top: 0;
+}
+
+ul li:before {
+  content: "\f1e3";
+  font-size: 28px;
+  font-family: "FontAwesome";
+  margin-right: 10px;
+  color: #D93F00;
+}
+
+ul li li:before {
+  content: "\f140";
+  font-size: 28px;
+  font-family: "FontAwesome";
+  margin-right: 10px;
+  color: #D93F00;
+}
+.grid2, .grid2-col, .grid2-row {
+  display: grid;
+  margin-left: 1em;
+  margin-right: 1em;
+  width: calc(70% + 8em);
+  height: 100%;  
+}
+
+.scroll-800 {
+  overflow-y: scroll;
+  height: 600px;
+}
+
+pre {
+  text-align: left;!important
+}
+
+.custom-list ul li li li:before {
+  content: "";
+}
+

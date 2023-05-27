@@ -1,0 +1,787 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "$k$-nearest neightbours"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 7"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 7"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*$k$-nearest neightbours*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+library(tidyverse)
+library(ggforce)
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+
+## Motivation
+
+::: incremental
+
+- When new training data becomes available, the models so far require re-estimation.
+- **_Re-estimation can be time consuming_**.
+- $k$-nearest neighbours (**kNN**) requires no explicit training or model.
+
+:::
+
+
+## Neighbours
+
+::: incremental
+
+- An observation $j$ is said to be a [**neighbour**]{.monash-blue} of observation $i$ if its predictor values $\boldsymbol{x}_j$ are similar to the predictor values $\boldsymbol{x}_i$.
+- The **$k$-nearest neighbours** to observation $i$ are the $k$ observations, with the most similar predictor values to $\boldsymbol{x}_i$.
+- But how do we **measure similarity**?
+
+:::
+
+
+
+# Distance metrics {background-color="#006DAE" .mcenter}
+
+
+## Simple example
+
+::: flex
+
+::: {.w-80}
+
+- Consider 3 individuals and 2 predictors (age and income):
+  + [Mr Orange]{style="color:#FFD200;"} is 37 years old and earns $75K per year.
+  + [Mr Red]{style="color:#FF0000;"} is 31 years old and earns $67K per year.
+  + [Mr Blue]{style="color:#0000FF;"} is 30 years old and earns $69K per year.
+
+::: fragment  
+  
+- Which is the nearest neighbour to Mr Red?
+
+:::
+
+
+:::
+
+::: {.w-20 .pl3}
+
+```{r simple}
+#| echo: false
+#| fig-height: 4
+#| fig-width: 4
+df <- data.frame(age = c(37, 31, 30),
+                 income = c(75, 67, 69),
+                 color = c("orange", "red", "blue"))
+ggplot(df, aes(age, income)) +
+  geom_point(aes(color = I(color)), size = 3)
+```
+
+
+:::
+
+:::
+
+
+
+
+## Computing distances 
+
+- For two variables, we can use Pythagoras' theorem to calculate the distances between individuals.
+
+::: flex
+
+::: {.w-50}
+
+
+```{r distances}
+#| echo: false
+#| fig-height: 3.5
+df2 <- data.frame(age1 = c(37, 31, 30),
+                 age2 = c(31, 30, 37),
+                 income1 = c(75, 67, 69),
+                 income2 = c(67, 69, 75)) %>% 
+  mutate(dist = sqrt((age1 - age2)^2 + (income1 - income2)^2))
+ggplot(df) +
+  geom_segment(aes(x = age1, xend = age2,
+                   y = income1, yend = income2),
+               data = df2) +
+  # vertical
+  geom_segment(aes(x = age1, xend = age1,
+                   y = income1, yend = income2),
+               data = df2, linetype = "dashed") +
+  # horizontal
+  geom_segment(aes(x = age1, xend = age2,
+                   y = income2, yend = income2),
+               data = df2, linetype = "dashed") +
+  geom_label(data = df2,
+            aes(x = age1,
+                y = (income1 + income2)/2,
+                label = round(abs(income1 - income2), 1))) +
+  geom_label(data = df2,
+            aes(x = (age1 + age2)/2,
+                y = income2,
+                label = round(abs(age1 - age2), 1))) +
+  geom_point(aes(age, income, color = I(color)), size = 3) +
+  geom_label(data = df2,
+            aes(x = (age1 + age2)/2,
+                y = (income1 + income2)/2,
+                label = round(dist, 1)),
+            fill = "yellow") +
+  labs(x = "age", y = "income")
+```
+
+
+:::
+
+::: {.w-50 .pl3 .f3}
+
+* Distances:
+
+  * $\sqrt{6^2 + 8^2} = `r sqrt(6^2 + 8^2)`$
+  * $\sqrt{1^2 + 2^2} \approx `r round(sqrt(1^2 + 2^2), 1)`$
+  * $\sqrt{7^2 + 6^2} \approx `r round(sqrt(7^2 + 6^2), 1)`$
+  
+* Mr Red is closest to Mr Blue.
+
+:::
+
+:::
+
+. . . 
+
+- But how do we compute the distances between observations when there are _more than two variables_?
+
+
+
+
+
+
+
+## Euclidean distance
+ 
+- Suppose $\boldsymbol{x}_{i}$ is the value of the predictors for observation $i$, $\boldsymbol{x}_{j}$ is the value of the predictors for observation $j$.
+
+. . . 
+
+- The [**Euclidean distance**]{.monash-blue} (ED) between observations $i$ and $j$ can be computed as
+
+$$D_{Euclidean}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)=\sqrt{\sum\limits_{s=1}^p \left(x_{is}-x_{js}\right)^2}.$$
+
+## Manhattan distance
+
+- There are other ways to compute the distances. 
+
+. . . 
+
+- Another distance metric is the [**Manhattan distance**]{.monash-blue}, also known as the **block distance**:
+
+$$D_{Manhattan}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)=\sum\limits_{s=1}^p |x_{is}-x_{js}|.$$
+
+
+## Chebyshev distance
+
+* The [**Chebyshev distance**]{.monash-blue} is the maximum distance between any variables:
+
+$$D_{Chebyshev}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)=\max_{s = 1, \dots, p} |x_{is}-x_{js}|.$$
+
+## Canberra distance 
+
+- The [**Canberra distance**]{.monash-blue} is a weighted version of the Manhattan distance:
+
+$$D_{Canberra}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)=\sum\limits_{s=1}^p \dfrac{|x_{is}-x_{js}|}{|x_{is}| + |x_{js}|}.$$
+
+- If $x_{is} = x_{js} = 0$ then it is omitted from the sum. 
+
+## Jaccard distance 
+
+* The [**Jaccard distance**]{.monash-blue}, or `binary` distance, measures the proportion of differences in non-zero elements between two variables out of elements where at least one variable is non-zero:
+
+$$D_{Jaccard}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right) =  1 - \dfrac{|A\cap B|}{|A\cup B|},$$ where 
+
+- $A = \{s~|~x_{is} = 0 \text{ for }s =1, \dots, p\}$ and
+- $B = \{s~|~x_{js} = 0 \text{ for }s =1, \dots, p\}$.
+
+
+## Minkowski distance 
+
+- The [**Minkowski distance**]{.monash-blue} is a generalisation of the Euclidean distance $(q = 2)$ and Manhattan distance $(q = 1)$:
+
+$$D_{Minkowski}\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)=\left(\sum\limits_{s=1}^p \left|x_{is}-x_{js}\right|^q\right)^{\frac{1}{q}}.$$
+
+
+
+
+## <i class='fab fa-r-project'></i> Computing distances with R 
+```{r simple-dist}
+simple <- data.frame(age = c(37, 31, 30),
+                     income = c(75, 67, 69),
+                     row.names = c("Orange", "Red", "Blue"))
+simple
+
+dist(simple, method = "euclidean")
+```
+
+. . . 
+
+Other `method`s available:
+
+::: flex
+
+::: {.w-50}
+
+- `maximum` (Chebyshev distance)
+- `manhattan`
+- `canberra`
+
+:::
+
+::: {.w-50 .pl3}
+
+- `binary` (Jaccard distance)
+- `minkowski`
+
+:::
+
+:::
+
+
+
+## Standardising the variables {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+<details><summary>Data</summary>
+
+```{r print-simple}
+simple1000 <- simple %>% 
+  mutate(income = 1000 * income) 
+
+simple1000
+```
+
+</details>
+
+```{r simple-dist2}
+simple1000 %>%  # measure income in $ instead of $1000
+  dist(method = "euclidean")
+```
+
+::: incremental
+
+- The units of measurements are now very different across variables. 
+- Here `income` in dollars contributes greater to the distance than `age` in years.
+- We commonly calculate distance after *standardising the variables* so the variables are in a comparable scale.
+
+:::
+
+. . . 
+
+
+```{r scale-vars}
+dist(scale(simple))
+dist(scale(simple1000))
+```
+
+
+
+# $k$-nearest neighbours {background-color="#006DAE" .mcenter}
+
+
+
+## Notations for neighbours
+
+::: incremental
+
+- [${ \mathcal{N}_i^k}$]{.monash-blue} denotes a set of index of  $k$ observations with the smallest distance to observation $i$.
+- For instance, ${ \mathcal{N}^2_{10} =\{3, 5\}}$ indicates that the nearest neighbours for observation $10$ are observations $3$ and $5$. 
+- Alternatively, it can also be defined as [${\mathcal{N}^k_i = \{j~|~D\left(\boldsymbol{x}_{i},\boldsymbol{x}_{j}\right)<\epsilon_k\}}$]{.monash-blue}.
+- All observations whose distance to $\boldsymbol{x}_i$ is less than the positive scalar $\epsilon_k$. 
+- The value $\epsilon_k$ is chosen so that only $k$ neighbours are chosen.
+
+:::
+
+
+
+## Illustration of neighbours 1
+
+- For observation 7 with $k=1$, we have ${ \mathcal{N}^1_7} = \{3\}$.
+- Here we use Euclidean distance and $\epsilon_k = 0.4$.
+
+```{r vis-neighbour-1}
+#| echo: false 
+set.seed(10)
+dat <- tibble(id = paste0("x", 1:20)) %>% 
+  mutate(age = round(rnorm(n(), 45, 10)),
+         income = round(rnorm(n(), 80, 10)),
+         bankrupt = ifelse(income < (120 - age + rnorm(n(), 0, 6)), 'defaulted', 'paid'),
+         age_std = scale(age),
+         income_std = scale(income),
+         dist = sqrt((age_std - age_std[7])^2 + (income_std - income_std[7])^2),
+         eps = 0.4,
+         select = 7)
+
+gneigh <- dat %>%
+  ggplot(aes(
+    x = age_std,
+    y = income_std,
+    label = id,
+    color = bankrupt
+  )) +
+  geom_circle(
+    aes(x0 = age_std[select[1]], y0 = income_std[select[1]], r = eps[select[1]]),
+    inherit.aes = FALSE,
+    linetype = "dashed",
+    size = 0.05,
+    fill = "grey80",
+    alpha = 0.5
+  ) + 
+  geom_point() + 
+  ggrepel::geom_text_repel() +
+  xlim(-3, 2) + 
+  ylim(-3, 2) +
+  labs(x = "age (standardised)", y = "income (standardised)")
+
+gneigh
+```
+
+## Illustration of neighbours 2
+
+- ${ \mathcal{N}_7^3} = \{3, 8, 9\}$.
+
+```{r vis-neighbour-3}
+#| echo: false 
+
+gneigh %+% mutate(dat, eps = 1.1) 
+```
+
+## Illustration of neighbours 3
+
+- $\mathcal{N}_{15}^3 = \{5, 11, 16\}$
+
+```{r vis-neighbour-32}
+#| echo: false 
+gneigh %+% mutate(dat, select = 15, eps = 0.78) 
+```
+
+## Illustration of neighbours 4
+
+- $\mathcal{N}_{8}^3 = \{1, 10, 16\}$
+
+```{r vis-neighbour-33}
+#| echo: false 
+gneigh %+% mutate(dat, select = 8, eps = 0.88) 
+```
+
+## Your turn
+
+- Can you find the 3-nearest neighbours to observation 9?
+
+```{r vis-neighbour-34}
+#| echo: false 
+gneigh %+% mutate(dat, select = 9, eps = 0) 
+```
+
+
+## The boundary region for Euclidean distance
+
+::: incremental
+
+- With one predictor finding the nearest neighbours is finding the $k$ observations inside an **interval** around $x_i$: $[x_i-\epsilon_k,x_i+\epsilon_k]$.
+- With two predictors it is finding the $k$ observations inside a **circle** around $\boldsymbol{x}_i.$
+- With three predictors it is finding the $k$ observations inside a **sphere** around $\boldsymbol{x}_i.$
+- In high dimensions ( ${ p>3}$ ) it is finding the $k$ observations inside a **hyper-sphere** around  $\boldsymbol{x}_i.$
+
+:::
+
+## Illustration of neighbours: Manhattan distance
+
+- ${ \mathcal{N}_7^3} = \{3, 8, 9\}$.
+
+```{r vis-man-1}
+#| echo: false
+eps <- 1.3
+gman <- dat %>%
+  ggplot(aes(
+    x = age_std,
+    y = income_std,
+    color = bankrupt
+  )) +
+    geom_polygon(
+    data = data.frame(x = c(dat$age_std[7], 
+                            dat$age_std[7] + eps,
+                            dat$age_std[7],
+                            dat$age_std[7] - eps),
+                      y = c(dat$income_std[7] + eps,
+                            dat$income_std[7],
+                            dat$income_std[7] - eps,
+                            dat$income_std[7])),
+    aes(
+      x = x,
+      y = y
+    ),
+    color = 'black',
+    fill = "grey80",
+    alpha = 0.5,
+    linetype = "dashed",
+    size = 0.05
+  ) +
+  geom_point() +
+  ggrepel::geom_text_repel(aes(label = id)) +
+  xlim(-3, 2) + 
+  ylim(-3, 2) +
+  labs(x = "age (standardised)", y = "income (standardised)")
+gman
+```
+
+- Neighbours are selected within the boundary of a tilted square.
+
+
+## Prediction with kNN
+
+::: incremental 
+
+- Assume that we want to predict a new record with predictor values $\boldsymbol{x}_\text{new}$.
+- For classification problems, kNN predicts the outcome class in three steps:
+  1. Find the $k$-nearest neighbours $\mathcal{N}^k_{\text{new}}$.
+  2. Count how many neighbours belong to class 1 and to class 2.
+  3. Take as your prediction the class with the majority of votes.
+  
+:::
+
+
+## Prediction with kNN: New data
+
+::: flex
+
+::: {.w-50}
+
+- Suppose that the new customer has a (standardized) age $0$ with  (standardized) income of $0$.
+- Let's use 5-nearest neighbours to predict whether they can pay their loan.
+
+:::
+
+::: {.w-50 .pl3}
+
+
+
+
+```{r new-record}
+#| echo: false
+#| fig-height: 4
+gnew <- dat %>%
+  ggplot(aes(
+    x = age_std,
+    y = income_std,
+    color = bankrupt
+  )) +
+  geom_point() +
+  ggrepel::geom_text_repel(aes(label = id)) +
+  annotate(
+    geom = "point",
+    x = 0,
+    y = 0,
+    color = "black"
+  ) +
+  annotate(
+    geom = "text",
+    x = 0.2,
+    y = -0.2,
+    label = "xnew",
+    color = "black"
+  ) +
+  xlim(-3, 2) + ylim(-3, 2) +
+  labs(x = "age (standardised)", y = "income (standardised)")
+gnew
+```
+
+:::
+
+:::
+
+
+## Prediction with kNN: Step 1
+
+```{r new-record-plot}
+#| echo: false
+dat %>%
+  ggplot(aes(
+    x = age_std,
+    y = income_std,
+    color = bankrupt
+  )) +
+  geom_circle(aes(x0 = 0, y0 = 0, r = 0.73), 
+              inherit.aes = FALSE, linetype="dashed",
+              size=0.05,
+              fill = "grey80",
+              alpha = 0.5) +
+  geom_point() +
+  ggrepel::geom_text_repel(aes(label = id)) +
+  annotate(
+    geom = "point",
+    x = 0,
+    y = 0,
+    color = "black"
+  ) +
+  annotate(
+    geom = "text",
+    x = 0.2,
+    y = -0.2,
+    label = "xnew",
+    color = "black"
+  ) +
+  xlim(-3, 2) + ylim(-3, 2) +
+  labs(x = "age (standardised)", y = "income (standardised)") 
+```
+- ${ \mathcal{N}_{\text{new}}^5 = \{1, 6, 8, 10, 20\}}$.
+
+
+
+## Prediction with kNN: Steps 2 and 3
+
+- Step 2:
+  - 2 votes for **paid**: $6$ and $20$.
+  - 3 votes for **default**: $1$, $8$ and $10$.
+  
+. . .   
+
+- Step 3: The new record is predicted to **default on their loan**.
+
+
+
+## Prediction with kNN: Propensity score
+
+- We can also think about the proportion of class 1 observations as a propensity score.
+- The **propensity score** is:
+$${ \text{Pr}\left(y_{\text{new}}=1|\boldsymbol{x}_{\text{new}}\right)= \frac{1}{k}\sum_{\boldsymbol{x}_j\in\mathcal{N}^k_{\text{new}}}I(y_j=1)
+}$$
+- Proportion of neighbours in favor of class 1.
+
+
+## Prediction with kNN: Propensity score calculation
+
+- To compute the propensity score of the new record in the example, **paid** is class 1 and **defaulted** class 2. 
+
+- Then
+$$\begin{align*}P\left(y_{\text{new}} =1|\boldsymbol{x}_{\text{new}}\right) &= \frac{1}{5} (I(y_1=1)+I(y_6=1)+I(y_{8}=1)\\ &\qquad+I(y_{10}=1)+I(y_{20}=1))\\&=\frac{1}{5}(0 + 1 + 0 + 0 + 1)\\&=0.4.\end{align*}$$
+ 
+
+
+
+# An application to caravan data {background-color="#006DAE" .mcenter}
+
+
+## The business problem
+
+::: incremental
+
+- The Insurance Company (TIC) Benchmark is interested in increasing their business.
+- Their salesperson must visit each potential customer. 
+- The company wants to use data on old customers to maximize the insurance purchases. 
+- The predictions from the trained model can help the salesperson spend their time on a customer that is more likely to purchase the caravan insurance policy. 
+
+:::
+
+## <i class="fas fa-database"></i> Sales of insurance policy with `caravan` data {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+```{r caranan-skim}
+#| echo: false
+#| eval: true
+#| results: hide
+library(tidyverse)
+caravan <- read_csv("https://emitanaka.org/iml/data/caravan.csv") %>% 
+  mutate(across(-Purchase, scale),
+         Purchase = factor(Purchase))
+skimr::skim(caravan)
+```
+
+
+- The data contains `r nrow(caravan)` customer records.
+- The full description of data can be found  [here](https://liacs.leidenuniv.nl/~puttenpwhvander/library/cc2000/data.html). 
+- Variables 1 to 43 are sociodemographic. Obtained from zip codes. Customers with the same zip code have identical attributes.
+- Variables 44 to 85 product ownership data. 
+- Variable 86 (Purchase) indicates whether the customer purchased a caravan insurance policy. 
+
+```{r caranan-skim}
+#| echo: true
+#| eval: true
+#| classes: skimr
+```
+
+##  <i class="fab fa-r-project"></i> kNN in R
+
+- First let's separate the data into training and testing data.
+```{r caravan-split}
+library(rsample)
+set.seed(124)
+caravan_split <- caravan %>% 
+  # standardise
+  mutate(across(-Purchase, scale)) %>% 
+  initial_split()
+```
+
+. . . 
+
+- We apply kNN using `kknn` function from the `kknn` library:
+
+```{r knn}
+library(kknn)
+knn_pred <- kknn(Purchase ~ ., 
+                 train = training(caravan_split),
+                 test = testing(caravan_split),
+                 k = 2,
+                 # parameter of Minkowski distance 
+                 # 2 = Euclidean distance 
+                 # 1 = Manhattan distance
+                 distance = 2)
+```
+
+
+
+
+
+
+## <i class='fab fa-r-project'></i> Output object
+
+- The return object from `kknn` includes:
+  - `fitted.values` - vector of predictions 
+  - `prob` - predicted class probabilities
+
+
+```{r knn-output}
+knn_pred$fitted.values %>% head()
+knn_pred$prob %>% head()
+```
+
+
+## Selecting $k$ {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+- We can compute metrics, such as AUC for a range of $k$s.
+
+```{r select-k}
+library(yardstick)
+kaucres <- map_dfr(2:100, function(k) {
+    knn_pred <- kknn(Purchase ~ ., 
+                   train = training(caravan_split),
+                   test = testing(caravan_split),
+                   k = k,
+                   distance = 2)
+    tibble(k = k, AUC = roc_auc_vec(testing(caravan_split)$Purchase, 
+                                    knn_pred$prob[, 1]))
+  })
+
+kaucres 
+```
+
+
+
+## Selecting $k$ visually {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+```{r elbow-plot}
+#| fig-width: 10
+#| fig-height: 2.5
+#| code-fold: true
+ggplot(kaucres, aes(k, AUC)) +
+  geom_line() +
+  scale_x_continuous(breaks = seq(5, 100, 5))
+```
+
+- The AUC rises as $k$ increases, however there is some diminishing return for larger $k$ values.
+- We can see that the increase in AUC is not as sharp from $k > 15$, so we can suggest $k = 15$. 
+* This visual selection of $k$ is referred to as the **elbow method**.
+
+
+# kNN for other variable encodings {background-color="#006DAE" .mcenter}
+
+## Categorical predictors
+
+- In the examples so far, the predictors were all numeric.
+
+. . . 
+
+- Categorical variables must be **converted to dummy variables** before distances can be computed. 
+
+
+## kNN for numerical outcomes
+
+::: incremental
+
+- We can also apply kNN to predict numerical responses.
+- The step of finding nearest neighbours is identical as to the case of categorical variables, however, the predictive step is different!
+- The predicted value is equal to the average of the outcome of the neighbours: $${\hat{y}_{\text{new}} = f(\boldsymbol{x}_{\text{new}}) = \frac{1}{k}\sum_{j\in\mathcal{N}^k_{\text{new}}}y_j}.$$
+
+:::
+
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+
+- kNN is simple and powerful -- no complex parameters to tune.
+- No optimisation involved with kNN. 
+- kNN can be however computationally expensive as the nearest neighbour for a new point requires computation of distance to all points.
+
+
+
+
+
+
+

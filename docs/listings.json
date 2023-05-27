@@ -1,10 +1,31 @@
 [
   {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/2022-10-23-edibble-for-biometrics-bulletin/index.html",
+      "/blog/2022-10-15-affective-colors/index.html",
+      "/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
+      "/blog/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
+      "/blog/2022-06-30-academic-ranks/academic-ranks.html",
+      "/blog/2022-04-27-new-beginnings/new-beginnings.html",
+      "/blog/2022-03-12-maximum-potential/maximum-potential.html",
+      "/blog/2022-03-06-the-war/the-war.html",
+      "/blog/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
+      "/blog/2022-02-20-color-considerations/color-considerations.html",
+      "/blog/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
+      "/blog/2022-01-16-anime-titles/anime-titles.html",
+      "/blog/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
+      "/blog/2021-01-29-uml-seq-diag/uml-seq-diag.html",
+      "/blog/travel2019/travel2019.html",
+      "/blog/hexsticker/hexsticker.html"
+    ]
+  },
+  {
     "listing": "/research/index.html",
     "items": [
-      "/research/grammar/index.html",
+      "/research/deggust/index.html",
       "/research/edibble/index.html",
-      "/research/deggust/index.html"
+      "/research/grammar/index.html"
     ]
   },
   {
@@ -26,25 +47,49 @@
     ]
   },
   {
-    "listing": "/blog/index.html",
+    "listing": "/teaching/index.html",
     "items": [
-      "/blog/2022-10-23-edibble-for-biometrics-bulletin/index.html",
-      "/blog/2022-10-15-affective-colors/index.html",
-      "/blog/2022-03-27-sensory-discrimination-tests/sensory-discrimination-tests.html",
-      "/blog/2022-07-11-transitioning-from-xaringan-to-quarto-revealjs/transitioning-from-xaringan-to-quarto-revealjs.html",
-      "/blog/2022-06-30-academic-ranks/academic-ranks.html",
-      "/blog/2022-04-27-new-beginnings/new-beginnings.html",
-      "/blog/2022-03-12-maximum-potential/maximum-potential.html",
-      "/blog/2022-03-06-the-war/the-war.html",
-      "/blog/2022-02-24-simulation-proof-of-concept/simulation-proof-of-concept.html",
-      "/blog/2022-02-20-color-considerations/color-considerations.html",
-      "/blog/2022-01-18-manipulating-arrays-in-R/manipulating-arrays-in-r.html",
-      "/blog/2022-01-16-anime-titles/anime-titles.knit.html",
-      "/blog/2022-01-16-anime-titles/anime-titles.html",
-      "/blog/2021-02-03-current-state-of-experimental-design-r-packages/current-state-of-experimental-design-r-packages.html",
-      "/blog/2021-01-29-uml-seq-diag/uml-seq-diag.html",
-      "/blog/travel2019/travel2019.html",
-      "/blog/hexsticker/hexsticker.html"
+      "/teaching/monash-wcd/synthetic-and-simulated-data.html",
+      "/teaching/monash-wcd/language-of-designs.html",
+      "/teaching/monash-wcd/intro-data-collection.html",
+      "/teaching/monash-wcd/aussie-census.html",
+      "/teaching/monash-wcd/aussie-election.html",
+      "/teaching/monash-wcd/aussie-election-and-census.html",
+      "/teaching/monash-cwd/basic-communication.html",
+      "/teaching/monash-cwd/web-tech.html",
+      "/teaching/monash-cwd/web-apps.html",
+      "/teaching/monash-cwd/storytelling-on-web.html",
+      "/teaching/monash-cwd/data-tables.html",
+      "/teaching/monash-cwd/model-outputs.html",
+      "/teaching/monash-cwd/effective-dataviz.html",
+      "/teaching/monash-cwd/statistical-presentations.html",
+      "/teaching/monash-cwd/communicating-code.html",
+      "/teaching/monash-cwd/communicating-code2.html",
+      "/teaching/monash-cwd/narrative.html",
+      "/teaching/monash-cwd/visual.html",
+      "/teaching/monash-cwd/interactive.html",
+      "/teaching/monash-eda/ida.html",
+      "/teaching/monash-eda/single-variable.html",
+      "/teaching/monash-eda/comparisons.html",
+      "/teaching/monash-eda/model-diagnostics.html",
+      "/teaching/monash-eda/visual-inference-part1.html",
+      "/teaching/monash-eda/visual-inference-part2.html",
+      "/teaching/monash-iml/overview.html",
+      "/teaching/monash-iml/nonparametric-regression.html",
+      "/teaching/monash-iml/variable-selection.html",
+      "/teaching/monash-iml/regularisation.html",
+      "/teaching/monash-iml/resampling.html",
+      "/teaching/monash-iml/discriminant-analysis.html",
+      "/teaching/monash-iml/logistic-regression.html",
+      "/teaching/monash-iml/decision-trees.html",
+      "/teaching/monash-iml/tree-ensemble.html",
+      "/teaching/monash-iml/knn.html",
+      "/teaching/monash-iml/dimension-reduction.html",
+      "/teaching/monash-iml/clustering.html",
+      "/teaching/monash-iml/svm.html",
+      "/teaching/monash-iml/neural-network-part1.html",
+      "/teaching/monash-iml/neural-network-part2.html",
+      "/teaching/monash-iml/wrap-up.html"
     ]
   }
 ]

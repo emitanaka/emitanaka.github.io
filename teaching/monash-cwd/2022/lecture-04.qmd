@@ -1,0 +1,573 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Data storytelling on the web"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 4"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 4"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: true
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: false
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+
+fa_file <- function(ext) {
+  glue::glue('<span class="fa-layers fa-fw"><i class="fas fa-file"></i><span class="fa-layers-text fa-inverse" data-fa-transform="shrink-11 down-3" style="font-weight:900;color:#e3e3e3;">{ext}</span></span>')
+}
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim background="white"}
+
+::: {.callout-important }
+
+## Aim
+
+* Understand a website structure and its difference to a webpage
+* Learn how to use Quarto
+* Adopt reproducible workflows using Quarto
+* Host web content using either Quarto Pub, GitHub Pages or Netlify
+
+:::
+
+::: fragment
+
+::: {.callout-tip }
+
+## Why
+
+* Communication on the web is increasingly common
+* There are challenges to streamline reproducible data analysis on the web 
+
+:::
+
+
+:::
+
+
+
+# `r fa_file("Rmd")` R Markdown 
+
+(Assumed knowledge from ETC5513)
+
+## R Markdown system
+
+::: flex
+
+::: w-50
+<center>
+<img src="images/drawn/rmd-system.png">
+</center>
+:::
+
+::: w-50
+
+**Benefits**
+
+::: incremental 
+
+* Better reproducibility for analytical results via R
+* Change output document type easily (thanks to Pandoc)
+* Active maintenance and development by RStudio a.k.a. Posit team
+
+:::
+
+
+:::
+
+:::
+
+
+
+
+# `r fa_file("qmd")` Quarto
+
+(multi-language, next generation version of R Markdown)
+
+::: f3
+
+Note: this is developed by RStudio (or [Posit](https://www.rstudio.com/blog/rstudio-is-becoming-posit/) from October 2022) team.
+
+:::
+
+## Quarto system
+
+::: flex
+
+::: w-50
+
+<center>
+<img src="images/drawn/qmd-system.png">
+</center>
+
+:::
+
+::: {.w-50 .f2}
+
+
+**Changes**
+
+::: incremental 
+
+* The reproducible workflow is no longer dependant on R
+* Better multi-language support (e.g. Python, Julia, JavaScript, R, etc) and multi-engine support (e.g. Jupyter, Knitr, Observable)
+* Consistency in systems across all formats (e.g. layouts, cross references)
+* Some specifications for YAML and chunk options
+
+:::
+
+:::
+
+:::
+
+## Overall syntax comparison
+
+::: flex
+
+::: {.w-50 .pr1}
+
+Rmd 
+
+```` yaml
+---
+title: "My document"
+output:
+  html_document:
+    toc: true
+    css: styles.css
+---
+
+```{{r, warning = FALSE, message = FALSE}}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.width = 8, 
+                      fig.height = 6)
+library(tidyverse)
+```
+````
+
+:::
+
+::: {.w-50 .pl1}
+
+Qmd 
+
+```` yaml
+---
+title: "My document"
+execute: 
+  echo: false
+format:
+  html:
+    toc: true
+    css: styles.css
+    fig-width: 8
+    fig-height: 6
+    html-math-method: katex 
+---
+
+```{{r}}
+#| warning: false
+#| message: false
+library(tidyverse)
+```
+````
+
+:::
+
+:::
+
+
+
+
+## Do we use Rmd or Qmd?
+
+. . . 
+
+* If your computation uses only R, Rmd is completely fine.
+
+. . . 
+
+* In this unit, we will be using Quarto for making:
+  - websites (including blogs) and 
+  - presentation slides.
+
+::: flex
+
+::: w-50
+
+<iframe src="https://rstudio.github.io/r-manuals/" width="100%" height="300px" class="ba"></iframe>
+
+:::
+
+::: w-50
+
+<iframe src="https://quarto.org/docs/presentations/revealjs/demo/#/title-slide" width="100%" height="300px" class="ba"></iframe>
+
+:::
+
+
+:::
+
+
+
+## How to use Quarto
+
+::: incremental
+
+* Quarto is quite NEW -- v1 was released only on 20th July 2022! [<i class="fa-solid fa-download"></i>](https://quarto.org/docs/get-started/)
+
+* The best documentaton is at [https://quarto.org/](https://quarto.org/)
+
+:::
+
+::: fragment
+
+<iframe src="https://quarto.org/" width="100%" height="400px"></iframe>
+
+:::
+
+
+# <i class="fa-solid fa-globe"></i> Making Websites with Quarto
+
+
+## Webpage vs. Website
+
+What is the difference?
+
+. . . 
+
+::: flex
+
+::: w-50
+
+<center>
+<img src="images/drawn/webpage-vs-website.png">
+</center>
+
+:::
+
+::: w-50
+
+::: incremental
+
+* A **webpage** is a _single_ document written in HTML.
+* While a **website** is a collection of webpages where it usually share a common **_navigation_** bar (or tab), and possibly a common **_footer_**.
+
+:::
+
+:::
+
+:::
+
+::: notes 
+
+* A webpage is like a page of a book while a website is like the book
+
+:::
+
+
+## Web server directory index
+
+::: incremental
+
+* `index.html` is a special reserved name for the "index" page
+
+* If you go to [[https://cwd.numbat.space/](https://cwd.numbat.space/)]{.monash-bg-orange2 .monash-white .pl3 .pr3}, this in fact is loading [[https://cwd.numbat.space/]{.monash-bg-umber2 .monash-white .pl3}[index.html]{.monash-bg-orange2 .monash-white .pr3}](https://cwd.numbat.space/)
+
+* Any other file name and folder structure requires you to append it to the domain or subdomain, e.g. [[https://cwd.numbat.space/]{.monash-bg-umber2 .monash-white .pl3}[lectures/lecture-00.html]{.monash-bg-orange2 .monash-white .pr3}](https://cwd.numbat.space/lectures/lecture-03.html)
+
+
+
+:::
+
+## Getting started with Quarto blog 
+
+::: callout-note
+
+## Using RStudio IDE
+
+File > New Project > New Directory > Quarto Blog
+
+:::
+
+. . . 
+
+::: callout-note
+
+## Command line
+
+Run in the terminal:
+
+```{{}}
+quarto create-project myblog --type website:blog
+```
+
+This creates a basic file structure in the `myblog` directory.
+
+
+:::
+
+
+## Quarto blog template
+
+<iframe src="myblog/index.html" width="100%" height="600px" class="ba"></iframe>
+
+
+## Quarto blog structure 
+
+```{{}}
+├── _quarto.yml
+├── index.qmd
+├── about.qmd
+├── profile.jpg
+├── styles.css
+└── posts
+    ├── _metadata.yml
+    ├── welcome
+    │   ├── thumbnail.jpg
+    │   └── index.qmd
+    └── post-with-code
+        ├── image.jpg
+        └── index.qmd
+```
+
+
+## Quarto workflow
+
+* For a live preview of the website (when developing):
+
+```{{}}
+quarto preview 
+```
+
+. . . 
+
+* For rendering the website (default folder is `_site`):
+
+```{{}}
+quarto render 
+```
+
+---
+
+::: flex
+
+::: {.w-50 .pr3}
+
+`_quarto.yml`
+
+
+``` yaml
+project:
+  type: website
+
+website:
+  title: "myblog"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/
+      - icon: twitter
+        href: https://twitter.com
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+```
+
+:::
+
+::: {.w-50 .pl3}
+
+`index.qmd`
+
+``` yaml
+
+---
+title: "myblog"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+```
+
+:::
+
+:::
+
+
+# <i class="fa-solid fa-globe"></i> Publishing websites
+
+## Web hosting
+
+<center>
+<img src="images/drawn/web-pub-system.png">
+</center>
+
+
+
+
+
+## <img src="images/quarto.png" style="vertical-align:middle"> Sharing on the web with Quarto Pub
+
+* Go to [https://quartopub.com/](https://quartopub.com/) and log in
+* In the terminal, run 
+
+```{{}}
+quarto publish quarto-pub
+```
+
+* The website will be published at `https://username.quarto.pub/mysite/` where 
+   * `username` is your Quarto Pub username
+   * `mysite` is the site name
+
+
+
+
+
+## <i class="fab fa-github black"></i> Sharing on the web with GitHub Pages
+
+```r
+usethis::use_git()
+usethis::use_github() # or manually link with your local folder
+```
+
+1. Push your directory to your Github repo, say `mysite`.
+2. Go to your GitHub repo settings and enable "GitHub Pages". 
+3. Your website will be available with url: http://username.github.io/mysite
+  
+[Note: it may take 10 minutes or so to render the first time.]{.f4}
+
+
+. . . 
+
+Alternatively use
+
+```{{}}
+quarto publish gh-pages
+```
+
+
+## <i class="fas fa-square-full" style="color:#00AD9F; transform: rotate(45deg);font-size:28pt;"></i> Sharing on the web with Netlify
+
+1. Go to [https://app.netlify.com](https://app.netlify.com) and log in
+2. Drag and drop your site folder which contains the `index.html` to:
+
+<center>
+<img src="images/lecture-04/netlify-dropoff.png" width = "800px">
+</center>
+
+3. Do go to `Site settings > Change site name` for a more sensible domain name. 
+
+. . . 
+
+Alternatively use
+
+```{{}}
+quarto publish netlify
+```
+
+
+
+
+
+## Week 4 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* We looked at a website structure 
+* We built a website using the Quarto system
+* We learnt how to host websites using Quarto Pub, GitHub Pages or Netlify
+
+:::
+
+
+::: {.callout-tip}
+
+## Resources
+
+* [Quarto: Creating a Blog](https://quarto.org/docs/websites/website-blog.html)
+* [Quarto: Execution Options](https://quarto.org/docs/computations/execution-options.html)
+* [Quarto: Article Layout](https://quarto.org/docs/authoring/article-layout.html)
+* [Quarto: Cross References](https://quarto.org/docs/authoring/cross-references.html)
+* [Quarto: Document Listings](https://quarto.org/docs/websites/website-listings.html)
+
+:::

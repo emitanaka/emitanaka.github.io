@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5512: Wild Caught Data</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation-1.0/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome-5.0.13/js/fontawesome-all.min.js"></script>
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+    -->
+    <link rel="icon" href="images/favicon.ico"  type='image/x-icon'/>
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-logo.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/emi.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+background-color: #006DAE
+class: middle center hide-slide-number
+
+
+&lt;div class="shade_black"  style="width:60%;right:0;bottom:0;padding:10px;border: dashed 4px white;margin: auto;"&gt;
+&lt;i class="fas fa-exclamation-circle"&gt;&lt;/i&gt; These slides are viewed best by Chrome and occasionally need to be refreshed if elements did not load properly. See &lt;a href=week08-ABS-data.pdf/&gt;here for PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+&lt;/div&gt;
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+---
+
+
+background-image: url(images/bg-week8.jpg)
+background-size: cover
+class: hide-slide-number split-70 title-slide
+count: false
+
+.column.shade_black[.content[
+
+&lt;br&gt;
+
+# .monash-blue.outline-text[ETC5512: Wild Caught Data]
+
+&lt;h2 class="monash-blue2 outline-text" style="font-size: 30pt!important;"&gt;Week 8&lt;/h2&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Synthetic and Simulated Data&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+Department of Econometrics and Business Statistics
+
+<span>&lt;i class="fas  fa-envelope faa-float animated "&gt;&lt;/i&gt;</span>  ETC5512.Clayton-x@monash.edu
+
+13th May 2020
+
+&lt;br&gt;
+]
+
+
+]]
+
+
+
+&lt;div class="column transition monash-m-new delay-1s" style="clip-path:url(#swipe__clip-path);"&gt;
+&lt;div class="background-image" style="background-image:url('images/large.jpg');background-position: center;background-size:cover;margin-left:3px;"&gt;
+&lt;svg class="clip-svg absolute"&gt;
+&lt;defs&gt;
+&lt;clipPath id="swipe__clip-path" clipPathUnits="objectBoundingBox"&gt;
+&lt;polygon points="0.5745 0, 0.5 0.33, 0.42 0, 0 0, 0 1, 0.27 1, 0.27 0.59, 0.37 1, 0.634 1, 0.736 0.59, 0.736 1, 1 1, 1 0, 0.5745 0" /&gt;
+&lt;/clipPath&gt;
+&lt;/defs&gt;	
+&lt;/svg&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+
+
+
+
+---
+
+# What is .yellow[PISA]?
+
+* The Programme for International Student Assessment (PISA) is a 	triennial	survey 	conducted	by the	 Organization	for	Economic	Cooperation	and	Development	(OECD)	on  assessment measuring 15-year-old student performances in .monash-blue[reading], .monash-blue[mathematics] and .monash-blue[science].
+* The	goal	of	the	PISA	 survey	is	to	assess	the	workforce	readiness	of	15-year	old	students and used as a global metric for	quality,	equity	and	efficiency	in	school	education.
+* In 2018, PISA involved 79 countries and economies with assessment of about 600,000 students worldwide as a sample of 32 million 15-year olds in school.
+* One domain is tested in detail for every PISA. In 2018, this was *reading* with mathematics and science as minor areas of assessment.
+* Read more about the Programme [here](http://www.oecd.org/pisa/aboutpisa/).
+
+---
+
+class: wider
+
+# PISA 2018 Assessment and Analytical Framework
+
+* **Reading literacy** is defined as students’ capacity to understand, use, evaluate, reflect on and engage with texts in order to achieve one’s goals, develop one’s knowledge and potential, and participate in society.
+
+* **Mathematics literacy** is defined as students’ capacity to formulate, employ and interpret mathematics in a variety of contexts. It includes reasoning mathematically and using mathematical concepts, procedures, facts and tools to describe, explain and predict phenomena.
+
+* **Science literacy** is defined as the ability to engage with science-related issues, and with the ideas of science, as a reflective citizen. A scientifically literate person is willing to engage in reasoned discourse about science and technology, which requires the competencies to explain phenomena scientifically, evaluate and design scientific enquiry, and interpret data and evidence scientifically.
+
+
+---
+
+# PISA 2018 Assessment 
+
+.grid[
+
+.item.bg-gray[
+
+* Assessments are mostly computer-based that lasts a total of 2 hours. 
+* The questions comprise a mixture of multiple choice and free entry.
+* Different students may have different set of questions.
+* Reading was tested for 1 hour and other topics for the remaining 1 hour. 
+* You can find an example of the test questions [here](https://www.oecd.org/pisa/test/).
+
+
+]
+
+.item[
+
+&lt;center&gt;
+&lt;img src="images/pisa2018-question-partA.png" width = "500px"/&gt;
+&lt;img src="images/pisa2018-question-partB.png" width = "680px"/&gt;
+&lt;/center&gt;
+
+]
+
+
+
+]
+
+
+
+
+
+---
+
+class: transition middle 
+
+# Download the data from 
+
+http://www.oecd.org/pisa/data/2018database/
+
+&lt;br&gt;
+&gt; SPSS (TM) Data Files (compressed)
+
+
+&gt; Student questionnaire data file 
+
+
+* The file is 494 MB so it will take a while to download. 
+* Keep a local copy for later use. 
+
+---
+
+class: font_small wider
+
+# Data in .yellow[proprietary formats]
+
+* The PISA data are provided in proprietary formats (SAS and SPSS).
+* This means that the data are stored in a particular encoding scheme, designed  so that decoding and reading the data is accomplished by particular software or hardware.
+* In R, you can use the `haven` package to import the PISA data.
+
+
+
+```r
+library(tidyverse)
+library(haven)
+pisa2018 &lt;- read_sav(here::here("data", "CY07_MSU_STU_QQQ.sav")) %&gt;% 
+                as_factor()  # swap code and labels for labelled factors
+dim(pisa2018)
+```
+
+
+```
+## [1] 612004   1118
+```
+
+
+* Since the data is big, it will take a while to read the data in.
+* Every row corresponds to a student.
+
+---
+
+class: font_smaller 
+
+# Domain assessment scores
+
+* `PV1MATH` = Plausible Value 1 in Mathematics
+* `PV1READ` = Plausible Value 1 in Reading
+* `PV1SCIE` = Plausible Value 1 in Science
+
+
+.grid[
+.item[
+
+
+```r
+pisa2018 %&gt;% 
+  select(PV1MATH:PV10MATH) %&gt;% 
+  pivot_longer(PV1MATH:PV10MATH, 
+               names_to = "Number", 
+               values_to = "Value") %&gt;% 
+  # reorder factor so it is PV1MATH, ..., PV10MATH
+  mutate(Number = fct_reorder(Number, Number, 
+         function(x) unique(parse_number(x)))) %&gt;% 
+  ggplot(aes(x = Value, y = Number)) + 
+  labs(y = "") + 
+  ggridges::geom_density_ridges() +  
+    theme_classic(base_size = 18)
+```
+]
+
+
+.item[
+![](images/math-scores-1.png)&lt;!-- --&gt;
+.center[
+Perfect bell curves!
+]]]
+
+---
+
+# Domain score distribution by plausible value number
+
+
+
+.grid[
+.item[
+
+* Wait... is it too perfect?
+* There are no outliers or unusual characteristics for the values.
+* Also why are there 10 values?
+
+]
+
+
+.item[
+![](images/pisa2018-dist-1.png)&lt;!-- --&gt;
+]]
+
+
+---
+
+class: wider
+
+# What are "plausible values"?
+
+* School assessments are typically concerned with accurately assessing **individual performance** for the purpose of *diagnosis*, *selection* or *ranking*.
+* The goal of PISA is to compare the skills and knowledge of 15-year-old students across countries and economies.
+* PISA supplies data for individual students but the assessment values are *not* raw data. 
+* The raw data are first quality checked and then used for **scaling** and **population modelling**. 
+* In brief, the **plausible values are generated from a model** that *capture sub-population or population characteristics*. 
+* Hence why the PISA data do not display individual characteristics. 
+* Thus PISA data should not be used to make precise inferences about individuals' domain performances.
+
+---
+
+# Brief technical explanation of "plausible values"
+
+1. *Item response theory scaling* of the cognitive responses estimates the item parameters that provide comparable latent scales across countries and cycles for each domain 
+2. *Multivariate latent regression* is fitted using item parameters estimates from 1.
+3. For each student and each domain, *10 plausible values are drawn from posterior distribution* using the estimated model parameters in 2. 
+
+
+* This is the gist of how the values are generated but the *technical details are beyond the scope of this course*.
+* For those interested, you can find detailed technical explanation from [PISA 2018 Technical Report Chapter 9 Scaling PISA Data](http://www.oecd.org/pisa/data/pisa2018technicalreport/Ch.09-Scaling-PISA-Data.pdf).
+
+
+
+
+
+---
+
+background-image: url("images/pisa-data-workflow.jpg")
+background-size: 100%
+
+# PISA Data Management
+
+.bottom_abs.font_small.width100[
+Diagram from [PISA 2018 Technical Report Chapter 10 Data Management](http://www.oecd.org/pisa/data/pisa2018technicalreport/PISA2018%20TecReport-Ch-10-Data-Management.pdf)
+]
+
+
+
+---
+
+class: middle transition
+
+# Examining the gender gap across countries
+
+This section is based on [upcoming book by Hofmann, Cook, Vanderplas and Wang](https://github.com/heike/data-technologies).
+
+
+
+---
+
+class: font_small wider
+
+# Are girls worse in maths than boys?
+
+* The gender gap in mathematics is a common discussion, with the concern being that girls tend to score lower than boys on average in standardized math tests. 
+* The PISA data provides an opportunity to explore the gender gap across numerous countries.
+* In the `pisa2018` data, the sex of the student is in variable `ST004D01T` and the country/region is in variable `CNT`. 
+* Let's rename these to sensible names, e.g. `sex` and `country`.
+* We'll also modify some country names so that it can be joined with the map data later.
+* We will focus on using `PV1MATH` and will not cover any analysis that require us to use all 10 plausible values in this course.
+
+---
+
+class: font_smaller
+
+# Code to clean PISA data
+
+
+```r
+pisa2018c &lt;- pisa2018 %&gt;% 
+  rename(sex = ST004D01T, country = CNT) %&gt;% 
+  filter(!is.na(sex)) %&gt;% # filter two Canadian students where sex is missing
+  filter(!is.na(PV1MATH)) %&gt;%  # Vietnam is missing scores
+  mutate(country = case_when(
+    country == "Brunei Darussalam" ~ "Brunei",
+    country == "United Kingdom" ~ "UK",
+    country %in% c("Hong Kong", "B-S-J-Z (China)") ~ "China",
+    country == "Korea" ~ "South Korea",
+    country == "North Macedonia" ~ "Macedonia",
+    country == "Baku (Azerbaijan)" ~ "Baku",
+    country %in% c("Moscow Region (RUS)", "Tatarstan (RUS)", 
+                   "Russian Federation") ~ "Russia",
+    country == "Slovak Republic" ~ "Slovakia",
+    country == "Chinese Taipei" ~ "Taiwan",
+    country == "United States" ~ "USA", 
+    TRUE ~ as.character(country)))
+```
+
+---
+
+class: font_smaller
+
+# &lt;i class="fas fa-exclamation-triangle"&gt;&lt;/i&gt; Plot 1: Gender difference in math scores by country
+
+
+
+.grid[
+.item[
+
+
+```r
+pisa2018c %&gt;% 
+  group_by(sex, country) %&gt;% 
+  summarise(avg = mean(PV1MATH)) %&gt;% 
+  ungroup() %&gt;% 
+  pivot_wider(country, names_from = sex, 
+              values_from = avg) %&gt;% 
+  mutate(diff = Female - Male,
+         country = fct_reorder(country, diff)) %&gt;% 
+  ggplot(aes(x = diff, y = country)) + 
+  geom_point() + 
+  geom_vline(xintercept = 0, color = "red") + 
+  labs(y = "Country", 
+       x = "Difference in mean PV1 (girl - boy)") + 
+  theme_bw(base_size = 14)
+```
+
+{{content}}
+
+]
+.item[
+![](images/plot1-1.png)&lt;!-- --&gt;
+
+]]
+
+--
+
+* But wait how is the data collected?
+
+---
+
+class: wider
+
+# Assessment Design
+
+.font_small[Sourced from [PISA 2018 Integratated Design](https://www.oecd.org/pisa/pisaproducts/PISA-2018-INTEGRATED-DESIGN.pdf).] Scroll down to see more information.
+
+.scroll-900[
+
+&lt;img src="images/PISA-design-table.png" width = "100%"/&gt;
+
+
+* R1-R18 are Reading clusters
+* M1-M6ab are Math clusters
+* S1-S6 are Science clusters
+* GC1-GC4 are Global Competence clusters
+* FL1-FL3 are Financial Literacy clusters
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+]
+
+---
+
+class: font_small
+
+# Interrogating the data
+
+* So students who have `BOOKID` as Form 1-12 or 67-78 would have had mathematics component in their test.
+
+.grid[.item[
+
+
+
+```r
+pisa2018 %&gt;% 
+  filter(BOOKID == "Form 13") %&gt;% 
+  select(CNT, ST004D01T, BOOKID, PV1MATH)
+```
+
+```
+## # A tibble: 20,511 x 4
+##    CNT     ST004D01T BOOKID  PV1MATH
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;fct&gt;     &lt;dbl&gt;
+##  1 Albania Female    Form 13    417.
+##  2 Albania Male      Form 13    585.
+##  3 Albania Female    Form 13    354.
+##  4 Albania Male      Form 13    424.
+##  5 Albania Female    Form 13    451.
+##  6 Albania Female    Form 13    351.
+##  7 Albania Female    Form 13    257.
+##  8 Albania Female    Form 13    407.
+##  9 Albania Male      Form 13    495.
+## 10 Albania Female    Form 13    512.
+## # … with 20,501 more rows
+```
+
+]
+.item[
+
+{{content}}
+
+]]
+
+--
+
+* But there is a mathematics score for students who did not even sit a test with mathematics component!
+* You will compare the math gender gap with all students vs. the subset of students who did sit the mathematics component during the tutorial 🔧 
+
+
+
+
+---
+
+class: wider
+
+# Sample survey data 
+
+
+* PISA data is collected from a complex multi-stage design which results in *different* inclusion probabilities of certain student/school characteristics.
+* For example, in Australia, all indigeneous students (the minority group) are asked to participate.
+* PISA data comes with two sets of weights: 
+  * Final student weights (`W_FSTUWT`). These scale the sample up to the size of the population within each country. If the unit of interest is the population of students within subset of countries, use this. 
+  * Senate weights (`SENWT`). These weights sum up to the same constant value, therefore each country will contribute equally to the analysis. If the unit of interest is the countries then use this. 
+* Without applying weights, students or schools with particular characteristics may be either under/over represented within the analysis.
+
+.font_small.width100.bottom_abs[
+Jerrim et al. (2017) “What Happens When Econometrics and Psychometrics Collide? An Example Using the PISA Data.” Economics of Education Review 61 (December): 51–58.
+]
+
+
+
+---
+
+class: wider
+
+# Why accounting for sampling weights is important
+
+
+
+
+* Suppose we have a class of 24 students with 20 boys and 4 girls. 
+
+&lt;center&gt;
+&lt;table style="width:70%; font-size: 24pt;"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/center&gt;
+
+The population average of this class is .green[4.12] with .blue[3.9] for boys and .purple[5.25] for girls.
+
+
+---
+
+count: false
+class: wider
+
+# Why accounting for sampling weights is important
+
+* Suppose we have a class of 24 students with 20 boys and 4 girls. 
+
+&lt;center&gt;
+&lt;table style="width:70%; font-size: 24pt;"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female purple'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/center&gt;
+
+The population average of this class is .green[4.12] with .blue[3.9] for boys and .purple[5.25] for girls.
+
+* If we randomly select 6 students to participate in the survey, we expect 5 boys and 1 girl on average (Selected boys are 2, 3, 5, 7, 16 and girl is 2). The sample average score of selected boys is .blue[2.4] and girls is .purple[7], and total sample average is .green[3.17].
+
+
+---
+
+count: false
+class: wider
+
+# Why accounting for sampling weights is important
+
+* Suppose we have a class of 24 students with 20 boys and 4 girls. 
+
+&lt;center&gt;
+&lt;table style="width:70%; font-size: 24pt;"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-male blue'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female purple'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female purple'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female'&gt;&lt;/i&gt;&lt;/td&gt;&lt;td&gt;&lt;i class='fas fa-female purple'&gt;&lt;/i&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/center&gt;
+
+The population average of this class is .green[4.12] with .blue[3.9] for boys and .purple[5.25] for girls.
+
+* If we randomly select 6 students to participate in the survey, we expect 5 boys and 1 girl on average (Selected boys are 2, 3, 5, 7, 16 and girl is 2). The sample average score of selected boys is .blue[2.4] and girls is .purple[7], and total average is .green[3.17].
+
+
+* But having equal number of boys and girls in the survey is important then the inclusion probability for a boy is 3/20 while for a girl is 3/4. (Now say selected boys are 5, 11, 20 and girls are 1, 2, 4). The sample average score of selected boys is .blue[4] and girls is .purple[5.33], and total sample average is .green[4.67].
+
+--
+
+
+* The sample average score (.green[4.67]) is higher than it should be due to over-representation of the girls in the sample. 
+
+---
+
+class: wider
+
+# Taking into weights into account
+
+* In this case, the sampling weights are the inverse of the inclusion probability (20/3 for boys and 4/3 for girls).
+   
+* A weighted mean, `\(\hat{\mu}\)`, for values `\(x_1, ..., x_n\)` with corresponding weights `\(w_1, ..., w_n\)` is computed as 
+
+`$$\hat{\mu} = \dfrac{1}{\sum_{i=1}^nw_i}\sum_{i=1}^n w_ix_i.$$`
+
+* So the class population mean can be estimated as  `\(\dfrac{20 / 3 \times  4 + 4/3 \times 5.3333333}{20/3 + 4/3} = 4.2222222.\)` &lt;br&gt;&lt;br&gt;Notice that the estimate is closer to the class population mean.
+
+* Or you can use the `weighted.mean` function in R.   
+
+
+---
+
+class: font_smaller
+
+# &lt;i class="fas fa-exclamation-triangle"&gt;&lt;/i&gt; Plot 2: Gender difference in math scores by country
+
+
+.grid[
+.item[
+
+
+```r
+mathdiff_df &lt;- pisa2018c %&gt;% 
+  group_by(sex, country) %&gt;% 
+  summarise(math = weighted.mean(PV1MATH, 
+*                                w = SENWT)) %&gt;%
+  ungroup() %&gt;% 
+  pivot_wider(country, names_from = sex, 
+              values_from = math) %&gt;% 
+  mutate(diff = Female - Male,
+         country = fct_reorder(country, diff)) 
+
+ggplot(mathdiff_df, aes(x = diff, y = country)) + 
+  geom_point() + 
+  geom_vline(xintercept = 0, color = "red") + 
+  labs(y = "Country", 
+       x = "Difference in mean PV1 (girl - boy)") + 
+  theme_bw(base_size = 14)
+```
+
+]
+.item[
+![](images/plot2-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+class: font_smaller
+
+# &lt;i class="fas fa-globe"&gt;&lt;/i&gt; Mapping the math score differences by gender
+
+
+
+```r
+map_data("world") %&gt;% # function from ggplot2
+  left_join(mathdiff_df, by = c("region" = "country")) %&gt;% 
+  ggplot(aes(long, lat, group = group, fill = diff)) + 
+   geom_polygon(color = "black") + theme_void(base_size = 18) +
+      scale_fill_gradient2("Math Gap", na.value="grey90",
+                         low="#1B9E77", high="#D95F02", mid="white") 
+```
+
+&lt;img src="images/map1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: transition middle
+
+# Bootstrap for estimating variance
+
+---
+
+# &lt;i class="fas fa-exclamation-triangle"&gt;&lt;/i&gt; Caution point estimates
+
+.grid[.item[
+
+&lt;img src="images/plot2-1.png" style="display: block; margin: auto;" /&gt;
+]
+.item[
+
+* Non-zero point estimate does not mean that there is a *significant* difference in performance for mathematics by gender!
+* There is uncertainty for every estimate (and prediction).
+* The plot we saw before will be more useful if we plot the error bar, that represents the uncertainty, for each point estimate.
+* But how do we calculate this uncertainty?
+
+
+]]
+
+---
+
+# Bootstrap to measure uncertainty
+
+* Bootstrap is a technique that uses **random sampling with replacement** of data to obtain properties of an estimator.
+* Bootstrap is relatively **simple to apply**.
+* Bootstrap can be **computationally expensive** as it requires a large number of times for the process to be applied (we will do 100 times but at least 200 times is recommended).
+* In bootstrapping, it is assumed that the **observations are independent (or independent within blocks)**.
+* For assessing the gender gap in mathematics scores across countries, we will be *resampling within country and gender*. 
+* The resampling process should generate data with the same number of observations as the original data.
+
+---
+
+class: wider font_small
+
+# Bootstrap using R: Part 1
+
+There are a number of ways of doing this in R but we will use `sample_n` function in `dplyr` 📦. 
+
+
+```r
+set.seed(2020) # for reproducibility
+boot_sample1 &lt;- pisa2018c %&gt;% 
+  group_by(country, sex) %&gt;% 
+  sample_n(size = n(), replace = TRUE)
+```
+
+We can then treat `boot_sample1` as we did before to obtain another set of estimates for the gender gap for mathematics score by country. 
+
+
+
+
+&lt;code class ='r hljs remark-code'&gt;&lt;span style='background-color:#ffff7f'&gt;boot_sample1&lt;/span&gt; %&gt;%&lt;br&gt;&amp;nbsp;&amp;nbsp;summarise(avg = weighted.mean(PV1MATH, SENWT)) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;ungroup() %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;pivot_wider(country, names_from = sex, values_from = avg) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;mutate(diff = Female - Male, country = fct_reorder(country, diff))&lt;/code&gt;
+
+```
+
+## # A tibble: 76 x 4
+##    country                Female  Male   diff
+##    &lt;fct&gt;                   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Albania                  438.  434.   3.74
+##  2 Argentina                373.  389. -15.4 
+##  3 Australia                490.  495.  -4.57
+##  4 Austria                  497.  508. -11.1 
+##  5 Baku                     415.  424.  -9.02
+##  6 Belarus                  470.  472.  -1.83
+##  7 Belgium                  502.  517. -14.9 
+##  8 Bosnia and Herzegovina   402.  410.  -7.43
+##  9 Brazil                   376.  391. -14.6 
+## 10 Brunei                   435.  425.   9.41
+## # … with 66 more rows
+
+```
+
+---
+
+class: wider font_small
+
+# Bootstrap using R: Part 2
+
+* We need to repeat this process a reasonable number of times. 
+* We will do 100 times. 
+* To make this process easier, we will use the `map_dfr` function from `purrr` 📦.
+
+
+
+&lt;code class ='r hljs remark-code'&gt;boot_ests &lt;- map_dfr(1:100, ~{&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;pisa2018c %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;group_by(country, sex) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;sample_n(size = n(), replace = TRUE) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;summarise(avg = weighted.mean(PV1MATH, SENWT)) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;ungroup() %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;pivot_wider(country, names_from = sex, values_from = avg) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mutate(diff = Female - Male, country = fct_reorder(country, diff)) %&gt;% &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mutate(boot_id = &lt;span style='background-color:#ffff7f'&gt;.x&lt;/span&gt;)&lt;br&gt;&amp;nbsp;&amp;nbsp;})&lt;/code&gt;
+
+* The `.x` is substituted from an element from the first argument in `map_dfr`.
+
+---
+
+class: font_small
+
+# Bootstrap using R: Part 3
+
+* We obtain a 90% confidence interval of mean differences by gender in mathematics score for each country by taking the 5% and 95% quantiles from the bootstrap estimates. 
+* There are many other ways to do this. Week 8 lab solution will show a different way.
+
+
+```r
+mathdiff2_df &lt;- boot_ests %&gt;% 
+  group_by(country) %&gt;% 
+  summarise(lower = sort(diff)[5], 
+            upper = sort(diff)[95]) %&gt;% 
+  left_join(mathdiff_df, by = "country") %&gt;% 
+  mutate(country = fct_reorder(country, diff))
+```
+
+
+---
+
+class: font_small
+
+# &lt;i class="fas fa-smile"&gt;&lt;/i&gt; Plot 3: Gender difference in math scores by country
+
+
+.grid[.item[
+
+* A better plot is then to draw this 90% confidence interval on the plot.
+
+
+```r
+ggplot(mathdiff2_df, aes(diff, country)) + 
+  geom_point() + 
+* geom_errorbar(aes(xmin = lower,
+*                   xmax = upper)) +
+  geom_vline(xintercept = 0, color = "red") + 
+  labs(y = "Country", 
+       x = "Difference in mean PV1 (girl - boy)") + 
+  theme_bw(base_size = 14)
+```
+
+]
+.item[
+
+![](images/plot3-1.png)&lt;!-- --&gt;
+
+]]
+
+
+
+
+---
+
+class: transition middle
+
+# Simulated data 
+
+---
+
+class: wider
+
+# "Real" and "Fake" Data
+
+.info-box[
+* **Real data** are data where observations are direct measurements from real-world phenomena.
+* **Synthetic data** are data where observations are artificially generated with similar statistical properties to the real data.
+* **Simulated data** are data where observations (and covariates) are simulated from a model. 
+]
+
+* Data by default are assumed to be "real" so there is generally no need to explicitly refer data as real data. 
+* The terms synthetic and simulated data may be used interchangeably in some literature. Synthetic data may be simulated data and vice versa.
+* The purpose of simulated data is to often study a statistical method and is commonly used in statistical literature (both in teaching and research). 
+
+
+
+---
+
+class: wider font_small
+
+# Data Generating Process: Simple Linear Model 
+
+* Unlike typical data, the **data generating process is _known_** for simulated data.
+* For example, we can generate a set of observation that is only linearly dependent on an independent continuous variable. 
+* Mathematically, the data generating process is a simple linear model:
+`$$\color{blue}{y_{i}} = \color{red}{\beta_0} + \color{red}{\beta_1}\color{blue}{x_i} + e_{i},$$`
+where for `\(i = 1, ..., n\)`, `\(y_i\)` is the `\(i\)`-th response, `\(x_i\)` is the corresponding covariate, `\(e_i\)` is a random error, `\(\beta_0\)` is the intercept and `\(\beta_1\)` is the slope. 
+* Typically we assume that `\(e_i\)`s are independent and `\(e_i \sim N(0, \sigma^2)\)`.
+* In practice, we only .blue[observe] those colored in blue and we .red[estimate] those colored in red (for simplicity assuming the data generating process is known but the model parameters are unknown). 
+
+---
+
+class: wider font_small
+
+# Simulated Data in R: Simple Linear Model
+
+Suppose that `\(n = 200\)`, `\(\beta_0 = 3\)`, `\(\beta_1 = -2\)` and `\(\sigma^2 = 1\)`.
+
+
+```r
+set.seed(2020) # for reproducibility
+n &lt;- 200 # sample size
+b0 &lt;- 3  # intercept
+b1 &lt;- -2 # slope
+sim_df &lt;- tibble(id = 1:n) %&gt;%  # initialise data set
+    mutate(x = runif(n(), 0, 10), # draw x from Uniform[0,10]
+           y = b0 + b1 * x + rnorm(n(), 0, 1))
+```
+
+Obtain least squares estimates (or maximum likelihood estimate) for `\(\beta_0\)` and `\(\beta_1\)`:
+
+
+```r
+fit1 &lt;- lm(y ~ x, data = sim_df)
+coef(fit1)
+```
+
+```
+## (Intercept)           x 
+##    2.975177   -2.020419
+```
+The estimates are pretty close to the true values!
+
+
+---
+
+class: wider font_small
+
+# Simulated Data in R: Simple Linear Model
+
+* Suppose now that `\(e_i \sim \text{Gamma}(2, 1) - 2\)`. 
+* How good are the estimates under least squares when the error is not normally distributed?
+
+
+```r
+sim2_df &lt;- tibble(id = 1:n) %&gt;%  
+    mutate(x = runif(n(), 0, 10), 
+           y = b0 + b1 * x + rgamma(n(), 2, 1) - 2)
+fit2 &lt;- lm(y ~ x, data = sim2_df)
+coef(fit2)
+```
+
+```
+## (Intercept)           x 
+##    2.818092   -1.997902
+```
+
+* The estimate of the slope is still good but the estimate of the intercept is not as good as before.
+* In the tutorial, you will also learn to simulate data when the dependent variable is a categorical variable 🔧
+
+
+
+&lt;img class="border-box" src="images/gamma-dist-1.png" style="position:absolute;right:50px;top:25%;"/&gt;
+
+---
+
+
+class: transition middle
+
+# Visual Inference 
+
+---
+
+class: font_small
+
+# Assessing estimates based on a scatter plot
+
+.grid[
+.item[
+
+* We could also superimpose the least squares fit onto the scatter plot. 
+
+
+```r
+combined_df &lt;- sim2_df %&gt;% 
+  mutate(sim = "Simulation 1") %&gt;% 
+  rbind(mutate(sim_df, 
+               sim = "Simulation 2"))
+ggplot(combined_df, aes(x, y)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_grid(sim ~ .) + 
+  theme_bw(base_size = 18) 
+```
+
+* We could also do a formal statistical test for the slope (and intercept) but we have to validate our assumption.
+
+]
+.item[
+
+![](images/combine2-1.png)&lt;!-- --&gt;
+
+]]
+
+---
+
+class: font_small
+
+# Assessing model assumption based on the residual plot
+
+
+.grid[
+.item[
+
+* We assume that `\(e_i \sim N(0, \sigma^2)\)`.
+* We assess the residual plot to check this assumption.
+
+
+```r
+combined2_df &lt;- combined_df %&gt;% 
+  mutate(residual = c(fit1$residuals, fit2$residuals))
+
+ggplot(combined2_df, aes(x, residual)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "red") + 
+  facet_grid(sim ~ ., scales = "free") + 
+  theme_bw(base_size = 18) 
+```
+
+* Generally, we check that there is "no pattern" in the residual plot.
+* What do we mean by "no pattern"? 
+
+]
+.item[
+
+![](images/resplot-1.png)&lt;!-- --&gt;
+
+]]
+
+
+---
+
+class: wider font_small
+
+# Null data
+
+
+`$$H_0: e_i \sim N(0, \hat{\sigma}^2)\qquad \text{vs.} \qquad H_1: \text{not }H_0$$`
+
+* `\(\hat{\sigma}\)` is the estimate of `\(\sigma\)` from the model fit. 
+
+
+```r
+c(summary(fit1)$sigma, summary(fit2)$sigma)
+```
+
+```
+## [1] 1.140534 1.229640
+```
+
+* We simulate observations of size `\(n = 200\)` from `\(N(0, \hat{\sigma}^2)\)`. These are called **null data** as it is generated under the null hypothesis. 
+* We draw a scatter plot with these observations against the original `\(x\)`-values. 
+* We repeat this process `\(K = 19\)` times then produce a **lineup** of the plots with the original residual plot randomly included into it. 
+
+
+
+---
+
+class:  font_small
+
+# Null data using R
+
+* The process of generating null data and lineups is facilitated by the `nullabor` 📦
+
+
+```r
+library(nullabor)
+method1 &lt;- null_dist("residual", "norm", 
+              params = 
+                list(mean = 0, 
+                     sd = summary(fit1)$sigma))
+sim_df$residual &lt;- fit1$residuals
+null1_df &lt;- lineup(method1, sim_df)
+ggplot(null1_df, aes(x, residual)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, color = "red") + 
+  facet_wrap(~.sample) + 
+  theme_bw(base_size = 18) 
+```
+
+
+---
+
+class: wider
+
+# Line up for simulated data 1
+
+
+```
+## decrypt("E0Ui w676 VQ rnqV7VnQ KK")
+```
+
+![](images/nullabor1-1.png)&lt;!-- --&gt;
+
+---
+
+class: wider
+
+# Line up for simulated data 2
+
+
+```
+## decrypt("E0Ui w676 VQ rnqV7VnQ 28")
+```
+
+![](images/nullabor2-1.png)&lt;!-- --&gt;
+
+---
+
+# References
+
+* In practice, you shouldn't show the data plot (also the test statistic in visual inference) before the lineup.
+* You can read more about visual inference on the paper by [Buja et al. (2009)](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2009.0120) but also one of your lecturers, Prof Di Cook, is a world leading expert on it! She is also the one of the authors of the paper, as well as, the maintainer of `nullabor` 📦.
+
+---
+
+
+background-image: url(images/bg-week8.jpg)
+background-size: cover
+class: hide-slide-number split-70
+
+.column.shade_black[.content[
+
+&lt;br&gt;&lt;br&gt;
+
+# That's it!
+
+&lt;br&gt; 
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+.bottom_abs.width100[
+
+Lecturer: Emi Tanaka
+
+Department of Econometrics and Business Statistics&lt;br&gt;
+<span>&lt;i class="fas  fa-envelope faa-float animated "&gt;&lt;/i&gt;</span>  ETC5512.Clayton-x@monash.edu
+
+]
+
+
+]]
+
+
+
+&lt;div class="column transition monash-m-new delay-1s" style="clip-path:url(#swipe__clip-path);"&gt;
+&lt;div class="background-image" style="background-image:url('images/large.png');background-position: center;background-size:cover;margin-left:3px;"&gt;
+&lt;svg class="clip-svg absolute"&gt;
+&lt;defs&gt;
+&lt;clipPath id="swipe__clip-path" clipPathUnits="objectBoundingBox"&gt;
+&lt;polygon points="0.5745 0, 0.5 0.33, 0.42 0, 0 0, 0 1, 0.27 1, 0.27 0.59, 0.37 1, 0.634 1, 0.736 0.59, 0.736 1, 1 1, 1 0, 0.5745 0" /&gt;
+&lt;/clipPath&gt;
+&lt;/defs&gt;	
+&lt;/svg&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'assets/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

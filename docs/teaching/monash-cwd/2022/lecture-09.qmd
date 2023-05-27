@@ -1,0 +1,960 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Stylishly communicating with code"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 9"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 9"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    incremental: true
+execute:
+  echo: true
+  eval: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  warning = FALSE,
+  message = FALSE,
+  cache = FALSE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Document your functions
+* Create vignettes for your package
+* Implement testing framework for your package
+* Distribute your package
+
+:::
+
+::: {.callout-tip }
+
+## Why
+
+* Documentation informs users of how to use your package 
+* Adopting best practice development workflow will make package development easier 
+* Testing can increase the trust worthiness of the package
+* Distributing your package is needed for adoption of your package by others
+
+
+:::
+
+[Thanks to Stuart Lee for developing the initial content in this slide, which has been subsequently modified a fair amount by me.]{.f2}
+
+
+# Demo R Package <br> `praise.me` {background-color="#006DAE"}
+
+## Communicating about your [R package]{.monash-blue}
+
+- What is the [**goal**]{.monash-blue} of the package?
+- [**What**]{.monash-blue} does your function(s) do? 
+- [**How**]{.monash-blue} do we use it?
+- [**Why**]{.monash-blue} should we use it?
+- [**Where**]{.monash-blue} do we find and install it?
+
+. . . 
+
+::: {.center .f-headline}
+
+[**Documentation**]{.monash-ruby2} is vital 
+
+:::
+
+## `praise.me` package
+
+::: {.callout-note appearance="minimal"}
+
+<i class="fa-solid fa-circle-exclamation"></i> This package is for teaching demo only
+
+:::
+
+
+* The goal of the `praise.me` package is to give you or someone else a random word of praise. 
+
+. . . 
+```{r}
+#| eval: true
+#| code-line-numbers: false
+library(praise.me)
+praise_me()
+praise_me()
+praise_someone("Patrick")
+praise_someone("Harriet")
+```
+
+
+## `praise_me()` function
+
+```{r}
+praise_me <- function() {
+  praises <- c(
+    "exceptional",
+    "remarkable",
+    "extraordinary",
+    "delightful",
+    "wonderful",
+    "fantastic",
+    "phenomenal",
+    "brilliant",
+    "astonishing",
+    "splendid"
+  )
+  affirmation <- sample(praises, 1)
+  paste0("You are ", affirmation, "!")
+}
+```
+
+. . . 
+
+<br>
+
+```{r}
+#| code-line-numbers: false
+praise_me()
+```
+
+
+## `praise_someone()` function
+
+```{r}
+praise_someone <- function(who = NULL) {
+  praises <- c(
+    "exceptional",
+    "remarkable",
+    "extraordinary",
+    "delightful",
+    "wonderful",
+    "fantastic",
+    "phenomenal",
+    "brilliant",
+    "astonishing",
+    "splendid"
+  )
+  affirmation <- sample(praises, 1)
+  ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+}
+```
+
+. . . 
+
+
+```{r}
+#| code-line-numbers: false
+praise_someone()
+praise_someone("Patrick")
+```
+
+## Reduce repetition
+
+::: flex
+
+::: {.w-40 .pr2}
+
+`data-raw/praises.R`
+
+
+```{r}
+#| eval: false
+praises <- data.frame(words = c(
+  "exceptional",
+  "remarkable",
+  "extraordinary",
+  "delightful",
+  "wonderful",
+  "fantastic",
+  "phenomenal",
+  "brilliant",
+  "astonishing",
+  "splendid"
+))
+
+usethis::use_data(praises, overwrite = TRUE)
+```
+
+Or put code for `praises` in a file under `R/` if not using as exported data.
+
+:::
+
+::: {.w-60 .pl2}
+
+`R/praise.R`
+
+```{r}
+#' @export
+praise_me <- function() {
+  affirmation <- sample(praises$words, 1)
+  paste0("You are ", affirmation, "!")
+}
+
+#' @export
+praise_someone <- function(who = NULL) {
+  affirmation <- sample(praises$words, 1)
+  ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+}
+```
+
+
+
+:::
+
+
+:::
+
+## Custom `print` method
+
+```{r}
+praise_me()
+```
+
+
+* `print` is an S3 method and above is actually using `print.default()`
+
+. . . 
+
+```{r}
+print
+```
+
+* Custom `print` method for class `praise`:
+
+. . . 
+
+```{r}
+#' @export
+print.praise <- function(x, ...) {
+  cat(x, ...)
+}
+```
+
+## Internal functions to reduce repetition
+
+`R/praise.R`
+
+```{r}
+#| code-line-numbers: 5,15,18-20
+#' @export
+praise_me <- function() {
+  affirmation <- sample(praises$words, 1)
+  out <- paste0("You are ", affirmation, "!")
+  praise_now(out)
+}
+
+#' @export
+praise_someone <- function(who = NULL) {
+  affirmation <- sample(praises$words, 1)
+  out <- ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+  praise_now(out)
+}
+
+praise_now <- function(praise) {
+  structure(praise, class = c("praise", "character"))
+}
+
+#' @export
+print.praise <- function(x, ...) {
+  cat(x, ...)
+}
+```
+
+## Comparison with new print 
+
+::: flex
+
+::: {.w-50 .pr3}
+
+Old
+
+```{r}
+#| echo: false
+praise_me_old <- function() {
+  affirmation <- sample(praises$words, 1)
+  paste0("You are ", affirmation, "!")
+}
+praise_someone_old <- function(who = NULL) {
+  affirmation <- sample(praises$words, 1)
+  ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+}
+```
+```{r}
+#| eval: false
+#| code-line-numbers: false
+praise_me()
+```
+```{r}
+#| echo: false
+praise_me_old()
+```
+```{r}
+#| eval: false
+#| code-line-numbers: false
+praise_someone()
+```
+```{r}
+#| echo: false
+praise_someone_old()
+```
+
+
+:::
+
+::: {.w-50 .fragment .pl3}
+
+New
+
+```{r}
+#| code-line-numbers: false
+praise_me()
+praise_someone()
+```
+
+
+:::
+
+:::
+
+. . . 
+
+<br>
+
+Note: the return object is still a `character` so you can store the object. 
+
+
+
+
+::: flex
+
+::: {.w-50 .pr3}
+
+
+```{r}
+#| code-line-numbers: false
+x <- cat("Hello")
+```
+
+
+::: fragment
+
+```{r}
+#| code-line-numbers: false
+x
+```
+
+:::
+:::
+
+::: {.w-50 .fragment .pl3}
+
+```{r}
+#| code-line-numbers: false
+x <- praise_now("Hello")
+x
+```
+
+:::
+
+:::
+
+
+## Using pipe operator in your package 
+
+* To add the `%>%` operator in your package, you can import the `magrittr` package (used to import pipe operator in all `tidyverse` packages).
+* Add all essential elements automatically with:
+
+. . . 
+
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_pipe()
+```
+
+# Documentation {background-color="#006DAE"}
+
+
+## Documenting R functions with `roxygen2`
+
+- use `#'` above a function to write documentation for that function
+- `roxygen2` uses `@` tags to structure documentation, e.g. 
+  * any text after `@description` is the description
+  * any text after `@param` describes the arguments of the function
+  * `@export` signals that it is an exported function
+  * any text after `@return` describes the return object
+  * the full list of Rd tags are found [here](https://roxygen2.r-lib.org/articles/rd.html)
+- `devtools::document()` converts the Rd tags to appropriate sections of `.Rd` files written in the `man/` folder
+
+
+
+
+
+
+
+## Documenting `praise.me` package 
+
+`R/praise.R`
+```{r}
+#| eval: false
+#' Praises you or someone
+#'
+#' @description
+#' Praises you or someone with a random word.
+#'
+#' @param who A character of who to praise.
+#'
+#' @return An object of class `praise` and `character`.
+#'
+#' @examples
+#' praise_me()
+#' praise_someone()
+#' praise_someone("Joanna")
+#'
+#' @export
+praise_me <- function() {
+  affirmation <- sample(praises$words, 1)
+  out <- paste0("You are ", affirmation, "!")
+  praise_now(out)
+}
+
+#' @rdname praise_me
+#' @export
+praise_someone <- function(who = NULL) {
+  affirmation <- sample(praises$words, 1)
+  out <- ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+  praise_now(out)
+}
+
+praise_now <- function(praise) {
+  structure(praise, class = c("praise", "character"))
+}
+
+#' @export
+print.praise <- function(x, ...) {
+  cat(x, ...)
+}
+
+
+
+```
+
+
+## Documenting data
+
+- `usethis::use_data_raw()` to store R code to process raw data, 
+- `usethis::use_data()` to save a binary file in `data/` directory,
+- The data is named `praises`.
+- Documentation is contained in `data.R` or `name-of-data.R`
+
+. . . 
+
+`R/data.R`
+
+```{r}
+#| eval: false
+#' A list of praises
+#'
+#'
+#' @format A data frame with a single column.
+#' \describe{
+#'   \item{words}{A list of praises.}
+#' }
+#' @source \url{https://www.vocabulary.com/lists/5167}
+"praises"
+```
+
+
+
+## Make package documentation
+
+- Add documentation of the "big picture" of your package
+ 
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_package_doc()
+```
+
+- Above creates the file below
+
+. . . 
+
+`R/praise.me-package.R`
+```{r}
+#| eval: false
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
+## usethis namespace: end
+NULL
+```
+
+
+- Default package documentation is built from your DESCRIPTION file
+
+. . . 
+
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+library(praise.me)
+?praise.me
+```
+
+
+
+## Vignette: a long-form documentation
+
+- Some documentation doesn't fit as a package or function documentation.
+- You may want to built a vignette (article) for these cases.
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_vignette(name = "my-amazing-package", 
+                      title = "My amazing package")
+```
+
+- Edit the created Rmd file 
+- Knit the vignette to see what it looks like
+- Use `devtools::build()` to build package with vignettes included
+
+
+
+# Dependencies {background-color="#006DAE"}
+
+## Adding dependencies
+
+
+- Dependencies are specified in DESCRIPTION file under three categories:
+  - `Depends`: Specify the version of R that the package will work with or package that it is dependent on (e.g. for ggplot2 extension packages, it depends on ggplot2).
+  - `Imports`: External packages that are imported to use in your package. Most external packages are in this category.
+  - `Suggests`: Packages that are not strictly needed but are nice to have, i.e. you use them in examples or vignettes. 
+- You can add easily add this via `usethis::use_package()`
+
+
+## Importing `cowsay`
+
+```{r}
+cowsay::say("Hello", by = "cow")
+```
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_package("cowsay", type = "Imports") # default is Imports
+```
+
+. . . 
+
+This adds a line in the `DESCRIPTION` file:
+
+```{glue}
+#| code-line-numbers: false
+#| eval: false
+Imports: 
+    cowsay
+```
+
+## Using imported packages 
+
+1. Refer to it with `pkg::fun()`.
+
+. . . 
+
+```{r}
+#| code-line-numbers: "|41"
+#' Praises you or someone
+#'
+#' @description
+#' Praises you or someone with a random word.
+#'
+#' @param who A character of who to praise.
+#' @param by A character to say the praise. See the full
+#'   list of character by `list_character()`.
+#'
+#' @return An object of class `cheer`, which is
+#'   just a character with special print method.
+#'
+#' @examples
+#' praise_me()
+#' praise_me(by = "cow")
+#' praise_someone()
+#' praise_someone("Joanna", by = "cat")
+#'
+#' @export
+praise_me <- function(by = NULL) {
+  affirmation <- sample(praises$words, 1)
+  praise_text <- paste0("You are ", affirmation, "!")
+  praise_now(praise_text, by = by)
+}
+
+#' @rdname praise_me
+#' @export
+praise_someone <- function(who = NULL, by = NULL) {
+  affirmation <- sample(praises$words, 1)
+  praise_text <- ifelse(is.null(who),
+    paste0(tools::toTitleCase(affirmation), "!"),
+    paste0(who, " is ", affirmation, "!")
+  )
+  praise_now(praise_text, by = by)
+}
+
+praise_now <- function(praise, by = NULL) {
+  if (is.null(by)) {
+    out <- praise
+  } else {
+    out <- cowsay::say(praise, by = by, type = "string")
+  }
+  structure(out, class = c("praise", "character"))
+}
+
+#' @export
+print.praise <- function(x, ...) {
+  cat(x, ...)
+}
+```
+
+## Using imported packages 
+
+2. Use `#' @importFrom pkg fun` to drop the `pkg::`.
+3. Use `#' @import pkg` to import _all_ functions in `pkg`<br>(not recommended).
+
+. . . 
+
+```{r}
+#| code-line-numbers: "1,6"
+#' @importFrom cowsay say
+praise_now <- function(praise, by = NULL) {
+  if (is.null(by)) {
+    out <- praise
+  } else {
+    out <- say(praise, by = by, type = "string")
+  }
+  structure(out, class = c("praise", "character"))
+}
+```
+
+# Unit Tests {background-color="#006DAE"}
+
+
+## Testing
+
+* When we check a function works in the console, we are informally testing the function.
+* We can formalise and automate this process using unit tests.
+* This checks your assumptions - does your code do what you think it does?
+* Ensure code works as intended as you develop the package.
+
+
+## Unit testing with `testthat`
+
+* To create a file for testing for the active R file:
+
+. . . 
+
+```{r}
+#| eval: false
+usethis::use_test() 
+```
+
+* This creates a file `test-active-filename.R` in `tests/testthat/` directory
+
+. . . 
+
+
+```{glue, eval = FALSE}
+praise.me
+|- R
+|  |- praise.R
+|- tests
+|  |- testthat
+|     |- test-praise.R
+|- ...
+```
+
+## Writing tests with `testthat`
+
+
+`tests/testthat/test-praise.R`
+
+```{r}
+#| eval: false
+test_that("praise works", {
+  library(stringr)
+  expect_true(str_detect(praise_me(), "^You are [a-z]+!$"))
+  expect_true(str_detect(praise_someone(), "^[A-Z][a-z]+!$"))
+  expect_true(str_detect(
+    praise_someone(who = "Emi"),
+    "^Emi is [a-z]+!$"
+  ))
+})
+```
+
+. . . 
+
+Test as you make changes to code:
+
+```{r}
+#| eval: false
+devtools::test_active_file() 
+devtools::test() # to test whole package
+```
+
+
+
+
+# Sharing {background-color="#006DAE"}
+
+## Share and collaborate on your package
+
+
+* Track changes to your code with Git
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_git()
+```
+
+* Collaborate with others via GitHub (or otherwise)
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_github()
+```
+
+. . . 
+
+or for existing repo, run from the terminal:
+
+```{zsh}
+#| eval: false
+#| code-code-line-numbers: false
+git remote add origin https://github.com/user/repo.git
+```
+
+
+* You can install your R package now using:
+
+. . . 
+
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+devtools::install_github("user/repo")
+```
+
+## Installing `praise.me` package
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+devtools::install_github("emitanaka/praise.me")
+```
+
+* The package is found at `https://github.com/emitanaka/praise.me`.
+* It's a good idea to add a `README` file with installation instructions -- this is displayed in the GitHub repo.
+* You can create a `README.Rmd` file with
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_readme_rmd() 
+# OR usethis::use_readme_md() if you have no code
+```
+* Make sure you knit the `README.Rmd` when you modify its contents.
+
+## Package documentation website with `pkgdown`
+
+- Automatically turns all package documentation into a website.
+- Documentation can now be easily viewable outside of R.
+- Easy to customise appearance of the site using YAML
+
+. . . 
+
+<iframe src="https://emitanaka.org/praise.me/" width="100%" height="400px" style="border:1px solid black;"></iframe>
+
+
+## Using `pkgdown` 
+
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_pkgdown()
+```
+
+- Build site locally with `pkgdown::build_site()`
+- Site appearance is modified in the `_pkgdown.yml` file
+  - [bootswatch](https://bootswatch.com/) themes for the appearance of the whole site
+  - organising function / vignette documentation with reference
+- See the [vignette](https://pkgdown.r-lib.org/articles/pkgdown.html) for more details
+- Automatically build and deploy your site with GitHub actions
+
+. . . 
+
+```{r}
+#| eval: false
+#| code-line-numbers: false
+usethis::use_pkgdown_github_pages() # if using this, no need for usethis::use_pkgdown()
+```
+
+## The whole package development workflow
+
+```{r}
+#| eval: false
+available::available("pkgname") # check if package name is available (if planning to publish publicly)
+usethis::create_package("pkgname")
+usethis::use_git() # set up version control
+usethis::use_github() # optional
+usethis::use_r("myfile")
+# write some functions in a script
+usethis::use_data_raw() # if adding data
+devtools::load_all() # try it out in the console
+usethis::use_package("import-pkgname") # add package to import (or depends or suggests)
+usethis::use_package_doc() # add package documentation
+usethis::use_pipe() # if you want to add %>% from `magrittr`
+usethis::use_vignette("vignette-name") # add vignette
+usethis::use_test() # make test file for active R file
+# write some test
+devtools::test_active_file() # test active file
+devtools::test() # test whole package
+devtools::build() # build vignettes
+devtools::install() # to install package
+devtools::check() # to build and check a package 
+usethis::use_readme_rmd() # to add a README Rmd file
+styler::style_pkg() # optional (commit first, then review changes carefully)
+usethis::use_pkgdown_github_pages() # for setting up pkgdown website on github
+# `usethis::use_pkgdown()` if not using github pages
+```
+
+
+
+
+## Week 9 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+::: nonincremental
+
+- Package documentation is important to let others know about the goal of the package, what your function does, and how to use your package.
+- Sharing your package by making it easy to install, implementing unit tests, commiting to good documentation, and making the documentation accessible helps to build trust to use your package.
+- You can make package development and distribution easy with `usethis`, `devtools`, `roxygen2`, `testthat` and `pkgdown`.
+
+:::
+
+:::
+
+. . . 
+
+::: callout-tip
+
+## Resources
+
+::: nonincremental
+
+
+- [`testthat` reference](https://testthat.r-lib.org/reference/index.html) 
+- [`roxygen2` documentation tags](https://roxygen2.r-lib.org/articles/rd.html)
+- [Customising your `pkgdown` site](https://pkgdown.r-lib.org/articles/customise.html)
+
+:::
+
+:::

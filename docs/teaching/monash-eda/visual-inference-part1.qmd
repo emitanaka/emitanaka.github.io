@@ -1,0 +1,26 @@
+---
+title: Visual inference Part I
+date: 2021-10-11
+format: html
+html: 'monash-eda/2021/lecture-11A.html#2'
+html2: 'monash-eda/2021/lecture-11B.html#2'
+---
+
+```{r}
+#| echo: false
+htmllink <- gsub("monash-eda/", "", rmarkdown::metadata$html)
+htmllink2 <- gsub("monash-eda/", "", rmarkdown::metadata$html2)
+```
+
+
+This was taught as part of the lecture for the Exploratory Data Analysis.
+
+<a href='`r htmllink`'><i class="fa-solid fa-link"></i></a> <a href='`r htmllink2`'><i class="fa-solid fa-link"></i></a>
+
+
+
+
+<iframe width="600px" src="`r htmllink`" height="337.5px" style="border: 1px solid black;"></iframe>
+
+<iframe width="600px" src="`r htmllink2`" height="337.5px" style="border: 1px solid black;"></iframe>
+

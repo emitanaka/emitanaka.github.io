@@ -1,0 +1,1052 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Dimension reduction"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 8"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 8"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Dimension reduction*]{.monash-blue} - table of contents"
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(echarts4r)
+library(gganimate)
+theme_set(theme_bw(base_size = 18))
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+## High dimensional data
+
+::: incremental
+
+- <i class='fas fa-ad'></i> In **marketing**, we may conduct a survey with a large number of questions about customer experience.
+- <i class='fas fa-file-invoice-dollar'></i> In **finance**, there may be several ways to assess the credit worthiness of firms or individuals.
+- <i class='fas fa-industry'></i> In **economics**, the development of a country or state can be measured by using multiple measures.
+
+:::
+
+
+## Summarising many variables
+
+::: incremental
+
+- Summarising many variables into a single **index** can be useful. 
+- For example,
+  + In finance, a **credit score** summarises all the information about the likelihood of bankruptcy for a company.
+  + In economics, the [**Human Development Index**](https://hdr.undp.org/data-center/human-development-index#/indicies/HDI) (HDI) is a summary measure that takes nation's income, education and health into account.
+  + In actuary, the [**Australian Actuaries Climate Index**](https://actuaries.asn.au/microsites/climate-index/) summarises the frequency of extreme weather. 
+  
+:::
+
+
+## Weighted linear combination
+
+- A convenient way to combine variables is through a *linear combination* of variables.
+
+. . . 
+
+- For example, your grade for this unit:
+$$\text{Final} = w_1\text{Assign 1} + w_2\text{Assign 2} + w_3\text{Assign 2} + w_4\text{Exam}$$
+  + Here $w_1$, $w_2$, $w_3$ and $w_4$ are called *__weights__*.
+  + In this unit, $w_1 = w_2 = 0.1$, $w_3 = 0.2$ and $w_4 = 0.6$. 
+  
+::: incremental
+
+- What is a good way to choose weights?
+- Do we also need to summarise data into a single variable?
+
+:::
+
+
+
+## Dimension reduction 
+
+::: incremental
+
+- **Dimension reduction** involves _mapping the data into a lower dimensional space_.
+- The _mapping_, or *projection*, involves learning the lower dimensional representation of the data.
+- This can help in for example,
+  - efficiency in computation or memory,  
+  - visualisation,
+  - noise removal, and 
+  - so on.
+
+:::
+
+## Toy example 
+
+::: flex
+
+::: {.w-50}
+
+```{r toy}
+#| echo: false
+toy <- data.frame(X = c(4, 3, 5, 2, 1, 6),
+                  Y = c(8, 6, 10, 4, 2, 12),
+                  Z = c(12, 9, 15, 6, 3, 18))
+z <- data.frame(t1 = c(4, 3, 5, 2, 1, 6))
+knitr::kable(toy)
+```
+
+
+:::
+
+::: {.w-50 .pl3 .fragment}
+
+Alternatively, 
+
+::: flex
+
+::: {.w-20}
+
+$$\begin{bmatrix}1 & 2 & 3\end{bmatrix} \times$$
+
+
+:::
+
+::: {.w-80 .pl3}
+
+```{r toy2}
+#| echo: false
+knitr::kable(z)
+```
+
+:::
+
+:::
+
+
+
+
+:::
+
+:::
+
+
+
+
+
+
+## Geometrically 
+
+::: flex
+
+::: {.w-50}
+
+Original: 3D space
+
+```{r toy-scatter}
+#| echo: false
+#| cache: false
+toy %>% 
+  e_charts(X) %>% 
+  e_scatter_3d(Y, Z, size = 3) %>% 
+  e_line_3d(Y, Z, smooth = TRUE) 
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+Projection: 1D space
+
+
+```{r vis-1d}
+#| echo: false
+ggplot(z, aes(t1)) +
+  geom_point(aes(y = 0), size = 5, color = "blue") +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.length.y = grid::unit(0, "mm")) +
+  scale_x_continuous(breaks = z$z1) +
+  geom_hline(yintercept = 0)
+```
+
+
+$$\mathbb{R}^3 \rightarrow \mathbb{R}$$
+
+[But how do we find this projection?]{.fragment}
+
+
+:::
+
+:::
+
+
+# Matrix transformations {.mcenter background-color="#006DAE"}
+
+
+## <i class="fas fa-football-ball"></i> A toy data
+
+::: flex
+::: {.w-50}
+
+```{r toy-circle-grid}
+#| echo: false
+xgrid <- bind_rows(expand_grid(
+                     x1 = c(-2, -1, 0, 1, 2),
+                     x2 = seq(-2, 2, length.out = 50)),
+                   expand_grid(
+                     x2 = c(-2, -1, 0, 1, 2),
+                     x1 = seq(-2, 2, length.out = 50)),
+                   tibble(x1 = 2 * sin(seq(0, 2, length.out = 100) * pi),
+                          x2 = 2 * cos(seq(0, 2, length.out = 100) * pi))
+                   
+                   )
+
+xgrid
+```
+
+:::
+::: {.w-50 .pl3}
+
+```{r plot-circle-grid}
+#| echo: false
+#| fig-width: 4
+ggplot(xgrid, aes(x1, x2)) +
+  geom_point() +
+  coord_equal()
+```
+
+:::
+:::
+
+
+## Scaling matrix
+
+::: flex
+::: {.w-50}
+
+- A diagonal matrix where non-diagonal elements are all zero, e.g. 
+$$\mathbf{S}_{2\times2} = \begin{bmatrix}s_{x_1} & 0 \\ 0 & s_{x_2}\end{bmatrix}.$$
+- Here we apply the transformation $\mathbf{X}_{n\times 2}\mathbf{S}_{2\times2}$ where $$\mathbf{S}_{2\times2} = \begin{bmatrix}1.5 & 0 \\ 0 & 0.5\end{bmatrix}.$$
+
+:::
+::: {.w-50 .pl3 .fragment}
+
+```{r scale-grid}
+#| echo: false
+#| fig-width: 4
+Xscale <- as.matrix(xgrid) %*% matrix(c(1.5, 0, 0, 0.5), 2, 2)
+Xscaledf <- as.data.frame(Xscale) %>% 
+  rename(x1 = V1, x2 = V2)
+
+bind_rows(mutate(xgrid, state = "Original"),
+          mutate(Xscaledf, state = "Scaled")) %>% 
+  ggplot(aes(x1, x2)) +
+  geom_point(data = ~.x %>% 
+               filter(state=="Original") %>% 
+               select(-state),
+             color = "grey") + 
+  geom_point() + 
+  transition_states(state) +
+  labs(title = "{closest_state}") +
+  coord_equal()
+```
+
+
+:::
+:::
+
+## Rotation matrix 
+
+::: flex
+::: {.w-50}
+
+- Applying the transformation $\mathbf{X}_{n\times 2}\mathbf{R}_{2\times 2}$ where $$\mathbf{R}_{2\times2} = \begin{bmatrix}\cos(\theta) & -\sin(\theta) \\\sin(\theta) & \cos(\theta) \end{bmatrix}$$ rotates the data around the origin by an angle of $\theta$ in the counterclockwise direction. 
+
+:::
+::: {.w-50 .pl3 .fragment}
+
+```{r rotate-grid}
+#| echo: false
+#| fig-width: 4
+Xrotate <- as.matrix(xgrid) %*% matrix(c(cos(pi/3), -sin(pi/3), sin(pi/3), cos(pi/3)), 2, 2)
+Xrotatedf <- as.data.frame(Xrotate) %>% 
+  rename(x1 = V1, x2 = V2)
+
+bind_rows(mutate(xgrid, state = "Original"),
+          mutate(Xrotatedf, state = "Rotated")) %>% 
+  ggplot(aes(x1, x2)) +
+  geom_point(data = ~.x %>% 
+               filter(state=="Original") %>% 
+               select(-state),
+             color = "grey") + 
+  geom_point() + 
+  transition_states(state) +
+  labs(title = "{closest_state}") +
+  coord_equal()
+```
+
+
+:::
+:::
+
+## Shear matrix 
+
+::: flex
+::: {.w-50}
+
+* A shear matrix can tilt an axis, e.g. $$\mathbf{H}_{2\times 2} = \begin{bmatrix}1 & \lambda \\ 0 & 1\end{bmatrix}$$ tilts the $x$-axis.
+* The shear matrix below will tilt the $y$-axis dimension: $$\mathbf{H}_{2\times 2} = \begin{bmatrix}1 & 0 \\ \lambda & 1\end{bmatrix}.$$
+
+
+:::
+::: {.w-50 .pl3 .fragment}
+
+```{r shear-grid}
+#| echo: false
+#| fig-width: 4
+Xshear1 <- as.matrix(xgrid) %*% matrix(c(1, 1.1, 0, 1), 2, 2)
+Xshear1df <- as.data.frame(Xshear1) %>% 
+  rename(x1 = V1, x2 = V2)
+Xshear2 <- as.matrix(xgrid) %*% matrix(c(1, 0, 1.1, 1), 2, 2)
+Xshear2df <- as.data.frame(Xshear2) %>% 
+  rename(x1 = V1, x2 = V2)
+
+bind_rows(mutate(xgrid, state = "Original"),
+          mutate(Xshear1df, state = "Tilted (x-axis)"),
+          mutate(xgrid, state = "Original "),
+          mutate(Xshear2df, state = "Tilted (y-axis)")) %>% 
+  mutate(state = fct_inorder(state)) %>% 
+  ggplot(aes(x1, x2)) +
+  geom_point(data = ~.x %>% 
+               filter(state=="Original") %>% 
+               select(-state),
+             color = "grey") + 
+  geom_point() + 
+  transition_states(state) +
+  labs(title = "{closest_state}") +
+  coord_equal() 
+```
+
+
+:::
+:::
+
+## Inverting transformations 
+
+- Suppose we have a new transformed data $$\hat{\mathbf{X}}_{n\times p} = \mathbf{X}_{n\times p}\mathbf{W}_{p\times p}.$$
+
+. . . 
+
+- Then we can get the data in the original measurement by applying: $$\mathbf{X}_{n\times p} = \hat{\mathbf{X}}_{n\times p}\mathbf{W}^{-1}_{p\times p}$$ provided that $\mathbf{W}^{-1}$ exists. 
+
+# Matrix decompositions {.mcenter background-color="#006DAE"}
+
+## Eigenvectors and eigenvalues
+
+- For a square matrix, $\mathbf{A}$, if there exists a vector $\boldsymbol{v}$ and scalar value $\lambda$ such that $$\mathbf{A}\boldsymbol{v} = \lambda\boldsymbol{v}$$ then $\boldsymbol{v}$ is an [**eigenvector**]{.monash-blue} of $\mathbf{A}$ with [**eigenvalue**]{.monash-blue} of $\lambda$. 
+
+## Eigenvalue decomposition
+
+::: incremental 
+
+- Also called **eigendecomposition**, **diagonalisation** or **spectral decomposition**.
+- For a positive semi-definite symmetric matrix, $\mathbf{V}$, there exists an orthogonal matrix $\mathbf{Q}$ and a diagonal matrix $\mathbf{\Lambda}$ such that [$$\mathbf{V} = \mathbf{Q}\mathbf{\Lambda}\mathbf{Q}^{-1}.$$]{.monash-blue}
+
+- $\mathbf{\Lambda}$ is a diagonal matrix where the diagonal entries correspond to **eigenvalues**.
+- The columns of $\mathbf{Q}$ are **eigenvectors** of $\mathbf{V}$ corresponding to the eigenvalues in $\mathbf{\Lambda}$.
+
+:::
+
+## Singular value decomposition 
+
+[$$\mathbf{A}_{m\times n} = \mathbf{U}_{m\times m}\mathbf{\Sigma}_{m\times n}\mathbf{V}^\top_{n\times n}$$]{.monash-blue}
+
+- where
+  - $\mathbf{V}$ is an orthogonal matrix (i.e. $\mathbf{V}^\top\mathbf{V} = \mathbf{I}$),
+  - $\mathbf{\Sigma}$ is a rectangular diagonal matrix, and
+  - $\mathbf{U}$ is another orthogonal matrix.
+
+. . . 
+
+- SVD is the same as eigenvalue decomposition if $\mathbf{A}$ is symmetric positive-semidefinite matrix.
+
+# Principal components analysis {background-color="#006DAE" .mcenter}
+
+## Principal components
+
+- The $k$-th [**principal component**]{.monash-blue} is a _linear combination of variables_: $$\boldsymbol{t}_k = 
+w_{1k}\boldsymbol{x}_1 + w_{2k}\boldsymbol{x}_2 + \dots + w_{pk}\boldsymbol{x}_p = \mathbf{X}_{n\times p}\boldsymbol{w}_k$$ where $\mathbf{X}_{n\times p} = \begin{bmatrix}\boldsymbol{x}_1 & \cdots & \boldsymbol{x}_p \end{bmatrix}$ and $\boldsymbol{w}_k = (w_{1k}, \dots, w_{pk})^\top$.
+
+. . . 
+
+- The elements in $\boldsymbol{w}_k$ are referred to as the [**loadings**]{.monash-blue} (or weights) of the $k$-th principal component.
+
+. . . 
+
+- <i class='fas fa-exclamation-circle'></i> This does assumes all variables are numeric!
+
+
+## Loading or weight matrix
+
+- The matrix $\mathbf{W} = \begin{bmatrix}\boldsymbol{w}_1 & \cdots & \boldsymbol{w}_{\min\{n,p\}}\end{bmatrix}$ is referred to as the [**loading or weight matrix**]{.monash-blue}.
+- We obtain the principal component scores (or rotated data) as $$\mathbf{T} = \begin{bmatrix} \boldsymbol{t}_1 & \cdots & \boldsymbol{t}_{\min\{n,p\}}  \end{bmatrix}  = \mathbf{X}\mathbf{W}.$$
+
+
+## First principal components
+
+- The loadings for the [**first principal component scores**]{.monash-blue} are found by maximising the _projected variance_:
+
+$$\boldsymbol{w}_1 = \argmax_{\boldsymbol{w}_1} \big\{var(\boldsymbol{t}_1)\big\} = \argmax_{\boldsymbol{w}_1} \big\{var(\mathbf{X}\boldsymbol{w}_1)\big\}.$$
+
+- Subject to $\sum_{j=1}^pw_{j1}^2 = 1$.
+
+
+
+## Second principle component 
+
+- The loadings of the [**second principal component**]{.monash-blue} is found from 
+
+$$\boldsymbol{w}_2 = \argmax_{\boldsymbol{w}_2} \big\{var(\boldsymbol{t}_2)\big\} = \argmax_{\boldsymbol{w}_2} \big\{var(\mathbf{X}\boldsymbol{w}_2)\big\}.$$
+
+- such that $\displaystyle\sum_{j=1}^pw_{j2}^2 = 1$ [and [$\boldsymbol{w}_1^\top \boldsymbol{w}_2 = 0$ [(i.e. $\boldsymbol{t}_2$ is uncorrelated with $\boldsymbol{t}_1$)]{.f2}]{.monash-blue}.]{.fragment}
+
+
+
+
+## Third principle component and beyond 
+
+- The loadings of the [**third principal component**]{.monash-blue} is found from 
+
+$$\boldsymbol{w}_3 = \argmax_{\boldsymbol{w}_3} \big\{var(\boldsymbol{t}_3)\big\} = \argmax_{\boldsymbol{w}_3} \big\{var(\mathbf{X}\boldsymbol{w}_3)\big\}.$$
+
+- such that $\displaystyle\sum_{j=1}^pw_{j3}^2 = 1$ and [$\boldsymbol{t}_3$ is uncorrelated with both $\boldsymbol{t}_1$ and $\boldsymbol{t}_2$]{.monash-blue}.
+
+. . . 
+
+- And so on for other higher order PCs.
+
+
+## PCs, eigenvectors and eigenvalues
+
+
+::: incremental 
+
+- Suppose you have a $n\times p$ data matrix $\mathbf{X}$ with each column centered around 0.
+- The **empirical variance-covariance matrix** of the variables is given as $\frac{1}{n}\mathbf{X}^\top\mathbf{X}.$
+- For PCA, we maximise $\frac{1}{n}\boldsymbol{w}_k^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{w}_k$ such that $\boldsymbol{w}_k^\top\boldsymbol{w}_k = 1$.
+- The Lagrangian for this is $\frac{1}{n}\boldsymbol{w}_k^\top\mathbf{X}^\top\mathbf{X}\boldsymbol{w}_k-\lambda(\boldsymbol{w}_k^\top\boldsymbol{w}_k - 1)$.
+- The partial derivative with respect to $\boldsymbol{w}_k$ and setting it to zero is $2(\frac{1}{n}\mathbf{X}^\top\mathbf{X} - \lambda\mathbf{I}_n) \boldsymbol{w}_k = 0$.
+- Therefore, $\boldsymbol{w}_k$ must be an eigenvector of $\mathbf{X}^\top\mathbf{X}$ with eigenvalue of $n\lambda$. 
+:::
+
+
+## PCs and SVD
+
+::: incremental
+
+- The PC scores are given as: $\mathbf{T} = \mathbf{X}\mathbf{W}$.
+- Let $\mathbf{X} = \mathbf{U}\mathbf{\Sigma}\mathbf{V}^\top$.
+- It turns out that: 
+  - the columns of $\mathbf{U}$ are the eigenvectors of $\mathbf{X}\mathbf{X}^\top$,
+  - the squares of the diagonal elements of $\mathbf{\Sigma}$ are the eigenvalues of both $\mathbf{X}^\top\mathbf{X}$ and $\mathbf{X}\mathbf{X}^\top$,
+  - the columns of $\mathbf{V}$ are the eigenvectors of $\mathbf{X}^\top\mathbf{X}$, and
+  - $\mathbf{W} = \mathbf{V}$!
+
+:::
+
+## Rotated data
+
+::: incremental
+
+- And so $\mathbf{T} = \mathbf{U}\mathbf{\Sigma}\mathbf{W}^\top\mathbf{W} = \mathbf{U}\mathbf{\Sigma}$.
+- Note that then $\mathbf{X} = \mathbf{T}\mathbf{W}^\top$.
+- You'll go through more of this in the tutorial.
+
+:::
+
+
+
+## Geometric interpretation 
+
+Alternatively,
+
+- Let $\hat{\mathbf{X}}_2 = \mathbf{X} - \mathbf{X}\boldsymbol{w}_1\boldsymbol{w}_1^\top$.
+- Then $$\boldsymbol{w}_2 = \argmax_{\boldsymbol{w}_2} \big\{var(\hat{\mathbf{X}}_2\boldsymbol{w}_2)\big\}\text{ such that }\sum_{j=1}^pw_{j2}^2 = 1.$$
+
+
+
+# An application to Yale face database {background-color="#006DAE" .mcenter}
+
+
+## <i class='fas fa-database'></i> Yale face database
+
+- The data is from P. Belhumeur, J. Hespanha, D. Kriegman, “Eigenfaces vs. Fisherfaces: Recognition Using Class Specific Linear Projection,” IEEE Transactions on Pattern Analysis and Machine Intelligence, July 1997, pp. 711-720. 
+- The data consists of 15 subjects each under 11 conditions (e.g. "happy", "sad", "centerlight"), so a total of 165 images.
+- Each image is 320 (width) x 243 (height) = 77,760 pixels (features). 
+- Note that here $n << p$!
+
+```{r yaleface}
+#| classes: skimr
+#| echo: -1
+Sys.setenv(VROOM_CONNECTION_SIZE = 5000000)
+yalefaces <- read_csv("https://emitanaka.org/iml/data/yalefaces.csv")
+dim(yalefaces)
+```
+
+## <i class='fas fa-grimace'></i> Sample faces
+
+```{r yaleface-vis}
+#| code-fold: true
+#| fig-height: 6
+imagedata_to_plotdata <- function(data = yalefaces, 
+                                  w = 320, 
+                                  h = 243, 
+                                  which = sample(1:165, 15)) {
+  data %>% 
+    mutate(id = 1:n()) %>% 
+    filter(id %in% which) %>% 
+    pivot_longer(starts_with("V")) %>% 
+    mutate(col = rep(rep(1:w, each = h), n_distinct(id)),
+           row = rep(rep(1:h, times = w), n_distinct(id)))
+}
+
+gfaces <- imagedata_to_plotdata(yalefaces) %>% 
+    ggplot(aes(col, row)) +
+    geom_tile(aes(fill = value)) + 
+    facet_wrap(~subject + type, nrow = 3) +
+    scale_y_reverse() +
+    theme_void(base_size = 18) +
+    guides(fill = "none") +
+    coord_equal()
+
+gfaces
+
+```
+
+## <i class='fab fa-r-project'></i> Principle component analysis with R {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+- There are several functions for doing principal components analysis in R -- we use `prcomp()`.
+
+
+
+```{r yale-pc}
+#| code-line-numbers: 3
+yalefaces_x <- yalefaces %>%
+  select(-c(subject, type))
+yalefaces_pca <- prcomp(yalefaces_x)
+
+str(yalefaces_pca)
+```
+
+
+
+- `prcomp` object contains: 
+  - `sdev` are the standard deviations of the principle components 
+  - `rotation` is the loading matrix 
+  - `x` is the rotated data (centered + scaled data multiplied by `rotation` matrix)
+  - `center` is the centering (if any)
+  - `scale` is a logical value to indicate if scaling was done
+
+
+## <i class='fab fa-r-project'></i> Summary of PCA
+
+- The summary of `prcomp` object shows for each PC,
+  - it's standard deviation, 
+  - the proportion of variation it explains, and 
+  - the cumulative proportion of variation it explains.
+- Below shows that PCs of up to (and including) 50 explains 95.11% of the variation in the data.
+
+```{r pca-summary}
+summary(yalefaces_pca)
+```
+
+
+## <i class='fab fa-r-project'></i> Summary of PCA "by hand"
+
+
+- `sdev` is simply the sample standard deviation of the rotated data:
+```{r pca-summary-hand}
+apply(yalefaces_pca$x, 2, sd) %>% head()
+yalefaces_pca$sdev %>% head()
+```
+. . . 
+
+- Proportion of variation explained "by hand":
+
+```{r}
+(yalefaces_pca$sdev^2 / sum(yalefaces_pca$sdev^2)) %>% head()
+```
+. . . 
+
+- Cumulative proportion of variation explained "by hand":
+
+```{r}
+cumsum(yalefaces_pca$sdev^2 / sum(yalefaces_pca$sdev^2)) %>% head()
+```
+
+## The total variation of PCs
+
+- There are a total of $\min\{p, n\}$ PCs.
+- The total variation of the PCs explain all of the variation of the original variables.
+
+$$\sum_{j = 1}^{\min\{p,~n\}}var(\boldsymbol{t}_j) = \sum_{j=1}^pvar(\boldsymbol{x}_j)$$
+
+. . . 
+
+```{r pca}
+sum(yalefaces_pca$sdev^2) # LHS
+sum(apply(select(yalefaces, -c(type, subject)), 2, var)) # RHS
+```
+
+
+
+
+## Image compression
+
+```{r yalefaces-pc1calc}
+#| code-fold: true
+Xnew <- yalefaces_pca$x[, 1:50] %*% t(yalefaces_pca$rotation[, 1:50])
+
+sample_ids <- sample(1:165, 15)
+
+rawdata <- imagedata_to_plotdata(which = sample_ids) 
+Pdata <- as.data.frame(Xnew) %>% 
+  mutate(type = yalefaces$type,
+         subject = yalefaces$subject) %>% 
+  imagedata_to_plotdata(which = sample_ids)
+
+```
+
+::: flex
+
+::: {.w-50 .f3}
+
+```{r yalefaces-raw .pr2}
+#| echo: false
+#| fig-height: 5
+#| fig-width: 8
+gfaces %+% rawdata
+```
+
+Based on the original data:
+
+$$165 \times 320 \times 243 \approx 12.8\text{ million}$$
+
+:::
+
+::: {.w-50 .f3}
+
+```{r yalefaces-pc1 .pl2}
+#| echo: false
+#| fig-height: 5
+#| fig-width: 8
+gfaces %+% Pdata
+```
+
+Based on 50 PCs: 
+
+$$165 \times 50 + 50 \times 320 \times 243 \approx 3.9\text{ million}$$
+
+:::
+
+
+:::
+
+
+
+## Facial recognition {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- Each PC captures a different aspect of the data.
+- The PCs can be treated as a feature downstream, say, for facial recognition systems.
+
+```{r yalefaces-pccalc}
+#| echo: false
+pc_decompose <- function(k) {
+    Xnew <- yalefaces_pca$x[, k, drop = FALSE] %*% t(yalefaces_pca$rotation[, k, drop = FALSE])
+  rawdata <- imagedata_to_plotdata(which = sample_ids) 
+  as.data.frame(Xnew) %>% 
+    mutate(type = yalefaces$type,
+           subject = yalefaces$subject) %>% 
+    imagedata_to_plotdata(which = sample_ids)
+}
+```
+
+::: flex
+
+::: {.w-50}
+
+```{r yalefaces-pc-even}
+#| echo: false
+#| fig-height: 5
+#| fig-width: 8
+gfaces %+% rawdata + labs(title = "Original")
+gfaces %+% pc_decompose(2) + labs(title = "PC 2")
+gfaces %+% pc_decompose(4) + labs(title = "PC 4")
+gfaces %+% pc_decompose(6) + labs(title = "PC 6")
+gfaces %+% pc_decompose(8) + labs(title = "PC 8")
+gfaces %+% pc_decompose(10) + labs(title = "PC 10")
+gfaces %+% pc_decompose(12) + labs(title = "PC 12")
+gfaces %+% pc_decompose(14) + labs(title = "PC 14")
+```
+
+:::
+
+::: {.w-50}
+
+
+
+```{r yalefaces-pc-odd}
+#| echo: false
+#| fig-height: 5
+#| fig-width: 8
+gfaces %+% pc_decompose(1) + labs(title = "PC 1")
+gfaces %+% pc_decompose(3) + labs(title = "PC 3")
+gfaces %+% pc_decompose(5) + labs(title = "PC 5")
+gfaces %+% pc_decompose(7) + labs(title = "PC 7")
+gfaces %+% pc_decompose(9) + labs(title = "PC 9")
+gfaces %+% pc_decompose(11) + labs(title = "PC 11")
+gfaces %+% pc_decompose(13) + labs(title = "PC 13")
+gfaces %+% pc_decompose(15) + labs(title = "PC 15")
+```
+
+
+:::
+
+:::
+
+
+
+
+
+# An application to wine quality data {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-database'></i> Wine quality data {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+This data on wine quality found [here](https://www.kaggle.com/datasets/rajyellow46/wine-quality). 
+
+```{r skim-wine}
+#| classes: skimr
+wine <- read_csv("https://emitanaka.org/iml/data/winequalityN.csv")
+skimr::skim(wine)
+```
+
+- There are small amount missing values in the data.
+- For ease of computation, let's ignore any observations with missing values (<i class='fas fa-exclamation-circle'></i>  don't do this in practice!)
+
+```{r winec}
+winec <- wine %>% 
+  filter(if_all(everything(), complete.cases))
+```
+
+
+
+
+## <i class='fab fa-r-project'></i> Scaling then PCA
+
+```{r pc1}
+#| code-line-numbers: "3-4"
+wine_pca <- winec %>%
+  select(-type) %>% 
+  scale() %>%
+  prcomp() # or skip above line and use prcomp(.scale = TRUE) 
+
+wine_pca
+```
+
+## Standardise or not?
+
+::: incremental 
+
+- We can scale in two ways
+  + Scale the data using `scale()`
+  + Include the option `scale. = TRUE` when calling  `prcomp()`
+- While the normalisation $\sum_{j=1}^{\min\{p,n\}}w_{jk}^2  = 1$ is always implemented in any software that does PCA, the decision to _standardise_ is up to you.
+- If the variables are measured in the *same* units then there may be no need to standardise.
+- If the variables are measured in the *different* units then *standardise* the data.
+
+:::
+
+## <i class='fab fa-r-project'></i> Proportion of variance by PCs
+
+```{r summary}
+summary(wine_pca)
+```
+
+
+
+## <i class='fab fa-r-project'></i> Loading matrix
+
+```{r weights}
+wine_pca$rotation
+```
+- A positive (negative) loading indicates a positive (negative) association between a variable and the corresponding PC.
+- The magnitude indicates the strength of the association.
+
+
+## <i class='fab fa-r-project'></i> Augment PCs to data 
+
+```{r augment}
+wine_pca_aug <- wine_pca %>% 
+  broom::augment(winec)
+
+head(wine_pca_aug)
+```
+
+# <i class='fas fa-chart-line'></i> Visualisations {background-color="#006DAE" .mcenter}
+
+## <i class='fab fa-r-project'></i> Correlation biplot
+
+```{r pc-biplot}
+#| fig-height: 5
+library(ggfortify)
+autoplot(wine_pca, loadings = TRUE, loadings.label = TRUE, loadings.label.colour = "black",
+         data = winec, colour = 'type')
+```
+
+
+## <i class='fab fa-r-project'></i> Distance biplot
+
+```{r pc-biplot-dist}
+#| fig-height: 5
+#| code-line-numbers: 4
+library(ggfortify)
+autoplot(wine_pca, loadings = TRUE, loadings.label = TRUE, loadings.label.colour = "black",
+         data = winec, colour = 'type',
+         scale = 0) 
+```
+
+## Interpreting a biplot
+
+- The distance between observations implies similarity between observations.
+- The angles between variables tell us something about correlation (approximately)
+  + citric acid and residual sugar are highly positively correlated as the angle between them is close to zero.
+  + quality and pH are close to uncorrelated as the angle between them is close 90 degrees.
+  + pH and citric acid are highly negatively correlated as the angle between them is close to 180 degrees.
+
+
+
+## Scree plot
+
+```{r pca-varex}
+#| code-fold: true
+pcsum <- tibble(vars = wine_pca$sdev^2,
+                PC = factor(1:length(wine_pca$sdev))) 
+
+pcsum %>% 
+  ggplot(aes(PC, vars)) +
+  geom_point() +
+  geom_line(group = 1) +
+  labs(y = "Variance", title = "Screeplot")
+```
+
+
+
+# Selecting the number of principal components {background-color="#006DAE" .mcenter}
+
+## Elbow method
+
+- The scree plot can be used to select the number of PCs.
+- Look for the "elbow" of the scree plot (around 4-6).
+- There is some subjectiveness to the selection!
+
+```{r pca-varex2}
+#| echo: false
+pcsum <- tibble(vars = wine_pca$sdev^2,
+                PC = factor(1:length(wine_pca$sdev))) 
+
+pcsum %>% 
+  ggplot(aes(PC, vars)) +
+  geom_point() +
+  geom_line(group = 1) +
+  labs(y = "Variance", title = "Screeplot")
+```
+
+## Kaiser's rule
+
+- Kaiser’s rule states to select all PCs with a variance greater than 1.
+
+```{r}
+summary(wine_pca)
+```
+
+- Here we select 4 PCs.
+
+
+## Interpreting PCs
+
+::: incremental
+
+- Remember that PCs do nothing more than finding uncorrelated linear combinations of the variables that explain the variance of the data.
+- It can be incredibly useful to find the interpretation of PCs but this relies on the context of data. 
+
+:::
+
+
+# Multi-dimensional scaling {background-color="#006DAE" .mcenter}
+
+## Motivation 
+
+::: incremental
+
+- Suppose we have $n$ observations and $p$ (numerical) variables. 
+- When $p = 2$, we can easily draw a scatterplot to see the disances between observations.  
+- However, when $p > 2$ then there isn't an easy way to visualise the distances between observations. 
+- But, we can get a close approximation of the distances using **multi-dimensional scaling** (MDS) by finding a low (usually two) dimensional represenation of pairwise distances between observations. 
+
+::: 
+
+
+
+
+## Classical MDS
+
+```{r mds-wine}
+Dwinec <- winec %>% 
+  # note that we are removing the categorical variable `type` here!
+  select(-type) %>% 
+  # then standardising the data
+  scale() %>% 
+  # and calculating the distances between observations (ED is default)
+  dist()
+
+# add the row labels back
+attributes(Dwinec)$Labels <- winec$type
+
+# perform the classical (metric) MDS
+mdsout <- cmdscale(Dwinec, k = 2)
+
+head(mdsout)
+```
+
+
+## Visualising the MDS output
+
+```{r}
+mdsout %>% 
+  as_tibble(rownames = "type") %>% 
+  ggplot(aes(V1, V2)) +
+  geom_point(aes(color = type))
+```
+
+## Distances 
+
+$$D_{Euclidean}(\boldsymbol{x}_i, \boldsymbol{x}_j) = \sqrt{\sum_{s = 1}^p (x_{is} - x_{js})^2}.$$
+
+::: incremental
+
+- So for example, $D_{Euclidean}(\boldsymbol{x}_1, \boldsymbol{x}_2) = `r round(as.matrix(Dwinec)[1,2], 3)`$.
+- But for $D_{Euclidean}(\boldsymbol{z}_1, \boldsymbol{z}_2) = \sqrt{(`r round(mdsout[1,1], 3)` - (`r round(mdsout[2,1], 3)`))^2 + (`r round(mdsout[1,2], 3)` - (`r round(mdsout[2,2], 3)`))^2} = `r round(sqrt((mdsout[1,1] - mdsout[2,1])^2 + (mdsout[1,2] - mdsout[2,2])^2), 3)`.$
+- Another example, $D_{Euclidean}(\boldsymbol{x}_1, \boldsymbol{x}_3) = `r round(as.matrix(Dwinec)[1,3], 3)`$.
+- But $D_{Euclidean}(\boldsymbol{z}_1, \boldsymbol{z}_2) = \sqrt{(`r round(mdsout[1,1], 3)` - `r round(mdsout[3,1], 3)`)^2 + (`r round(mdsout[1,2], 3)` - `r round(mdsout[3,2], 3)`)^2} = `r round(sqrt((mdsout[1,1] - mdsout[3,1])^2 + (mdsout[1,2] - mdsout[3,2])^2), 3)`.$
+
+:::
+
+## Comparing raw and MDS distances 
+
+```{r mds-vs-raw}
+#| code-fold: true
+#| fig-width: 5
+#| fig-height: 5
+tibble(ed_mds = as.vector(dist(mdsout)),
+       ed_raw = as.vector(Dwinec)) %>% 
+  ggplot(aes(ed_mds, ed_raw)) +
+  geom_point() +
+  labs(x = "MDS (ED)", y = "Raw (ED)")
+```
+
+## Classical MDS 
+
+- In classical MDS, the aim is to minimise the strain function:
+
+$$\text{Strain} = \sum_{i=1}^{n-1}\sum_{j>i}\left(D(\boldsymbol{x}_i, \boldsymbol{x}_j) - D(\boldsymbol{z}_i, \boldsymbol{z}_j)\right)^2.$$
+
+- The above has a tractable solution when Euclidean distance is used. 
+- The solution _rotates_ the points until the 2D projection is close to the input distances.
+
+## Sammon mapping
+
+- An alternative objective is to minimise the stress function:
+
+
+$$\text{Stress} = \sum_{i=1}^{n-1}\sum_{j>i}\frac{\left(D(\boldsymbol{x}_i, \boldsymbol{x}_j) - D(\boldsymbol{z}_i, \boldsymbol{z}_j)\right)^2}{D(\boldsymbol{x}_i, \boldsymbol{x}_j)}.$$
+
+- This ensures that points that observations with small distances are close to in the MDS output as well, preserving the local structure.
+- This is refererd to as **sammon mapping**.
+
+
+## Modern MDS 
+
+::: incremental
+
+- Methods for finding a low dimensional representation of high dimensional data are more recently referred to as **manifold learning**.
+- Low-dimensional representations can also be used as features downstream in classification or regression problems. 
+- Some of these examples include, 
+  - Local linear embeddings (LLE)
+  - IsoMap
+  - t-SNE
+  - UMAP, and so on.
+  
+:::
+
+
+# <i class='fas fa-key'></i> Takeaways  {background-color="#006DAE"}
+
+
+
+- Principal components are linear combination of the data variables. 
+- Multi-dimensional scaling is a non-linear dimensionality reduction. 
+- They both present low-dimenstional representation of the full data and useful for downstream analysis.

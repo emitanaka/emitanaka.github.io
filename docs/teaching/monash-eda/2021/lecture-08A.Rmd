@@ -1,0 +1,1208 @@
+---
+title: "ETC5521: Exploratory Data Analysis"
+subtitle: "Sculpting data using models, checking assumptions, co-dependency and performing diagnostics"
+author: "Emi Tanaka"
+email: "ETC5521.Clayton-x@monash.edu"
+date: "Week 8 - Session 1"
+length: "50 minutes"
+titlebgimg: "images/bg-01.png"
+output:
+  xaringan::moon_reader:
+    css:
+      - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
+      - "assets/animate.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/table.css"
+      - "assets/styles.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/slide-types.css"
+      - "assets/panelset-modified.css"
+      - "assets/scroll.css"
+      - "assets/datatables.css"
+    self_contained: false 
+    seal: false 
+    chakra: 'lib/remark-latest.min.js'
+    lib_dir: lib
+    includes:
+      in_header: "assets/head.html"
+    mathjax: "lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      highlightStyle: magula
+      highlightLanguage: r 
+      highlightLines: true
+      highlightSpans: false 
+      countIncrementalSlides: false
+      slideNumberFormat: '%current%/%total%'
+      navigation:
+        scroll: false 
+        touch: true
+        click: false
+      ratio: '16:9'
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".Rmd$", "", current_file)
+```
+```{r, include = FALSE}
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+library(broom)
+options(width = 200)
+knitr::opts_chunk$set(
+  fig.path = "images/week8A/",
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center",
+  dev.args = list(bg = 'transparent'),
+  #out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/week8A/"
+)
+theme_set(ggthemes::theme_gdocs(base_size = 18) +
+            theme(plot.background = element_rect(fill = 'transparent', colour = NA), axis.line.y = element_line(color = "black", linetype = "solid"),
+                  plot.title.position = "plot",
+                  plot.title = element_text(size = 24),
+                  panel.background  = element_rect(fill = 'transparent', colour = NA),
+                  legend.background = element_rect(fill = 'transparent', colour = NA),
+                  legend.key        = element_rect(fill = 'transparent', colour = NA)
+                  ) )
+```
+
+```{r titleslide, child="assets/titleslide.Rmd"}
+```
+
+```{css, echo = FALSE}
+.gray80 {
+  color: #505050!important;
+  font-weight: 300;
+}
+.bg-gray80 {
+  background-color: #DCDCDC!important;
+}
+```
+
+
+---
+
+class: transition middle
+
+# Parametric regression
+
+---
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+
+
+
+
+]
+.w-50.pl3[
+
+
+
+]
+]
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+```{r quad-good-data, fig.height = 3, fig.width = 6}
+set.seed(1)
+df1 <- tibble(id = 1:200) %>% 
+  mutate(x = runif(n(), -10, 10),
+         y = x^2 + rnorm(n(), 0, 5))
+ggplot(df1, aes(x, y)) +
+  geom_point()
+```
+
+
+
+
+
+
+]
+]
+
+---
+
+count: false
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$
+where $\epsilon_i \sim NID(0, \color{red}{\sigma^2})$ for $i = 1, ..., n$,
+
+  * $\color{red}{red} = \text{estimated}$
+  * $\color{blue}{blue} = \text{observed}$
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+```{r quad-good-data, fig.height = 3, fig.width = 6}
+```
+
+
+
+]
+]
+
+---
+
+count: false
+
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$
+where $\epsilon_i \sim NID(0, \color{red}{\sigma^2})$ for $i = 1, ..., n$,
+
+  * $\color{red}{red} = \text{estimated}$
+  * $\color{blue}{blue} = \text{observed}$
+
+
+
+]
+.w-50.pl3[
+
+**Example**
+
+```{r quad-good-fit, fig.height = 3, fig.width = 6}
+ggplot(df1, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE,
+              formula = y ~ poly(x, 2),
+              size = 2, color = "red")
+```
+
+
+
+]
+]
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$
+where $\epsilon_i \sim NID(0, \color{red}{\sigma^2})$ for $i = 1, ..., n$,
+
+  * $\color{red}{red} = \text{estimated}$
+  * $\color{blue}{blue} = \text{observed}$
+* Because some type of distribution is assumed in advance, parametric fitting can lead to fitting a smooth curve that misrepresents the data.
+
+]
+.w-50.pl3[
+
+**Example**
+
+```{r quad-good-fit, fig.height = 3, fig.width = 6}
+```
+
+
+
+]
+]
+
+
+---
+
+count: false
+
+# Parametric regression
+
+.flex[
+.w-50[
+* .monash-blue[**Parametric**] means that the researcher or analyst assumes in advance that the data fits some type of distribution (e.g. the normal distribution). 
+* E.g. one may assume that
+$$\color{blue}{y_i} = \color{red}{\beta_0} + \color{red}{\beta_1} \color{blue}{x_i} + \color{red}{\beta_2} \color{blue}{x_i^2} + \epsilon_i,$$
+where $\epsilon_i \sim NID(0, \color{red}{\sigma^2})$ for $i = 1, ..., n$,
+
+  * $\color{red}{red} = \text{estimated}$
+  * $\color{blue}{blue} = \text{observed}$
+* Because some type of distribution is assumed in advance, parametric fitting can lead to fitting a smooth curve that misrepresents the data.
+
+]
+.w-50.pl3[
+
+**Examples**
+
+```{r quad-good-fit, fig.height = 3, fig.width = 6}
+```
+Assuming a quadratic fit:
+
+```{r quad-bad-fit, fig.height = 3, fig.width = 6}
+tibble(id = 1:200) %>% 
+  mutate(x = runif(n(), -10, 10),
+         y = 3* (x-10)*(x+4)*(x-1) + rnorm(n(), 0, 100)) %>% 
+  ggplot(aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE,
+              formula = y ~ poly(x, 2),
+              size = 2, color = "red")
+```
+
+
+]
+]
+
+
+
+---
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$
+* Then we have
+$$y~|~x \sim N(x^2, 2^2).$$
+
+
+]
+.w-50.f4[
+
+
+]
+]
+
+---
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$
+* Then we have
+$$y~|~x \sim N(x^2, 2^2).$$
+* Let's draw $200$ observations from this model.
+
+
+
+]
+.w-50.f4[
+
+```{r sim-quad-1, echo = TRUE}
+set.seed(1)
+df <- tibble(id = 1:200)
+
+df
+```
+
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$
+* Then we have
+$$y~|~x \sim N(x^2, 2^2).$$
+* Let's draw $200$ observations from this model.
+* Suppose that $x\in(-10,10)$ and that we have uniform coverage over the support.
+
+
+
+]
+.w-50.f4[
+```{r sim-quad-2, echo = TRUE}
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+        mutate(x = runif(n(), -10, 10))
+
+df
+```
+
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$
+* Then we have
+$$y~|~x \sim N(x^2, 2^2).$$
+* Let's draw $200$ observations from this model.
+* Suppose that $x\in(-10,10)$ and that we have uniform coverage over the support.
+* The response $y$ is generated as per above model.
+
+
+]
+.w-50.f4[
+```{r sim-quad-3, echo = TRUE}
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+        mutate(x = runif(n(), -10, 10),
+               y = x^2 + rnorm(n(), 0, 2))
+df
+```
+]
+]
+
+---
+
+count: false
+
+# Simulating data from parametric models
+
+.flex[
+.w-50.pr3[
+* Say a model is 
+$$y = x^2 + e, \qquad e \sim N(0, 2^2).$$
+* Then we have
+$$y~|~x \sim N(x^2, 2^2).$$
+* Let's draw $200$ observations from this model.
+* Suppose that $x\in(-10,10)$ and that we have uniform coverage over the support.
+* The response $y$ is generated as per above model.
+
+
+]
+.w-50.f4[
+```{r sim-quad-final, echo = TRUE}
+set.seed(1)
+df <- tibble(id = 1:200) %>% 
+        mutate(x = runif(n(), -10, 10),
+               y = x^2 + rnorm(n(), 0, 2))
+```
+Plotting this:
+```{r sim-plot, echo = TRUE, fig.height = 4}
+ggplot(df, aes(x, y)) +
+  geom_point()
+```
+]
+]
+
+---
+
+class: transition middle
+
+# Logistic regression
+
+---
+
+# Logistic regression 
+
+.w-80[
+* Not all parametric models assume Normally distributed errors nor continuous responses.
+
+{{content}}
+]
+--
+
+
+* Logistic regression models the relationship between a set of explanatory variables $(x_{i1}, ..., x_{ik})$ and a set of <span class="monash-blue">**binary outcomes**</span> $Y_i$ for $i = 1, ..., n$.
+{{content}}
+--
+
+* We assume that $Y_i \sim B(1, p_i)\equiv Bernoulli(p_i)$ and the model is given by 
+
+$$\text{logit}(p_i) = \text{ln}\left(\dfrac{p_i}{1 - p_i}\right) = \beta_0 + \beta_1x_{i1} + ... + \beta_k x_{ik}.$$
+{{content}}
+--
+
+* Taking the exponential of both sides and rearranging we get
+$$p_i = \dfrac{1}{1 + e^{-(\beta_0 + \beta_1x_{i1} + ... + \beta_k x_{ik})}}.$$
+{{content}}
+--
+
+* The function $f(p) = \text{ln}\left(\dfrac{p}{1 - p}\right)$ is called the <span class="monash-blue">**logit**</span> function, continuous with range $(-\infty, \infty)$, and if $p$ is the probablity of an event, $f(p)$ is the log of the odds.
+
+---
+
+# Representation of data for binary outcomes
+
+.flex[
+.w-50.pr3[
+Data:
+```{r mock-data}
+n <- 18
+mock_df <- tibble(Patient = 1:n,
+  Smoker = sample(c("Yes", "No"), n, replace = TRUE),
+  Sex = sample(c("Female", "Male"), n, replace = TRUE),
+  Cancer = sample(c("Yes", "No"), n, replace = TRUE)) %>% 
+  mutate(across(everything(), as.factor),
+         CancerBinary = as.numeric(Cancer=="Yes"))
+```
+.f5[
+```{r, echo = TRUE, cache.vars=mock_df}
+mock_df
+```
+]
+
+]
+.w-50[
+Summarised data:
+```{r, mock-summary, cache.vars=mock_df}
+mock_sumdf <- mock_df %>% 
+  group_by(Smoker, Sex) %>% 
+  summarise(Cancer = sum(Cancer=="Yes"),
+            Total = n())
+```
+.f5[
+```{r, echo  = TRUE}
+mock_sumdf
+```
+]
+{{content}}
+]]
+
+--
+
+<br>
+
+* The summarised data here give the same information as the original data, except you lost the patient number
+* Note the sample size, n,  is larger than the number of rows in the summarised data
+
+---
+
+# Logistic regression in R
+
+* Fitting logistic regression models in R depend on the form of input data
+
+.flex[
+.w-50.f5.pr3[
+```{r fit-mock, echo =  TRUE}
+glm(Cancer ~ Smoker + Sex, 
+    family = binomial(link = "logit"), 
+    data = mock_df)
+```
+]
+.w-50.f5[
+```{r fit-mocksum, echo = TRUE}
+glm(cbind(Cancer, Total - Cancer) ~ Smoker + Sex, 
+    family = binomial(link = "logit"),
+    data = mock_sumdf)
+```
+
+]
+]
+
+---
+
+# Simulating from a logistic regression model .f4[Part 1]
+
+.flex[
+.w-40.pr3[
+* Let's suppose that the probability of having cancer are the following:
+  * 0.075 for women smokers
+  * 0.045 for men smokers
+  * 0.005 for women non-smokers
+  * 0.003 for men non-smokers
+* We'll sample 500 people for each group
+]
+.w-60.f5[
+{{content}}
+]]
+
+
+--
+
+```{r, echo = TRUE}
+df <- tibble(id = 1:2000) %>% 
+  mutate(Smoker = rep(c("Yes", "No"), each = n() / 2),
+         Sex = rep(c("Female", "Male"), times = n() / 2)) 
+
+print(df, n = 4)
+
+df %>% 
+  group_by(Smoker, Sex) %>% 
+  count()
+```
+
+---
+
+count: false
+
+# Simulating from a logistic regression model .f4[Part 1]
+
+.flex[
+.w-40.pr3[
+* Let's suppose that the probability of having cancer are the following:
+  * 0.075 for women smokers
+  * 0.045 for men smokers
+  * 0.005 for women non-smokers
+  * 0.003 for men non-smokers
+* We'll sample 500 people for each group
+* Remember that under the logistic regression model, we assumed that $Y_i \sim B(1, p_i)$
+]
+.w-60.f5[
+```{r, echo = TRUE}
+df <- tibble(id = 1:2000) %>% 
+  mutate(Smoker = rep(c("Yes", "No"), each = n() / 2),
+         Sex = rep(c("Female", "Male"), times = n() / 2)) %>% 
+  rowwise() %>% 
+  mutate(CancerBinary = 
+           case_when(Smoker=="Yes" & Sex=="Female" ~ rbinom(1, 1, 0.075), #<<
+                     Smoker=="Yes" & Sex=="Male" ~ rbinom(1, 1, 0.045), #<<
+                     Smoker=="No" & Sex=="Female" ~ rbinom(1, 1, 0.005), #<<
+                     Smoker=="No" & Sex=="Male" ~ rbinom(1, 1, 0.003)), #<<
+         Cancer = ifelse(CancerBinary, "Yes", "No"))
+
+df %>% 
+  filter(Cancer=="Yes")
+```
+]]
+
+
+
+---
+
+# Simulating from a logistic regression model .f4[Part 2]
+
+.flex[
+.w-40[
+
+* At times, you may want to **simulate the summary data directly** instead of the individual data
+{{content}}
+
+]
+.w-60[
+
+]]
+
+--
+
+* Recall that if $Y_i\sim B(1, p)$ for $i = 1, ...k$ and $Y_i$s are independent,  $$S = Y_1 + Y_2 + ... +  Y_k \sim B(k, p)$$
+
+---
+
+count: false
+
+# Simulating from a logistic regression model .f4[Part 2]
+
+.flex[
+.w-40[
+
+* At times, you may want to **simulate the summary data directly** instead of the individual data
+* Recall that if $Y_i\sim B(1, p)$ for $i = 1, ...k$ and $Y_i$s are independent,  $$S = Y_1 + Y_2 + ... +  Y_k \sim B(k, p)$$
+
+]
+.w-60.f5[
+```{r, echo = TRUE}
+expand_grid(Smoker = c("Yes", "No"), Sex = c("Female", "Male")) %>% 
+  rowwise() %>% 
+  mutate(Cancer = 
+           case_when(Smoker=="Yes" & Sex=="Female" ~ rbinom(1, 500, 0.075), #<<
+                     Smoker=="Yes" & Sex=="Male" ~ rbinom(1, 500, 0.045), #<<
+                     Smoker=="No" & Sex=="Female" ~ rbinom(1, 500, 0.005), #<<
+                     Smoker=="No" & Sex=="Male" ~ rbinom(1, 500, 0.003)), #<<
+         Total = 500) #<<
+```
+
+]]
+
+--
+
+
+
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[1] Menarche
+
+* In 1965, the average age of 25 homogeneous groups of girls was
+recorded along with the number of girls who have reached
+menarche out of the total in each group.
+
+.panelset[
+.panel[.panel-name[📊]
+
+```{r menarche-data, include = FALSE}
+data(menarche, package = "MASS")
+skimr::skim(menarche)
+```
+```{r menarche-plot, fig.height = 4, fig.width = 5}
+# can't fit the model below using geom_smooth 
+# so manually fit
+menarche_model <- glm(cbind(Menarche, Total - Menarche) ~ Age, 
+                      data = menarche, 
+                      family = binomial(link = "logit"))
+# length.out = 80 to match geom_smooth default
+menarche_pred <- data.frame(Age = seq(min(menarche$Age),
+                                      max(menarche$Age),
+                                      length.out = 80))
+menarche_pred <- menarche_pred %>% 
+  mutate(fit = predict(menarche_model, newdata = menarche_pred, type = "response"))
+
+ggplot(menarche, aes(Age, Menarche/Total)) + 
+  geom_point() +
+  geom_line(data = menarche_pred, aes(y = fit), color = "blue")
+```
+
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f4[
+```{r menarche-data, echo = TRUE, render = knitr::normal_print}
+```
+
+]]
+.panel[.panel-name[R]
+.scroll-sign[.s300.f4[
+```{r menarche-plot, echo = TRUE, eval = FALSE}
+```
+]]]
+
+]
+
+.footnote.f4[
+Milicer, H. and Szczotka, F. (1966) Age at Menarche in Warsaw girls in 1965. Human Biology 38, 199–203.
+]
+
+---
+
+# Simulating data from a fitted logistic regression model .f4[Part 1]
+
+* Suppose we want to simulate from the fitted model
+
+.flex[
+.w-50.pr3.f5[
+
+* We first fit the fitted model
+
+```{r logit, echo = TRUE}
+fit1 <- 
+  glm(cbind(Menarche, Total - Menarche) ~ Age, 
+      family = "binomial", 
+      data = menarche)
+(beta <- coef(fit1))
+```
+
+
+* The fitted regression model is given as:
+$$\text{logit}(\hat{p}_i) = \hat{\beta}_0  + \hat{\beta}_1 x_{i1}.$$
+* Rearranging we get
+$$\hat{p}_i = \dfrac{1}{1 + e^{-(\hat{\beta}_0  + \hat{\beta}_1 x_{i1})}}.$$
+]
+.w-50.f5[
+* Simulating from first principles:
+```{r sim-logistic, echo = TRUE}
+menarche %>% 
+  rowwise() %>% 
+  mutate(
+    phat = 1/(1 + exp(-(beta[1] + beta[2] * Age))),
+    simMenarche = rbinom(1, Total, phat)) #<<
+```
+
+]
+
+]
+
+---
+
+# Simulating data from a fitted logistic regression model .f4[Part 2]
+
+* An easier way to do this is to use the `simulate` function which works for many model objects in R
+* Below it's simulating 3 sets of responses (i.e. counts of "success" and "failure" events) from `fit1` logistic model object
+
+.f4[
+```{r, echo = TRUE}
+simulate(fit1, nsim = 3) 
+```
+]
+
+
+
+---
+
+# Diagnostics for logistic regression models
+
+.flex[
+.w-50.br.pr3[
+
+* One diagnostic is to compare the observed and expected proportions under the logistic regression fit.
+
+```{r fit-logistic, echo = TRUE}
+df1 <- menarche %>% 
+  mutate(
+    pexp = 1/(1 + exp(-(beta[1] + beta[2] * Age))),
+    pobs = Menarche / Total)
+```
+```{r plot-logistic, fig.height = 4, fig.width = 4}
+ggplot(df1, aes(pobs, pexp)) +
+  geom_point() + 
+  geom_abline(slope = 1, intercept = 0,
+              color = "red") +
+  labs(x = "Observed proportion",
+       y = "Expected proportion")
+```
+
+]
+.w-50.pl3[
+
+{{content}}
+
+]
+
+]
+
+--
+
+* Goodness-of-fit type test is used commonly to assess the fit as well.
+
+* E.g. Hosmer–Lemeshow test, where test statistic is given as 
+
+<span style="font-size:14pt!important;">
+$$H = \sum_{i = 1}^r \left(\dfrac{(O_{1i} - E_{1g})^2}{E_{1i}} + \dfrac{(O_{0i} - E_{0g})^2}{E_{0i}}\right)$$
+where $O_{1i}$ $(E_{1i})$ and $O_{0i}$ $(E_{0i})$ are observed (expected) frequencies for successful and non-successful events for group $i$, respectively.
+</span>
+
+```{r HLtest, echo = TRUE}
+vcdExtra::HLtest(fit1)
+```
+
+
+---
+
+class: transition middle
+
+# Diagnostics for linear models
+
+---
+
+# Assumptions for linear models
+
+.flex[
+.w-50.pl3[
+For $i \in \{1, ..., n\}$,
+
+$$Y_i = \beta_0 + \beta_1x_{i1} + ... + \beta_{k}x_{ik} + \epsilon_i,$$
+where $\epsilon_i \sim NID(0, \sigma^2)$ or in matrix format,
+
+$$\boldsymbol{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim N(\boldsymbol{0}, \sigma^2 \mathbf{I}_n)$$
+
+<div style="font-size:12pt;padding-left:20px;">
+where 
+
+<ul>
+<li> $\boldsymbol{Y} = (Y_1, ..., Y_n)^\top$,</li>
+<li> $\boldsymbol{\beta} = (\beta_0, ..., \beta_k)^\top$, </li>
+<li> $\boldsymbol{\epsilon} = (\epsilon_1, ..., \epsilon_n)^\top$, and </li>
+<li> $\mathbf{X} = \begin{bmatrix}\boldsymbol{1}_n & \boldsymbol{x}_1 & ... & \boldsymbol{x}_k \end{bmatrix}$, where </li>
+<li> $\boldsymbol{x}_j =(x_{1j}, ..., x_{nj})^\top$ for $j \in \{1, ..., k\}$</li>
+</ul>
+</div>
+
+
+]
+.w-50.pl3[
+
+]
+
+]
+
+---
+
+count: false
+
+# Assumptions for linear models
+
+.flex[
+.w-50.pl3[
+For $i \in \{1, ..., n\}$,
+
+$$Y_i = \beta_0 + \beta_1x_{i1} + ... + \beta_{k}x_{ik} + \epsilon_i,$$
+where $\color{red}{\epsilon_i \sim NID(0, \sigma^2)}$ or in matrix format,
+
+$$\boldsymbol{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \quad \color{red}{\boldsymbol{\epsilon} \sim N(\boldsymbol{0}, \sigma^2 \mathbf{I}_n)}$$
+
+<div style="font-size:12pt;padding-left:20px;">
+where 
+
+<ul>
+<li> $\boldsymbol{Y} = (Y_1, ..., Y_n)^\top$,</li>
+<li> $\boldsymbol{\beta} = (\beta_0, ..., \beta_k)^\top$, </li>
+<li> $\boldsymbol{\epsilon} = (\epsilon_1, ..., \epsilon_n)^\top$, and </li>
+<li> $\mathbf{X} = \begin{bmatrix}\boldsymbol{1}_n & \boldsymbol{x}_1 & ... & \boldsymbol{x}_k \end{bmatrix}$, where </li>
+<li> $\boldsymbol{x}_j =(x_{1j}, ..., x_{nj})^\top$ for $j \in \{1, ..., k\}$</li>
+</ul>
+</div>
+
+
+]
+.w-50.pl3[
+This means that we assume
+
+1. $E(\epsilon_i) = 0$ for $i \in \{1, ..., n\}.$
+2. $\epsilon_1, ..., \epsilon_n$ are independent.
+3. $Var(\epsilon_i) = \sigma^2$ for $i \in \{1, ..., n\}$ (i.e. homogeneity).
+4. $\epsilon_1, ..., \epsilon_n$ are normally distributed.
+
+{{content}}
+
+]
+
+]
+
+--
+
+<br><br>
+<i>So how do we check it?</i>
+
+
+
+
+---
+
+# Model diagnostics for linear models
+
+.flex.h-45[
+
+.w-50.pa3[
+Plot $Y_i$ vs $x_i$ to see if there is $\approx$ a linear relationship between $Y$ and $x$.
+
+```{r, echo=F, fig.height=3, fig.width=3, fig.align="center"}
+dat <- read.csv(here::here("data/sleep.csv"))
+dat %>%
+  ggplot(aes(log(BodyWt), log(BrainWt))) + geom_point() +
+  geom_smooth(method="lm", se=F) +
+  labs(x="log(Body) (kg)", y="log(Brain) (g)") 
+```
+
+]
+.w-50.bg-gray80.pa3[
+
+A boxplot of the residuals $R_i$ to check for symmetry.
+```{r, echo=F, fig.height=2.5, fig.width=2.5, fig.align="center", dev='svg', dev.args=list(bg = "transparent")}
+lm(log(BrainWt) ~ log(BodyWt), data=dat) %>%
+  augment() %>% 
+  ggplot(aes(1,.std.resid)) + 
+  geom_boxplot() + 
+  labs(x="", y="Residual") + 
+  theme(axis.text.x = element_blank())
+```
+
+]]
+.flex[
+.w-50.bg-gray80.pa3[
+To check the homoscedasticity assumption, plot $R_i$ vs $x_i$. There should be no obvious patterns.
+
+```{r, echo=F, fig.height=2.2, fig.width=2.2, fig.align="center", dev='svg', dev.args=list(bg = "transparent")}
+lm(log(BrainWt) ~ log(BodyWt), data=dat) %>%
+  augment() %>% 
+  ggplot(aes(`log(BodyWt)`, .std.resid)) + 
+  geom_point() + 
+  labs(x="log(Body) (kg)", y="Residual") +
+  geom_hline(yintercept=0, color="blue") 
+```
+]
+.w-50.pa3[
+A normal Q-Q plot, i.e. a plot of the ordered residuals vs $\Phi^{-1}(\frac{i}{n+1})$.
+
+```{r, echo=F, fig.height=2.2, fig.width=2.2, fig.align="center", dev='svg', dev.args=list(bg = "transparent")}
+lm(log(BrainWt) ~ log(BodyWt), data=dat) %>%
+  augment() %>% 
+  ggplot(aes(sample=.std.resid)) + 
+  stat_qq() + stat_qq_line(color="blue")
+```
+
+]
+]
+
+
+
+
+---
+
+# Assessing (A1) $E(\epsilon_i) = 0$ for $i=1,\ldots,n$
+
+* It is a property of the least squares method that $$\sum_{i=1}^n R_i = 0,\quad
+\text{so}\quad \bar R_i  = 0$$ for $R_i = Y_i - \hat{Y}_i$, hence (A1)  will always appear valid "overall". 
+--
+
+* Trend in residual versus fitted values or covariate can indicate "local"
+failure of (A1). 
+--
+
+* What do you conclude from the following plots?
+
+```{r sim-plots, echo=F, fig.width=14, fig.height=3, dev='svg', dev.args=list(bg = "transparent")}
+set.seed(2019)
+n <- 100
+x <- seq(0, 1, length.out = n)
+y1 <- x + rnorm(n) / 3                 #  Linear
+y2 <- 3 * (x - 0.5) ^ 2 + 
+  c(rnorm(n / 2)/3, rnorm(n / 2)/6)  #  Quadratic
+y3 <- - 0.25 * sin(20 * x - 0.2) + x + rnorm(n) / 3    #  Non-linear
+g1 <- lm(y1 ~ x) %>% augment() %>%
+  ggplot(aes(.fitted, .resid)) + 
+  geom_point() + 
+  labs(x="Fitted Values", y="Residual", tag="(1)") +
+  geom_hline(yintercept=0, color="blue") 
+g2 <- lm(y2 ~ x) %>% augment() %>%
+  ggplot(aes(.fitted, .resid)) + 
+  geom_point() + 
+  labs(x="Fitted Values", y="Residual", tag="(2)") +
+  geom_hline(yintercept=0, color="blue") 
+g3 <- lm(y3 ~ x) %>% augment() %>%
+  ggplot(aes(.fitted, .resid)) + 
+  geom_point() +
+  labs(x="Fitted Values", y="Residual", tag="(3)") +
+  geom_hline(yintercept=0, color="blue") 
+
+g1 + g2 + g3
+```
+
+---
+
+# Assessing (A2)-(A3) 
+
+.flex[.w-50.bg-gray80.pa3[
+
+### (A2) $\epsilon_1, \ldots ,\epsilon_n$ are independent
+
+* If (A2) is correct, then residuals should appear randomly scattered
+about zero if plotted against fitted values or covariate.
+* Long sequences of positive residuals followed by sequences of negative residuals in $R_i$ vs $x_i$ plot suggests that the error terms are not independent.
+]
+.w-50.pa3[
+
+### (A3) $Var(\epsilon_i) = \sigma^2$ for $i=1,\ldots,n$
+
+* If (A3) holds then the spread of the residuals should be roughly the same across the fitted values or covariate. 
+
+<Br>
+
+
+
+]
+]
+
+```{r sim-plots, echo=F, fig.width=14, fig.height=3, dev='svg', dev.args=list(bg = "transparent")}
+```
+
+
+---
+
+# Assessing (A4) $\epsilon_1, \ldots ,\epsilon_n$ are normally distributed
+
+.grid[.item[
+### Q-Q Plots
+
+* The function `qqnorm(x)` produces a Q-Q plot of the ordered vector `x` against the quantiles of the normal distribution.
+* The $n$ chosen normal quantiles $\Phi^{-1}(\frac{i}{n+1})$ are easy to calculate but more sophisticated ways exist:
+   * $\frac{i}{n+1} \mapsto \frac{i-3/8}{n+1/4}$, default in `qqnorm`. 
+   * $\frac{i}{n+1} \mapsto \frac{i-1/3}{n+1/3}$, recommended by Hyndman and Fan (1996).
+<!-- * Symmetry, heavy or light tails, location and spread can be "easily" seen in Q-Q plots. How? -->
+
+]
+.item.bg-gray80.pl3.pr3[
+
+### In R
+
+```{r, echo = T, eval = F}
+fit <- lm(y ~ x)
+```
+
+
+By "hand"
+```{r, eval=F, echo = T}
+plot(qnorm((1:n) / (n + 1)), sort(resid(fit)))
+```
+
+By `base`
+
+```{r, eval=F, echo = T}
+qqnorm(resid(fit))
+qqline(resid(fit))
+```
+
+By `ggplot2`
+
+```{r, eval=F, echo = T}
+data.frame(residual = resid(fit)) %>% 
+  ggplot(aes(sample = residual)) + 
+  stat_qq() + stat_qq_line(color="blue")
+```
+
+
+]
+]
+
+.footnote.f4[
+Reference: Hyndman and Fan (1996). *Sample quantiles in statistical packages*, American Statistician, 50, 361--365.
+]
+
+---
+
+# Examining simulated data
+
+.flex[
+.w-50[
+```{r, echo=F, fig.height=4, fig.width=8, fig.align="center"}
+dat3sim <- data.frame(y=c(y1, y2, y3), x=rep(x, times=3), Simulation=rep(1:3, each=length(x)))
+dat3sim %>%
+  ggplot(aes(x,y)) + geom_point() +
+  geom_smooth(method="lm", se=F) + facet_grid( . ~ Simulation) +
+  theme(axis.text = element_blank())
+```
+
+]
+.w-50.bg-gray80[
+
+```{r, echo=F, fig.height=4, fig.width=8, fig.align="center",y2dev='svg', dev.args=list(bg = "transparent")}
+M1 <- lm(y1 ~ x); M2 <- lm(y2 ~ x); M3 <- lm(y3 ~ x)
+data.frame(residual=c(resid(M1), resid(M2), resid(M3)),
+           Simulation=rep(1:3, each=length(x))) %>%
+  ggplot(aes(x=factor(Simulation), y=residual)) + geom_boxplot() + labs(x="", y="Residual")
+```
+
+
+
+]]
+.flex[
+.w-50.bg-gray80.f5.pa3[
+
+{{content}}
+
+]
+.w-50[
+```{r, echo=F, fig.height=4, fig.width=8, fig.align="center",y2dev='svg', dev.args=list(bg = "transparent")}
+data.frame(residual=c(resid(M1), resid(M2), resid(M3)),
+           Simulation=rep(1:3, each=length(x))) %>%
+  ggplot(aes(sample=residual)) + stat_qq() + 
+  stat_qq_line(color="blue") +
+  facet_grid( . ~ Simulation) 
+```
+
+]]
+
+--
+
+Simulation scheme
+```{r, echo = TRUE}
+n <- 100
+x <- seq(0, 1, length.out = n)
+y1 <- x + rnorm(n) / 3                  #  Linear
+y2 <- 3 * (x - 0.5) ^ 2 + 
+  c(rnorm(n / 2)/3, rnorm(n / 2)/6)     #  Quadratic
+y3 <- -0.25 * sin(20 * x - 0.2) + 
+  x + rnorm(n) / 3                      #  Non-linear
+
+M1 <- lm(y1 ~ x); M2 <- lm(y2 ~ x); M3 <- lm(y3 ~ x)
+
+```
+
+---
+
+# Take away messages
+
+.flex[
+.w-70.f2[
+
+
+
+<ul class="fa-ul">
+{{content}}
+</ul>
+
+
+]
+]
+
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Parametric models assume some distribution in advance 
+</li>
+
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>Logistic models can be used to model explanatory variables with binary outcomes
+</li>
+
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>You should be able to simulate from parametric models
+</li>
+
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>You can perform basic model diagnostics
+</li>
+
+{{content}}
+--
+
+<li><span class="fa-li"><i class="fas fa-paper-plane"></i></span>You can use simulation to analyse model properties
+</li>
+
+
+---
+
+# Resources and Acknowledgement
+
+- Some of these slides were inspired by STAT3012 Applied Linear Models at The University of Sydney by Prof Samuel Muller
+- Cook & Weisberg (1994) 
+"An Introduction to Regression Graphics"
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+---
+
+```{r endslide, child="assets/endslide.Rmd"}
+```

@@ -1,0 +1,856 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Support vector machines"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 10"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 10"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Support vector machines*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(LearnGeom)
+theme_set(theme_bw(base_size = 18))
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 6,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename),
+  eval = TRUE
+)
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+## Hyperplane 
+
+- In a $p$-dimensional space, a [hyperplane]{.monash-blue} is a linear subspace of dimension $p - 1$.
+
+- A $p$-dimensional hyperplane is given as
+
+$$\beta_0 + \beta_1 x_1 + \dots + \beta_p x_p = 0.$$
+
+
+
+## Hyperplane in 2D
+
+- For $p = 2$, a hyperplane is a line.
+
+```{r diagnosis-2d}
+#| echo: false
+#| fig-height: 5
+set.seed(1)
+data <- tibble(id = 1:20) %>% 
+  mutate(radius_mean = c(runif(n()/2 , 8, 15), runif(n()/2, 20, 25)),
+         concave_points_mean = rep(c(0.15, 0.23), each = n()/2) - 0.005 * radius_mean + rnorm(n(), 0, 0.02),
+         diagnosis = rep(c("B", "M"), each = 10))
+
+gbase <- data %>% 
+  ggplot(aes(radius_mean, concave_points_mean * 100)) +
+  geom_point(aes(color = diagnosis), size = 4) +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(x = "Average radius", y = str_wrap("Average concave portions of the contours x 100", 20),
+       color = "Diagnosis") +
+  coord_equal()
+
+ggplot(tibble(x = rnorm(20, 0, 1),
+              y = rnorm(20, 0, 1)),
+       aes(x, y)) +
+  geom_abline(intercept = 0.5, slope = -1, linewidth = 1.2) +
+  xlim(-1, 1) +
+  ylim(-1, 1) +
+  labs(x = "x1", y = "x2")
+```
+
+## Hyperplane in 3D
+
+- For $p = 3$, a hyperplane is a plane.
+
+```{r hyperplane3d}
+#| echo: false
+library(echarts4r)
+expand_grid(x1 = seq(0, 1, length.out=50),
+            x2 = seq(0, 1, length.out=50)) %>% 
+  mutate(x3 = 0.5 * (x1 - x2 + 1)) %>% 
+  e_charts(x1, reorder = FALSE, width = 1000, height = 400) %>% 
+  e_surface(x2, x3)
+
+```
+
+
+## Separating hyperplanes
+
+::: incremental
+
+- A hyperplane divides the $p$-space into two sides. 
+- Suppose we have a new observation $\boldsymbol{x}_0 = (x_{01}, x_{02}, \dots, x_{0p})^\top$ with [$$g(x_0) = \beta_0 + \beta_1 x_{01} + \dots + \beta_p x_{0p}.$$]{.monash-blue}
+  - $\boldsymbol{x}_0$ is on side 1 if $g(\boldsymbol{x}_0) > 0$.
+  - $\boldsymbol{x}_0$ is on side 2 if $g(\boldsymbol{x}_0) < 0$.
+  - $\boldsymbol{x}_0$ is on the hyperplane if $g(\boldsymbol{x}_0) = 0$.
+- The magnitude of $g(\boldsymbol{x}_0)$ tells us how far from $\boldsymbol{x}_0$ is from the hyperplane. 
+
+:::
+
+## Example
+
+- Suppose we have $g(\boldsymbol{x}) = 1 + x_{1} - x_2$.
+- Consider the points $\boldsymbol{p}_1 = (0, 0)^\top$ and $\boldsymbol{p}_2 = (0, 2)^\top$. 
+
+::: flex
+
+::: {.w-30}
+
+```{r example}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+tibble(x1 = c(0, -1),
+       x2 = c(0, 2),
+       label = c("p1", "p2")) %>% 
+  ggplot(aes(x1, x2)) +
+  geom_point(size = 3) + 
+  geom_text(aes(label = label), nudge_x = c(-0.07, 0.07)) +
+  geom_abline(intercept = 1, slope = 1, linewidth = 1.2)
+```
+
+
+:::
+
+::: {.w-70 .pl3 .fragment}
+
+- $\boldsymbol{p}_1$ is on side 1.
+- $\boldsymbol{p}_2$ is on side 2.
+
+:::
+
+:::
+
+
+
+
+## SVM disambiguation 
+
+- Support vector machine methods refer to three main approaches:
+  - Maximal margin classifier.
+  - Support vector classifier.
+  - Support vector machines.
+- To avoid confusion, we call these as support vector machine methods and reserve the name support vector machines for the third approach.
+
+# Maximal marginal classifier {background-color="#006DAE" .mcenter}
+
+
+
+## <i class='fas fa-diagnoses'></i> Toy breast cancer diagnosis data
+
+```{r diagnosis-data}
+#| echo: false
+gbase
+```
+
+
+
+## Infinite hyperplanes 
+
+::: flex
+
+::: {.w-50}
+
+- There are _infinite_ number of hyperplanes to perfectly classify these points. E.g., 
+  (A) [$28 - x_{1} - x_{2} = 0$]{.monash-blue2}
+  (B) [$30 - 1.4x_{1} - x_{2} = 0$]{.monash-orange2}
+  (C) [$18.5 - 0.5x_{1} - x_{2} = 0$]{.monash-ruby2}
+  
+::: fragment
+
+- All three do a perfect job to separate the classes. 
+- Which one should be we choose?
+
+:::
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r example-hyperplanes}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+gbase +
+  theme(legend.position = "bottom") +
+  geom_abline(
+    slope = -1,
+    intercept = 28,
+    color = '#027EB6',
+    linewidth = 1,
+    linetype = 1
+  ) +
+  geom_abline(
+    slope = -1.4,
+    intercept = 30,
+    color = '#D93F00',
+    linewidth = 1,
+    linetype = 1
+  ) +
+  geom_abline(
+    slope = -0.5,
+    intercept = 18.5,
+    color = '#C8008F',
+    linewidth = 1,
+    linetype = 1
+  )
+```
+
+:::
+
+:::
+
+
+
+
+
+## Distance to hyperplane 
+
+::: incremental
+
+- We compute the (perpendicular) distance from each training observation to a given separating hyperplane. 
+- The smallest such distance is known as the [**margin**]{.monash-blue} ($M$).
+- The [**maximal margin hyperplane**]{.monash-blue} is the separating hyperplane for which the margin is largest. 
+- We can then classify a test observation based on which side of the maximal margin hyperplane it lies. 
+- This is known as the [**maximal margin classifier**]{.monash-blue}.
+
+:::
+
+## Margin for hyperplane (a)
+
+::: flex
+
+::: {.w-75}
+
+```{r margin1}
+#| echo: false 
+dataproj <- data %>% 
+  rowwise() %>% 
+  mutate(proj1 = list(ProjectPoint(c(radius_mean, concave_points_mean * 100), 
+                              CreateLinePoints(c(0, 28), c(1, 27)))),
+         proj2 = list(ProjectPoint(c(radius_mean, concave_points_mean * 100), 
+                              CreateLinePoints(c(0, 30), c(1, 30 - 1.4)))),
+         proj3 = list(ProjectPoint(c(radius_mean, concave_points_mean * 100), 
+                              CreateLinePoints(c(0, 18.5), c(1, 18.5 - 0.5))))) %>% 
+  mutate(across(c(proj1, proj2, proj3), 
+                ~sqrt((.x[1] - radius_mean)^2 + (.x[2] - concave_points_mean * 100)^2), 
+                .names = "dist_{.col}")) %>% 
+  unnest_wider(c(proj1, proj2, proj3), names_sep = "_") 
+
+gmargin1 <- gbase %+% (dataproj %>%
+  mutate(mindist = dist_proj1==min(dist_proj1),
+         linewidth = ifelse(mindist, 1, 0.5),
+         linetype = ifelse(mindist, 'solid', 'dashed'),
+         projx = proj1_X,
+         projy = proj1_Y)) +
+  geom_segment(aes(xend = projx, 
+                   yend = projy,
+                   linewidth = I(linewidth),
+                   linetype = I(linetype))) +
+  theme(legend.position = "none") 
+
+gmargin1 +
+  geom_abline(slope = -1,
+              intercept = 28,
+              color = '#027EB6',
+              lwd = 1.2,
+              linetype = 1) 
+```
+
+
+:::
+
+::: {.w-25}
+
+The margin for this hyperplane is `r round(min(dataproj$dist_proj1), 2)`.
+
+:::
+
+:::
+
+
+
+## Margin for hyperplane (b)
+
+::: flex
+
+::: {.w-75}
+
+```{r margin2}
+#| echo: false 
+gmargin1 %+% (dataproj %>%
+  mutate(mindist = dist_proj2==min(dist_proj2),
+         linewidth = ifelse(mindist, 1, 0.5),
+         linetype = ifelse(mindist, 'solid', 'dashed'),
+         projx = proj2_X,
+         projy = proj2_Y))  +
+  geom_abline(slope = -1.4,
+              intercept = 30,
+              color = '#D93F00',
+              lwd = 1.2,
+              linetype = 1) 
+
+```
+
+:::
+
+::: {.w-25}
+
+The margin for this hyperplane is `r round(min(dataproj$dist_proj2), 2)`.
+
+:::
+
+:::
+
+## Margin for hyperplane (c)
+
+::: flex
+
+::: {.w-75}
+
+```{r margin3}
+#| echo: false 
+gmargin1 %+% (dataproj %>%
+  mutate(mindist = dist_proj3==min(dist_proj3),
+         linewidth = ifelse(mindist, 1, 0.5),
+         linetype = ifelse(mindist, 'solid', 'dashed'),
+         projx = proj3_X,
+         projy = proj3_Y))  +
+  geom_abline(slope = -0.5,
+              intercept = 18.5,
+              color = '#C8008F',
+              lwd = 1.2,
+              linetype = 1) 
+
+```
+
+:::
+
+::: {.w-25}
+
+The margin for this hyperplane is `r round(min(dataproj$dist_proj3), 2)`.
+
+:::
+
+:::
+
+
+## Maximal margin classifier
+
+::: flex
+
+::: {.w-75}
+
+```{r svm-maximal}
+#| echo: false
+fitsvm <- e1071::svm(as.factor(diagnosis) ~ radius_mean + I(concave_points_mean * 100), 
+                     data = data, 
+                     kernel = "linear", 
+                     cost = 1,
+                     scale = FALSE)
+
+w <- t(fitsvm$coefs) %*% fitsvm$SV
+b <- -fitsvm$rho
+intercept <- -b / w[2] 
+slope <- -w[1] / w[2] 
+
+datasvm <- data %>% 
+  rowwise() %>% 
+  mutate(proj = list(ProjectPoint(c(radius_mean, concave_points_mean * 100), 
+                              CreateLinePoints(c(0, intercept), c(1, intercept + slope))))) %>% 
+  unnest_wider(proj) %>% 
+  mutate(dist_proj = sqrt((X - radius_mean)^2 + (Y - concave_points_mean * 100)^2)) 
+
+gmaxmargin <- gmargin1 %+% (datasvm %>%
+  mutate(mindist = 1:n() %in% fitsvm$index,#dist_proj==min(dist_proj),
+         linewidth = ifelse(mindist, 1, 0.5),
+         linetype = ifelse(mindist, 'solid', 'dashed'),
+         projx = X,
+         projy = Y))  +
+  geom_abline(slope = slope,
+              intercept = intercept,
+              color = '#9651A0',
+              lwd = 1.5,
+              linetype = 1)  +
+  geom_abline(slope = slope,
+              intercept = c(intercept - 21, intercept + 21),
+              color = '#9651A0',
+              lwd = 1,
+              linetype = "dashed") 
+
+gmaxmargin
+```
+
+
+:::
+
+::: {.w-25}
+
+
+The [**maximal margin hyperplane**]{.monash-fuchsia2} is the plane that correctly classifies all observations but also is farthest away from them.
+
+
+:::
+
+:::
+
+
+
+
+
+## Support vectors
+
+- There will always be at least two equidistant vectors vectors to the maximal margin hyperplane.
+- These are called [**support vectors**]{.monash-blue} -- there are three in this example.
+```{r maxmargin}
+#| echo: false
+#| fig-height: 4
+gmaxmargin
+```
+
+
+## Maximal margin hyperplane
+
+::: incremental
+
+- Suppose that $y_i = \begin{cases}1 & \text{if observation $i$ in class 1}\\-1& \text{if observation $i$ in class 2}\end{cases}.$
+- The maximal margin hyperplane is found from solving the optimisation problem: $$\hat{\boldsymbol{\beta}} = \arg\max_{\boldsymbol{\beta}\in\mathbb{R}^{p+1}}M$$ subject to $\sum_{j=1}^p \beta_j^2 = 1$ and $y_i \times g(\boldsymbol{x}_i) \geq M$.
+
+
+:::
+
+
+## Non-separable case
+
+::: incremental
+
+- The maximal margin classifier only works when we have perfect separability in our data.
+
+- What do we do if data is not perfectly separable by a hyperplane?
+
+- **The support vector classifier** allows points to either lie on the wrong side of the margin, or on the wrong side of the hyperplane altogether. 
+
+
+:::
+ 
+ 
+# Support vector classifier  {background-color="#006DAE" .mcenter} 
+
+
+## Support vector classifier
+
+::: incremental
+
+- Support vector classifier allows some observation to be closer to the hyperplane than the support vectors. 
+- It also allows some observations to be on the incorrect side of the hyperplane (i.e. allows for some misclassification).
+- It will try to classify the remaining observations to be classified correctly.
+
+:::
+
+## Optimisation
+
+- For support vector classification, we solve the optimisation problem: $$\hat{\boldsymbol{\beta}} = \arg\max_{\boldsymbol{\beta}\in\mathbb{R}^{p+1}}M$$ subject to $\sum_{j=1}^p \beta_j^2 = 1$ and $y_i \times g(\boldsymbol{x}_i) \geq M(1 - \varepsilon_i)$.
+
+. . . 
+
+- $\varepsilon_i \geq 0$ is called the **slack variable**  and $\sum_{i=1}^n\varepsilon_i \leq C$. 
+  - If $0 < \varepsilon_i \leq 1$, observation $i$ is correctly classified but it _violates the margin_.
+  - If $\varepsilon_i > 1$, observation is incorrectly classified. 
+
+
+
+## Tuning parameter $C$
+
+::: incremental
+
+- $C$ restricts the magnitude of $\varepsilon_i$.
+- If $C = 0$, then all $\varepsilon_i = 0$ thus support vector classifier is equivalent to maximum margin classifier. 
+- You can select $C$ using cross-validation. 
+
+:::
+
+## Nonlinear boundaries
+
+- The support vector classifier is a linear classifier. 
+- It doesn't work well for nonlinear boundaries. 
+
+```{r nonlinear-boundary}
+#| echo: false
+dat <- tibble(id = 1:1000) %>% 
+  mutate(x1 = rnorm(n(), 0, 5),
+         x2 = rnorm(n(), 0, 5),
+         y1 = as.factor(2 * ((x2 - 0.5 * x1^2 + 6) < 0) - 1),
+         y2 = as.factor(2 * (x1^2 + x2^2 < 25) - 1))
+```
+
+::: flex
+
+::: {.w-50}
+
+```{r nlb-1}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+gnlb1 <- dat %>%
+  filter(abs(2 * (x2 - 0.5 * x1^2 + 6)) > 2) %>%
+  ggplot(aes(x1, x2, color = y1)) +
+  geom_point() + 
+  theme(legend.position = "none") +
+  colorspace::scale_color_discrete_qualitative()
+
+gnlb1
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r nlb-2}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+gnlb2 <- dat %>%
+  filter(abs(x1^2 + x2^2 - 25) > 4) %>%
+  ggplot(aes(x1, x2, color = y2)) +
+  geom_point() + 
+  theme(legend.position = "none") +
+  colorspace::scale_color_discrete_qualitative()
+
+gnlb2
+```
+
+
+:::
+
+:::
+
+
+
+## Enlarging the feature space
+
+- We can make **support vector classifier** more flexible by adding higher order polynomial terms, e.g. $x_1^2$ and $x_2^3$. 
+- We treat these new terms as predictors (referred to as _enlarging the feature space_).
+
+::: {.flex .fragment}
+
+::: {.w-50}
+
+```{r gnlb1A}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+gnlb1 +
+  geom_line(aes(x1, 0.5 * x1^2 - 6),
+            color = 'black', 
+            linetype = "dashed",
+            linewidth = 1.2) +
+  ylim(-10, 14)
+```
+
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r gnlb2B}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+library(ggforce)
+gnlb2 +
+  geom_circle(aes(x0 = 0, y0 = 0, r = 5),
+              inherit.aes = FALSE, 
+              linetype = "dashed",
+              linewidth = 1.2)
+```
+
+
+:::
+
+:::
+
+
+
+
+
+# Support vector machines {background-color="#006DAE" .mcenter}
+
+## Support vector machines
+
+::: incremental 
+
+- Adding polynomial terms makes support vector classifiers more flexible, but we have to explicitly specify this apriori. 
+- **Support vector machines** enlarges the feature space without explicit specification of nonlinear terms apriori. 
+- To understand support vector machines, we need to know about:
+  - the inner product,
+  - the dual representation, and  
+  - kernel functions.
+
+:::
+
+## The inner product
+
+- Consider two $p$-vectors $$\begin{align*}
+\boldsymbol{x}_i & = (x_{i1}, x_{i2}, \dots, x_{ip}) \in \mathbb{R}^p \\
+\text{and} \quad \boldsymbol{x}_k & = (x_{k1}, x_{k2}, \dots, x_{kp}) \in \mathbb{R}^p.
+\end{align*}$$
+- The inner product is defined as 
+
+$$\langle \boldsymbol{x}_i, \boldsymbol{x}_k\rangle = \boldsymbol{x}_i^\top \boldsymbol{x}_k = x_{i1}x_{k1} + x_{i2}x_{k2} + \dots + x_{ip}x_{kp} = \sum_{j=1}^{p} x_{ij}x_{kj}.$$
+
+
+## Dual representation 
+
+- In support vector machines, we write $$\beta_j = \sum_{k=1}^n\alpha_ky_kx_{kj}.$$
+
+. . . 
+
+- This re-expresses $g(\boldsymbol{x})$ as 
+$$g(\boldsymbol{x}_i) = \beta_0 + \sum_{j=1}^p\beta_jx_{ij} = \beta_0 + \sum_{k=1}^n\alpha_ky_k\langle\boldsymbol{x}_i, \boldsymbol{x}_k\rangle.$$
+
+
+## Dual representation 
+
+
+- We can generalise the expression by replacing the inner product with a [**kernel function**]{.monash-blue}:
+$$g(\boldsymbol{x}_i) = \beta_0 + \sum_{j=1}^p\beta_jx_{ij} = \beta_0 + \sum_{k=1}^n\alpha_ky_k\color{#006DAE}{\mathcal{K}(\boldsymbol{x}_i, \boldsymbol{x}_k)}.$$
+- Under this representation, we don't need to manually enlarge the feature space. 
+- Instead we choose a kernel function.
+
+
+
+## Kernel functions
+
+- A **kernel function** is an inner product of vectors mapped to a (higher dimensional) feature space $$
+\mathcal{K}(\boldsymbol{x}_i, \boldsymbol{x}_k)  = \langle \psi(\boldsymbol{x}_i), \psi(\boldsymbol{x}_j) \rangle$$ $$
+\psi: \mathbb{R}^p \rightarrow \mathbb{R}^d
+$$ where $d > p$.
+
+
+
+## Examples of kernels
+
+- Standard kernels include:
+$$
+\begin{align*}
+\text{Linear} \quad  \mathcal{K}(\boldsymbol{x}_i, \boldsymbol{x}_k) & = \langle\boldsymbol{x}_i, \boldsymbol{x}_k \rangle \\
+\text{Polynomial} \quad \mathcal{K}(\boldsymbol{x}, \boldsymbol{y}) & = (\langle\boldsymbol{x}_i, \boldsymbol{x}_k \rangle + 1)^d \\
+\text{Radial} \quad \mathcal{K}(\boldsymbol{x}_i, \boldsymbol{x}_k) & = \exp(-\gamma\lvert\lvert\boldsymbol{x}_i-\boldsymbol{x}_k\lvert\lvert^2)
+\end{align*}
+$$
+
+
+
+
+
+
+# An application to breast cancer diagnosis {background-color="#006DAE" .mcenter}
+
+## <i class="fas fa-database"></i> Breast cancer diagnosis
+
+```{r breast-cancer}
+#| code-fold: true
+#| fig-width: 10
+#| fig-height: 5
+library(tidyverse)
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_malignant = ifelse(diagnosis=="M", 1, 0),
+         diagnosis = factor(diagnosis, levels = c("B", "M"))) %>% 
+  janitor::clean_names()
+
+cancer %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(alpha = 0.25, size = 2, aes(color = diagnosis)) +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(x = "Average radius",
+       y = str_wrap("Average concave portions of the contours", 20),
+       color = "Diagnosis")
+```
+
+## <i class='fab fa-r-project'></i> Support vector machine with R
+
+```{r svc}
+library(e1071)
+svmfitl <- svm(diagnosis ~ radius_mean + concave_points_mean,
+              data = cancer,
+              kernel = "linear",
+              cost = 1,
+              scale = FALSE)
+
+```
+
+- `cost` is related to $C$
+- Large `cost` tolerates less classification error.
+- Small `cost` tolerates more classification error.
+
+
+## <i class='fab fa-r-project'></i> Main output of `svm`
+
+- `svmfitl$index`: The indexes of the support vectors.
+- `svmfitl$coefs`: The $y_k\alpha_k$ from the dual representation.
+- `svmfitl$SV`: The support vectors. 
+- `svmfitl$b`: Negative intercept $-\hat{\beta}_0$.
+- For linear kernels, $\hat{\beta}_k$ can be calculated as `t(svmfitl$coefs) %*% svmfitl$SV`.
+
+
+## Classification plot for linear kernel
+
+```{r class-plot}
+#| code-fold: true
+cancer_grid <- expand_grid(radius_mean = seq(min(cancer$radius_mean),
+                                             max(cancer$radius_mean),
+                                             length.out = 50),
+                           concave_points_mean = seq(min(cancer$concave_points_mean),
+                                                     max(cancer$concave_points_mean),
+                                                     length.out = 50)) %>% 
+  mutate(predl = predict(svmfitl, .))
+
+cancer %>% 
+  mutate(support_vector = 1:n() %in% svmfitl$index) %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_tile(data = cancer_grid, aes(fill = predl), alpha = 0.5) +
+  geom_point(alpha = 0.5, size = 3, aes(color = diagnosis, shape = support_vector)) +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(x = "Average radius",
+       y = str_wrap("Average concave portions of the contours", 20),
+       color = "Diagnosis",
+       shape = "Support vector",
+       fill = "Prediction",
+       title = "Linear kernel")
+```
+
+
+## <i class='fab fa-r-project'></i> Support vector machine with other kernels
+
+- Polynomial kernel
+
+
+```{r svcp}
+#| code-line-numbers: 3
+svmfitp <- svm(diagnosis ~ radius_mean + concave_points_mean,
+               data = cancer,
+               kernel = "polynomial",
+               cost = 1,
+               scale = FALSE)
+```
+
+- Radial kernel:
+
+```{r svcr}
+#| code-line-numbers: 3
+svmfitr <- svm(diagnosis ~ radius_mean + concave_points_mean,
+               data = cancer,
+               kernel = "radial",
+               cost = 1,
+               scale = FALSE)
+```
+
+## Classification plots for polynomial & radial kernels
+
+
+```{r class-plotp}
+#| code-fold: true
+#| fig-width: 14
+library(patchwork)
+cancer_grid <- cancer_grid %>% 
+  mutate(predp = predict(svmfitp, .),
+         predr = predict(svmfitr, .))
+
+p1 <- cancer %>% 
+  mutate(support_vector = 1:n() %in% svmfitp$index) %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_tile(data = cancer_grid, aes(fill = predp), alpha = 0.5) +
+  geom_point(alpha = 0.5, size = 3, aes(color = diagnosis, shape = support_vector)) +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(x = "Average radius",
+       y = str_wrap("Average concave portions of the contours", 20),
+       color = "Diagnosis",
+       shape = "Support vector",
+       fill = "Prediction",
+       title = "Polynomial kernel")
+
+p2 <- cancer %>% 
+  mutate(support_vector = 1:n() %in% svmfitr$index) %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_tile(data = cancer_grid, aes(fill = predr), alpha = 0.5) +
+  geom_point(alpha = 0.5, size = 3, aes(color = diagnosis, shape = support_vector)) +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(x = "Average radius",
+       y = "",
+       color = "Diagnosis",
+       shape = "Support vector",
+       fill = "Prediction",
+       title = "Radial kernel")
+
+
+p1 + p2 + plot_layout(guides = "collect")
+```
+
+
+## <i class='fas fa-times-circle'></i> Limitations of support vector machine methods 
+
+::: incremental
+
+- The optimisation problem in the support vector machine methods is hard to solve for large sample size. 
+- It often fails when class overlap in the feature space is large. 
+- It does not have statistical foundation. 
+
+:::
+
+
+# <i class='fas fa-key'></i> Takeaways {background-color="#006DAE" .mcenter}
+
+- There are three types of support vector machine methods:
+  - **Maximal margin classifier** is for when the data is perfectly separated by a hyperplane
+  - **Support vector classifier/soft margin classifier** for when data is _not_ perfectly separated by a hyperplane but still has a linear decision boundary, and
+  - **Support vector machines** used for when the data has nonlinear decision boundaries.
+

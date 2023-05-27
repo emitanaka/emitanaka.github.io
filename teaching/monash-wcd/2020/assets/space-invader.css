@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+@font-face {
+  font-family: 'Pangolin', cursive;
+}
+* {
+  font-family: 'Pangolin', cursive;
+}
+
+.bubble-right {
+  position: relative;
+  width: 640px;
+  height: 600px;
+  padding: 0px;
+  background: #CCC;
+  border: #7F7F7F solid 5px;
+  -webkit-border-radius: 31px;
+  -moz-border-radius: 31px;
+  border-radius: 31px;
+  float: left;
+  margin-left: 520px;
+  z-index: 1;
+}
+
+.right-01 {
+    margin-top: -400px;
+}
+
+.bubble-right:after {
+  content: "";
+  position: absolute;
+  top: 88px;
+  left: -39px;
+  border-style: solid;
+  border-width: 19px 39px 19px 0;
+  border-color: transparent #CCC;
+  display: block;
+  width: 0;
+  z-index: 2;
+}
+
+.bubble-right:before {
+  content: "";
+  position: absolute;
+  top: 84px;
+  left: -48px;
+  border-style: solid;
+  border-width: 23px 43px 23px 0;
+  border-color: transparent #7F7F7F;
+  display: block;
+  width: 0;
+  z-index: 2;
+}
+
+
+
+.bubble-right p {
+  font-size: 30pt;
+  margin-top: -50px;
+  padding: 0;
+  margin: 0;
+  line-height:45px;
+  color: #000;
+  margin:10px 20px;
+  z-index: 1;
+}
+
+#space-invader{ 
+  box-shadow: 0 0 0 1em white,
+    0 1em 0 1em white,
+    -2.5em 1.5em 0 .5em white,
+    2.5em 1.5em 0 .5em white,
+    -3em -3em 0 0 white,
+    3em -3em 0 0 white,
+    -2em -2em 0 0 white, 
+    2em -2em 0 0 white,
+    -3em -1em 0 0 white,
+    -2em -1em 0 0 white,
+    2em -1em 0 0 white,
+    3em -1em 0 0 white,
+    -4em 0 0 0 white,
+    -3em 0 0 0 white, 
+    3em 0 0 0 white,
+    4em 0 0 0 white,
+    -5em 1em 0 0 white,
+    -4em 1em 0 0 white,
+    4em 1em 0 0 white,
+    5em 1em 0 0 white,
+    -5em 2em 0 0 white,
+    5em 2em 0 0 white,
+    -5em 3em 0 0 white,
+    -3em 3em 0 0 white, 
+    3em 3em 0 0 white,
+    5em 3em 0 0 white,
+    -2em 4em 0 0 white,
+    -1em 4em 0 0 white,
+    1em 4em 0 0 white,
+    2em 4em 0 0 white;
+  background: white;
+  width: 1em;
+  height: 1em;
+  position: fixed;
+  overflow: hidden;
+    z-index: 1;
+}
+.alien-01 {
+    margin: -300px 0 70px 370px;
+}
+
+
+.bubble-left {
+  position: relative;
+  width: 250px;
+  height: 380px;
+  padding: 0px;
+  background: #CCC;
+  border: #7F7F7F solid 5px;
+  -webkit-border-radius: 31px;
+  -moz-border-radius: 31px;
+  border-radius: 31px;
+  margin-left: 0px;
+  z-index: 1;
+}
+.bubble-left:after {
+  content: "";
+  position: absolute;
+  top: 44px;
+  right: -39px;
+  border-style: solid;
+  border-width: 19px 0 19px 39px;
+  border-color: transparent #CCC;
+  display: block;
+  width: 0;
+  z-index: 1;
+}
+.bubble-left:before {
+  content: "";
+  position: absolute;
+  top: 40px;
+  left: 255px;
+  border-style: solid;
+  border-width: 23px 0 23px 43px;
+  border-color: transparent #7F7F7F;
+  display: block;
+  width: 0;
+  z-index: 0;
+}
+.bubble-left p {
+  font-size: 30pt;
+  margin-top: -50px;
+  padding: 0;
+  margin: 0;
+  line-height:45px;
+  color: #000;
+  margin:10px 20px;
+}
+
+
+.wrapper{
+  position:relative;
+  top:-8px;
+  left:-4px
+  overflow: hidden;
+  background:#010101
+}
+
+.bubble-right ul li {
+  font-size: 20pt;
+  list-style-position: outside;
+}
+
+.bubble-right ul li:before {
+  content: "👾";
+  font-size: 28px;
+  color: #D93F00;
+  margin-left: -20px;
+  margin-right: 10px;
+}
+
+    
+.space{
+    height: 1000px;
+    width:3420px;
+    overflow-x: auto;
+    -webkit-perspective: 300px;
+    perspective: 300px;
+    overflow-y: auto;
+    position: relative;
+    background:#000;
+    top: -800px;
+    left:-8px
+}
+    
+.p div {
+    height:100%;
+    width:100%;
+}
+    
+.p{
+    height:100%;
+    width:100%;
+    left: 500px;
+    position: absolute;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+    
+.pattern0{
+    background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px), radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 350px 350px, 250px 250px, 132px 135px, 210px 225px;
+    background-position: 0 0, 94px 60px, 120px 270px, 13px 100px;
+    -webkit-transform: translateZ(230px) scale(1);
+    transform: translateZ(230px) scale(1);
+}
+    
+    
+.pattern1{
+    background-image:
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+    radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 550px 550px, 350px 350px, 250px 250px, 144px 150px; 
+    background-position: 0 0, 55px 60px, 120px 270px, 90px 100px;
+        -webkit-transform: translateZ(90px) scale(1.7);
+        transform: translateZ(90px) scale(1.7);
+}
+    
+    
+    
+.pattern2 {
+    background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px), radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 350px 350px, 550px 550px, 350px 350px, 350px 350px;
+    background-position: 0 0, 80px 80px, 115px 255px, 70px 100px;
+    -webkit-transform: translateZ(0) scale(2);
+    transform: translateZ(0) scale(2);
+}
+    
+.pattern3{
+    background-image:
+radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+background-size: 550px 550px, 350px 350px, 250px 250px, 250px 250px;
+background-position: 0 0, 40px 60px, 130px 270px, 20px 100px;
+    -webkit-transform: translateZ(-300px) scale(3);
+    transform: translateZ(-300px) scale(3);
+}
+.z2{z-index: 2;}
+.z1{z-index: 1;}
+.z0{z-index: 0;}
+.z_1{z-index: -1;}
+  
+  
+  
+/** game **/
+
+canvas {
+  display: block;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+}
+
+

@@ -1,0 +1,1040 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Logistic regression"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 4A"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 4A: Logistic regression" 
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    auto-stretch: false
+    include-after-body: "assets/after-body.html"
+    toc: true
+    toc-title: "[*Logistic regression*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(latex2exp)
+library(tidyverse)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+
+options(ggplot2.discrete.fill  = function() colorspace::scale_fill_discrete_qualitative(),
+        ggplot2.discrete.colour  = function() colorspace::scale_color_discrete_qualitative())
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+# Classification problems {background-color="#006DAE" .mcenter}
+
+
+
+## Classification problems
+
+::: incremental
+
+- In the previous three lectures, our outcome of interest was _numeric_. 
+- In **classification** problems, the response $y$ is a **categorical variable**: 
+  - Loan approval $\in \{\text{successful}, \text{unsuccessful}\}$ 
+  - Bankruptcy $\in\{\text{paid}, \text{default}\}$.
+  - Preferred beverage $\in\{\text{Coca cola},\text{Pepsi},\text{Fanta}\}$.
+  
+:::
+
+
+## <i class="fas fa-database"></i> Breast cancer diagnosis {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- We use the [Wisconsin breast cancer data set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) to build a model to predict if the breast mass sample is *malignant* (M) or *benign* (B).
+- Here the response is categorical with two classes (M and B).
+
+```{r}
+#| label: cancer-data
+#| classes: skimr
+#| code-fold: true
+#| fig-height: 5
+library(tidyverse)
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_malignant = ifelse(diagnosis=="M", 1, 0),
+         diagnosis = factor(diagnosis, levels = c("B", "M"))) %>% 
+  janitor::clean_names()
+
+skimr::skim(cancer, diagnosis, radius_mean, concave_points_mean)
+
+cancer %>% 
+  select(diagnosis, radius_mean, concave_points_mean) %>% 
+  GGally::ggpairs(mapping = aes(color = diagnosis))
+```
+
+
+
+## Why not linear regression?
+
+```{r cancer-plot}
+#| code-fold: true
+cancer %>% 
+  ggplot(aes(radius_mean, diagnosis_malignant)) +
+  geom_point(alpha = 0.25, size = 2, aes(color = diagnosis)) +
+  geom_smooth(method = "lm",
+              formula = y ~ x,
+              se = FALSE,
+              color = "#027EB6",
+              linewidth = 1.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  labs(y = "diagnosis") +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  guides(color = "none")
+```
+
+. . . 
+
+- How would we model this then?
+
+
+# Concepts {background-color="#006DAE" .mcenter}
+
+
+
+##  Propensity score
+
+
+::: incremental
+- Suppose we consider $y_i$ as a binary category:
+$$y_i = \begin{cases} 
+       1 & \text{ if $i$-th observation is in class 1}\\
+       0 & \text{ if $i$-th observation is in class 2}\\
+  \end{cases}$$
+- Instead of modelling the outcome directly, we consider the conditional probability, say $P(y_i = 1|\boldsymbol{x}_i)$, also known as the [**propensity score**]{.monash-blue} of class 1.
+- The propensity score of class 2 is $$P(y_i=0|\boldsymbol{x}_i) = 1 - P(y_i=1|\boldsymbol{x}_i).$$
+
+
+:::
+
+## Odds of an event 
+
+
+- The [**odds of an event**]{.monash-blue} is defined as  $$\text{odds} = \color{#006DAE}{\frac{p}{1-p}} = \frac{\text{probability that the event will occur}}{\text{probability that the event will not occur}},$$ where $p$ is the probability of an event occuring. 
+
+. . . 
+
+- The **ratio of the propensity scores of the two classes** is the odds of being in class 1:
+
+$$\text{odds} = \frac{P(y_i=1|\boldsymbol{x}_i)}{1-P(y_i=1|\boldsymbol{x}_i)}.$$
+
+
+## Logistic function
+
+
+- The [**logistic function**]{.monash-blue}:
+
+
+::: flex
+
+::: {.w-50}
+
+$$g(z) = \frac{e^z}{1+e^z} = \frac{1}{1+e^{-z}}$$
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r vis-logistic}
+#| echo: false
+#| fig-height: 3.5
+tibble(x = rep(seq(-10, 10, by=0.1), 2), 
+       y = 1 / (1 + exp(-x))) %>% 
+  ggplot(aes(x, y)) +
+  geom_line(size=1.4, color = "#027EB6") + 
+  labs(y = "g(z)", x = "z") +
+  theme(axis.title = element_text(face = "italic"))
+```
+
+
+:::
+:::
+
+* Notice that $0 < g(z) < 1$ for all finite values of $z$.
+
+
+## Logit function
+
+
+- The [**logit function**]{.monash-blue}:
+
+
+::: flex
+
+::: {.w-50}
+
+$$f(p) = \log_e \left(\frac{p}{1- p}\right)$$
+
+:::
+
+::: {.w-50 .pl3}
+
+```{r vis-logit}
+#| echo: false
+#| fig-height: 3.5
+tibble(p = seq(0, 1, length.out = 1000), 
+       y = log(p / (1 - p))) %>% 
+  ggplot(aes(p, y)) +
+  geom_line(size=1.4, color = "#027EB6") + 
+  labs(y = "f(p)", x = "p") +
+  theme(axis.title = element_text(face = "italic"))
+```
+
+
+:::
+:::
+
+
+- Here $-\infty < f(p) < \infty$ for all $p \in (0, 1)$.
+
+. . . 
+
+- Note that **logit and logistic functions are inverse functions of one another**, i.e. $f(g(z)) = z$ and
+$g(f(p)) = p$.
+
+
+
+# Logistic regression {background-color="#006DAE" .mcenter}
+
+
+
+
+
+
+## Logistic regression for binary response
+
+
+- Logistic regression is a **generalised linear model** where it models the *log odds* as a linear combination of predictors:
+$$\text{logit}(p_i) = \log_e \left(\frac{p_i}{1-p_i}\right) = \sum_{j=0}^p\beta_jx_{ij}, \quad p_i = \frac{e^{\sum_{j=0}^p\beta_jx_{ij}}}{1+e^{\sum_{j=0}^p\beta_jx_{ij}}}$$
+- We assume that [$y_i \sim B(1, p_i)$]{.monash-blue} where $p_i = P(y_i=1|\boldsymbol{x}_i)$.
+- In generalised linear models,  the [**link function**]{.monash-blue} links the predictors to the model parameters.  
+- In a logistic regression, the link function is the logit function.
+
+
+
+## Maximum likelihood estimation {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- We maximise the likelihoood:
+
+$$L(\boldsymbol{\beta}|\boldsymbol{y}, \mathbf{X}) = \prod_{i=1}^n p_i^{y_i}(1-p_i)^{1-y_i}.$$
+
+. . . 
+
+- It is more convenient to maximize the *log-likelihood*:
+
+$$\log L(\boldsymbol{\beta}|\boldsymbol{y}, \mathbf{X}) = \sum_{i = 1}^n \left( y_i\log p_i + (1-y_i)\log(1-p_i)\right).$$
+<details class="f3" open> <summary>Mathematical details</summary>
+
+\begin{align*}
+\log L(\boldsymbol{\beta}) &= \sum_{i = 1}^n \left(y_i \log\left( \frac{e^{\sum_{j=0}^p x_{ij}\beta_j}}{1 + e^{\sum_{j=0}^p x_{ij}\beta_j}}\right) + (1 - y_i) \log\left( \frac{1}{1 + e^{\sum_{j=0}^p x_{ij}\beta_j}}\right) \right) \\
+&= \sum_{i = 1}^n \left(y_i \log\left(e^{\sum_{j=0}^p x_{ij}\beta_j}\right) - y_i \log\left(1 + e^{\sum_{j=0}^p x_{ij}\beta_j}\right) - (1 - y_i) \log\left(1 + e^{\sum_{j=0}^p x_{ij}\beta_j}\right) \right) \\
+&= \sum_{i = 1}^n \left(y_i \sum_{j=0}^p x_{ij}\beta_j - \log\left(1 + e^{\sum_{j=0}^p x_{ij}\beta_j}\right) \right)
+\end{align*}
+
+We then solve the following to find the MLE of $\beta_j$
+
+
+$$\frac{\partial \log L(\boldsymbol{\beta})}{\partial\beta_j} = \sum_{i = 1}^n \left(y_i x_{ij} - \frac{x_{ij}e^{\sum_{j=0}^p x_{ij}\beta_j}}{1 + e^{\sum_{j=0}^p x_{ij}\beta_j}} \right) = 0$$
+assuming function below is concave.
+
+There is no closed-form solution of the above, so we use analytical approaches (e.g. Newton-Raphson method). 
+
+
+</details>
+
+
+
+## <i class="fab fa-r-project"></i> Logistic regression with a binary response 
+
+- When response is a **binary value** (0 or 1):
+
+```{r table-malignant}
+str(cancer$diagnosis_malignant)
+table(cancer$diagnosis_malignant)
+```
+
+. . . 
+
+- Fit the logistic model in R as
+
+```{r cancer-logistic-binary}
+cancer_fit <- glm(diagnosis_malignant ~ radius_mean + concave_points_mean, 
+                  data = cancer, 
+                  family = binomial(link = "logit"))
+
+coef(cancer_fit)
+```
+
+## <i class="fab fa-r-project"></i> Logistic regression with a factor response 
+
+
+- When response is a **factor**:
+
+```{r str-factor}
+#| cache: false
+str(cancer$diagnosis)
+```
+
+. . . 
+
+- <i class="fas fa-exclamation-circle"></i> Watch out for the order of the levels!
+
+```{r cancer-logistic-factor}
+cancer_fit2 <- glm(diagnosis ~ radius_mean + concave_points_mean, 
+                   data = cancer, 
+                   family = binomial(link = "logit"))
+coef(cancer_fit2)
+```
+
+. . . 
+
+```{r cancer-logistic-factor2}
+#| code-line-numbers: 2
+cancer_fit3 <- glm(diagnosis ~ radius_mean + concave_points_mean, 
+                   data = cancer %>% mutate(diagnosis = factor(diagnosis, levels = c("M", "B"))),  
+                   family = binomial(link = "logit"))
+coef(cancer_fit3)
+```
+
+
+## Interpretation of logistic models
+
+```{r cancer-logistic-model}
+#| cache: false
+library(broom)
+tidy(cancer_fit) # coefficients
+```
+
+
+- Increasing `radius_mean` by one unit changes the log odds by $\hat{\beta}_1$, `r round(coef(cancer_fit)[2], 3)`, or equivalently it multiplies the odds by $e^{\hat\beta_1}$, `r round(exp(coef(cancer_fit)[2]), 3)`, provided `concave_points_mean` is held fixed.
+
+
+
+## Threshold
+
+::: incremental
+
+- We choose the threshold $q$ such that $P(y_i=1|\boldsymbol{x}_i) \ge q$ is considered to be in class 1. 
+- This gives us the **decision boundary**: $\text{log} \left(\frac{q}{1-q}\right) =\sum_{j = 0}^p\beta_jx_{ij}.$
+- E.g., if $p = 2$,  the boundary corresponds to:
+$$x_{i2} = \underbrace{\frac{1}{\beta_2}\left[\text{log} \left(\frac{q}{1-q}\right)-\beta_0\right]}_{\text{intercept}}\underbrace{-\frac{\beta_1}{\beta_2}}_{\text{slope}}x_{i1}.$$
+
+
+
+:::
+
+
+
+
+
+
+
+## Linear classifier
+
+* Logistic regression is a linear classifier.
+* The separation in class is a point for one variable, line for two variables and a hyperplane for more than two variables.
+
+```{r cancer-split}
+#| echo: false
+library(rsample)
+set.seed(2023)
+qthresh <- c(0.2, 0.5, 0.8)
+cancer_split <- initial_split(cancer, prop = 3/4)
+cancer_train <- training(cancer_split)
+cancer_test <- testing(cancer_split)
+```
+
+
+::: flex
+::: {.w-40}
+
+```{r cancer-one-variable}
+#| echo: false
+#| fig-width: 6
+cancer_logistic1 <- glm(diagnosis_malignant ~ radius_mean, 
+                       data = cancer_train, 
+                       family = binomial(link = "logit"))
+
+beta0 <- coef(cancer_logistic1)[1]
+beta1 <- coef(cancer_logistic1)[2]
+decision_point <- (log(qthresh / (1 - qthresh)) - beta0) / beta1
+
+ggplot(cancer_train, aes(radius_mean, diagnosis_malignant)) +
+  geom_point(aes(color = diagnosis, shape = diagnosis), alpha = 0.5, size = 3) + 
+  geom_smooth(method = glm, method.args = list(family = "binomial"), se = FALSE, color = "black") +
+  geom_vline(xintercept = decision_point, linetype = "dashed") +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  guides(color = "none", shape = "none") +
+  labs(title = "diagnosis ~ radius_mean",
+       x = "Average radius",
+       y = "Diagnosis (1=malignant)") +
+  theme(plot.title = element_text(family = "mono"),
+        plot.title.position = "plot") +
+  annotate("text", label = paste0("q = ", qthresh), x = decision_point + 0.25, y = 0.4, angle = -90)
+```
+
+
+:::
+::: {.w-60 .pl3}
+
+```{r cancer-two-variable}
+#| echo: false
+#| cache: false
+#| fig-width: 9
+cancer_logistic2 <- glm(diagnosis_malignant ~ radius_mean + concave_points_mean, 
+                       data = cancer_train, 
+                       family = binomial(link = "logit"))
+
+beta0 <- coef(cancer_logistic2)[1]
+beta1 <- coef(cancer_logistic2)[2]
+beta2 <- coef(cancer_logistic2)[3]
+decision_intercept <- 1 / beta2 * (log(qthresh / (1 - qthresh)) - beta0)
+decision_slope <- -beta1 / beta2
+
+
+cancer_train %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(aes(color = diagnosis, shape = diagnosis),
+             size = 3, alpha = 0.5) +
+  labs(x = "Average radius",
+       y = "Average concave\nportions of the\ncontours",
+       color = "Diagnosis",
+       shape = "Diagnosis",
+       title = "diagnosis ~ radius_mean + concave_points_mean") +
+  geom_abline(slope = decision_slope, intercept = decision_intercept, linetype = "dashed") +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  annotate("text", label = paste0("q = ", qthresh), x = 10, y = c(0.08, 0.1, 0.115), angle = -17.155) +
+  theme(plot.title = element_text(family = "mono"),
+        plot.title.position = "plot")
+```
+
+
+
+:::
+:::
+
+
+
+
+## Out-of-sample prediction  {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+```{r data}
+#| code-fold: true
+#| code-summary: "data splitting code"
+library(rsample)
+set.seed(2023)
+cancer_split <- initial_split(cancer, prop = 3/4)
+cancer_train <- training(cancer_split)
+cancer_test <- testing(cancer_split)
+```
+
+
+* Using threshold $q = 0.5$:
+
+```{r cancer-pred}
+cancer_logistic <- glm(diagnosis ~ radius_mean + concave_points_mean, 
+                       data = cancer_train, 
+                       family = binomial(link = "logit"))
+cancer_pred <- cancer_test %>% 
+  mutate(propensity = predict(cancer_logistic, ., type = 'response'),
+         pred50 = factor(as.numeric(propensity > 0.5), labels = c("B", "M"), levels = c(0, 1)),
+         index = 1:n())
+
+cancer_pred %>% select(propensity, pred50, diagnosis)
+```
+
+## Assessing prediction results
+
+
+```{r cancer-OOS-vis}
+#| echo: false
+cancer_pred %>% 
+  ggplot(aes(index, propensity, color = diagnosis)) +
+  geom_point(aes(shape = pred50), size = 3, alpha = 0.5) +
+  geom_abline(intercept = 0.5, slope = 0, linetype = "dashed") +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  labs(
+    x = "Index",
+    y = "Propensity",
+    color = "Truth",
+    shape = "Prediction (for q = 0.5)",
+    title = "Testing data"
+  )
+```
+
+. . . 
+
+
+- We see some observations are wrongly classified -- how do we summarise how well a model is in classifying?
+
+
+
+
+# <i class="fab fa-r-project"></i> Metrics for classification problems {background-color="#006DAE" .mcenter}
+
+
+## Confusion matrix 
+
+* The **confusion matrix**, also known as **classification table**, tabulates the number of correct/incorrect predictions by classes of the response variable.
+
+```{r conf-matrix}
+library(yardstick)
+cancer_pred %>% 
+  # get the confusion matrix
+  conf_mat(diagnosis, pred50) %>% 
+  # get the table 
+  pluck("table") %>% 
+  # add the total for each group
+  addmargins()
+```
+
+
+
+## What is a good classification metric?
+
+::: flex
+::: {.w-50}
+
+```{r autoplot-conf-matrix}
+#| fig-width: 5
+cancer_pred %>% 
+  conf_mat(diagnosis, pred50) %>% 
+  autoplot(type = "heatmap")
+```
+
+:::
+::: {.w-50 .pl3}
+
+::: incremental
+
+* We want higher numbers along the diagonal entries of the confusion matrix. 
+* But what is a single number that can summarise how good the classification is?
+
+:::
+
+:::
+:::
+
+
+
+
+
+
+## Classification metrics
+
+* Note that these metrics depend on the chosen threshold $q$. 
+
+<center>
+<img src="https://emitanaka.org/blog/2023-01-12-ML-workflow/classification-table.svg" width="60%">
+</center>
+
+
+::: aside 
+
+Image from [Emi's blog](https://emitanaka.org)
+
+:::
+
+
+## Sensitivity and specificity
+
+$$\text{sensitivity} = \frac{\text{TP}}{\text{TP} + \text{FN}}, \quad \text{specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}}$$
+
+```{r sens-metrics}
+#| echo: -1
+sensitivity <- yardstick::sensitivity
+cancer_pred %>% 
+  metric_set(sensitivity, specificity)(., truth = diagnosis, estimate = pred50)
+```
+
+- Often used in the context of medical diagnostics. 
+- Wrongful negative diagnosis could be costly for the patient! E.g. undetected cancer, missing out on early treatment.
+
+## Precision and recall 
+
+$$\text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad \text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}$$
+```{r recall-metrics}
+cancer_pred %>% 
+  metric_set(precision, recall)(., truth = diagnosis, estimate = pred50)
+```
+
+- Terminology used more often in the context of information retrieval.
+- Note : _recall_ is the same _sensitivity_.
+- E.g. search engine retrieves documents -- precision measures proportion of retrieved documents that are relevant.
+
+
+## Precision-recall curve
+
+```{r pr-curve}
+cancer_pred %>% 
+  pr_curve(truth = diagnosis, propensity, event_level = "second") %>% 
+  ggplot(aes(recall, precision)) +
+  geom_path() +
+  geom_point(color = "pink", size = 1.3, data = ~filter(., .threshold >= 0.2) %>% arrange(.threshold) %>% slice(1)) +
+  geom_point(color = "red", size = 1.3, data = ~filter(., .threshold >= 0.5) %>% arrange(.threshold) %>% slice(1)) +
+  geom_point(color = "maroon", size = 1.3, data = ~filter(., .threshold >= 0.8) %>% arrange(.threshold) %>% slice(1)) +
+  coord_equal()
+```
+
+
+## Area under the precision-recall curve
+
+
+```{r pr-curve-area}
+#| echo: false
+cancer_pred %>% 
+  pr_curve(truth = diagnosis, propensity, event_level = "second") %>% 
+  ggplot(aes(recall, precision)) +
+  geom_area(aes(y = 1), fill = "tomato") +
+  geom_path() +
+  geom_area(fill = "yellowgreen") + 
+  coord_equal()
+```
+```{r area-pr} 
+cancer_pred %>% 
+  pr_auc(truth = diagnosis, propensity, event_level = "second")
+```
+
+## Receiver operating characteristic (ROC) curve
+
+```{r plot-roc-curve}
+#| fig-height: 3.5
+cancer_pred %>% 
+  roc_curve(truth = diagnosis, propensity, event_level = "second") %>%
+  ggplot(aes(1 - specificity, sensitivity)) +
+  geom_path() +
+  geom_point(color = "pink", size = 1.3, data = ~filter(., .threshold >= 0.2) %>% arrange(.threshold) %>% slice(1)) +
+  geom_point(color = "red", size = 1.3, data = ~filter(., .threshold >= 0.5) %>% arrange(.threshold) %>% slice(1)) +
+  geom_point(color = "maroon", size = 1.3, data = ~filter(., .threshold >= 0.8) %>% arrange(.threshold) %>% slice(1)) +
+  geom_abline(linetype = "dashed") +
+  coord_equal()
+```
+
+## Area under the ROC curve
+
+
+```{r roc-curve-area}
+#| echo: false
+cancer_pred %>% 
+  roc_curve(truth = diagnosis, propensity, event_level = "second") %>% 
+  arrange(1 - specificity, sensitivity) %>% 
+  ggplot(aes(1 - specificity, sensitivity)) +
+  geom_area(aes(y = 1), fill = "tomato") +
+  geom_path() +
+  geom_area(fill = "yellowgreen") + 
+  geom_abline(linetype = "dashed") +
+  coord_equal()
+```
+```{r area-roc} 
+cancer_pred %>% 
+  roc_auc(truth = diagnosis, propensity, event_level = "second")
+```
+## F1 Score
+
+$$F_{\beta} = (1 + \beta^2) \times \frac{\text{precision} \times \text{recall}}{\beta^2\times\text{precision} + \text{recall}}$$
+$$F_1 = 2 \times \frac{\text{precision} \times \text{recall}}{\text{precision} + \text{recall}}$$
+
+```{r f1-score}
+cancer_pred %>% 
+  f_meas(truth = diagnosis, estimate = pred50, beta = 1)
+```
+
+
+
+
+## Detection prevalence
+
+$$\text{detection prevalence} = \frac{\text{TP} + \text{FP}}{\text{TP} + \text{FN} + \text{FP} + \text{TN}}$$
+
+```{r prevelance-metrics} 
+cancer_pred %>% 
+  detection_prevalence(truth = diagnosis, estimate = pred50, event_level = "second")
+```
+
+- Note: this is not a measure of how good a classification is!
+
+
+## Prevalence
+
+- Prevalence is the proportion of a particular population with the condition.
+- Assuming we have a representative sample, then we can estimate the prevalence as:
+
+$$\text{prevalence} = \frac{\text{TP} + \text{FN}}{\text{TP} + \text{FN} + \text{FP} + \text{TN}}$$
+
+```{r}
+table(cancer_pred$diagnosis)[["M"]]/nrow(cancer_pred)
+```
+
+* This is clearly not a representative sample of the population! 
+
+
+## Accuracy 
+
+$$\text{accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FN} + \text{FP}}$$
+
+```{r acc-metrics}
+cancer_pred %>% 
+  accuracy(truth = diagnosis, estimate = pred50)
+```
+
+* Accuracy is the proportion of the data that are predicted correctly.
+
+## Balanced accuracy  {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+$$\text{balanced accuracy} = \frac{1}{2}(\text{sensitivity} + \text{specificity})$$
+```{r bal-acc-metrics}
+cancer_pred %>% 
+  bal_accuracy(truth = diagnosis, estimate = pred50)
+```
+
+. . . 
+
+* This metric works better if there is an imbalance in the response class.
+
+
+| Prediction `\` Truth | Positive | Negative | 
+| --- | --- | --- |
+| **Positive** | 20 | 70 |
+| **Negative** | 30 | 5000 | 
+
+
+```{r bal-accuracy-demo}
+TP <- 20; FP <- 30; TN <- 5000; FN <- 70
+(accuracy <- (TP + TN) / (TP + TN + FP + FN))
+(sensitivity <- TP / (TP + FN))
+(specificity <- TN / (TN + FP))
+(balanced_accuracy <- 1/2 * (sensitivity + specificity))
+```
+
+
+## Cohen's kappa coefficient {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+$$\kappa = \frac{2\times (\text{TP}\times \text{TN} - \text{FN}\times \text{FP})}{(\text{TP} + \text{FP})(\text{TN} + \text{FP}) + (\text{TP} + \text{FN})(\text{TN} + \text{FN})}$$
+
+```{r kappa}
+cancer_pred %>% 
+  kap(truth = diagnosis, estimate = pred50)
+```
+
+. . . 
+
+* Cohen's kappa coefficient is similar to accuracy but takes into account that some true positives and true negatives are by chance.
+
+::: flex
+::: {.w-50}
+
+Case A
+
+| Prediction `\` Truth | Positive | Negative | 
+| --- | --- | --- |
+| **Positive** | 45 | 15 |
+| **Negative** | 25 | 15 | 
+
+:::
+::: {.w-50 .pl3}
+
+Case B
+
+| Prediction `\` Truth | Positive | Negative | 
+| --- | --- | --- |
+| **Positive** | 25 | 35 |
+| **Negative** | 5 | 35 | 
+
+:::
+:::
+
+
+```{r kappa-demo}
+# Case A
+TP <- 45; FP <- 25; TN <- 15; FN <- 15
+(accuracy <- (TP + TN) / (TP + TN + FP + FN))
+(kappa <- 2 * (TP * TN - FN * FP) / ((TP + FP) * (TN + FP) + (TP + FN) * (TN + FN)))
+
+# Case B
+TP <- 25; FP <- 5; TN <- 35; FN <- 35
+(accuracy <- (TP + TN) / (TP + TN + FP + FN))
+(kappa <- 2 * (TP * TN - FN * FP) / ((TP + FP) * (TN + FP) + (TP + FN) * (TN + FN)))
+```
+
+
+## Matthew's correlation coefficient  
+
+* Also called the **phi coefficient**.
+
+$$\phi = \frac{\text{TP}\times\text{TN} - \text{FP}\times\text{FN}}{\sqrt{(\text{TP} + \text{FP})(\text{TN} + \text{FN})(\text{TP} + \text{FN})(\text{FP} + \text{TN})}}$$
+
+```{r mcc}
+cancer_pred %>% 
+  mcc(truth = diagnosis, estimate = pred50)
+```
+
+
+## Postive and negative predictive values
+
+* Positive/negative predictive value (PPV/NPV) is the proportion of cases with a positive/negative classification that are actually correct. 
+
+$$\text{PPV} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad\text{NPV} = \frac{\text{TN}}{\text{TN} + \text{FN}}$$
+
+```{r ppv-npv}
+cancer_pred %>% 
+  metric_set(ppv, npv)(., truth = diagnosis, estimate = pred50)
+```
+
+
+
+## Youden's J-index
+
+$$J = \text{specificity} + \text{sensitivity} - 1$$
+
+::: flex
+
+::: {.w-60}
+
+```{r j-index}
+cancer_pred %>% 
+  j_index(truth = diagnosis, estimate = pred50)
+```
+
+* $J$ index is between 0 and 1 (inclusive).
+
+
+::: 
+
+::: {.w-40 .pl3}
+
+```{r plot-j-index}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 5
+cancer_pred50 <- cancer_pred %>% 
+  roc_curve(truth = diagnosis, propensity, event_level = "second") %>% 
+  filter(.threshold >= 0.5) %>%
+  arrange(.threshold) %>% 
+  slice(1)
+
+cancer_pred %>% 
+  roc_curve(truth = diagnosis, propensity, event_level = "second") %>%
+  ggplot(aes(1 - specificity, sensitivity)) +
+  geom_path() +
+  geom_point(color = "red", size = 1.3, data = cancer_pred50) +
+  geom_segment(data = cancer_pred50,
+               aes(y = 1 - specificity, yend = sensitivity, xend = 1 - specificity), color = "red") +
+  geom_text(data = cancer_pred50, color = "red",
+            aes(label = "J", y = sensitivity/ 2, x = 1 - specificity + 0.05)) + 
+  geom_abline(linetype = "dashed") +
+  coord_equal()
+```
+
+
+
+:::
+:::
+
+
+
+
+## Classification metrics
+
+
+```{r cancer-accuracy}
+#| echo: -1
+accuracy <- yardstick::accuracy; sensitivity <- yardstick::sensitivity; specificity <- yardstick::specificity
+cancer_pred %>% 
+  metric_set(sensitivity, specificity, precision, recall, pr_auc, roc_auc, 
+             f_meas, accuracy, bal_accuracy, kap, mcc, ppv, npv, j_index)(.,
+                                                                  truth = diagnosis,
+                                                                  propensity,
+                                                                  estimate = pred50,
+                                                                  event_level = "second")
+```
+
+
+
+
+
+
+
+
+
+# Modelling for count data of binary category {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-database"></i> Survival on titanic {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+* Response does not have to be categorical to fit a logistic regression. 
+* Observation may be the count for each category as below:
+
+```{r titanic-data}
+#| code-fold: true
+#| classes: skimr
+#| fig-height: 7
+titanic <- datasets::Titanic %>% 
+  as.data.frame() %>% 
+  pivot_wider(c(Class, Sex, Age), 
+              names_from = Survived, 
+              values_from = Freq, 
+              names_prefix = "Survived_")
+
+titanic
+
+skimr::skim(titanic)
+
+datasets::Titanic %>% 
+  as.data.frame() %>% 
+  ggplot(aes(Survived, Freq)) +
+  geom_col(aes(fill = Sex, group = Age), position = "fill") +
+  facet_grid(Class ~ Age) +
+  labs(y = "Proportion")
+```
+
+
+## <i class="fab fa-r-project"></i> Logistic regression with count data 
+
+```{r titanic-fit}
+titanic_fit <- glm(cbind(Survived_No, Survived_Yes) ~ Class + Age + Sex,
+                   data = titanic, 
+                   family = binomial(link = "logit"))
+
+tidy(titanic_fit)
+```
+
+# Multi-class logistic regression {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-database"></i> Digit recognition with MNIST data {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+- Images of single digits are rescaled to $28 \times 28 = 784$ pixels.
+- Labels are 0, 1, ..., 9.
+- This is a multi-class classification problem.
+
+```{r mnist-data}
+#| code-fold: true
+dat_mnist <- dslabs::read_mnist()
+mnist <- dat_mnist$train$images %>% 
+  as.data.frame() %>% 
+  mutate(label = as.factor(dat_mnist$train$label))
+
+glimpse(mnist)
+```
+
+
+```{r mnist-view}
+#| code-fold: true
+mnist %>% 
+  mutate(id = 1:n()) %>% 
+  filter(id %in% 1:10) %>% 
+  pivot_longer(starts_with("V")) %>% 
+  mutate(row = rep(rep(1:28, each = 28), max(id)),
+         col = rep(rep(1:28, times = 28), max(id))) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  facet_wrap(~id, nrow = 2) +
+  scale_y_reverse() +
+  theme_void(base_size = 18) +
+  guides(fill = "none")
+```
+
+
+
+## Multi-class logistic regression 
+
+- For multi-class problems, we can fit a logistic model for every class.
+
+```{r mnist-fit}
+mnist_digit_preds <- map_dfc(0:9, function(digit) {
+  mnist_data <- mnist %>% 
+    mutate(target_digit = as.numeric(label == digit)) %>% 
+    select(-label)
+  
+  mnist_fit <- glm(target_digit ~ ., data = mnist_data, family = binomial())
+  
+  predict(mnist_fit, mnist_data, type = "response")
+}) %>% 
+  mutate(id = 1:n(),
+         label = mnist$label) %>% 
+  pivot_longer(-c(id, label), names_to = "name", values_to = "pred") 
+```
+
+
+* The predicted class then can be determined by the highest probability out of all classes.
+
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+
+- Logistic regression allows us to predict binary categorical variables.
+- It is estimated via maximum likelihood methods.
+- Logistic regression is a linear classifier and such, it cannot deal with complex classification patterns.
+- In problems with multiple predictors, logistic regression separates the points using a hyper-plane.
+- Variable selection approaches such as lasso and ridge regression can still be considered (covered in tutorial).
+
+
+
+
+
+
+
+
+

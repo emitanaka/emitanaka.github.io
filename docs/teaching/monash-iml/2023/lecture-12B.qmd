@@ -1,0 +1,600 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Wrap-up"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 12B"
+department: "Department of Econometrics and Business Statistics"
+footer: "ETC3250/5250 Wrap-up"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    code-fold: true
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    auto-stretch: false
+    toc: true
+    toc-title: "[*Wrap-up*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+theme_set(theme_bw(base_size = 18))
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+::: {.tl}
+
+<br>
+
+
+<ul class="fa-ul">
+<li><span class="fa-li"><i class="fas fa-envelope"></i></span>`r rmarkdown::metadata$email`</li>
+<li><span class="fa-li"><i class="fas fa-calendar-alt"></i></span> `r rmarkdown::metadata$date`</li>
+</ul>
+
+<br>
+
+:::
+
+
+```{css, echo = FALSE}
+.displaydata {
+  font-size: 14px;
+}
+table {
+  border-top: 1px solid black!important;
+}
+
+table.dataTable {
+  width: auto;
+}
+
+.aim {
+  background-color: #cfe2f3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  padding-left: 50px;
+  width: auto;
+}
+
+.aim::before {
+  content: "🎯 ";
+  position: absolute;
+  left: -5px;
+
+}
+```
+
+
+# <i class="fas fa-database"></i> Featured datasets {background-color="#006DAE" .mcenter}
+
+## <i class="fas fa-car"></i> Toyota car price
+
+::: aim
+
+Predict the Toyota car `price` from this [used car listing data](https://www.kaggle.com/datasets/mysarahmadbhat/toyota-used-car-listing).
+
+:::
+
+```{r toyota-data}
+library(tidyverse)
+toyota <- read_csv("https://emitanaka.org/iml/data/toyota.csv")
+```
+
+
+```{r toyota-data-display}
+#| echo: false
+set.seed(1)
+slice_sample(toyota, n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE)
+```
+
+
+## <i class='fas fa-first-aid'></i> Medical insurance costs
+
+::: aim
+
+Predict the insurance `charges` given customer characteristics from [this data](https://www.kaggle.com/datasets/mirichoi0218/insurance).
+
+:::
+
+```{r insurance-data}
+insurance <- read_csv("https://emitanaka.org/iml/data/insurance.csv")
+```
+
+```{r insurance-data-display}
+#| echo: false
+slice_sample(insurance, n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE)
+```
+
+## <i class="fas fa-stethoscope"></i> Breast cancer diagnosis
+
+::: aim
+
+Diagnose (`diagnosis`) a breast mass sample as malignant (`M`) or benign (`B`) from the features of its image using [Wisconsin breast cancer data set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29).
+
+:::
+
+```{r cancer-data}
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_malignant = ifelse(diagnosis=="M", 1, 0),
+         diagnosis = factor(diagnosis, levels = c("B", "M"))) %>% 
+  janitor::clean_names()
+```
+
+```{r cancer-data-display}
+#| echo: false
+slice_sample(cancer, n = 10) %>% 
+  select(id, diagnosis, diagnosis_malignant, everything()) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE)
+```
+
+## <i class="fas fa-ship"></i> Titanic survival {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+::: aim
+
+Predict whether the titanic passenger survived from class, sex and age.
+
+:::
+
+```{r titanic-data}
+titanic <- datasets::Titanic %>% 
+  as.data.frame() %>% 
+  pivot_wider(c(Class, Sex, Age), 
+              names_from = Survived, 
+              values_from = Freq, 
+              names_prefix = "Survived_")
+```
+
+
+```{r titanic-data2}
+#| echo: false 
+#| eval: false
+titanic_expand <- map_dfr(1:nrow(titanic), function(i) {
+  nsurv <- titanic %>% 
+    slice(i) %>% 
+    pull(Survived_Yes)
+  ndied <- titanic %>% 
+    slice(i) %>% 
+    pull(Survived_No)
+  if(ndied==0 & nsurv==0) return(NULL)
+  survdf <- dieddf <- NULL
+  datarow <- titanic %>% 
+        slice(i) %>% 
+        select(Class, Sex, Age)
+  if(nsurv > 0) {
+    survdf <- replicate(nsurv, datarow, simplify = FALSE) %>% 
+      bind_rows() %>% 
+      mutate(Survived = "Y")
+  } 
+  if(ndied > 0) {
+    dieddf <- replicate(ndied, datarow, simplify = FALSE) %>% 
+      bind_rows() %>% 
+      mutate(Survived = "N")
+  } 
+  bind_rows(survdf, dieddf)
+})
+```
+
+```{r titanic-data-display}
+#| echo: false
+titanic %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "titanic1")
+```
+
+
+
+
+## <i class="fab fa-draft2digital"></i> Digit recognition with MNIST database
+
+::: aim
+
+Predict digit 0-9 (`label`) from a $28\times 28$ (784 pixels) image.
+
+:::
+
+```{r mnist-data}
+dat_mnist <- dslabs::read_mnist()
+mnist <- dat_mnist$train$images %>% 
+  as.data.frame() %>% 
+  mutate(label = as.factor(dat_mnist$train$label))
+```
+
+```{r mnist-image-display}
+#| echo: false
+#| fig-height: 1.5
+#| fig-width: 12
+mnist %>% 
+  mutate(id = 1:n()) %>% 
+  filter(id %in% 1:10) %>% 
+  pivot_longer(starts_with("V")) %>% 
+  mutate(row = rep(rep(1:28, each = 28), max(id)),
+         col = rep(rep(1:28, times = 28), max(id))) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  facet_wrap(~id, nrow = 1) +
+  scale_y_reverse() +
+  theme_void(base_size = 18) +
+  guides(fill = "none") +
+  coord_equal() +
+  theme(strip.text = element_blank())
+```
+
+
+```{r mnist-data-display}
+#| echo: false
+mnist %>% 
+  select(label, everything()) %>% 
+  slice_sample(n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "mnist-data")
+```
+
+## <i class="fas fa-piggy-bank"></i> Bank marketing data
+
+::: aim
+
+Predict whether client will subscribe to a term deposit (`y`) based on [direct marketing campaigns of a Portuguese banking institution](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing).
+
+:::
+
+```{r bank-marketing-data}
+bank <- read_delim("https://emitanaka.org/iml/data/bank-full.csv", delim = ";")
+```
+
+
+```{r bank-data-display}
+#| echo: false
+bank %>% 
+  slice_sample(n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "bank-data")
+```
+
+## <i class="fas fa-file-invoice-dollar"></i> Sales of insurance policy 
+
+::: aim
+
+Predict whether the customer will `Purchase` a caravan insurance policy based on data [here](https://liacs.leidenuniv.nl/~puttenpwhvander/library/cc2000/data.html).
+
+:::
+
+```{r caravan-data}
+caravan <- read_csv("https://emitanaka.org/iml/data/caravan.csv") %>% 
+  mutate(across(-Purchase, scale),
+         Purchase = factor(Purchase))
+```
+
+```{r caravan-data-display}
+#| echo: false
+caravan %>% 
+  select(Purchase, everything()) %>% 
+  slice_sample(n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "caravan-data")
+```
+
+## <i class='fas fa-edit'></i> Customer survey data
+
+::: aim
+
+Learn about customer personalities from a [customer survey data](https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis).
+
+:::
+
+```{r cmarketing-data}
+marketing <- read_tsv("https://emitanaka.org/iml/data/marketing_campaign.csv")
+
+marketing_clean <- marketing %>% 
+  mutate(Marital_Status = fct_collapse(
+    Marital_Status,
+    "1" = c("Absurd", "Alone", "Divorced", "Single",
+            "Widow", "YOLO"),
+    "2" = c("Married", "Together")
+  ), 
+  Marital_Status = as.numeric(as.character(Marital_Status)),
+  Education = fct_collapse(
+    Education,
+    "3" = c("2n Cycle", "Master", "PhD"),
+    "1" = "Basic",
+    "2" = "Graduation"
+  ),
+  Education = as.numeric(as.character(Education)),
+  Income = case_when(is.na(Income) ~ 0,
+                     Income == 666666 ~ 0,
+                     TRUE ~ Income),
+  Dt_Customer = year(dmy(Dt_Customer)) - 2011) %>% 
+  filter(Year_Birth >= 1940) %>% 
+  mutate(Age = 2015 - Year_Birth) %>% 
+  select(-Year_Birth)
+
+```
+
+```{r cmarketing-data-display}
+#| echo: false
+marketing_clean %>% 
+  slice_sample(n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "cmarketing-data")
+```
+
+## <i class='fas fa-grimace'></i> Yale face database
+
+::: aim
+
+Profile the faces from the yale face database (Belhumeur et al. 1997).
+
+:::
+
+```{r yale-faces2}
+#| echo: -1
+Sys.setenv(VROOM_CONNECTION_SIZE = 5000000)
+yalefaces <- read_csv("https://emitanaka.org/iml/data/yalefaces.csv")
+```
+
+```{r yale-faces-display}
+#| echo: false
+#| fig-width: 12
+#| fig-heigth: 4
+imagedata_to_plotdata <- function(data = yalefaces, 
+                                  w = 320, 
+                                  h = 243, 
+                                  which = sample(1:165, 18)) {
+  data %>% 
+    mutate(id = 1:n()) %>% 
+    filter(id %in% which) %>% 
+    pivot_longer(starts_with("V")) %>% 
+    mutate(col = rep(rep(1:w, each = h), n_distinct(id)),
+           row = rep(rep(1:h, times = w), n_distinct(id)))
+}
+
+gfaces <- imagedata_to_plotdata(yalefaces) %>% 
+    ggplot(aes(col, row)) +
+    geom_tile(aes(fill = value)) + 
+    facet_wrap(~subject + type, nrow = 3) +
+    scale_y_reverse() +
+    theme_void(base_size = 18) +
+    guides(fill = "none") +
+    coord_equal()
+
+gfaces
+```
+
+## <i class='fas fa-wine-bottle'></i> Wine quality data
+
+::: aim
+
+Investigate wine quality based on several features of wines based on [this data](https://www.kaggle.com/datasets/rajyellow46/wine-quality).
+
+:::
+
+```{r wine-data}
+wine <- read_csv("https://emitanaka.org/iml/data/winequalityN.csv")
+```
+
+```{r wine-data-display}
+#| echo: false
+wine %>% 
+  slice_sample(n = 10) %>% 
+  DT::datatable(class = "displaydata", options = list(dom = 't', ordering = FALSE), rownames = FALSE, elementId = "wine-display-data")
+```
+
+
+## <i class="fas fa-tshirt"></i> Fashion MNIST data 
+
+::: aim
+
+Predict the clothe type (labelled 0-9) from a $28\times 28$ (784 pixel) image using the [fashion MNIST data by Zalando SE](https://github.com/zalandoresearch/fashion-mnist).
+
+:::
+
+
+```{r fashion-data}
+fashion <- read_csv("https://emitanaka.org/iml/data/fashion-mnist_train.csv.gz")
+```
+
+```{r fashion-image-display}
+#| echo: false
+#| fig-height: 4
+#| fig-width: 12
+fashion %>% 
+  mutate(id = 1:n()) %>% 
+  filter(id %in% 1:20) %>% 
+  pivot_longer(-c(label, id)) %>% 
+  mutate(row = rep(rep(1:28, each = 28), max(id)),
+         col = rep(rep(1:28, times = 28), max(id))) %>% 
+  ggplot(aes(col, row)) +
+  geom_tile(aes(fill = value)) + 
+  facet_wrap(~id, nrow = 2) +
+  scale_y_reverse() +
+  theme_void(base_size = 18) +
+  guides(fill = "none") +
+  coord_equal() +
+  theme(strip.text = element_blank())
+```
+
+
+# <i class='fas fa-toolbox'></i> Toolkit {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-tag'></i> Supervised learning 
+
+We cover the following methods:
+
+::: flex
+
+::: w-50
+
+::: incremental
+
+- [**Regression problems**]{.monash-blue}:
+  - Linear & non-linear regression:
+    - Parameteric 
+    - Non-parametric
+  - Regression trees
+  - Tree-ensemble methods
+  - $k$-nearest neighbours ($k$-NN)
+  - Neural networks
+  
+:::
+
+:::
+
+::: {.w-50 }
+
+::: incremental
+
+- [**Classification problems**]{.monash-blue}:
+  - Logistic regression 
+  - Linear & quadratic discriminant analysis (LDA & QDA)
+  - Classification trees
+  - Tree-ensemble methods
+  - $k$-nearest neighbours ($k$-NN)
+  - Support vector machines (SVM)
+  - Neural networks
+  
+:::
+  
+:::
+
+:::
+
+
+## <i class='fas fa-object-group'></i> Unsupervised learning  
+
+We cover the following methods:
+
+::: incremental
+
+- [**Dimension reduction**]{.monash-blue}:
+  - multi-dimensional scaling (MDS)
+  - principle component analysis (PCA)
+
+  
+- [**Clustering**]{.monash-blue}:
+  - hierarchical
+  - $k$-means
+  
+:::
+
+## <i class='fas fa-laptop-code'></i> Workflow 
+
+::: incremental
+
+- [**Resampling**]{.monash-blue}:
+  - Training, testing and validation data splits
+  - $k$-fold cross-validation
+  - Bootstrap samples
+  - Nested cross-validation
+- [**Data preprocessing**]{.monash-blue}:
+  - Converting categorical variable to dummy variables (one-hot encoding)
+  - Standardising variables 
+:::
+
+
+## <i class='fas fa-tools'></i> Other toolkits
+
+::: incremental
+
+- [**Regularisation**]{.monash-blue}:
+  - L1 regularisation (**lasso**)
+  - L2 regularisation (**ridge regression**)
+  - L1 and L2 regularisation (**elastic net**)
+- [**Miscellaneous techniques**]{.monash-blue}:
+  - Splines 
+  - Variable selection
+  - Feature engineering
+:::
+
+# <i class='fas fa-brain'></i> Critical thinking {background-color="#006DAE" .mcenter}
+
+## <i class='fas fa-question-circle'></i> Problem identification
+
+::: incremental
+
+- Before using your toolkits, you need to be able to _formulate the aim and problem_. 
+- Is the aim [**_prediction_**]{.monash-blue} or [**_inference_**]{.monash-blue}?
+- Do you apply a [**_supervised learning_**]{.monash-blue} or [**_unsupervised learning_**]{.monash-blue} (or neither)?
+- If supervised learning, is it a [**_regression_**]{.monash-blue}, [**_binary classification_**]{.monash-blue} or [**_multi-class classification_**]{.monash-blue}?
+- Are there any issues with the data? E.g. missing values, non-representative data, ethical issues, etc. 
+- We conveniently side-stepped issues with the data most of the time but in practice you should be mindful of these problems.
+:::
+
+# <i class="fas fa-book"></i> This unit and beyond {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-plus"></i> Learning more
+
+If you liked this unit (and did well), you may like to consider enrolling for the next semester:
+
+**ETC3555/ETC5555 - Statistical Machine Learning**
+
+> This unit covers the methods and practice of statistical machine learning for modern data analysis problems. Topics covered will include recommender systems, social networks, text mining, matrix decomposition and completion, and sparse multivariate methods. All computing will be conducted using the R programming language.
+
+Prerequisites: ETC3250/ETC5250 or FIT3154
+
+## <i class='fas fa-calculator'></i> Exam information {.scrollable}
+
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.f4 .absolute .top-1 .right-1}
+
+
+- There are a total of **25 questions** comprising of:
+  - 10 multiple choice questions (with a single answer),
+  - 15 short to long answer questions.
+- This is a supervised **eAssessment** comprising a mix of computer input and handwritten responses -- be prepared to take photo and upload handwritten responses at the end of the exam. Please **_label question number in handwritten responses_**.
+- Total time: **2 hours and 10 minutes**.
+- Content:
+  - Week 1-12 inclusive.
+  - No questions asks you to write R code but you will need to understand some R code and output.
+  - No questions with mathematical proofs.
+  - A few questions asking you to explain about concepts or models.
+  - See sample exam on Moodle.
+- Bring:
+  - **Notes** (either printed or handwritten) on double-sided A4 paper allowed -- note: **_no_** equation sheet provided in the exam so write this in your notes if you need it.
+  - **Calculator**.
+
+[**Good luck!**]{.f1 .fragment .monash-blue}

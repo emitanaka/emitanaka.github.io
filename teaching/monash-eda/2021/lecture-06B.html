@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.10/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-06B.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Making comparisons between groups and strata&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+&lt;style type="text/css"&gt;
+.font20 {
+  font-size: 20pt!important;
+}
+
+&lt;/style&gt;
+
+
+---
+
+class: transition middle
+
+# Modelling and testing for comparisons
+
+
+---
+
+
+
+
+# Revisiting .orange[Case study] .circle.bg-orange.white[1] Pest resistance maize 
+
+.flex[
+.w-50[
+.panelset[
+.panel[.panel-name[📊]
+
+&lt;img src="images/week6B/pest-plot1-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+
+```r
+data(gathmann.bt, package = "agridat")
+df1 &lt;- gathmann.bt %&gt;% 
+  pivot_longer(-gen, values_to = "abundance",
+               names_to = "species") %&gt;% 
+  mutate(species = case_when(species=="thysan" ~ "Thrip",
+                             TRUE ~ "Spider"))
+skimr::skim(df1)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df1   
+## Number of rows             32    
+## Number of columns          3     
+## _______________________          
+## Column type frequency:           
+##   character                1     
+##   factor                   1     
+##   numeric                  1     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate   min   max empty n_unique whitespace
+## 1 species               0             1     5     6     0        2          0
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts     
+## 1 gen                   0             1 FALSE          2 Bt: 16, ISO: 16
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 abundance             0             1  6.01  6.36     0   0.6   2.5  10.7  18.4 ▇▂▃▁▂
+```
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+ggplot(df1, aes(gen, abundance, color = gen)) +
+  ggbeeswarm::geom_quasirandom(size = 3) + 
+  facet_wrap(~species, scales = "free") + 
+  scale_color_discrete_qualitative() + 
+  guides(color = FALSE) + 
+  labs(x = "", y = "Abundance") + 
+  theme(axis.text.x = element_text(angle = 90, 
+                                   vjust = 0.5, 
+                                   hjust = 1))
+```
+]]
+
+]
+
+]
+.w-50[
+* The experiment compared abundance of spiders and thrips on *Bt* variety to the abundance of those on isogenic control variety.
+{{content}}
+]
+
+]
+
+--
+* Would you say that the abundance of spiders and/or thrips are comparable between *Bt* variety and isogenic variety?
+
+
+---
+
+# Two-sample parametric tests: `\(t\)`-test
+
+.flex[
+.w-50.br[
+* Assumes the two samples are independent and from the `\(N(\mu_x, \sigma^2_x)\)` and `\(N(\mu_y, \sigma^2_y)\)`, respectively.
+
+`$$H_0: \mu_x - \mu_y = 0~\text{ vs. }~H_1: \mu_x - \mu_y \neq 0$$`
+
+`$$T^* = \frac{\bar{X} - \bar{Y}}{SE(\bar{X} - \bar{Y})}.$$`
+* Assuming `\(\sigma^2_x = \sigma^2_y\)`, then `\(T^* \sim t_{n_x + n_y - 2}.\)`
+* A `\(100(1 - \alpha)\%\)` confidence interval for `\(\mu_x - \mu_y\)` is given as `\((L, U)\)` such that:
+`$$P(L&lt;\mu_x - \mu_y &lt; U) = 1 - \frac{\alpha}{2}.$$`
+* If `\(0 \in (L, U)\)`, consistent with `\(H_0\)`. 
+
+]
+.w-50[
+.f4[
+
+```r
+with(gathmann.bt,
+     t.test(thysan[gen=="ISO"],
+            thysan[gen=="Bt"],
+            alternative = "two.sided",
+            var.equal = TRUE,
+            conf.level = 0.95))
+```
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  thysan[gen == "ISO"] and thysan[gen == "Bt"]
+## t = -3.2182, df = 14, p-value = 0.006192
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -9.248813 -1.851187
+## sample estimates:
+## mean of x mean of y 
+##     8.725    14.275
+```
+
+]]
+]
+
+
+
+]
+
+.footnote.f6[
+Note significance test suggested is different in Achim Gathmann et al. (2006) “Impact of Bt Maize Pollen (MON810) on Lepidopteran Larvae Living on Accompanying Weeds.” Molecular Ecology 15: 2677–85.
+]
+
+---
+
+# Confidence interval for two sample difference
+
+.grid[
+.item[
+&lt;center&gt;
+&lt;img src="images/confidence-interval.gif" width="400px"/&gt;
+&lt;/center&gt;
+
+]
+.item[
+
+* In the right, a 95% confidence interval for population mean difference is constructed repeatedly, assuming population mean difference is Normally distributed, from 100 samples of the same population.
+* The population mean is zero. 
+* Each confidence interval is calculated as 
+`$$\bar{X} - \bar{Y} \pm \color{red}{t_{n-2, 0.975}}\times SE(\bar{X} - \bar{Y})$$`
+where `\(t_{n-2, 0.975}\)` is `\(t^*\)` such that `$$P(t_{n-2} &lt; t^*) =  0.975.$$`
+
+
+]
+
+]
+
+
+
+---
+
+# Two sample non-parametric tests
+
+.flex[.w-50.br[
+### Wilcoxon rank-sum test
+
+* Suppose that `\(X\)` and `\(Y\)` are randomly selected values from two populations.
+
+`$$H_0: P(X &gt; Y) = P(X &lt; Y)$$`
+.center[
+vs.
+]
+`$$H_1: P(X&gt;Y)\neq P(X&lt;Y)$$`
+* All observations are ranked.
+* Test statistic is based on the sum of the ranks of one group.
+
+
+]
+.w-50[
+.f4[
+
+```r
+with(gathmann.bt,
+     wilcox.test(thysan[gen=="ISO"],
+                 thysan[gen=="Bt"],
+                 alternative = "two.sided",
+                 conf.int = TRUE, 
+                 conf.level = 0.95))
+```
+
+```
+## 
+## 	Wilcoxon rank sum exact test
+## 
+## data:  thysan[gen == "ISO"] and thysan[gen == "Bt"]
+## W = 7, p-value = 0.006993
+## alternative hypothesis: true location shift is not equal to 0
+## 95 percent confidence interval:
+##  -9.4 -2.4
+## sample estimates:
+## difference in location 
+##                   -6.3
+```
+]]
+]
+
+
+---
+
+# Equivalence of tests to testing model parameters
+
+.flex[
+.w-30.br[
+.f5[
+
+```
+##    gen thysan aranei
+## 1   Bt   16.6   0.80
+## 2   Bt   16.4   0.80
+## 3   Bt   11.0   0.60
+## 4   Bt   16.8   0.40
+## 5   Bt   10.6   0.60
+## 6   Bt   18.4   0.80
+## 7   Bt   14.2   0.00
+## 8   Bt   10.2   0.60
+## 9  ISO    6.2   0.75
+## 10 ISO   10.0   0.20
+## 11 ISO   11.8   1.00
+## 12 ISO   15.6   0.80
+## 13 ISO    7.6   0.00
+## 14 ISO    7.4   0.00
+## 15 ISO    7.2   0.60
+## 16 ISO    4.0   0.40
+```
+
+]]
+.w-70.pl3[
+`$$\texttt{thysan}_i = \beta_0 + \beta_1\mathbb{I}(\texttt{gen}_i=\texttt{ISO}) + e_i$$`
+where `\(e_i \sim NID(0, \sigma^2)\)`.
+
+* The least squares estimate for `\(\hat{\beta}_1 = \bar{X} - \bar{Y}.\)`
+
+
+
+```r
+lm(thysan ~ gen, data = gathmann.bt) %&gt;% 
+  confint("genISO", level = 0.95)
+```
+
+```
+##            2.5 %    97.5 %
+## genISO -9.248813 -1.851187
+```
+{{content}}
+]
+]
+
+
+--
+
+* Notice that the above confidence interval is the same confidence interval from the `\(t\)`-test!
+
+
+---
+
+# Revisiting .orange[Case study] .circle.bg-orange.white[4] Weight gain of calves .font_small[Part 1/3]
+
+
+
+* 67 calves born in 1975 across 11 herds are fed of one of three diets with low, medium or high energy with their initial and final weights recorded.
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6B/diet-plot2-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+]
+.panel[.panel-name[data]
+.h100.scroll-sign.f4[
+
+```r
+data(urquhart.feedlot, package = "agridat")
+df4 &lt;- urquhart.feedlot %&gt;% 
+  pivot_longer(c(weight1, weight2), 
+               names_to = "when",
+               values_to = "weight") %&gt;% 
+  mutate(when = factor(as.character(when), 
+                       labels = c("initial", "final"),
+                       levels = c("weight1", "weight2")),
+         diet = factor(diet, levels = c("High", "Medium", "Low")))
+skimr::skim(df4)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df4   
+## Number of rows             134   
+## Number of columns          5     
+## _______________________          
+## Column type frequency:           
+##   factor                   2     
+##   numeric                  3     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts               
+## 1 diet                  0             1 FALSE          3 Low: 64, Med: 46, Hig: 24
+## 2 when                  0             1 FALSE          2 ini: 67, fin: 67         
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50    p75  p100 hist 
+## 1 animal                0             1  34    19.4     1  17.2   34    50.8    67 ▇▇▇▇▇
+## 2 herd                  0             1  25.6  10.7     3  19     31    34      36 ▂▁▂▂▇
+## 3 weight                0             1 863.  182.    530 705    842. 1027    1248 ▃▇▃▆▃
+```
+]]
+.panel[.panel-name[R]
+
+```r
+ggplot(df4, aes(when, weight, color = diet, group = animal)) + 
+  geom_point(size = 3) + 
+  facet_wrap(~herd, nrow = 2) + 
+  geom_line() + 
+  labs(x = "", y = "Weight", color = "Diet")
+```
+]
+]
+
+---
+
+# Revisiting .orange[Case study] .circle.bg-orange.white[4] Weight gain of calves .font_small[Part 2/3]
+
+.flex[
+.w-50.br[
+* Modelling the response as weight gain with diet factor:
+.f4[
+
+```r
+coef(lm((weight2 - weight1) ~ diet, data = urquhart.feedlot))
+```
+
+```
+## (Intercept)     dietLow  dietMedium 
+##  332.666667   -4.666667  -33.971014
+```
+]
+* The herd is thought to be an important factor contributing to the response. 
+* Modelling the response as weight gain with diet and herd factor:
+.f4[
+
+```r
+# herd needs to be factor not integer
+dat4 &lt;- mutate(urquhart.feedlot,  herdf = factor(herd))
+coef(lm((weight2 - weight1) ~ herdf + diet, data = dat4))
+```
+
+```
+## (Intercept)      herdf9     herdf16     herdf19     herdf24     herdf31     herdf32     herdf33     herdf34     herdf35     herdf36     dietLow  dietMedium 
+##  354.257353  -91.148529  -51.312039    7.410059  -63.221311   -4.666667  -51.189338  -36.083555  -15.179622   -3.423367  -34.974083    2.872233  -23.580408
+```
+]
+
+
+]
+.w-50.pl3[
+* Last model is the same as modelling the final weight with the initial weight as a covariate with slope fixed to 1:
+.f4[
+
+```r
+coef(lm(weight2 ~ offset(weight1) + herdf + diet, 
+        data = dat4)) 
+```
+
+```
+## (Intercept)      herdf9     herdf16     herdf19     herdf24     herdf31     herdf32     herdf33     herdf34     herdf35     herdf36     dietLow  dietMedium 
+##  354.257353  -91.148529  -51.312039    7.410059  -63.221311   -4.666667  -51.189338  -36.083555  -15.179622   -3.423367  -34.974083    2.872233  -23.580408
+```
+]
+
+* Estimating slope for initial weight from the data:
+.f4[
+
+```r
+coef(lm(weight2 ~ weight1 + herdf + diet,
+        data = dat4)) 
+```
+
+```
+## (Intercept)     weight1      herdf9     herdf16     herdf19     herdf24     herdf31     herdf32     herdf33     herdf34     herdf35     herdf36     dietLow  dietMedium 
+##  200.440174    1.243238  -79.102111  -51.238137   -6.864643  -75.406093  -33.044411  -56.517848  -62.152563  -23.610465  -29.219641  -75.555713    1.212633  -30.912720
+```
+]]
+]
+
+---
+
+# Revisiting .orange[Case study] .circle.bg-orange.white[4] Weight gain of calves .font_small[Part 3/3]
+
+.f4[
+
+```r
+dat4 &lt;- lm(weight2 ~ weight1 + herdf + diet, data = dat4) %&gt;% broom::augment() 
+ggplot(dat4, aes(.fitted, .resid)) +
+  geom_point(data = select(dat4, -herdf), size = 2, color = "gray") + 
+  geom_point(size = 2, aes(color = herdf)) + 
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted values", y = "Residual") +
+  scale_color_discrete_qualitative() +
+  facet_wrap(~herdf, nrow = 2) + guides(color = FALSE)
+```
+
+&lt;img src="images/week6B/fit-semi-final-1.png" width="1080" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[10] Soil nitrogen .font_small[Part 1/3]
+
+
+
+.flex[.w-50[
+
+.panelset[
+.panel[.panel-name[📊]
+&lt;img src="images/week6B/soil-plot1-1.png" width="576" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[data]
+.h400.scroll-sign.f5[
+
+```r
+data(gomez.nitrogen, package = "agridat")
+skimr::skim(gomez.nitrogen)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values        
+## Name                       gomez.nitrogen
+## Number of rows             96            
+## Number of columns          4             
+## _______________________                  
+## Column type frequency:                   
+##   factor                   3             
+##   numeric                  1             
+## ________________________                 
+## Group variables            None          
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts                    
+## 1 trt                   0             1 FALSE          8 T1: 12, T2: 12, T3: 12, T4: 12
+## 2 rep                   0             1 FALSE          4 R1: 24, R2: 24, R3: 24, R4: 24
+## 3 stage                 0             1 FALSE          3 P1: 32, P2: 32, P3: 32        
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 nitro                 0             1  2.24 0.796  1.11  1.46  2.21  2.93  3.84 ▇▅▅▅▃
+```
+
+]
+]
+.panel[.panel-name[R]
+.f5[
+
+```r
+ggplot(gomez.nitrogen, aes(trt, nitro, color = stage)) + 
+  geom_point(size = 3) + 
+  scale_color_discrete_qualitative() +
+  labs(x = "Fertilizer treatment", 
+       y = "Soil nitrogen content (%)",
+       color = "Growth stage")
+```
+]]
+
+]
+
+]
+.w-50[
+* Soil nitrogen content with 8 different fertilizer treatment is measured at 3 growth stage:
+  * P1 = 15 days post transplanting
+  * P2 = 40 days post transplanting
+  * P3 = panicle initiation
+{{content}}
+
+]
+]
+
+--
+* Clearly the growth stage affects the soil nitrogen content but this makes it hard to compare the fertilizer treatments.
+{{content}}
+--
+* Let's model the nitrogen content as:
+
+```r
+lm(nitro ~ stage + trt, data = gomez.nitrogen)
+```
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[10] Soil nitrogen .font_small[Part 2/3]
+
+.flex[.w-50.br[
+* Considering just the stage effect:
+.f5[
+
+```r
+fit1 &lt;- lm(nitro ~ stage, data = gomez.nitrogen)
+fit1data &lt;- broom::augment(fit1) %&gt;% 
+  left_join(gomez.nitrogen, by=c("nitro", "stage")) %&gt;% 
+  mutate(trt = fct_reorder(trt, .resid))
+ggplot(fit1data, aes(trt, .resid)) +
+  geom_boxplot() + 
+  labs(x = "Fertilizer treatment", 
+       y = "Residual of fit1")
+```
+
+&lt;img src="images/week6B/unnamed-chunk-4-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]]
+.w-50.pl3[
+.f5[
+{{content}}
+
+]]
+]
+
+--
+
+* Here we expect no pattern:
+
+```r
+fit2 &lt;- lm(nitro ~ stage + trt, 
+           data = gomez.nitrogen)
+fit2data &lt;- broom::augment(fit2) %&gt;% 
+  mutate(trt = fct_reorder(trt, .resid))
+ggplot(fit2data, aes(trt, .resid)) +
+  geom_boxplot() + 
+  labs(x = "Fertilizer treatment", 
+       y = "Residual of fit2")
+```
+
+&lt;img src="images/week6B/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+---
+
+# .orange[Case study] .circle.bg-orange.white[10] Soil nitrogen .font_small[Part 3/3]
+.flex[
+.w-50[
+.h400.scroll-sign.f5[
+
+```r
+library(emmeans)
+confint(pairs(emmeans(fit2, "trt"), adjust="none"))
+```
+
+```
+##  contrast estimate    SE df lower.CL  upper.CL
+##  T1 - T2   -0.2117 0.116 86  -0.4420  0.018654
+##  T1 - T3   -0.3375 0.116 86  -0.5678 -0.107180
+##  T1 - T4   -0.2308 0.116 86  -0.4612 -0.000513
+##  T1 - T5   -0.0717 0.116 86  -0.3020  0.158654
+##  T1 - T6   -0.1492 0.116 86  -0.3795  0.081154
+##  T1 - T7   -0.3592 0.116 86  -0.5895 -0.128846
+##  T1 - T8   -0.2333 0.116 86  -0.4637 -0.003013
+##  T2 - T3   -0.1258 0.116 86  -0.3562  0.104487
+##  T2 - T4   -0.0192 0.116 86  -0.2495  0.211154
+##  T2 - T5    0.1400 0.116 86  -0.0903  0.370320
+##  T2 - T6    0.0625 0.116 86  -0.1678  0.292820
+##  T2 - T7   -0.1475 0.116 86  -0.3778  0.082820
+##  T2 - T8   -0.0217 0.116 86  -0.2520  0.208654
+##  T3 - T4    0.1067 0.116 86  -0.1237  0.336987
+##  T3 - T5    0.2658 0.116 86   0.0355  0.496154
+##  T3 - T6    0.1883 0.116 86  -0.0420  0.418654
+##  T3 - T7   -0.0217 0.116 86  -0.2520  0.208654
+##  T3 - T8    0.1042 0.116 86  -0.1262  0.334487
+##  T4 - T5    0.1592 0.116 86  -0.0712  0.389487
+##  T4 - T6    0.0817 0.116 86  -0.1487  0.311987
+##  T4 - T7   -0.1283 0.116 86  -0.3587  0.101987
+##  T4 - T8   -0.0025 0.116 86  -0.2328  0.227820
+##  T5 - T6   -0.0775 0.116 86  -0.3078  0.152820
+##  T5 - T7   -0.2875 0.116 86  -0.5178 -0.057180
+##  T5 - T8   -0.1617 0.116 86  -0.3920  0.068654
+##  T6 - T7   -0.2100 0.116 86  -0.4403  0.020320
+##  T6 - T8   -0.0842 0.116 86  -0.3145  0.146154
+##  T7 - T8    0.1258 0.116 86  -0.1045  0.356154
+## 
+## Results are averaged over the levels of: stage 
+## Confidence level used: 0.95
+```
+]
+]
+.w-50.f4[
+&lt;img src="images/week6B/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
+* From above, the 6 pairs of treatments: T3 &amp; T5, T1 &amp; T4, T1 &amp; T8, T6 &amp; T7, T1 &amp; T3, T1 &amp; T7 are significantly different. 
+* These confidence intervals are constructed *without taking any regard for others*.
+
+]
+
+]
+---
+
+
+# Controlling the family-wise error rate
+
+.flex[
+.w-50.br[
+
+**Unadjusted**
+
+* Each interval has been constructed using a procedure so that when the model is correct,
+the probability that the "correct" population contrast is covered is 0.95. . . individually.
+
+`$$\bar{X} - \bar{Y} \pm \color{red}{t_{n-t,1 - \alpha/2}}\times SE(\bar{X} - \bar{Y})$$`
+where `\(\alpha = 0.05\)` and `\(t\)` is the number of treatments.
+
+* But, what is the probability that all intervals cover their corresponding true values simultaneously?
+
+
+
+
+
+]
+.w-50.pl3[
+**Bonferonni adjustment**
+
+* We can adjust the individual `\(100(1-\alpha)\%\)` confidence intervals so 
+
+`$$\bar{X} - \bar{Y} \pm \color{red}{t_{n-t,1 - \alpha/(2m)}}\times SE(\bar{X} - \bar{Y})$$`
+where `\(m\)` is the number of pairwise comparisons.
+
+* So for 8 treatments, the number of pairwise comparisons is
+
+
+```r
+choose(8, 2)
+```
+
+```
+## [1] 28
+```
+
+
+]
+]
+
+---
+
+# Bonferonni adjusted confidence interval
+.flex[
+.w-50[
+.h400.scroll-sign.f5[
+
+```r
+confint(pairs(emmeans(fit2, "trt"),
+              adjust="bonferroni"))
+```
+
+```
+##  contrast estimate    SE df lower.CL upper.CL
+##  T1 - T2   -0.2117 0.116 86   -0.585   0.1619
+##  T1 - T3   -0.3375 0.116 86   -0.711   0.0361
+##  T1 - T4   -0.2308 0.116 86   -0.604   0.1427
+##  T1 - T5   -0.0717 0.116 86   -0.445   0.3019
+##  T1 - T6   -0.1492 0.116 86   -0.523   0.2244
+##  T1 - T7   -0.3592 0.116 86   -0.733   0.0144
+##  T1 - T8   -0.2333 0.116 86   -0.607   0.1402
+##  T2 - T3   -0.1258 0.116 86   -0.499   0.2477
+##  T2 - T4   -0.0192 0.116 86   -0.393   0.3544
+##  T2 - T5    0.1400 0.116 86   -0.234   0.5136
+##  T2 - T6    0.0625 0.116 86   -0.311   0.4361
+##  T2 - T7   -0.1475 0.116 86   -0.521   0.2261
+##  T2 - T8   -0.0217 0.116 86   -0.395   0.3519
+##  T3 - T4    0.1067 0.116 86   -0.267   0.4802
+##  T3 - T5    0.2658 0.116 86   -0.108   0.6394
+##  T3 - T6    0.1883 0.116 86   -0.185   0.5619
+##  T3 - T7   -0.0217 0.116 86   -0.395   0.3519
+##  T3 - T8    0.1042 0.116 86   -0.269   0.4777
+##  T4 - T5    0.1592 0.116 86   -0.214   0.5327
+##  T4 - T6    0.0817 0.116 86   -0.292   0.4552
+##  T4 - T7   -0.1283 0.116 86   -0.502   0.2452
+##  T4 - T8   -0.0025 0.116 86   -0.376   0.3711
+##  T5 - T6   -0.0775 0.116 86   -0.451   0.2961
+##  T5 - T7   -0.2875 0.116 86   -0.661   0.0861
+##  T5 - T8   -0.1617 0.116 86   -0.535   0.2119
+##  T6 - T7   -0.2100 0.116 86   -0.584   0.1636
+##  T6 - T8   -0.0842 0.116 86   -0.458   0.2894
+##  T7 - T8    0.1258 0.116 86   -0.248   0.4994
+## 
+## Results are averaged over the levels of: stage 
+## Confidence level used: 0.95 
+## Conf-level adjustment: bonferroni method for 28 estimates
+```
+]
+]
+.w-50[
+.f5[
+&lt;img src="images/week6B/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /&gt;
+]
+* Now none are significantly different.
+* Note: Bonferroni adjustment is quite conservative.
+
+]
+
+]
+
+---
+
+# .blue[Example] .bg-blue.circle.white[1] Mystery data .font_small[Part 1/2]
+
+* Many inferences, e.g. using confidence intervals or `\(p\)`-values, are based on assumptions being met.
+* From the model fit below can we suggest the following model?
+
+`$$\hat{Y} = -0.002 + 0.979x_1 + 0.998x_2 + 0.973x_3 + 0.995x_4$$`
+
+
+.flex[.w-50[
+
+
+&lt;img src="images/week6B/unnamed-chunk-12-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+.w-50.pl3.f5[
+
+```r
+lm(y ~ x1 + x2 + x3 + x4, data=mystery_data) %&gt;% broom::tidy()
+```
+
+```
+## # A tibble: 5 × 5
+##   term        estimate std.error statistic p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept) -0.00204    0.0109    -0.187   0.852
+## 2 x1           0.979      0.0151    64.8     0    
+## 3 x2           0.998      0.0155    64.4     0    
+## 4 x3           0.973      0.0154    63.1     0    
+## 5 x4           0.995      0.0109    91.6     0
+```
+
+
+]
+
+]
+
+---
+
+# .blue[Example] .bg-blue.circle.white[1] Mystery data .font_small[Part 2/2]
+
+.flex[.w-50[
+
+```r
+lm(y ~ x1 + x2 + x3 + x4, data=mystery_data) %&gt;% 
+  broom::augment() %&gt;% 
+  ggplot(aes(.fitted, .resid)) + 
+  geom_point() + 
+  labs(x="Fitted Values", y="Residual") 
+```
+
+&lt;img src="images/week6B/simpson-fit-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+]
+.w-50.pl3[
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+## Moral of the story:
+
+### Don't forget to check model diagnostics.
+]
+]
+
+
+
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 6 - Session 2
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

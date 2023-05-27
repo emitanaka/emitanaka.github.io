@@ -1,0 +1,103 @@
+@import url("https://use.fontawesome.com/releases/v5.15.1/css/all.css");
+
+.display.dataTable {
+  font-size: 15pt;
+}
+
+.monash-bg-blue a {
+  color: white!important;
+}
+
+ul li {
+  list-style-type: none;
+}
+ul li:before {
+  content: "\f201";
+  font-family: "Font Awesome 5 Free";
+  margin-right: 10px;
+  font-weight: 900;
+  color: #D93F00;
+}
+
+ul li li:before {
+  content: "\f57e";
+  font-family: "Font Awesome 5 Free";
+  margin-right: 5px;
+  font-weight: 900;
+  color: #D93F00;
+}
+
+.dc_font_small { font-size: 18pt;}
+.dc_font_smaller { font-size: 16pt }
+.dc_font_smaller2 { font-size: 13pt }
+.dc_font_smaller3 .remark-code { font-size: 11pt }
+.dc_font_smaller4 .remark-code { font-size: 8pt }
+
+.scroll-800 {
+  overflow-y: scroll;
+  height: 600px;
+}
+
+.pad50px{ padding: 50px; }
+
+.shuriken-full>.blade1 {height: 50%; width:50%; position: absolute; top: 0; left: 0;}
+.shuriken-full>.blade2 {height: 50%; width:50%; position: absolute; top: 0; right: 0;}
+.shuriken-full>.blade3 {height: 50%; width:50%; position: absolute; bottom: 0; right: 0;}
+.shuriken-full>.blade4 {height: 50%; width:50%; position: absolute; bottom: 0; left: 0;}
+.shuriken-full>.hole {height: 0%; width:0%; position: absolute; top: 300px; left: 300px;}
+
+.speech-bubble {
+	position: relative;
+	background: #004d65;
+	border-radius: .1em;
+	color: white;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 47px solid transparent;
+	border-bottom-color: #004d65;
+	border-top: 0;
+	border-left: 0;
+	margin-left: -23.5px;
+	margin-top: -47px;
+}
+
+.scroll-box-8 {
+  height: 8em;
+  overflow-y: scroll;
+}
+.scroll-box-10 {
+  height:10em;
+  overflow-y: scroll;
+}
+.scroll-box-12 {
+  height:12em;
+  overflow-y: scroll;
+}
+.scroll-box-14 {
+  height:14em;
+  overflow-y: scroll;
+}
+.scroll-box-16 {
+  height:16em;
+  overflow-y: scroll;
+}
+.scroll-box-18 {
+  height:18em;
+  overflow-y: scroll;
+}
+.scroll-box-20 {
+  height:20em;
+  overflow-y: scroll;
+}
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
+}
+

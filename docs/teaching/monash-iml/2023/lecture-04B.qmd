@@ -1,0 +1,444 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Discriminant analysis"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 4B"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 4B"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    auto-stretch: false
+    include-after-body: "assets/after-body.html"
+    toc: true
+    toc-title: "[*Discriminant analysis*]{.monash-blue} - table of contents"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+library(broom)
+library(tidyverse)
+library(patchwork)
+library(latex2exp)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  fig.retina = 2,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+
+## Discriminant analysis
+
+::: incremental
+
+- Another approach for building a classification model is with **discriminant analysis** (DA).
+- There are two main approaches we cover in this unit:
+  - **linear discriminant analysis** (LDA), and
+  - **quadratic discriminant analysis** (QDA). 
+
+
+:::
+
+
+
+## Logistic regression vs LDA vs QDA
+
+
+
+```{r cancer-data}
+#| echo: false
+#| fig-width: 12
+#| fig-height: 5
+library(tidyverse)
+library(rsample)
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_binary = ifelse(diagnosis=="M", 1, 0),
+         diagnosis = factor(diagnosis, levels = c("M", "B"))) %>% 
+  janitor::clean_names()
+
+set.seed(2023)
+qthresh <- 0.5
+cancer_split <- initial_split(cancer, prop = 3/4)
+cancer_train <- training(cancer_split)
+cancer_test <- testing(cancer_split)
+
+# base
+
+gbase <- cancer_train %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(aes(color = diagnosis, shape = diagnosis),
+             size = 3, alpha = 0.5) +
+  labs(x = "",
+       y = "",
+       color = "Diagnosis",
+       shape = "Diagnosis") +
+  scale_color_manual(values = c("forestgreen", "red2")) +
+  theme(legend.position = "bottom")
+
+# logistic
+
+cancer_logistic <- glm(diagnosis_binary ~ radius_mean + concave_points_mean, 
+                       data = cancer_train, 
+                       family = binomial(link = "logit"))
+
+beta0 <- coef(cancer_logistic)[1]
+beta1 <- coef(cancer_logistic)[2]
+beta2 <- coef(cancer_logistic)[3]
+decision_intercept <- 1 / beta2 * (log(qthresh / (1 - qthresh)) - beta0)
+decision_slope <- -beta1 / beta2
+  
+glogistic <- gbase +   
+  geom_abline(slope = decision_slope, intercept = decision_intercept, linetype = "dashed", linewidth = 1.5) +
+  labs(title = "Logistic regression", y = "Average concave\nportions of the\ncontours") 
+
+
+# LDA
+
+cancer_lda <- MASS::lda(diagnosis_binary ~ radius_mean + concave_points_mean, 
+                       data = cancer_train, method = "mle")
+cancer_data_lda_center <- cancer_train %>% 
+  mutate(x1 = case_when(diagnosis == "B" ~ radius_mean - cancer_lda$means[1, 1],
+                        diagnosis == "M" ~ radius_mean - cancer_lda$means[2, 1]),
+         x2 = case_when(diagnosis == "B" ~ concave_points_mean - cancer_lda$means[1, 2],
+                        diagnosis == "M" ~ concave_points_mean - cancer_lda$means[2, 2])) 
+cancer_lda_sigma <- var(cancer_data_lda_center[, c("x1", "x2")])
+
+
+cancer_grid <- expand_grid(radius_mean = seq(min(cancer_train$radius_mean), 
+                                             max(cancer_train$radius_mean), 
+                                             length = 100),
+                           concave_points_mean = seq(min(cancer_train$concave_points_mean),
+                                                     max(cancer_train$concave_points_mean), 
+                                                     length = 100)) %>% 
+  rowwise() %>% 
+  mutate(lda0 = mvtnorm::dmvnorm(c(radius_mean, concave_points_mean),
+                                 mean = cancer_lda$means[1,],
+                                 sigma = cancer_lda_sigma),
+         lda1 = mvtnorm::dmvnorm(c(radius_mean, concave_points_mean),
+                                 mean = cancer_lda$means[2,],
+                                 sigma = cancer_lda_sigma)) %>% 
+  ungroup() %>% 
+  mutate(lda_posterior = predict(cancer_lda, .)$posterior[, 1])
+
+glda <- gbase + 
+  geom_contour(data = cancer_grid, aes(z = lda0), color = "red2") +
+  geom_contour(data = cancer_grid, aes(z = lda1), color = "forestgreen") +
+  geom_contour(data = cancer_grid, aes(z = lda_posterior), breaks = 0.5, 
+               color = "black", linetype = "dashed", linewidth = 1.5) +
+  labs(title = "LDA", x = "Average radius")
+
+
+# QDA
+cancer_qda <- MASS::qda(factor(diagnosis_binary) ~ radius_mean + concave_points_mean, 
+                       data = cancer_train, method = "mle")
+
+cancer_qda_sigma <- cancer_train %>% 
+  mutate(x1 = radius_mean - cancer_qda$mean[diagnosis, "radius_mean"],
+         x2 = concave_points_mean - cancer_qda$mean[diagnosis, "concave_points_mean"]) %>% 
+  group_by(diagnosis) %>% 
+  summarise(sigma = list(var(data.frame(x1, x2))))
+
+cancer_grid2 <- cancer_grid %>% 
+  rowwise() %>% 
+  mutate(qda0 = mvtnorm::dmvnorm(c(radius_mean, concave_points_mean),
+                                 mean = cancer_qda$means[1,],
+                                 sigma = cancer_qda_sigma$sigma[[2]]),
+         qda1 = mvtnorm::dmvnorm(c(radius_mean, concave_points_mean),
+                                 mean = cancer_qda$means[2,],
+                                 sigma = cancer_qda_sigma$sigma[[1]])) %>% 
+  ungroup() %>% 
+  mutate(qda_posterior = predict(cancer_qda, .)$posterior[, 1])
+
+gqda <- gbase + 
+  geom_contour(data = cancer_grid2, aes(z = qda0), color = "red2") +
+  geom_contour(data = cancer_grid2, aes(z = qda1), color = "forestgreen") +
+  geom_contour(data = cancer_grid2, aes(z = qda_posterior), breaks = 0.5, 
+               color = "black", linetype = "dashed", linewidth = 1.5) +
+  labs(title = "QDA")
+
+glogistic + glda + gqda + plot_layout(guides = "collect") + plot_annotation(theme = theme(legend.position = "bottom"))
+```
+
+
+
+* For DA, we estimate $P(X|Y)$ shown as the contours to deduce $P(Y|X)$ used to get the decision boundary.
+
+
+## DA in a nutshell
+
+- DA involves assuming that the *distribution of the predictors* has a multivariate Normal distribution:
+  - $\boldsymbol{X}_{k} \sim N(\boldsymbol{\mu}_{k}, \mathbf{\Sigma}_k)$ for class $k = 1, \dots, K$ where 
+    - $\boldsymbol{\mu}_{k}$ is the $p$-vector of means, and
+    - $\mathbf{\Sigma}_k$ is the $p\times p$ variance-covariance matrix for the $j$-th predictor. 
+    
+. . .     
+
+- DA provides a low-dimensional projection of the $p$-dimensional space, where the class means $\boldsymbol{\mu}_{k}$ are the most separated relative to the variance-covariance $\mathbf{\Sigma}_k$.
+
+# Background {background-color="#006DAE" .mcenter}
+
+
+## Bayes theorem
+
+- Let $f_k(x)$ be the density function for predictor $x$ for class $k$. 
+- Bayes theorem (for $K$ classes) states that the **posterior probability**: $$P(Y = k|X = x) = p_k(x) = \frac{\pi_kf_k(x)}{\sum_{k=1}^K \pi_kf_k(x)}$$ where $\pi_k = P(Y = k)$ is the **prior probability** that the observation comes from class $k$.
+
+
+## Univariate Normal (Gaussian) distribution
+
+$$f(x) = \frac{1}{\sqrt{2 \pi} \sigma} \text{exp}~ \left( - \frac{1}{2 \sigma^2} (x - \mu)^2 \right).$$
+
+```{r univariate-normal}
+#| code-fold: true
+#| fig-height: 3
+#| fig-width: 12
+#| code-line-numbers: 2
+tibble(x = seq(-5, 7, length = 100)) %>% 
+  mutate(f1 = dnorm(x, 2, 1),
+         f2 = dnorm(x, -1, 1),
+         f3 = dnorm(x, 3, 2)) %>% 
+  pivot_longer(f1:f3, values_to = "f") %>% 
+  ggplot(aes(x, f)) + 
+  geom_line(aes(color = name), linewidth = 1.2) +
+  labs(y = "f(x)", color = "") +
+  scale_color_discrete(labels = c("N(2, 1)", "N(-1, 1)", "N(3, 4)"))
+
+```
+
+
+
+## Multivariate Normal (Gaussian) distribution
+
+::: flex
+
+::: {.w-50}
+
+$$f(\boldsymbol{x}) = \frac{1}{(2\pi)^{\frac{p}{2}}|\mathbf{\Sigma}|^{\frac{1}{2}}} \exp\left(-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^\top\mathbf{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\right)$$
+
+- $\boldsymbol{\mu}$ is a $p$-vector of means, and
+- $\mathbf{\Sigma}$ is a $p\times p$ variance-covariance matrix.
+
+
+:::
+
+::: {.w-50 .pl3}
+
+<br><br>
+
+```{r multivariate-normal}
+#| code-fold: true
+#| fig-height: 4
+#| fig-width: 4
+#| code-line-numbers: 2
+expand_grid(x1 = seq(-5, 5, length = 100),
+            x2 = seq(-5, 5, length = 100)) %>% 
+  rowwise() %>% 
+  mutate(f1 = mvtnorm::dmvnorm(c(x1, x2), mean = c(2, 1), sigma = matrix(c(1, 0.5, 0.5, 1), 2, 2)),
+         f2 = mvtnorm::dmvnorm(c(x1, x2), mean = c(1, 2), sigma = matrix(c(1, 0, 0, 1), 2, 2)),,
+         f3 = mvtnorm::dmvnorm(c(x1, x2), mean = c(-1, 1), sigma = matrix(c(2, 0.5, 0.5, 1), 2, 2)),) %>% 
+  pivot_longer(f1:f3, values_to = "f") %>% 
+  ggplot(aes(x1, x2, z = f)) + 
+  geom_contour(aes(color = name), linewidth = 1.2) +
+  labs(color = "") +
+  guides(color = "none")
+
+```
+
+:::
+:::
+
+
+
+
+
+# Linear Discriminant Analysis {background-color="#006DAE" .mcenter}
+
+
+## LDA 
+
+::: incremental
+
+- Recall, we assume that $\boldsymbol{X}_{k} \sim N(\boldsymbol{\mu}_{k}, \mathbf{\Sigma}_k)$ for $k = 1, \dots, K$.
+- In LDA, we further assume that $\mathbf{\Sigma}_1 = \mathbf{\Sigma}_2 = \dots = \mathbf{\Sigma}_k = \mathbf{\Sigma}$. 
+- Then by Bayes theorem, the posterior is given as: $$p_k(\boldsymbol{x}) = \frac{\pi_k\exp~ \left( - \frac{1}{2} (\boldsymbol{x} - \boldsymbol{\mu}_k)\mathbf{\Sigma}^{-1}(\boldsymbol{x} - \boldsymbol{\mu}_k) \right) }{ \sum_{k = 1}^K \pi_k  \exp~ \left( - \frac{1}{2} (\boldsymbol{x} - \boldsymbol{\mu}_k)\mathbf{\Sigma}^{-1}(\boldsymbol{x} - \boldsymbol{\mu}_k)  \right) }.$$
+
+- We assign new observation $\boldsymbol{X} = \boldsymbol{x}_0$ to the class with the highest $p_k(\boldsymbol{x}_0)$, referred to as the **maximum a posteriori estimation** (MAP).
+
+
+:::
+
+
+## <i class="fab fa-r-project"></i> LDA with R: $\boldsymbol{\mu}_k$
+
+* The LDA model can be fit using `lda()` via the maximum likelihood estimate in the `MASS` package as:
+
+```{r lda-fit}
+cancer_lda <- MASS::lda(diagnosis ~ radius_mean + concave_points_mean, 
+                        data = cancer_train, 
+                        method = "mle")
+```
+
+* The estimate of $\begin{bmatrix}\boldsymbol{\mu}_{\text{A}}^\top\\ \boldsymbol{\mu}_{\text{B}}^\top \end{bmatrix}$ is found:
+
+```{r lda-fit-means}
+cancer_lda$means
+```
+
+## <i class="fab fa-r-project"></i> LDA with R: $\mathbf{\Sigma}$
+
+* The estimate of $\mathbf{\Sigma}$ is found:
+
+```{r lda-fit-var}
+cancer_lda_sigma <- cancer_train %>% 
+  # first center predictors based on MLE of class means
+  mutate(x1 = radius_mean - cancer_lda$means[diagnosis, "radius_mean"],
+         x2 = concave_points_mean - cancer_lda$means[diagnosis, "concave_points_mean"]) %>% 
+  select(x1, x2) %>% 
+  # find the sample variance-covariance matrix
+  var()
+
+cancer_lda_sigma
+```
+
+
+
+# Quadratic Discriminant Analysis {background-color="#006DAE" .mcenter}
+
+## <i class="fab fa-r-project"></i> QDA with R: $\boldsymbol{\mu}_k$
+
+* The QDA model can be fit using `qda()` via the maximum likelihood estimate in the `MASS` package as:
+
+```{r qda-fit}
+cancer_qda <- MASS::qda(diagnosis ~ radius_mean + concave_points_mean, 
+                        data = cancer_train, 
+                        method = "mle")
+```
+
+
+* The estimate of $\begin{bmatrix}\boldsymbol{\mu}_{\text{A}}^\top\\ \boldsymbol{\mu}_{\text{B}}^\top \end{bmatrix}$ is found:
+
+```{r qda-fit-means}
+cancer_qda$means
+```
+
+## <i class="fab fa-r-project"></i> QDA with R: $\mathbf{\Sigma}$
+
+* The estimate of $\mathbf{\Sigma}$ is found:
+
+```{r qda-fit-var}
+cancer_qda_sigma <- cancer_train %>% 
+  # first center predictors based on MLE of class means
+  mutate(x1 = radius_mean - cancer_qda$means[diagnosis, "radius_mean"],
+         x2 = concave_points_mean - cancer_qda$means[diagnosis, "concave_points_mean"]) %>% 
+  group_by(diagnosis) %>% 
+  summarise(sigma = list(var(data.frame(x1, x2))))
+
+
+cancer_qda_sigma$sigma[[1]]
+cancer_qda_sigma$sigma[[2]]
+```
+
+
+## <i class="fab fa-r-project"></i> Predictions from dicriminant models
+
+```{r da-pred}
+#| echo: -2
+library(MASS)
+select <- dplyr::select
+qthresh <- 0.5
+cancer_pred <- cancer_test %>% 
+  mutate(prob_lda = predict(cancer_lda, .)$posterior[, 1],
+         prob_qda = predict(cancer_qda, .)$posterior[, 1],
+         pred_lda = factor(ifelse(prob_lda > qthresh, "M", "B"), levels = c("M", "B")),
+         pred_qda = factor(ifelse(prob_qda > qthresh, "M", "B"), levels = c("M", "B"))) %>% 
+  select(prob_lda, prob_qda, pred_lda, pred_qda, diagnosis)
+
+cancer_pred
+```
+
+## Classification metrics 
+
+
+```{r metrics}
+library(yardstick)
+cancer_pred %>% 
+  pivot_longer(-diagnosis, names_to = c(".value", "model"), names_sep = "_") %>% 
+  group_by(model) %>% 
+  metric_set(sensitivity, specificity, precision, recall, pr_auc, roc_auc, 
+             f_meas, accuracy, bal_accuracy, kap, mcc, ppv, npv, j_index)(., 
+                                                   truth = diagnosis, 
+                                                   prob, 
+                                                   estimate = pred) %>% 
+  pivot_wider(.metric, names_from = model, values_from = .estimate) %>% 
+  mutate(winner = ifelse(lda > qda, "lda", "qda"))
+```
+
+
+
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+
+
+::: flex
+
+::: {.w-50}
+Logistic regression 
+
+- Goal: directly estimate $P(Y \lvert X)$ 
+- Assumptions: no assumptions on predictor space  
+
+:::
+
+::: {.w-50 .pl3}
+
+Discriminant analysis
+
+- Goal: estimate $P(X \lvert Y)$ to then deduce $P(Y \lvert X)$ 
+- Assumptions: predictors are normally distributed    
+
+:::
+:::
+
+

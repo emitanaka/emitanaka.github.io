@@ -1,0 +1,855 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Introduction to web technologies"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 2"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 2"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: false
+    slide-number: c
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+execute:
+  echo: true
+---
+
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+library(tidyverse)
+library(timevis)
+library(widgetframe)
+library(htmltools)
+
+js <- '<i class="fab fa-js-square monash-green2"></i>'
+css <- '<i class="fab fa-css3-alt monash-blue2"></i>'
+seetext <- '<span class="monash-bg-orange2 monash-white" style="padding:5px;font-size:18pt;vertical-align: middle;border:1px dashed black;"><i class="fas fa-eye"></i><i class="fas fa-font" ></i></span>'
+seehtml <- '<span class="monash-bg-orange2 monash-white" style="padding:5px;font-size:18pt;vertical-align: middle;border:1px dashed black;"><i class="fas fa-eye"></i><i class="far fa-window-maximize"></i></span>'
+
+
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim background="white"}
+
+::: {.callout-important }
+
+## Aim
+
+* Understand the make up of web documents, i.e. HTML, CSS and JS
+* Write basic HTML and CSS with valid syntax
+* Use CSS selectors to apply new styles 
+* Integrate CSS and JS to R markdown documents with HTML output
+
+:::
+
+::: {.callout-tip }
+
+## Why
+
+* Basic web development skills are necessary for customising HTML documents
+* This hard skill will be necessary later for when you are communicating with web documents and web apps
+
+:::
+
+
+## 🌐  World Wide Web (WWW) 
+
+* WWW (or the **Web**) is the information system where documents (web pages) are identified by Uniform Resource Locators (**URL**s)
+
+::: incremental
+
+* A web page consists of:
+
+
+  * <i class="fab fa-html5 monash-orange2"></i> **HTML** provides the basic structure of the web page
+  * <i class="fab fa-css3-alt monash-blue2"></i> **CSS** controls the look of the web page (optional)
+  * <i class='fab fa-js-square monash-green2'></i> **JS** is a programming language that can modify the behaviour of elements of the web page (optional)
+
+:::
+::: notes
+  
+* Keep in mind that you are not a web developer [(or maybe you are)]{.f4} so you don't need to know these in-depth, but you require some knowledge in web technologies if you want to do some low-level customisation of HTML documents.
+
+:::
+
+
+## 🔨 Web Documents are Handy
+
+::: incremental
+
+* HTML documents are really handy for including interactive elements and supported in almost all computer devices.
+* Naturally, this ties in well with [interactive data visualisation]{.monash-blue}.
+:::
+
+::: fragment
+
+* Below is an interactive timeline visualisation of historical developments of HTML/CSS/JS:
+
+```{r, echo = FALSE}
+data <- tribble(~id, ~content, ~start, ~end, ~style,
+                1, "CSS 1", "1996-12-17", NA, "font-size:10pt",
+                2, "CSS 2", "1998-05-01", NA, "font-size:10pt",
+                3, "CSS", "1999-06-01", NA, "font-size:10pt;",
+                4, "HTML", "1989-01-01", NA, "font-size:10pt",
+                5, "HTML 2", "1995-11-24", NA, "font-size:10pt",
+                6, "HTML 3", "1997-01-14", NA, "font-size:10pt",
+                7, "HTML 4", "1997-12-18", NA, "font-size:10pt",
+                8, "HTML", "2014-10-28", NA, "font-size:10pt",
+                9, "CSS", "1994-10-10", NA, "font-size:10pt",
+                10, "JS", "1995-12-04", NA, "font-size:10pt"
+                
+)
+timevis(data, width = "100%", height = "250px")
+```
+:::
+
+
+# So what exactly is <br>[HTML]{.monash-orange2}, [CSS]{.monash-blue2}, and [JS]{.monash-green2}? {background="black"}
+
+
+
+
+
+#  <i class="fab fa-html5 monash-orange2"></i> Hyper Text Markup Language {#html}
+
+* HTML files have the extension `.html`.
+* HTML files are often rendered using a web browser via an URL.
+* HTML files are just text files that follows a special syntax that alerts web browsers how to render it.
+
+## <i class="fab fa-html5 monash-orange2"></i>  Simple HTML example 
+
+<center>
+<a href="simple-example.html" download><i class="fas fa-download"></i></a> `simple-example.html`
+</center>
+
+::: flex
+
+::: {.w-50 .pr3}
+
+`r seetext`
+
+```{.html code-line-numbers="|1,13|2,12|3|4|5-7|8|9-11|"}
+<html>
+<body>
+<h1>ETC5523: Communicating with Data</h1>
+<h2>Lecturer</h2>
+<ul>
+<li>Emi Tanaka (Chief Examiner)</li>
+</ul>
+<h2>Tutor</h2>
+<ul>
+<li>Weihao (Patrick) Li</li>
+</ul>
+</body>
+</html>
+```
+:::
+
+::: w-50
+
+`r seehtml`
+
+<iframe src="simple-example.html" height="100%"></iframe>
+
+:::
+
+
+:::
+
+
+## <span class="fa-layers fa-fw"> <i class="fas fa-square monash-white" data-fa-transform="shrink-5"></i><i class="fab fa-html5 monash-orange2"></i></span> HTML Structure
+
+```{.html code-line-numbers="|3-8|10-14|"}
+<html>
+<!--This is a comment and ignored by web client.-->
+<head>
+  <!--This section contains web page metadata.-->
+  <title>Communicating with Data</title>
+  <meta name="author" content="Emi Tanaka">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+<!--This section contains what you want to display on your web page.-->
+<h1>I'm a first level header</h1>
+<p>This is a paragraph.</p>
+</body>
+</html>
+
+```
+
+
+## <i class="fab fa-html5 monash-orange2"></i> HTML Syntax
+
+`r seetext` 
+
+``` html
+<span style="color:blue;">Author content</span>
+```
+
+`r seehtml` <span style="color:blue;">Author content</span>
+
+::: fragment
+
+The breakdown of this HTML syntax:
+
+:::
+
+<table style="width:100%;font-size:0.8em;" >
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">start tag:</td><td><span style="font-family:monospace;" ><span class="monash-ruby2">&lt;span style="color:blue;"&gt;</span><span class="monash-gray50">Author content&lt;/span&gt;</span></span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">end tag: </td><td> <span style="font-family:monospace;"><span class="monash-gray50">&lt;span style="color:blue;"&gt;Author content<span class="monash-ruby2">&lt;/span&gt;</span></span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">content: </td><td> <span style="font-family:monospace;" ><span class="monash-gray50">&lt;span style="color:blue;"&gt;</span><span class="monash-ruby2">Author content</span><span class="monash-gray50">&lt;/span&gt;</span></span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">element name: </td><td> <span style="font-family:monospace;" ><span class="monash-gray50">&lt;</span><span class="monash-ruby2">span</span><span class="monash-gray50"> style="color:blue;"&gt;Author content&lt;/span&gt;</span></span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">attribute: </td><td> <span style="font-family:monospace;" ><span class="monash-gray50">&lt;span <span class="monash-ruby2">style="color:blue;"</span><span class="monash-gray50">&gt;Author content&lt;/span&gt;</span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">attribute name: </td><td> <span style="font-family:monospace;" ><span class="monash-gray50">&lt;span <span class="monash-ruby2">style</span><span class="monash-gray50">="color:blue;"&gt;Author content&lt;/span&gt;</span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">attribute value: </td><td> <span style="font-family:monospace;" ><span class="monash-gray50">&lt;span style=</span><span class="monash-ruby2">"color:blue;"</span><span class="monash-gray50">&gt;Author content&lt;/span&gt;</span> </td>
+</tr>
+</table>
+
+
+
+## Not all HTML tags have an end tag
+
+`r seetext` 
+
+``` html
+<img height="200px" src="https://tinyurl.com/rlogo-svg">
+```
+
+<br>
+`r seehtml` 
+
+<img height="200px" src="https://tinyurl.com/rlogo-svg">
+
+
+
+## <i class="fab fa-html5 monash-orange2"></i> Some HTML elements
+
+<table class="f4">
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">block element:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;div><span class="monash-gray50">content</span>&lt;/div></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">inline element:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;span><span class="monash-gray50">content</span>&lt;/span></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">paragraph:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;p><span class="gray monash-gray50">content</span>&lt;/p></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">header level 1:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;h1><span class="monash-gray50">content</span>&lt;/h1></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">header level 2:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;h2><span class="monash-gray50">content</span>&lt;/h2></span> (note: only up to 6 levels)</td></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">italic:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;i><span class="monash-gray50">content</span>&lt;/i></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">emphasised text:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;em><span class="monash-gray50">content</span>&lt;/em></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">bold:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;b><span class="monash-gray50">content</span>&lt;/b></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">strong importance:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;strong><span class="monash-gray50">content</span>&lt;/strong></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">link:</td><td><span style="font-family: monospace" class="monash-red2" >&lt;a href="https://cwd.numbat.space/"><span class="monash-gray50">content</span>&lt;/a></span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">insert new line:</td><td><span style="font-family: monospace" class="monash-red2">&lt;br></span></td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">unordered list:</td><td><span style="font-family: monospace" class="monash-red2">&lt;ul><br>&lt;li><span class="monash-gray50">item 1</span>&lt;/li><Br>&lt;li><span class="monash-gray50">item 2</span>&lt;/li><Br>&lt;/ul></span></td>
+</tr>
+</table>
+
+::: fragment
+
+How these are rendered to the browser depends on the **browser default style values**, **style attribute** or **CSS**...
+
+:::
+
+
+# `r css` Cascading Style Sheet (CSS) {#css}
+
+
+::: incremental
+
+* CSS files have the extension `.css` [and styles also XHTML, plain XML, SVG and XUL]{.f4}.
+* There are 3 ways to style elements in HTML:
+  * **inline** by using the `style` attribute inside HTML start tag:
+``` html
+<h1 style="color:blue;">Blue Header</h1>
+```
+  * **externally** by using the `<link>` element:
+``` html
+<link rel="stylesheet" href="styles.css">
+```
+  * **internally** by defining within `<style>` element:<br>
+``` html
+<style type="text/css"> h1 { color: blue; } </style>
+```
+  
+:::
+  
+::: notes
+
+
+* By convention, the `<style>` and `<link>` elements tend to go into the `<head>` section of the HTML document.
+
+:::
+
+## `r css` CSS Syntax
+
+::: flex
+
+::: {.w-50 .pr3}
+`r seetext`
+
+```{.html}
+<style type="text/css">
+h1 { color: blue; }
+</style>
+
+<h1>This is a header</h1>
+```
+
+
+:::
+
+::: w-50
+
+`r seehtml`
+<h1 style="color:blue">This is a header</h1>
+
+:::
+
+:::
+
+::: fragment
+
+The breakdown of the CSS syntax:
+
+:::
+
+<table style="font-size:0.9em;">
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">selector:</td><td><span style="font-family:monospace;"><span class="monash-ruby2">h1</span><span class="monash-gray50"> { color: blue; }</span></span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">property:</td><td><span style="font-family:monospace;" class="monash-gray50">h1 { <span class="monash-ruby2">color: blue;</span> }</span> </td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">property name:</td><td><span style="font-family:monospace;" class="monash-gray50">h1 { <span class="monash-ruby2">color</span>: blue; } </span></td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">property value:</td><td><span class="monash-gray50"  style="font-family:monospace;">h1 { color: <span class="monash-ruby2">blue</span>; } </span></td>
+</tr>
+</table>
+
+
+## You may have multiple properties for a single CSS selector
+
+
+``` css
+h1 {
+  color: blue;
+  font-family: monospace;
+  background: yellow;
+}
+```
+
+<br>
+
+<h1 style="color: blue;font-family: monospace;background: yellow;">This is a header</h1>
+
+
+## `r css` Some CSS properties 
+
+<center>
+`<div> Sample text </div>`
+</center>
+
+<table class="f4">
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">background color:</td>
+<td><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">background-color: yellow;</span> }</span> </td>
+<td>
+<div style="background-color: yellow;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">text color:</td>
+<td><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">color: purple;</span> }</span> </td>
+<td>
+<div style="color: purple;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">border:</td>
+<td><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">border: 1px dashed brown;</span> }</span> </td>
+<td>
+<div style="border: 1px dashed brown;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">left border only:</td>
+<td><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">border-left: 10px solid pink;</span> }</span> </td>
+<td>
+<div style="border-left: 10px solid pink;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td style="text-align:right;padding-right:30px;">text size:</td>
+<td><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">font-size: 10pt;</span> }</span> </td>
+<td>
+<div style="font-size:10pt;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">padding:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { background-color: yellow; <br>
+&emsp;&emsp;&emsp;&nbsp;<span class="monash-ruby2">padding: 10px;</span> }</span> </td>
+<td>
+<div style="background-color: yellow;padding:10px;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">margin:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { background-color: yellow; <br>
+&emsp;&emsp;&emsp;&nbsp;<span class="monash-ruby2">margin: 10px;</span> }</span> </td>
+<td>
+<div style="background-color: yellow;margin:10px;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">horizontally center text:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { background-color: yellow; <br>
+&emsp;&emsp;&emsp;&nbsp;padding-top: 20px;<br>
+&emsp;&emsp;&emsp;&nbsp;<span class="monash-ruby2">text-align: center;</span> }</span> </td>
+<td>
+<div style="background-color: yellow;text-align: center;padding-top: 20px;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">font family:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">font-family: Marker Felt, times;</span> }</span> </td>
+<td>
+<div style="font-family: Marker Felt, times;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">strike:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">text-decoration: line-through;</span> }</span> </td>
+<td>
+<div style="text-decoration: line-through;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">underline:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">text-decoration: underline;</span> }</span> </td>
+<td>
+<div style="text-decoration: underline;">Sample text</div>
+</td>
+</tr>
+<tr class="fragment">
+<td valign="top" style="text-align:right;padding-right:30px;">opacity:</td>
+<td  valign="top"><span class="monash-gray50" style="font-family:monospace;" >div { <span class="monash-ruby2">opacity: 0.3</span> }</span> </td>
+<td>
+<div style="opacity: 0.3;">Sample text</div>
+</td>
+</tr>
+
+</table>
+
+
+## `r css` CSS Selector {#selector}
+
+
+
+<table style="font-size:0.7em;">
+<tr class="fragment">
+<td style="font-family:monospace;">`*` </td><td>&nbsp;&nbsp;</td><td>selects all elements</td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;">`div`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;div></span> elements</td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;">`div, p`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;div></span> and <span style="font-family:monospace;" >&lt;p></span> elements</td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;">`div p`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;p></span> within <span style="font-family:monospace;" >&lt;div></span></td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;">`div > p`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;p></span> one level deep in <span style="font-family:monospace;" >&lt;div></span></td>
+</tr>
+<tr class="fragment" valign="top">
+<td style="font-family:monospace;">`div + p`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;p></span> immediately after a <span style="font-family:monospace;" >&lt;div></span></td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;">`div ~ p`</td><td>&nbsp;&nbsp;</td><td>selects all <span style="font-family:monospace;" >&lt;p></span> preceded by a <span style="font-family:monospace;" >&lt;div></span></td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;" valign="top">`.classname`</td><td>&nbsp;&nbsp;</td><td>selects all elements with the attribute <span style="font-family:monospace;" >class="classname"</span>. </td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;" valign="top">`.c1.c2`</td><td>&nbsp;&nbsp;</td><td>selects all elements with <em>both</em> <span style="font-family:monospace;" >c1</span> and <span style="font-family:monospace;" >c2</span> within its class attribute. </td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;" valign="top">`.c1 .c2`</td><td>&nbsp;&nbsp;</td><td>selects all elements with  class <span style="font-family:monospace;" >c2</span> that is a descendant of an element with class <span style="font-family:monospace;" >c1</span>. </td>
+</tr>
+<tr class="fragment">
+<td style="font-family:monospace;" valign="top">`#idname`</td><td>&nbsp;&nbsp;</td><td>selects all elements with the attribute <span style="font-family:monospace;" >id="idname"</span>. </td>
+</tr>
+</table>
+
+
+##  `r js` JavaScript (JS) {#js}
+
+::: incremental 
+
+* JS is a programming language and enable interactive components in HTML documents.
+* You can insert JS into a HTML document in two ways:
+  * **internally** by defining within `<script>` element:
+  ```html
+  <script>
+  document.getElementById("p1").innerHTML = "content";
+  </script>
+  ```
+  * **externally** by using the `src` attribute to refer to the external file:
+  ```html
+  <script src="myjava.js"></script>
+  ```
+* You are *not* expected to be able to do any JS in this course.
+
+:::
+
+
+# HTML outputs with <br>[Rmd documents]{.monash-blue}
+
+``` yaml
+---
+output: html_document
+---
+```
+
+``` yaml
+---
+output: bookdown::html_document2
+---
+```
+
+
+## `r css` Inserting CSS in Rmd documents [Part 1]{.f4}
+
+
+* There is a `css` engine:
+
+```{css}
+#| echo: fenced
+h1 { color: red; }
+```
+
+. . . 
+
+* This inserts the following output into the document:
+
+```{.html}
+<style type="text/css">
+h1 { color: red; }
+</style>
+```
+
+. . . 
+
+
+* If the output is a HTML document then the defined styles will apply to the output document.
+
+## `r css` Inserting CSS in Rmd documents [Part 2]{.f4}
+
+* If you have an external file, say `styles.css`, that you define the styles, then most HTML outputs will support this with YAML argument `css`
+
+```{.yaml code-line-numbers=|4}
+---
+output: 
+  html_document: 
+    css: ["styles.css"]
+---
+```
+
+or say 
+
+```{.yaml code-line-numbers=|4}
+---
+output: 
+  bookdown::html_document2: 
+    css: ["styles.css", "custom.css"]
+---
+```
+
+
+
+
+## `r js` Inserting JS into Rmd documents [Part 1]{.f4}
+
+
+* There is a `js` engine:
+
+```{js}
+#| echo: fenced
+document.getElementById("p1").innerHTML = "content";
+```
+
+
+::: fragment 
+
+which inserts:
+
+``` html
+<script type="text/javascript">
+document.getElementById("p1").innerHTML = "content";
+</script>
+```
+
+:::
+
+::: fragment
+
+* If you have an external file, say `myjava.js`, then you can directly insert this in the body of the Rmd file as:
+
+``` js
+<script src="myjava.js"></script>
+```
+
+:::
+
+## `r js` Inserting JS into Rmd documents [Part 2]{.f4}
+
+If you need to insert at a specific location within the document then you can use `includes`:
+
+``` yaml
+---
+output:
+  html_document:
+    includes: 
+      in_header: ["header.html"]
+      before_body: ["before_body.html"]
+      after_body: ["after_body.html"]
+---
+```
+
+where `header.html`, `before_body.html`, `after_body.html` includes the JS code, e.g. 
+
+``` html
+<script src="myjava.js"></script>
+<script type="text/javascript">
+document.getElementById("p1").innerHTML = "content";
+</script>
+```
+
+
+
+## <i class="fas fa-user-friends"></i> Community Web Enhancements
+
+*  [Bootstrap](https://getbootstrap.com/) is a free open-source CSS and JS that is widely adopted.^[Included in the default `rmarkdown::html_document`.]
+* [jQuery](https://jquery.com/) is a widely used JS library for object selection and manipulation.<sup>1</sup>
+* [MathJax](https://www.mathjax.org/) is a JS library for displaying mathematics.<sup>1</sup>
+* [Font Awesome](https://fontawesome.com/) inserts icons to web using their CSS.^[Sometimes included in certain Rmd HTML documents.]
+* [D3.js](https://d3js.org/) is one of the most popular JS library for interactive data visualisation.   
+
+
+
+## ☁️  Communication in the Web {.smaller}
+
+* Hypertext Transfer Protocol (**HTTP**)
+functions as the communicator in the Web 
+* HTTPS is the secure version of HTTP where communications are encrypted
+
+<center>
+<img src="images/lecture-02/client-server.png" class="bg-white" width ="650px">
+</center>
+
+::: fragment
+
+::: callout-warning
+
+Different clients may work differently! E.g. Internet Explorer and Chrome may render the same web page differently.
+
+:::
+
+:::
+
+
+## 📋 Web Standard 
+
+::: {.f2}
+
+* There are 3 major groups that govern the standard for the Web:
+  * World Wide Web Consortium (**W3C**) formed in 1994 maintains the [CSS specifications](https://www.w3.org/Style/CSS/) <i class="fab fa-css3-alt blue"></i>
+  * Web Hypertext Application Technology Working Group (**WHATWG**) formed in 2004 and is the publisher of the [HTML and DOM standards](https://html.spec.whatwg.org/) <i class="fab fa-html5 orange"></i>
+  * **TC39 technical committee** of [Ecma International](http://www.ecma-international.org/publications/standards/Standard.htm), renamed from European Computer Manufacturers Association (ECMA) in 1994, maintains the standards for JS <span class='fa-layers'> <i class='fas fa-square black' data-fa-transform='shrink-2'></i><i class='fab fa-js-square yellow'></i></span>
+* These groups consist of Mozilla, <i class="fab fa-apple"></i> Apple, <i class="fab fa-google"></i> Google, <i class="fab fa-microsoft"></i> Microsoft and other invited members.
+
+:::
+
+
+## 📜 MDN Web Docs [LIVE DEMO]{.f4}
+
+[[https://developer.mozilla.org/](https://developer.mozilla.org/)]{.f2}
+
+::: {.f2}
+
+* Documentation of web standards maintained by the community.
+* Includes status of use:
+<center>
+<img src="images/lecture-02/obsolete.png"/>
+</center>
+* As well as its compatibility with web clients:
+<center>
+<img src="images/lecture-02/browser-compatibility.png" width ="450px"/>
+</center>
+
+:::
+
+## Writing HTML {#htmltidy}
+
+[You can play at [https://htmltidy.net/](https://htmltidy.net/)]{.f2}
+
+<center>
+<img class="ba" src="images/lecture-02/htmltidy.gif" width = "900px">
+</center>
+
+
+
+# 📝 Interactive Cheatsheets {#cheatsheets}
+
+::: {.r-fit-text}
+
+<i class="fab fa-html5 monash-orange2"></i> HTML Cheatsheet
+[https://htmlcheatsheet.com/](https://htmlcheatsheet.com/)
+
+
+<i class="fab fa-css3-alt monash-blue2"></i> CSS Cheatsheet 
+[https://htmlcheatsheet.com/css/](https://htmlcheatsheet.com/css/)
+
+
+<i class="fab fa-js-square monash-green2"></i>  JS Cheatsheet 
+[https://htmlcheatsheet.com/js/](https://htmlcheatsheet.com/js/)
+
+:::
+
+
+
+## 🔎 Inspect Element [LIVE DEMO]{.f4}
+
+Below GIF shows interactive use of Inspect Element^[Or called Inspect.] available from the menu in most web browsers when you right click on the web page^[Note: this is for inspection and doesn't actual make changes to the files.]:
+
+<center>
+<img class="ba" src="images/lecture-02/inspect-element.gif" width = "620px"/>
+</center>˜
+
+
+## Week 2 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* We went through the basics of HTML, CSS and JS 
+* You should be more comfortable with writing HTML and CSS
+* You learnt how to include CSS and JS into HTML documents created from R Markdown
+* You know the tools to interactively learn HTML and CSS 
+
+
+:::
+
+
+::: {.callout-tip .fragment}
+
+## Resources
+
+* [Introduction to Data Technologies Ch 2-4 by Paul Murrell](https://www.stat.auckland.ac.nz/~paul/ItDT/itdt-2010-11-01.pdf)
+* [Interactive HTML/CSS/JS cheatsheets](#cheatsheets)
+* [HTML Tidy .Net](#htmltidy)
+
+:::

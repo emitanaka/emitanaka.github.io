@@ -1,0 +1,649 @@
+---
+pagetitle: "ETC5523: Communicating with Data"
+subtitle: "Narrative"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 10"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "cwd.numbat.space"
+footer: "ETC5523 Week 10"
+format: 
+  revealjs:
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    width: 1280
+    height: 720
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    incremental: true
+execute:
+  echo: true
+---
+
+```{r, include = FALSE}
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+library(tidyverse)
+library(gganimate)
+knitr::opts_chunk$set(
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 6,
+  fig.height = 4,
+  fig.align = "center",
+  out.width = "100%",
+  fig.retina = 3,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = "cache/"
+)
+theme_set(theme_bw(base_size = 18))
+```
+
+## <br>[`r rmarkdown::metadata$pagetitle`]{.monash-blue} {#etc5523-title background-image="images/bg-01.png"}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+::: tl
+<br>
+
+<ul class="fa-ul">
+
+<li>
+
+[<i class="fas fa-envelope"></i>]{.fa-li}`r rmarkdown::metadata$email`
+
+</li>
+
+<li>
+
+[<i class="fas fa-calendar-alt"></i>]{.fa-li} `r rmarkdown::metadata$date`
+
+</li>
+
+<li>
+
+[<i class="fa-solid fa-globe"></i>]{.fa-li}<a href="`r rmarkdown::metadata[["unit-url"]]`">`r rmarkdown::metadata[["unit-url"]]`</a>
+
+</li>
+
+</ul>
+
+<br>
+:::
+
+
+## {#aim}
+
+::: {.callout-important }
+
+## Aim
+
+* Compose effective data stories by:
+  - identifying the goals, 
+  - selecting appropriate data, visualisations and aesthetic designs, and 
+  - receiving feedback.
+* Understand and apply narrative structures and techniques to enhance communication with data
+
+:::
+
+
+
+
+## Recall: Communication is a [process]{.monash-blue}
+
+
+Transactional communication model
+
+<center>
+<img src="images/drawn/transactional-communication-model.png" width="70%">
+</center>
+
+## Communication problems
+
+. . . 
+
+**_The technical problem_**
+
+How    accurately    can    the    symbols    of    communication    be transmitted?
+
+. . . 
+
+**_The semantic problem_**
+
+How  precisely  do  the  transmitted  symbols  convey  the  desired meaning?
+
+. . . 
+
+**_The effectiveness problem_**
+
+How effectively does the received meaning affect conduct in the desired way?
+
+
+::: aside 
+
+Jones (2014) Communicating Data with Tableau
+
+:::
+
+## [Principles]{.monash-blue} of Communicating Data
+
+1. Know your goal (target audience, intended message, desired effect)
+2. Use the right data
+3. Select suitable visualisations
+4. Design for aesthetics
+5. Choose an effective medium and channel
+6. Check the results, i.e. get **feedback**
+
+::: aside 
+
+Jones (2014) Communicating Data with Tableau
+
+:::
+
+
+## Recall: Communicating with Data
+
+
+<center>
+
+<img src="images/drawn/venn-diagram.png" height="600px"/>
+
+</center>
+
+## Recall: [Rhetorics]{.monash-blue}
+
+* The art of effective or persuasive speaking or writing
+
+. . . 
+
+::: flex
+
+::: w-50
+
+**Rhetorical triangle**
+
+
+<img src="images/drawn/rhetorical-triangle.png" width="80%">
+
+
+:::
+
+::: w-50
+
+**Rhetorical situation**
+
+* Writer or Speaker
+* Purpose
+* Message
+* Audience
+* Context
+
+:::
+
+
+:::
+
+
+## {}
+
+<br><br>
+
+::: blockquote
+
+No one ever made a decision because of a number. They need a story.
+
+[-- Daniel Kahneman]{.fr}
+:::
+
+
+
+# [[Basic Story Types](https://www.ipl.org/div/farq/plotFARQ.html)]{.monash-white} {background-color="#006DAE"}
+
+
+
+## One Story Type
+
+::: {.r-fit-text .fragment}
+
+Conflict
+
+:::
+
+::: aside
+
+Foster-Harris, William (1959) The Basic Patterns of Plot. 
+
+:::
+
+## Seven Story Types
+
+
+1. Overcoming the monster
+2. Rags to riches
+3. The quest
+4. Voyage and return
+5. Comedy
+6. Tragedy
+7. Rebirth
+
+
+::: aside
+
+Booker, Christopher (2004) The Seven Basic Plots: Why We Tell Stories.
+
+:::
+
+
+## Twenty Story Types
+
+::: flex
+
+::: w-33
+
+1. Quest
+2. Adventure
+3. Pursuit
+4. Rescue
+5. Escape
+6. Revenge
+7. The Riddle
+
+
+:::
+
+::: w-33
+
+8. Rivalry
+9. Underdog
+10. Temptation
+11. Metamorphosis
+12. Transformation
+13. Maturation
+14. Love
+
+:::
+
+
+::: w-33
+
+
+15. Forbidden Love
+16. Sacrifice
+17. Discovery
+18. Wretched Excess
+19. Ascension
+20. Descension.
+
+:::
+
+:::
+
+::: aside
+
+Tobias, Ronald B. (1993) 20 Master Plots.
+
+:::
+
+
+# Basic Data Story Types {background-color="#006DAE"}
+
+
+## Data Story Types
+
+```{css, echo = FALSE}
+.storytype {
+  width: 23%;
+}
+```
+
+<center>
+<img src="images/drawn/storytype-time.png" class="storytype">
+<img src="images/drawn/storytype-drilldown.png" class="storytype">
+<img src="images/drawn/storytype-zoomout.png" class="storytype">
+<img src="images/drawn/storytype-contrast.png" class="storytype">
+<img src="images/drawn/storytype-factors.png" class="storytype">
+<img src="images/drawn/storytype-intersections.png" class="storytype">
+<img src="images/drawn/storytype-outliers.png" class="storytype">
+</center>
+
+::: aside
+
+Jones, Ben (2015) [Seven Data Story Types.](https://dataremixed.com/2015/03/tapestry-2015-seven-data-story-types/) Tapestry Conference.
+
+:::
+
+## Data: key crop yields
+
+```{r, echo = TRUE}
+# devtools::install_github("etc5523-2022/data", ref = "tut9")
+cwdata::key_crop_yields
+```
+
+. . . 
+
+One data, many stories
+
+
+
+## <img src="images/drawn/storytype-time-notext.png" style="height:1em;vertical-align:middle;"> Change over time
+
+```{r plot-world-yield, fig.height = 4, fig.width = 8}
+# devtools::install_github("etc5523-2022/data", ref = "tut9")
+data <- cwdata::key_crop_yields
+world_wheat <- data %>% 
+  filter(entity == "World", crop == "wheat")
+region_wheat <- data %>% 
+  filter(crop == "wheat", 
+         entity %in% c("Asia", "Asia, Central",
+                       "Central America", "Central African Republic",
+                       "Eastern Africa", "Eastern Asia",
+                       "Eastern Europe", "Northern Europe",
+                       "Europe, Western", "Middle Africa",
+                       "Oceania", "South Africa",
+                       "South America", "South Eastern Asia",
+                       "Southern Africa", "Southern Asia",
+                       "Southern Europe", "Western Africa", "Western Asia"))
+europe_wheat <- data %>% 
+  filter(crop == "wheat", 
+         entity %in% c("Eastern Europe", 
+                       "Northern Europe",
+                       "Europe, Western", 
+                       "Southern Europe")) %>% 
+  mutate(entity = recode(entity, 
+                         "Europe, Western" = "Western Europe"))
+
+slope <- coef(lm(yield ~ year, data = world_wheat))[2]
+
+ggplot(world_wheat, aes(year, yield)) +
+  geom_line(color = "#969696") +
+  geom_smooth(method = lm, se = FALSE, size = 0.5,
+              color = "#008A25") +
+  labs(x = "Year", 
+       y = "Yield (t/ha)",
+       title = "Total world wheat yield is increasing",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  annotate("text", 
+           label = paste(round(slope * 10, 2), "t/ha per decade"), 
+           x = 2010, y = 2.25, color = "#008A25") +
+  annotate("segment", x = 2002, xend = 2002,
+           y = 2, yend = 2.5, 
+           arrow = grid::arrow(), color = "#008A25") +
+  theme(plot.caption = element_text(color = "#969696", size = 12))
+```
+
+## <img src="images/drawn/storytype-drilldown-notext.png" style="height:1em;vertical-align:middle;"> Drill down
+
+
+```{r plot-europe-wheat, fig.height = 4, fig.width = 8}
+europe_wheat %>% 
+  mutate(region = str_replace(entity, "ern Europe", "")) %>% 
+  ggplot(aes(year, yield, color = region)) +
+  geom_line() +
+  guides(color = "none") +
+  geom_text(aes(label = region, x = 2019), 
+            data = ~filter(.x, year == max(year)),
+            hjust = 0) +
+  xlim(NA, 2021) +
+  labs(x = "Year", 
+       y = "Yield (t/ha)",
+       title = "Major wheat yield in Europe is in North and West",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  theme(plot.caption = element_text(color = "#969696", size = 12)) +
+  colorspace::scale_color_discrete_qualitative()
+```
+
+
+## <img src="images/drawn/storytype-zoomout-notext.png" style="height:1em;vertical-align:middle;"> Zoom out
+
+
+```{r plot-worldmap-wheat, fig.height = 3.5, fig.width = 7}
+map_data("world") %>% 
+  mutate(region = recode(region,
+                         "UK" = "United Kingdom",
+                         "USA" = "United States",
+                         "Democratic Republic of the Congo" = "Democratic Republic of Congo"),
+         europe = str_detect(region, "[Ee]urope")) %>% 
+  left_join(filter(data, crop=="wheat", year == max(year)),
+            by = c("region" = "entity")) %>% 
+  ggplot(aes(long, lat, group = group)) +
+  geom_polygon(aes(fill = yield ), color = "black",
+               size = 0.5) +
+  theme_void(base_size = 18) +
+  colorspace::scale_fill_continuous_sequential(palette = "YlGn") +
+  labs(fill = "Yield (t/ha)",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01",
+       title = "Europe has high wheat yield per hectare, 2018") +
+  theme(plot.caption = element_text(color = "#969696", size = 12))  +
+  view_zoom_manual(pause_length = 1, 
+                   step_length = 2, 
+                   pan_zoom = 3,
+                   xmin = c(-30, -180), xmax = c(55, 190.3),
+                   ymin = c(30, -85.2), ymax = c(80, 83.6))
+
+```
+
+
+## <img src="images/drawn/storytype-contrast-notext.png" style="height:1em;vertical-align:middle;"> Contrast
+
+```{r plot-crop-type, fig.height = 3, fig.width = 6}
+data %>% 
+  filter(entity=="Europe",
+         year == max(year),
+         !is.na(yield)) %>% 
+  mutate(crop = tools::toTitleCase(crop),
+         crop = fct_reorder(crop, yield),
+         staple = crop %in% c("Potatoes", "Bananas")) %>% 
+  ggplot(aes(yield, crop)) + 
+    geom_col(aes(fill = staple)) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 43.5)) +
+  scale_fill_manual(values = c("grey", "yellow2")) +
+  guides(fill = "none") +
+  labs(x = "Yield (t/ha)", y = "",
+       title = "Bananas and potatoes are Europe's staple food, 2018",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  geom_text(aes(label = sprintf("%.1f", yield)),
+            hjust = 0) +
+  theme(axis.text.y = element_text(size = 12),
+        plot.title = element_text(size = 16),
+        plot.caption = element_text(color = "#969696", size = 12))
+```
+
+## <img src="images/drawn/storytype-factors-notext.png" style="height:1em;vertical-align:middle;"> Factors
+
+
+```{r plot-factors, fig.height = 3, fig.width = 6}
+data %>% 
+  filter(entity %in% c("Eastern Europe", 
+                       "Northern Europe",
+                       "Europe, Western", 
+                       "Southern Europe"),
+         year == max(year),
+         !is.na(yield)) %>% 
+  mutate(entity = recode(entity, 
+                  "Europe, Western" = "Western Europe"),
+         entity = str_replace(entity, "ern Europe", ""),
+         crop = tools::toTitleCase(crop),
+         crop = fct_reorder(crop, -yield, max),
+         staple = crop %in% c("Potatoes", "Bananas")) %>% 
+  ggplot(aes(yield, entity)) + 
+    geom_col(aes(fill = crop), position = "fill",
+             color = "black") +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(x = "Proportion", y = "",
+       fill = "",
+       title = "Bananas are produced only in South Europe!",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  theme(axis.text.y = element_text(size = 12),
+        plot.title = element_text(size = 16),
+        plot.caption = element_text(color = "#969696", size = 12),
+        axis.title.x = element_text(size = 14),
+        axis.text.x = element_text(size = 12),
+        legend.text = element_text(size = 12))
+```
+
+
+## <img src="images/drawn/storytype-intersections-notext.png" style="height:1em;vertical-align:middle;"> Intersections
+
+```{r plot-intersections, fig.width = 7, fig.height = 3}
+data %>% 
+  filter(entity %in% c("Europe"),
+         !crop %in% c("potatoes", "bananas"),
+         !is.na(yield)) %>% 
+  arrange(crop, year) %>% 
+  mutate(crop = tools::toTitleCase(crop),
+         crop = fct_reorder(crop, -yield, last)) %>% 
+  ggplot(aes(year, yield, color = crop)) + 
+    geom_line() +
+  colorspace::scale_color_discrete_qualitative() +
+  labs(y = "Yield (t/ha)", x = "Year",
+       title = "Maize became as popular as rice in Europe!",
+       color = "",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  theme(plot.caption = element_text(color = "#969696", size = 12))
+
+```
+
+
+
+
+## <img src="images/drawn/storytype-outliers-notext.png" style="height:1em;vertical-align:middle;"> Outliers
+
+::: center 
+
+Kuwait, NZ & USA have highest potato yields, 2018
+
+:::
+
+```{r plot-outliers, fig.height = 5, fig.width = 4.3, out.width="35%"}
+map_data("world") %>% 
+  mutate(region = recode(region,
+                         "UK" = "United Kingdom",
+                         "USA" = "United States",
+                         "Democratic Republic of the Congo" = "Democratic Republic of Congo"),
+         europe = str_detect(region, "[Ee]urope")) %>% 
+  left_join(filter(data, crop=="potatoes", year == max(year)),
+            by = c("region" = "entity")) %>%
+  group_by(region) %>% 
+  summarise(yield = mean(yield),
+            crop = unique(crop)) %>% 
+  ggplot(aes("1", yield)) +
+  ggbeeswarm::geom_quasirandom() +
+  ggrepel::geom_text_repel(aes(label = region),
+                           data = ~filter(.x, yield > 45),
+                           force_pull = 3) +
+  labs(y = "Yield (t/ha)", x = "",
+       color = "",
+       caption = "Source: Our World in Data / Tidy Tuesday 2020-09-01") +
+  theme(plot.caption = element_text(color = "#969696", size = 12),
+        axis.title.x = element_blank(),
+        axis.ticks.length.x = grid::unit(0, "mm"))
+```
+
+
+# Narrative structure {background-color="#006DAE"}
+
+
+## Narrative structure
+
+::: flex
+
+::: w-50
+
+<img src="images/fiveactstructure.png">
+
+:::
+
+::: w-50
+
+<img src="images/thegap.svg">
+
+:::
+
+
+:::
+
+::: aside
+
+[Spencer (2022, Feb. 17). Data in Wonderland. Section 1.](https://ssp3nc3r.github.io/data_in_wonderland/#narrative)
+
+:::
+
+## Elements of statistical persuasion
+
+* **Magnitude of effects**: the strength of a statistical argument is enhanced in accord with the quantitative magnitude of support for its qualitative claim.
+* **Articulation of results**: the degree of comprehensible detail in which conclusions are phrased. 
+* **Generality of effects**: the replicability of the results.
+* **Interestingness of argument**: the potential to change people believe.
+* **Credibility of argument**: the believability of a claim.
+
+::: aside
+
+[Spencer (2022, Feb. 17). Data in Wonderland. Section 1.](https://ssp3nc3r.github.io/data_in_wonderland/#narrative)
+
+:::
+
+
+## Narrative techniques 
+
+* **Metaphor, simile, analogy or anecdotes**, e.g. "one in three households is wasting the equivalent of a shopping bag full of food each week."
+* **Comparisons**, e.g. "While the average Australian man has $52,786 in their savings account right now, the average woman sits at around half that figure – $26,132."
+* **Flow of information**, e.g. new information before old, simple before complex information. 
+
+
+# Improving communication {background-color="#006DAE"}
+
+## Feedback loops
+
+* Recall [**there is no single, ideal way to communicate**]{.monash-blue}.
+* Get in a habit to seek feedback from others about:
+  - **Reach**: Did the audience even receive your message at all? Who did and who didn’t?
+  - **Understanding**: Did  the  audience  interpret  the  data  message  in  the  way  you  intended?
+  - **Impact**: Did the audience react in the way you wanted them to react?
+  
+::: aside 
+
+Jones (2014) Communicating Data with Tableau
+
+:::
+
+## Week 10 Lesson 
+
+
+::: callout-important
+
+## Summary
+
+* Storytelling is a powerful technique to communicate data
+* Compose effective data stories requires you to 
+  - know your the goals (audience, message, desired effect), 
+  - selecting appropriate data, visualisations and aesthetic designs, and 
+  - receiving feedback.
+
+
+:::
+
+
+::: callout-tip
+
+## Resources
+
+::: nonincremental
+
+* [Spencer (2022, Feb. 17). Data in Wonderland. Section 1.](https://ssp3nc3r.github.io/data_in_wonderland/#narrative)
+* Jones (2014) Communicating Data with Tableau
+
+:::
+
+:::

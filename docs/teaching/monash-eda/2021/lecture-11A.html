@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ETC5521: Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Emi Tanaka" />
+    <script src="lib/header-attrs-2.11/header-attrs.js"></script>
+    <link href="lib/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <script src="lib/kePrint-0.0.1/kePrint.js"></script>
+    <link href="lib/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <script src="assets/panelset-modified.js"></script>
+
+    <!--
+    <script defer src="assets/all.min.js"></script>
+
+    Need below to enable css contents
+
+    <script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+
+    -->
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
+    <link rel="stylesheet" href="assets/animate.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
+    <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/panelset-modified.css" type="text/css" />
+    <link rel="stylesheet" href="assets/scroll.css" type="text/css" />
+    <link rel="stylesheet" href="assets/datatables.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+class: middle center hide-slide-number monash-bg-gray80
+
+
+
+
+
+.info-box.w-50.bg-white[
+These slides are viewed best by Chrome or Firefox and occasionally need to be refreshed if elements did not load properly. See &lt;a href=lecture-11A.pdf&gt;here for the PDF &lt;i class="fas fa-file-pdf"&gt;&lt;/i&gt;&lt;/a&gt;. 
+]
+
+&lt;br&gt;
+
+.white[Press the **right arrow** to progress to the next slide!]
+
+
+
+---
+
+class: title-slide
+count: false
+background-image: url("images/bg-01.png")
+
+# .monash-blue[ETC5521: Exploratory Data Analysis]
+
+&lt;h1 class="monash-blue" style="font-size: 30pt!important;"&gt;&lt;/h1&gt;
+
+&lt;br&gt;
+
+&lt;h2 style="font-weight:900!important;"&gt;Using computational tools to determine whether what is seen in the data can be assumed to apply more broadly&lt;/h2&gt;
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 11 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+&lt;style type="text/css"&gt;
+table {
+  margin: auto;
+  border-top: 0.16em solid #111111;
+  border-bottom: 0.16em solid #111111;
+}
+table thead th {
+  border-bottom: 0.1em solid #111111;
+  text-align: left;
+}
+tr, th {
+  padding-left: 15px;
+  padding-right: 15px
+}
+&lt;/style&gt;
+
+---
+
+class: transition middle
+
+# Revisiting &lt;br&gt; .yellow[hypothesis testing]
+
+
+---
+
+
+
+
+# Testing coin bias .font_small[Part 1/2]
+
+* Suppose I have a coin that I'm going to flip &lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt; 
+--
+
+* If the coin is unbiased, what is the probability it will show heads?
+--
+
+* Yup, the probability should be 0.5. 
+--
+
+* So how would I test if a coin is biased or unbiased?
+--
+
+* We'll collect some data. 
+--
+
+* **Experiment 1**: I flipped the coin 10 times and this is the result:
+
+&lt;center&gt;
+&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;
+&lt;/center&gt;
+--
+
+* The result is 7 head and 3 tails. So 70% are heads. 
+--
+
+* Do you believe the coin is biased based on this data?
+
+
+---
+
+# Testing coin bias .font_small[Part 2/2]
+
+* **Experiment 2**: Suppose now I flip the coin 100 times and this is the outcome:
+
+&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_Fifty_Cents_Obv.jpg" height = "50px" style="vertical-align:middle;"&gt;&lt;img src="images/Australian_50c_Coin.png" height = "50px" style="vertical-align:middle;"&gt;
+--
+
+* We observe 70 heads and 30 tails. So again 70% are heads. 
+--
+
+* Based on this data, do you think the coin is biased?
+
+---
+
+# (Frequentist) hypotheses testing framework
+
+* Suppose `\(X\)` is the number of heads out of `\(n\)` independent tosses.
+* Let `\(p\)` be the probability of getting a head for this coin.
+
+
+|     |     |
+|-----|-----|
+|**Hypotheses**  | `\(H_0: p = 0.5\)` vs. `\(H_1: p \neq 0.5\)`   |
+--
+
+|**Assumptions**  | Each toss is independent with equal chance of getting a head.   |
+--
+
+|**Test statistic** | `\(X \sim B(n, p)\)`. Recall `\(E(X) = np\)`.&lt;br&gt; The observed test statistic is denoted `\(x\)`. |
+--
+
+|**P-value** &lt;br&gt;.font_small[(or critical value or confidence interval)] | `\(P(\mid X - np\mid \geq \mid x - np\mid )\)` |
+--
+
+|**&lt;i class="fas fa-gavel"&gt;&lt;/i&gt; Conclusion** | Reject null hypothesis when the `\(p\)`-value is less than&lt;br&gt; some significance level `\(\alpha\)`. Usually `\(\alpha = 0.05\)`.|
+
+--
+
+* The p-value for experiment 1 is `\(P(|X - 5| \geq 2) \approx 0.34\)`.
+* The p-value for experiment 2 is `\(P(|X - 50| \geq 20) \approx 0.00008\)`.
+
+---
+
+# Judicial system
+
+.grid[
+.item[
+&lt;br&gt;
+&lt;center&gt;
+&lt;img src="images/omni/judicial-court.png"&gt;
+&lt;/center&gt;
+]
+
+.item.bg-gray80.pl3[
+&lt;br&gt;
+{{content}}
+]
+
+]
+
+--
+
+&lt;center&gt;
+&lt;img src="images/omni/statistical-court.png"&gt;
+&lt;/center&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;i class="fas fa-search"&gt;&lt;/i&gt; Evidence by test statistic&lt;/li&gt;
+&lt;li&gt;&lt;i class="fas fa-gavel"&gt;&lt;/i&gt; Judgement by p-value, critical value or confidence interval&lt;/li&gt;
+&lt;/ul&gt;
+{{content}}
+
+--
+
+&lt;span class="red"&gt;Does the test statistic have to be a &lt;i&gt;numerical summary statistics&lt;/i&gt;?&lt;/span&gt;
+
+
+
+---
+
+class: transition middle
+
+# Visual inference
+
+---
+
+# Visual inference
+
+.grid[
+.item[
+
+* Hypothesis testing in visual inference framework is where:
+   * &lt;i class="fas fa-search"&gt;&lt;/i&gt;  the .monash-blue[_test statistic is a plot_] and 
+   * &lt;i class="fas fa-gavel"&gt;&lt;/i&gt; judgement is by human perceptions.
+{{content}}
+
+]
+.item.bg-gray80.pa3[
+
+From Exercise 4 in week 9 tutorial: a residual plot after modelling high-density lipoprotein in human blood.
+
+
+&lt;img src="images/week11A/HDL-resplot-1.png" width="432" style="display: block; margin: auto;" /&gt;
+]
+]
+--
+
+* You (and many other people) actually do visual inference many times but generally in an informal fashion.
+{{content}}
+--
+
+* Here, we are making an inference on whether the residual plot has any patterns based on a single data plot.
+
+---
+
+class: transition middle
+
+.font_large[
+
+&lt;i class="fas fa-chart-bar"&gt;&lt;/i&gt; Data plots tend to be over-interpreted
+
+&lt;br&gt;
+
+&lt;i class="fas fa-chart-bar"&gt;&lt;/i&gt; Reading data plots require calibration
+
+
+]
+
+---
+
+# Visual inference more formally
+
+.flex[
+.w-60[
+1. State your null and alternate hypotheses.
+{{content}}
+]]
+--
+2. Define a &lt;b&gt;visual test statistic&lt;/b&gt;, `\(V(.)\)`, i.e. a function of a sample to a plot.
+{{content}}
+--
+3. Define a method to generate &lt;b&gt;null data&lt;/b&gt;, `\(\boldsymbol{y}_0\)`. 
+{{content}}
+--
+4. `\(V(\boldsymbol{y})\)` maps the actual data, `\(\boldsymbol{y}\)`, to the plot. We call this the &lt;b class="monash-blue"&gt;data plot&lt;/b&gt;.
+{{content}}
+--
+5. `\(V(\boldsymbol{y}_0)\)` maps a null data to a plot of the same form. We call this the &lt;b class="monash-blue"&gt;null plot&lt;/b&gt;. We repeat this `\(m - 1\)` times to generate `\(m-1\)` null plots. 
+{{content}}
+--
+6. A &lt;b class="monash-blue"&gt;lineup&lt;/b&gt; displays these `\(m\)` plots in a random order. 
+{{content}}
+--
+7. Ask `\(n\)` human viewers to select a plot in the lineup that looks different to others without any context given.
+
+---
+
+count: false
+
+# Visual inference more formally
+
+.flex[
+.w-60[
+1. State your null and alternate hypotheses.
+2. Define a **visual test statistic**, `\(V(.)\)`, i.e. a function of a sample to a plot.
+3. Define a method to generate **null data**, `\(\boldsymbol{y}_0\)`. 
+4. `\(V(\boldsymbol{y})\)` maps the actual data, `\(\boldsymbol{y}\)`, to the plot. We call this the .monash-blue[**data plot**].
+5. `\(V(\boldsymbol{y}_0)\)` maps a null data to a plot of the same form. We call this the .monash-blue[**null plot**]. We repeat this `\(m - 1\)` times to generate `\(m-1\)` null plots. 
+6. A .monash-blue[**lineup**] displays these `\(m\)` plots in a random order. 
+7. Ask `\(n\)` human viewers to select a plot in the lineup that looks different to others without any context given.
+
+]
+.w-40.pl3[
+
+.info-box[
+Suppose `\(x\)` out of `\(n\)` people detected the data plot from a lineup, then
+* the .monash-blue[**visual inference p-value**] is given as `$$P(X \geq x)$$` where `\(X \sim B(n, 1/m)\)`, and 
+* the .monash-blue[**power of a lineup**] is estimated as `\(x/n\)`.
+]
+
+]]
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[1] In which plot is the pink group higher than the blue group?
+
+
+
+* Note: there is no correct answer here. 
+
+&lt;img src="images/week11A/weight-lineup-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Visual inference p-value (or "see"-value)
+
+* So &lt;span contenteditable="true"&gt;&amp;nbsp;&amp;nbsp; `\(x\)` &amp;nbsp;&amp;nbsp;&lt;/span&gt; out of &lt;span contenteditable="true"&gt;&amp;nbsp;&amp;nbsp; `\(n\)` &amp;nbsp;&amp;nbsp;&lt;/span&gt; of you chose the data plot.
+* So the visual inference p-value is `\(P(X \geq x)\)` where `\(X \sim B(n, 1/10)\)`.
+* In R, this is 
+```r
+1 - pbinom(x - 1, n, 1/10) 
+# OR 
+nullabor::pvisual(x, n, 10)
+```
+
+
+
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by diet 
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+&lt;img src="images/week11A/weight-plot-1.png" width="360" style="display: block; margin: auto;" /&gt;
+.gray[This is actually Plot 4 in the previous lineup.]
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+
+```r
+data("WeightLoss", package = "carData")
+# purposefully make it 2 groups
+df &lt;- filter(WeightLoss, group!="DietEx") 
+skimr::skim(df)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df    
+## Number of rows             24    
+## Number of columns          7     
+## _______________________          
+## Column type frequency:           
+##   factor                   1     
+##   numeric                  6     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts              
+## 1 group                 0             1 FALSE          2 Con: 12, Die: 12, Die: 0
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 wl1                   0             1  4.92  1.25     3   4     5    6        7 ▃▇▇▆▃
+## 2 wl2                   0             1  3.62  1.24     2   3     3.5  4.25     6 ▆▇▇▅▂
+## 3 wl3                   0             1  2.17  1.13     1   1     2    3        4 ▇▅▁▅▃
+## 4 se1                   0             1 14.8   2.11    11  13    15   16.2     19 ▃▆▂▇▁
+## 5 se2                   0             1 14.0   2.35    11  11.8  14   15.2     19 ▇▇▆▅▂
+## 6 se3                   0             1 15.6   2.45    11  14    15   18       19 ▃▃▆▃▇
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+gweight &lt;- ggplot(df, aes(group, wl1, color = group)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  labs(x = "", y = "Weight loss at 1 month") + 
+  theme(text = element_text(size = 22)) + 
+  guides(color = "none") +
+  scale_color_manual(values = c("#006DAE", "#ee64a4"))
+gweight
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with diet after 1 month?
+
+.f5[
+{{content}}
+
+]
+
+]
+
+]
+
+--
+
+&lt;table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Dev &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Control &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Diet &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.33 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.37 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+{{content}}
+--
+
+```r
+with(df, 
+     t.test(wl1[group=="Diet"], wl1[group=="Control"], 
+            alternative = "greater"))
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  wl1[group == "Diet"] and wl1[group == "Control"]
+## t = 1.7014, df = 20.125, p-value = 0.05213
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  -0.01117097         Inf
+## sample estimates:
+## mean of x mean of y 
+##  5.333333  4.500000
+```
+
+---
+
+# Null data generation method
+
+.w-70[
+* We are testing `\(H_0: \mu_{diet} = \mu_{control}\)` vs. `\(H_1: \mu_{diet} &gt; \mu_{control}\)` where `\(\mu_{diet}\)` and `\(\mu_{control}\)` are the average weight loss for population on diet and no diet, respectively.
+{{content}}
+
+]
+
+
+--
+
+* There are a number of ways to generate null data under `\(H_0\)`, e.g. 
+{{content}}
+--
+
+   * we could assume a parametric distribution of the data and estimate the parameters from the data, or 
+{{content}}
+--
+
+   * we could permute the labels for the diet and control group.
+--
+
+.flex[
+.w-33[
+&lt;img src="images/week11A/weight-null-demo1-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+]
+{{content}}
+]
+
+--
+
+&lt;div class="w-33"&gt;
+
+&lt;img src="images/week11A/weight-null-demo2-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+&lt;/div&gt;
+
+{{content}}
+
+--
+
+&lt;div class="w-33"&gt;
+
+&lt;img src="images/week11A/weight-null-demo3-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+&lt;/div&gt;
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[2] In which plot is the pink group higher than the blue group?
+
+
+
+&lt;img src="images/week11A/weight-ex-lineup-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by diet and exercise
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+&lt;img src="images/week11A/weight-ex-plot-1.png" width="360" style="display: block; margin: auto;" /&gt;
+.white[This is actually Plot 10 in the previous lineup.]
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+
+```r
+df2 &lt;- filter(WeightLoss, group!="Diet")
+skimr::skim(df2)
+```
+
+```
+## ── Data Summary ────────────────────────
+##                            Values
+## Name                       df2   
+## Number of rows             22    
+## Number of columns          7     
+## _______________________          
+## Column type frequency:           
+##   factor                   1     
+##   numeric                  6     
+## ________________________         
+## Group variables            None  
+## 
+## ── Variable type: factor ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate ordered n_unique top_counts              
+## 1 group                 0             1 FALSE          2 Con: 12, Die: 10, Die: 0
+## 
+## ── Variable type: numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##   skim_variable n_missing complete_rate  mean    sd    p0   p25   p50   p75  p100 hist 
+## 1 wl1                   0             1  5.27  1.86     3   4     5    6        9 ▇▃▃▂▂
+## 2 wl2                   0             1  4.59  1.87     2   3     4.5  5.75     9 ▇▅▇▃▁
+## 3 wl3                   0             1  2.14  1.17     1   1     2    3        4 ▇▅▁▃▃
+## 4 se1                   0             1 15.0   1.65    11  14    15   16       17 ▁▃▂▃▇
+## 5 se2                   0             1 13.9   1.93    11  12.2  13.5 15       18 ▇▇▇▃▂
+## 6 se3                   0             1 16.2   2.22    11  15    17   18       19 ▂▂▃▇▇
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+gweight %+% df2 + 
+  aes(y = wl2) +
+  labs(y = "Weight loss at 2 months")
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with diet *and exercise after 2 months*?
+
+.f5[
+{{content}}
+
+]
+
+]
+
+]
+
+--
+
+&lt;table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Dev &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Control &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.33 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; DietEx &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.45 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+{{content}}
+--
+
+```r
+with(df2, 
+     t.test(wl2[group=="DietEx"], wl2[group=="Control"], 
+            alternative = "greater"))
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  wl2[group == "DietEx"] and wl2[group == "Control"]
+## t = 5.0018, df = 16.317, p-value = 6.155e-05
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  1.802104      Inf
+## sample estimates:
+## mean of x mean of y 
+##  6.100000  3.333333
+```
+
+
+---
+
+class: transition 
+
+
+# What about if we change the visual test statistic?
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[3]  In which plot is the pink group higher than the blue group?
+
+`geom_point()` .white[Data plot is Plot 3]
+
+
+
+&lt;img src="images/week11A/weight-lineup3-1.png" width="936" style="display: block; margin: auto;" /&gt;
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[4]  In which plot is the pink group higher than the blue group?
+
+`geom_boxplot()`  .white[Data plot is Plot 2]
+
+&lt;img src="images/week11A/weight-lineup4-1.png" width="936" style="display: block; margin: auto;" /&gt;
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[5]  In which plot is the pink group higher than the blue group?
+
+`geom_violin()`  .white[Data plot is Plot 4]
+
+&lt;img src="images/week11A/weight-lineup5-1.png" width="936" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# .monash-blue[Lineup] .circle.monash-bg-blue.white[6]  In which plot is the pink group higher than the blue group?
+
+`ggbeeswarm::geom_quasirandom()`  .white[Data plot is Plot 10]
+
+&lt;img src="images/week11A/weight-lineup6-1.png" width="936" style="display: block; margin: auto;" /&gt;
+---
+
+# .orange[Case study] .circle.white.bg-orange[1] Weight loss by exercise
+
+
+.flex[
+.w-40[
+.panelset[
+.panel[.panel-name[📊]
+.f5[
+&lt;img src="images/week11A/weight-ex-plot3-1.png" width="360" style="display: block; margin: auto;" /&gt;
+]
+
+]
+.panel[.panel-name[data]
+.h200.scroll-sign.f5[
+
+```r
+df3 &lt;- filter(WeightLoss, group != "Control")
+```
+
+]]
+.panel[.panel-name[R]
+.f5[
+
+```r
+gweight %+% df3 + 
+  aes(y = wl2) +
+  labs(y = "Weight loss at 2 months")
+```
+
+]
+]
+
+]
+
+
+]
+.w-60[
+
+* Is weight loss greater with *exercise* after 2 months?
+
+.f5[
+&lt;table class=" lightable-classic" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Std. Dev &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Diet &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.92 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.38 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; DietEx &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.45 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+```r
+with(df3, 
+     t.test(wl2[group=="DietEx"], wl2[group=="Diet"], 
+            alternative = "greater"))
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  wl2[group == "DietEx"] and wl2[group == "Diet"]
+## t = 3.5969, df = 18.901, p-value = 0.0009675
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  1.133454      Inf
+## sample estimates:
+## mean of x mean of y 
+##  6.100000  3.916667
+```
+
+]
+
+]
+
+]
+
+
+
+---
+
+# Power of a lineup
+
+.w-70[
+* The power of a lineup is calculated as `\(x/n\)` where `\(x\)` is the number of people who detected the data plot out of `\(n\)` people
+
+&lt;br&gt;
+
+{{content}}
+]
+
+.footnote.f4[
+Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+]
+
+--
+
+
+Plot type | `\(x\)` | `\(n\)` | Power
+--- | --- | --- | --- 
+`geom_point` | `\(x_1\)` | `\(n_1\)` | `\(x_1 / n_1\)`
+`geom_boxplot` | `\(x_2\)` | `\(n_2\)` | `\(x_2 / n_2\)`
+`geom_violin` | `\(x_3\)` | `\(n_3\)` | `\(x_3 / n_3\)`
+`ggbeeswarm::geom_quasirandom` | `\(x_4\)` | `\(n_4\)` | `\(x_4 / n_4\)`
+
+&lt;br&gt;
+
+--
+
+* The plot type with a higher power is preferable 
+
+--
+
+* You can use this framework to find the optimal plot design
+
+
+---
+
+# Some considerations in visual inference
+
+* In practice you don't want to bias the judgement of the human viewers so for a proper visual inference:   
+   * you should _not_ show the data plot before the lineup
+   * you should _not_ give the context of the data 
+   * you should remove labels in plots
+* You can crowd source these by paying for services like:
+   * [Amazon Mechanical Turk](https://www.mturk.com/), 
+   * [Appen (formerly Figure Eight)](https://appen.com/figure-eight-is-now-appen/) and
+   * [LABVANCED](https://www.labvanced.com/).
+* If the data is for research purposes, then you may need ethics approval for publication.
+
+---
+
+# Resources and Acknowledgement
+
+.font18[
+- Buja, Andreas, Dianne Cook, Heike Hofmann, Michael Lawrence, Eun-Kyung Lee, Deborah F. Swayne, and Hadley Wickham. 2009. “Statistical Inference for Exploratory Data Analysis and Model Diagnostics.” Philosophical Transactions. Series A, Mathematical, Physical, and Engineering Sciences 367 (1906): 4361–83.
+- Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” IEEE Transactions on Visualization and Computer Graphics 16 (6): 973–79.
+- Hofmann, H., L. Follett, M. Majumder, and D. Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” IEEE Transactions on Visualization and Computer Graphics 18 (12): 2441–48.
+- Majumder, M., Heiki Hofmann, and Dianne Cook. 2013. “Validation of Visual Statistical Inference, Applied to Linear Models.” Journal of the American Statistical Association 108 (503): 942–56.
+- Data coding using [`tidyverse` suite of R packages](https://www.tidyverse.org) 
+- Slides constructed with [`xaringan`](https://github.com/yihui/xaringan), [remark.js](https://remarkjs.com), [`knitr`](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).
+
+]
+
+---
+
+
+
+
+background-size: cover
+class: title-slide
+background-image: url("images/bg-01.png")
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"&gt;Creative Commons Attribution-ShareAlike 4.0 International License&lt;/a&gt;.
+
+
+.bottom_abs.width100[
+
+Lecturer: *Emi Tanaka*
+
+
+
+&lt;i class="fas fa-envelope"&gt;&lt;/i&gt;  ETC5521.Clayton-x@monash.edu
+
+&lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt; Week 11 - Session 1
+
+&lt;br&gt;
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "magula",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": false,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current%/%total%",
+"navigation": {
+"scroll": false,
+"touch": true,
+"click": false
+},
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'lib/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

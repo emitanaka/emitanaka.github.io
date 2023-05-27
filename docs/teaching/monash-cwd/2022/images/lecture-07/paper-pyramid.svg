@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="1121 644 514 410" width="514" height="410">
+  <defs>
+    <font-face font-family="Roboto" font-size="28" panose-1="2 0 0 0 0 0 0 0 0 0" units-per-em="1000" underline-position="-73.24219" underline-thickness="48.828125" slope="0" x-height="528.3203" cap-height="710.9375" ascent="927.7344" descent="-244.14062" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Roboto-Regular"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.19.2\n2022-08-30 02:25:32 +0000</metadata>
+  <g id="paper-pyramid1" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none">
+    <title>paper-pyramid1</title>
+    <g id="paper-pyramid1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <path d="M 1121 1054 L 1310.6471 644.0834 L 1500.2942 1054 Z" fill="#006dae"/>
+      </g>
+      <g id="Graphic_3">
+        <text transform="translate(1340.1481 670)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Introduction</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <text transform="translate(1369.256 735)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Literature</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <text transform="translate(1400.4572 800)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Data</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <text transform="translate(1429.7037 864.0741)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Methods</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <text transform="translate(1461.5926 934.7037)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Results</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <text transform="translate(1490.7407 1002.5)" fill="black">
+          <tspan font-family="Roboto" font-size="28" font-weight="400" fill="black" x="0" y="26">Conclusion</tspan>
+        </text>
+      </g>
+      <g id="Line_9">
+        <line x1="1276.6627" y1="716.8" x2="1344.6315" y2="717.32026" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_10">
+        <line x1="1236.0573" y1="784.9277" x2="1385.237" y2="783.0723" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_11">
+        <line x1="1203.4884" y1="849.9693" x2="1427.1798" y2="846.5116" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_12">
+        <line x1="1172.6852" y1="915.011" x2="1447" y2="914.8148" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_13">
+        <line x1="1152.865" y1="988.6772" x2="1469.9074" y2="990.5325" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_14">
+        <line x1="1275.8582" y1="717.8" x2="1344.6315" y2="716.7442" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+</svg>

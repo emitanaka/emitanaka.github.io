@@ -1,0 +1,1391 @@
+---
+pagetitle: "ETC3250/5250: Introduction to Machine Learning"
+unitcode: "ETC3250/5250"
+unitname: "Introduction to Machine Learning"
+subtitle: "Overview"
+author: "Emi Tanaka"
+email: "emi.tanaka@monash.edu"
+date: "Week 1"
+department: "Department of Econometrics and Business Statistics"
+unit-url: "iml.numbat.space"
+footer: "ETC3250/5250 Week 1"
+format: 
+  revealjs:
+    html-math-method: katex
+    logo: images/monash-one-line-black-rgb.png
+    slide-number: c/t
+    multiplex: false
+    theme: assets/monash.scss
+    show-slide-number: all
+    show-notes: true
+    controls: true
+    auto-stretch: false
+    incremental: false
+    width: 1280
+    height: 720
+    df-print: kable
+    toc: true
+    toc-title: "[*Overview to machine learning*]{.monash-blue} - table of contents"
+    css: [assets/tachyons-addon.css, assets/custom.css]
+    include-after-body: "assets/after-body.html"
+    chalkboard:
+      boardmarker-width: 5
+      buttons: true
+---
+
+
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(lubridate)
+library(keras)
+library(tensorflow)
+library(rpart)
+library(caret)
+current_file <- knitr::current_input()
+basename <- gsub(".[Rq]md$", "", current_file)
+theme_set(theme_bw(base_size = 24))
+knitr::opts_chunk$set( 
+  fig.path = sprintf("images/%s/", basename),
+  fig.width = 10,
+  fig.height = 4,
+  fig.align = "center", 
+  fig.retina = 2,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  cache.path = sprintf("cache/%s/", basename)
+)
+```
+
+## <br>[`r rmarkdown::metadata$unitcode`]{.monash-blue} {background-image="images/bg-01.png" #etc5523-title}
+
+[**`r rmarkdown::metadata$unitname`**]{.monash-blue .f1}
+
+### `r rmarkdown::metadata$subtitle`
+
+Lecturer: *`r rmarkdown::metadata$author`*
+
+`r rmarkdown::metadata$department`
+
+## Machine learning
+
+::: incremental
+
+* [Machine learning]{.monash-blue} (ML) is a branch of artificial intelligence (AI) that use data and algorithm to learn about patterns in the data.
+* Some applications include:
+  * <i class="fas fa-money-bill"></i> Predict the credit risk score of the borrower to repay the loan
+  * <i class="far fa-credit-card"></i> Detect fraudulent activities 
+  * <i class="fas fa-user-friends"></i> Segment customers based on shared characteristics
+  * <i class="fas fa-image"></i> Classify digits from handwriting
+  * <i class="fas fa-dna"></i> Diagnose breast cancer 
+* ML can be applied to a wide range of problems in a variety of sectors.
+
+:::
+
+## <i class="fas fa-car"></i> Toyota dealer {background-color="#006DAE"}
+
+* You need to price a second-hand 2004 Toyota Yaris for a car dealer.
+
+
+::: flex
+
+::: w-33
+
+![](images/2017_Toyota_GT86_PRO_D-4S_2.0_(1).jpg){.ba}
+
+:::
+
+::: w-33
+
+![](images/2018_Toyota_Camry_(ASV70R)_Ascent_sedan_(2018-08-27)_01.jpg){.ba}
+
+:::
+
+::: w-33
+
+![](images/Toyota_Yaris_(XP130)_–_Frontansicht,_21._Juli_2012,_Heiligenhaus_(cropped).jpg){.ba}
+
+:::
+
+
+:::
+
+
+* You make use of this [Toyota used car listing data](https://www.kaggle.com/datasets/mysarahmadbhat/toyota-used-car-listing).
+
+## Car price as a function of year
+
+* Let's consider the (log of) Toyota Yaris car price as a function of year.
+
+
+```{r car-price-data}
+library(tidyverse)
+library(kknn)
+library(rpart)
+toyota <- read_csv("https://emitanaka.org/iml/data/toyota.csv")
+yaris <- toyota %>% 
+  filter(model == "Yaris")
+xyear <- 2004
+```
+
+
+```{r car-price-model}
+#| eval: false
+# setup for neural network
+normalizer <- layer_normalization(input_shape = shape(1), axis = NULL)
+normalizer %>% adapt(as.matrix(yaris$year))
+
+# model fits
+fit_yaris_models <- list(
+  "reg" = lm(log10(price) ~ year, data = yaris),
+  "tree" = rpart(log10(price) ~ year, data = yaris, method = "anova"),
+  "knn" = train.kknn(log10(price) ~ year, data = yaris),
+  "nn" = keras_model_sequential() %>%
+    normalizer() %>%
+    layer_dense(units = 1) %>%
+    compile(optimizer = optimizer_adam(learning_rate = 0.1),
+            loss = 'mean_absolute_error')
+)
+
+# update nn
+history <- fit(
+  fit_yaris_models$nn,
+  x = as.matrix(yaris$year),
+  y = as.matrix(log10(yaris$price)),
+  epochs = 100,
+  batch_size = 32,
+  validation_split = 0.2,
+  verbose = FALSE
+)
+
+# data with model 
+model_fits <- imap_dfr(fit_yaris_models, ~{
+  data.frame(year = min(yaris$year):max(yaris$year)) %>% 
+    mutate(.model = .y,
+           .pred = if(.y == "nn") 10^keras:::predict.keras.engine.training.Model(.x, as.matrix(year))[,1] 
+                else 10^predict(.x, data.frame(year = year)))
+})
+
+                             
+saveRDS(model_fits, here::here("data/lec01_model_fits.rds"))
+```
+```{r load-yaris-models}
+# pred
+model_fits <- readRDS(here::here("data/lec01_model_fits.rds"))
+
+pred_points <- map_dfr(unique(model_fits$.model), ~{
+  model_fits %>% 
+    filter(year == xyear,
+           .model == .x) %>% 
+    select(.model, .pred)
+}) %>% 
+  deframe()
+```
+
+
+```{r car-price-plot}
+#| cache: false
+car_plot <- yaris %>% 
+  ggplot(aes(year, price)) +
+  geom_point(alpha = 0.9) + 
+  scale_y_log10(label = scales::dollar_format(prefix = "€", accuracy = 1)) +
+  guides(color = "none") +
+  labs(x = "Year", y = "")
+
+car_plot
+```
+
+* The car price is generally higher for cars made more recently.
+
+## [Simple linear regression]{.monash-blue}
+
+- Let's fit the [line of best fit using the **least squares approach**]{.monash-blue}.
+
+```{r plot-slr}
+car_plot + 
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "#006DAE")
+```
+
+## [Simple linear regression]{.monash-blue} {visibility="uncounted"}
+
+::: nonincremental
+
+- Let's fit the [line of best fit using the **least squares approach**]{.monash-blue}.
+
+```{r plot-slr2}
+#| cache: false
+car_plot + 
+  geom_smooth(method = "lm",
+              se = FALSE,
+              color = "#006DAE") +
+  geom_point(data = data.frame(year = xyear, price = pred_points[["reg"]]),
+             color = "red", shape = "x", size = 10) +
+  geom_text(data = data.frame(year = xyear, price = pred_points[["reg"]]),
+            color = "red", nudge_y = 0.2, size = 8,
+            aes(label = scales::dollar(price, prefix = "€")))
+```
+
+- Under this (simplistic) model, we would price a second-hand 2004 Toyota Yaris as `r scales::dollar(pred_points[["reg"]], prefix = "€")`.
+
+
+:::
+
+
+# <i class="fas fa-cogs"></i> Machine learning methods {background-color="#006DAE" .mcenter}
+
+## ML paradigm
+
+::: incremental
+
+- [**Supervised learning**]{.monash-blue} is for *labelled* data with two primary cases:
+  - **classification** where the response is categorical:
+      - whether a patient has the disease or not (_binary_)
+      - identifying which animal it is from an image (_multi-class_)
+  - **regression** where the response is numerical:
+      - predicting the housing price 
+      - forecasting tomorrow's maximum temperature 
+
+:::      
+      
+## ML paradigm
+
+::: incremental
+
+- [**Unsupervised learning**]{.monash-blue} is for *unlabelled* data with two primary cases:
+  - **clustering** to find _unobserved grouping_:
+      - customer segmentation based on shared characteristics
+  - **association** to discover associations:
+      - whether item X is likely to be bought together with item Y
+      
+:::
+  
+## ML paradigm (not covered in this unit)  
+  
+- **Semi-supervised learning** is for data with a mix of labelled and unlabelled data
+  - classify text documents 
+  - fraud detection 
+
+. . .   
+  
+- **Reinforcement learning** trains the model based on rewarding desired behaviours:
+  - recommender systems
+  - predictive text 
+  - machine translations
+
+
+## Supervised learning 
+
+We cover the following methods:
+
+::: flex
+
+::: w-50
+
+- [**Regression problems**]{.monash-blue}:
+  - Linear & non-linear regression:
+    - Parameteric 
+    - Non-parametric
+  - Regression trees
+  - Tree-ensemble methods
+  - $k$-nearest neighbours ($k$-NN)
+  - Neural networks
+
+:::
+
+::: {.w-50 .fragment}
+
+- [**Classification problems**]{.monash-blue}:
+  - Logistic regression 
+  - Linear & quadratic discriminant analysis (LDA & QDA)
+  - Classification trees
+  - Tree-ensemble methods
+  - $k$-nearest neighbours ($k$-NN)
+  - Support vector machines (SVM)
+  - Neural networks
+  
+:::
+
+:::
+
+
+## Unsupervised learning  
+
+We cover the following methods:
+
+- [**Dimension reduction**]{.monash-blue}:
+  - multi-dimensional scaling (MDS)
+  - principle component analysis (PCA)
+
+. . .   
+  
+- [**Clustering**]{.monash-blue}:
+  - hierarchical
+  - $k$-means
+  
+
+
+
+# <i class="fas fa-image"></i> Illustration of supervised learning methods with<br> numerical response {background-color="#006DAE" .mcenter}
+
+
+## Simple linear regression
+
+<i class="fas fa-crosshairs"></i> Pricing a second-hand 2004 Toyota Yaris car
+
+
+```{r plot-slr2}
+```
+
+## Regression trees
+
+<i class="fas fa-crosshairs"></i> Pricing a second-hand 2004 Toyota Yaris car
+
+```{r plot-regtree}
+#| cache: false
+
+car_plot + 
+  geom_line(aes(y = .pred),
+            data = model_fits %>% 
+              filter(.model == "tree"),
+            color = "#C8008F",
+            linetype = "twodash") +
+  geom_point(data = data.frame(year = xyear, price = pred_points[["tree"]]),
+             color = "red", shape = "x", size = 10) +
+  geom_text(data = data.frame(year = xyear, price = pred_points[["tree"]]),
+            color = "red", nudge_y = 0.4, size = 8,
+            aes(label = scales::dollar(price, prefix = "€")))
+```
+
+<i class="fas fa-sticky-note"></i> For now don't worry how this is calculated - we will learn this later.
+
+## $k$-nearest neighbour
+
+<i class="fas fa-crosshairs"></i> Pricing a second-hand 2004 Toyota Yaris car
+
+```{r plot-knn}
+car_plot + 
+  geom_line(aes(y = .pred),
+            data = model_fits %>% 
+              filter(.model == "knn"),
+            color = "#008A25",
+            linetype = "dashed") +
+  geom_point(data = data.frame(year = xyear, price = pred_points[["knn"]]),
+             color = "red", shape = "x", size = 10) +
+  geom_text(data = data.frame(year = xyear, price = pred_points[["knn"]]),
+            color = "red", nudge_y = 0.4, size = 8,
+            aes(label = scales::dollar(price, prefix = "€")))
+```
+
+## Neural network
+
+<i class="fas fa-crosshairs"></i> Pricing a second-hand 2004 Toyota Yaris car
+
+```{r plot-nn}
+#| cache: false
+car_plot + 
+  geom_line(aes(y = .pred),
+            data = model_fits %>% 
+              filter(.model == "nn"),
+            color = "#D93F00",
+            linetype = "longdash") +
+  geom_point(data = data.frame(year = xyear, price = pred_points[["nn"]]),
+             color = "red", shape = "x", size = 10) +
+  geom_text(data = data.frame(year = xyear, price = pred_points[["nn"]]),
+            color = "red", nudge_y = 0.4, size = 8,
+            aes(label = scales::dollar(price, prefix = "€")))
+```
+
+## Comparing models for regression problem
+
+<i class="fas fa-crosshairs"></i> Pricing a second-hand 2004 Toyota Yaris car
+
+::: flex
+
+::: w-65
+
+```{r plot-all}
+#| cache: false
+#| fig-height: 5.2
+car_plot + 
+  geom_line(aes(y = .pred, 
+                color = .model, 
+                linetype = I(linetype)),
+            data = model_fits %>% 
+              mutate(linetype = case_when(.model == "reg" ~ "solid",
+                                          .model == "tree" ~ "twodash",
+                                          .model == "knn" ~ "dashed",
+                                          .model == "nn" ~ "longdash")))  +
+  scale_color_manual(values = c("#006DAE", "#C8008F", "#008A25", "#D93F00"),
+                     breaks = c("reg", "tree", "knn", "nn"),
+                     labels = c("Linear regression",
+                                "Regression tree",
+                                "k-nearest neighbour",
+                                "Neural network"),
+                     name = "") + 
+  guides(color = guide_legend(ncol = 2)) +
+  theme(legend.position = "bottom",
+        legend.text = element_text(margin = margin(b = 10)))
+```
+
+
+:::
+
+::: {.w-35 .f3}
+
+```{r tab-pred}
+#| cache: false
+tibble(
+  Method = c(
+    "Linear regression",
+    "Regression tree",
+    "k-nearest neighbour",
+    "Neural network"
+  ),
+ Price = scales::dollar(pred_points, prefix = "€")
+)
+```
+
+
+:::
+
+
+:::
+
+
+- Which model to use? How to choose parameters? <br>[We'll come back to these questions later.]{.fragment}
+
+# <i class="fas fa-image"></i> Illustration of supervised learning methods with categorical response {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-database"></i> Breast cancer diagnosis
+
+::: flex
+
+::: w-50
+
+![](images/aem-thumbnail-980-980.jpeg){width="50%"} 
+
+::: f4
+
+Image from [American Cancer Society website](https://www.cancer.org/cancer/breast-cancer/screening-tests-and-early-detection/breast-biopsy/fine-needle-aspiration-biopsy-of-the-breast.html)
+
+:::
+
+:::
+
+::: w-50
+
+![](images/fna-scan.png){width="80%"}
+
+::: f4
+
+Image from Street et al. (1993) Nuclear feature extraction for breast tumor diagnosis. *Biomedical Image Processing and Biomedical Visualization* 1905 [https://doi.org/10.1117/12.148698](https://doi.org/10.1117/12.148698)
+
+:::
+
+:::
+
+:::
+
+
+- We use the [Wisconsin breast cancer data set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) to build a model to predict if the breast mass sample is *malignant* (M) or *benign* (B).
+- Here the response is categorical with two classes (M and B).
+
+```{r cancer-data}
+cancer <- read_csv("https://emitanaka.org/iml/data/cancer.csv") %>% 
+  mutate(diagnosis_binary = ifelse(diagnosis=="M", 1, 0)) %>% 
+  janitor::clean_names()
+```
+
+## Features from the digitized image from FNA
+
+```{r cancer-plot}
+cancer %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(aes(color = diagnosis, shape = diagnosis),
+             size = 3, alpha = 0.5) +
+  labs(x = "Average radius",
+       y = "Average concave\nportions of the\ncontours",
+       color = "Diagnosis",
+       shape = "Diagnosis") +
+  scale_color_manual(values = c("forestgreen", "red2"))
+```
+
+- Before fitting any model, we can already see that the *average radius* and *concave portions* in the digitized image separate out the two classes. 
+
+```{r fit-cat-reponses}
+# logistic regression
+fit_logreg <- glm(diagnosis_binary ~ radius_mean + concave_points_mean, data = cancer, family = binomial)
+# nn cat
+fit_nncat <- keras_model_sequential() %>% 
+  layer_dense(units = 2, activation = "tanh", input_shape = 2) %>%
+  layer_dense(units = 2, activation = "tanh") %>%
+  layer_dense(units = 2, activation = "tanh") %>%
+  layer_dense(units = 2, activation = "softmax")%>%
+  compile(
+    optimizer = "rmsprop",
+    loss = "binary_crossentropy",
+    metrics = c("accuracy")
+  )
+
+cancer_scaled <- cancer %>% 
+  select(radius_mean, concave_points_mean) %>% 
+  scale()
+
+history2 <- fit_nncat %>% 
+  fit(
+    x = cancer_scaled,
+    y = to_categorical(cancer$diagnosis_binary, num_classes = 2),
+    epochs = 2000,
+    batch_size = 10,
+    validation_split = 0.2,
+    verbose = FALSE
+  )
+
+# predictions
+pred_range_df <- expand_grid(radius_mean = seq(min(cancer$radius_mean),
+                              max(cancer$radius_mean),
+                              0.25),
+            concave_points_mean = seq(min(cancer$concave_points_mean),
+                                      max(cancer$concave_points_mean),
+                                      0.005)) %>% 
+  mutate(., 
+         logreg = predict(fit_logreg, ., type = "response"),
+         knn = class::knn(train = cancer %>% 
+                     select(radius_mean, concave_points_mean),
+                   test = .,
+                   cl = cancer$diagnosis,
+                   k = 10, 
+                   prob = TRUE),
+         nn = predict(fit_nncat, scale(.)))
+```
+
+## Logistic regression
+
+```{r cancer-plot-logreg}
+cancer %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(data = pred_range_df, 
+             aes(color = logreg >= 0.5), 
+             shape = "square", alpha = 0.3) +
+  scale_color_manual(values = c("forestgreen", "red2"), guide = "none") +
+  ggnewscale::new_scale_color() +
+  geom_point(aes(shape = diagnosis, 
+                 color = diagnosis), size = 3, alpha = 0.5) +
+  labs(x = "Average radius",
+       y = "Average concave\nportions of the\ncontours",
+       color = "Diagnosis",
+       shape = "Diagnosis") +
+  scale_color_manual(values = c("forestgreen", "red2"))
+```
+
+<i class="fas fa-sticky-note"></i> Again don't worry how this is calculated - we will cover this in Week 4. 
+
+## $k$-nearest neighbour
+
+```{r cancer-plot-knn}
+#| cache: false
+cancer %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(data = pred_range_df, 
+             aes(color = knn), 
+             shape = "square", alpha = 0.3) +
+  scale_color_manual(values = c("forestgreen", "red2"), guide = "none") +
+  ggnewscale::new_scale_color() +
+  geom_point(aes(shape = diagnosis, 
+                 color = diagnosis), size = 3, alpha = 0.5) +
+  labs(x = "Average radius",
+       y = "Average concave\nportions of the\ncontours") +
+  scale_color_manual(values = c("forestgreen", "red2"))
+```
+
+## Neural network
+
+```{r cancer-plot-nn}
+#| cache: false
+cancer %>% 
+  ggplot(aes(radius_mean, concave_points_mean)) +
+  geom_point(data = pred_range_df, 
+             aes(color = nn[, 1] >= 0.5), 
+             shape = "square", alpha = 0.3) +
+  scale_color_manual(values = c("forestgreen", "red2"), guide = "none") +
+  ggnewscale::new_scale_color() +
+  geom_point(aes(shape = diagnosis, 
+                 color = diagnosis), size = 3, alpha = 0.5) +
+  labs(x = "Average radius",
+       y = "Average concave\nportions of the\ncontours") +
+  scale_color_manual(values = c("forestgreen", "red2"))
+```
+
+. . . 
+
+- What would you do to choose which model to use? <br>[We'll talk more on this later.]{.fragment}
+
+# <i class="fas fa-image"></i> Illustration of unsupervised learning {background-color="#006DAE" .mcenter}
+
+
+## <i class="fas fa-database"></i> Customer personality analysis  {.scrollable}
+ 
+[<i class="fas fa-long-arrow-alt-down"></i> scroll]{.absolute .top-1 .right-1 .f4}
+
+::: nonincremental
+
+* We use this customer survey data [here](https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis) that has over 20 features of a customer:
+
+**People**
+
+- `ID`: Customer's unique identifier
+- `Year_Birth`: Customer's birth year
+- `Education`: Customer's education level
+- `Marital_Status`: Customer's marital status
+- `Income`: Customer's yearly household income
+- `Kidhome`: Number of children in customer's household
+- `Teenhome`: Number of teenagers in customer's household
+- `Dt_Customer`: Date of customer's enrollment with the company
+- `Recency`: Number of days since customer's last purchase
+- `Complain`: 1 if the customer complained in the last 2 years, 0 otherwise
+
+**Products**
+
+- `MntWines`: Amount spent on wine in last 2 years
+- `MntFruits`: Amount spent on fruits in last 2 years
+- `MntMeatProducts`: Amount spent on meat in last 2 years
+- `MntFishProducts`: Amount spent on fish in last 2 years
+- `MntSweetProducts`: Amount spent on sweets in last 2 years
+- `MntGoldProds`: Amount spent on gold in last 2 years
+
+**Promotion**
+
+- `NumDealsPurchases`: Number of purchases made with a discount
+- `AcceptedCmp1`: 1 if customer accepted the offer in the 1st campaign, 0 otherwise
+- `AcceptedCmp2`: 1 if customer accepted the offer in the 2nd campaign, 0 otherwise
+- `AcceptedCmp3`: 1 if customer accepted the offer in the 3rd campaign, 0 otherwise
+- `AcceptedCmp4`: 1 if customer accepted the offer in the 4th campaign, 0 otherwise
+- `AcceptedCmp5`: 1 if customer accepted the offer in the 5th campaign, 0 otherwise
+- `Response`: 1 if customer accepted the offer in the last campaign, 0 otherwise
+
+**Place**
+
+- `NumWebPurchases`: Number of purchases made through the company’s website
+- `NumCatalogPurchases`: Number of purchases made using a catalogue
+- `NumStorePurchases`: Number of purchases made directly in stores
+- `NumWebVisitsMonth`: Number of visits to company’s website in the last month
+
+:::
+
+## Dimension reduction and clustering
+
+
+```{r marketing-data}
+marketing <- read_tsv("https://emitanaka.org/iml/data/marketing_campaign.csv")
+marketing_clean <- marketing %>% 
+  mutate(Marital_Status = fct_collapse(
+    Marital_Status,
+    "1" = c("Absurd", "Alone", "Divorced", "Single",
+            "Widow", "YOLO"),
+    "2" = c("Married", "Together")
+  ), 
+  Marital_Status = as.numeric(as.character(Marital_Status)),
+  Education = fct_collapse(
+    Education,
+    "3" = c("2n Cycle", "Master", "PhD"),
+    "1" = "Basic",
+    "2" = "Graduation"
+  ),
+  Education = as.numeric(as.character(Education)),
+  Income = case_when(is.na(Income) ~ 0,
+                     Income == 666666 ~ 0,
+                     TRUE ~ Income),
+  Dt_Customer = year(dmy(Dt_Customer)) - 2011) %>% 
+  filter(Year_Birth >= 1940) %>% 
+  mutate(Age = 2015 - Year_Birth) %>% 
+  select(-Year_Birth)
+
+```
+
+```{r marketing-pca}
+#| fig-height: 2
+library(recipes)
+process_pca <- recipe(~ ., data = marketing_clean) %>% 
+  step_rm("ID", "Complain") %>% 
+  step_zv(all_numeric_predictors()) %>% 
+  # enforce a symmetric distribution
+  bestNormalize::step_orderNorm(all_numeric_predictors()) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_pca(all_numeric_predictors(), num_comp = 8) %>% 
+  prep() %>% 
+  bake(new_data = NULL) 
+
+
+set.seed(1)
+res_kmeans <- kmeans(process_pca, centers = 5, nstart = 200)
+process_kmeans <- process_pca %>% 
+  bind_cols(marketing_clean) %>% 
+  mutate(cluster = factor(res_kmeans$cluster))
+```
+
+::: flex
+
+::: w-50
+```{r marketing-pca-plot}
+#| cache: false
+ggplot(process_kmeans, aes(PC1, PC2)) +
+  geom_point(aes(color = cluster))
+```
+
+:::
+
+::: w-50
+
+```{r cluster-income}
+#| cache: false
+ggplot(process_kmeans, aes(Age, Income)) +
+  geom_point(aes(color = cluster)) 
+```
+
+:::
+
+
+:::
+
+- Data with too many variables is hard to understand or process.
+- We can reduce dimension in a meaningful way.
+- Or cluster similar groups together to find inherent grouping structure.
+
+
+```{r mds-example}
+#| eval: false
+delta <- recipe(~ ., data = marketing_clean) %>% 
+  step_rm("ID", "Complain") %>% 
+  step_zv(all_numeric_predictors()) %>% 
+  # enforce a symmetric distribution
+  bestNormalize::step_orderNorm(all_numeric_predictors()) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  prep() %>% 
+  bake(new_data = NULL) %>% 
+  dist()
+
+mdsout <- cmdscale(delta)
+```
+
+
+```{r mds-plot}
+#| eval: false
+
+marketing_clean %>% 
+  mutate(mds1 = mdsout[, 1],
+         mds2 = mdsout[, 2]) %>% 
+  ggplot(aes(mds1, mds2, color = Income)) +
+  geom_point()
+```
+
+# <i class="fas fa-square-root-alt"></i> Statistical notations, concepts and terminologies {background-color="#006DAE" .mcenter #notation}
+
+## We need maths
+
+::: incremental
+
+- We need mathematical notations to form deeper understanding or discussion of ML models.
+- We'll refer:
+  - $y$ as a **response** (also called **dependent variable**), and
+  - $x_j$ as the $j$-th **predictor** (also called **feature** or **explanatory variable**).
+- We denote:
+  - $n$ for the total number of **observations** (or **samples**), and
+  - $p$ for the total number of predictors.
+  
+:::
+  
+## Assumption for supervised learning   
+
+
+- We assume that there is some fixed, but typically unknown, function $f$ that maps the predictors to response:
+
+$$y = f(x_1, x_2, ..., x_p) + e.$$
+
+
+::: fragment
+
+
+- The error term, $e$, is typically (but not always) assumed to be:
+  - independent of predictors, and 
+  - has a mean of zero.  
+  
+:::
+  
+  
+## More notational matters
+
+- Predictions for 
+  - $y_i$ are denoted as $\hat{y}_i = f(x_{i1}, x_{i2},  ..., x_{ip})$.
+  - $e_i$ are denoted as $\hat{e}_i = y_i - \hat{y}_i$ and referred to as the **residual** for the $i$-th observation.
+- Estimations of model parameters are denoted with $\hat{ }$,
+  - e.g., $\hat{\beta}_0$ is an estimate of the intercept in the previous multiplie linear regression model.
+  
+
+
+## Notations for multiple linear regression
+
+
+Consider a multiple linear regression:
+
+$$y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + ...  + \beta_p x_{ip} + e_i,\quad\text{for }i = 1, ..., n$$
+
+- $y_i$ is the $i$-th observation of variable $y$,
+- $x_{ij}$ is the $i$-th observation of the $j$-th predictor, 
+- $\beta_0$ is the intercept and $\beta_j$ is the slope or coefficient of $x_j$, and
+- $e_i$ is the error term for the $i$-th observation and is often assumed $e_i \sim N(0, \sigma^2)$.
+
+
+Notice we do not use $i$ when we refer to a generic variable, use $i$ for observations and $j$ for features.
+
+
+
+
+
+## Alternative notations for multiple linear regression
+
+
+- We can use a summation notation where $x_{i0} = 1$: 
+
+$$y_i = \beta_0 + \sum_{j=1}^p\beta_jx_{ij}  + e_i =  \sum_{j=0}^p\beta_jx_{ij}  + e_i,\quad\text{for }i = 1, ..., n$$
+
+::: fragment
+
+- Or represent it using a _matrix notation_:
+
+$$\boldsymbol{y} = \mathbf{X}_{n\times (p + 1)}\boldsymbol{\beta} + \boldsymbol{e}, \quad\text{assuming } \boldsymbol{e}\sim N(\boldsymbol{0}, \sigma^2\mathbf{I}_{n\times n}).$$
+:::
+
+
+## Properties of multiple linear regression 
+
+::: incremental
+
+- **Least-squares** or **maximum likelihood estimate** $\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\boldsymbol{y}$<br> (assuming that $\mathbf{X}$ is full rank).
+- **Fitted** or **predicted values**: $\hat{y}_i = \sum_{j=0}^{p}\hat{\beta}_jx_{ij}$.
+- **Residual standard error**: $RSE = \sqrt{\frac{1}{n - p - 1}\sum_{i=1}^n(y_i - \hat{y}_i)^2} = \sqrt{\frac{1}{n - p - 1}(\boldsymbol{y} - \mathbf{X}\hat{\boldsymbol{\beta}})^\top(\boldsymbol{y} - \mathbf{X}\hat{\boldsymbol{\beta}})}$.
+* $RSE = \hat{\sigma}$ is an unbiased estimator of $\sigma$.
+
+:::
+
+# Linear algebra {background-color="#006DAE" .mcenter}
+
+
+## Matrix
+
+
+- A **matrix** is a rectangular array of _scalars_ (i.e. numbers).
+
+$$\begin{bmatrix}2 & 3 \\4 & 3 \\ 1 & 1\end{bmatrix}\qquad\begin{bmatrix}-3 & 3 \\2 & 9 \end{bmatrix}\qquad\begin{bmatrix}1 & 3 & -1 \\ -4 & 0 & 0\end{bmatrix}$$
+
+* In this unit, a matrix is _denoted as a **bold capital letter**_, e.g. $\mathbf{A}$, $\mathbf{X}$ and $\mathbf{B}$.
+
+
+## Dimensions of a matrix
+
+
+* Occasionally the dimension of the matrix is denoted in the subscript:
+
+$$\mathbf{X}_{n\times p} = \begin{bmatrix}x_{11} &  x_{12} & \cdots & x_{1p}\\ x_{21} &  x_{22} & \cdots & x_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ x_{n1} &  x_{n2} & \cdots & x_{np}\end{bmatrix}$$
+
+
+## Diagonal matrix 
+
+
+* A **diagonal matrix** is a matrix where off-diagonal entries are zero. 
+
+$$\mathbf{D} = \text{diag}(d_{1}, d_{2}, d_{3}, d_4) =  \begin{bmatrix} d_{1} & 0 & 0 & 0\\0 & d_{2} & 0&  0\\ 0 & 0 & d_3 & 0  \\ 0 & 0 & 0 & d_4   \end{bmatrix}\qquad \mathbf{I}_3 = \begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+
+* An **identity matrix** of dimension $n$ is a $n\times n$ diagonal matrix denoted as $\mathbf{I}_n$ where all the diagonal entries is 1.
+
+
+
+
+
+
+## Vectors
+
+
+- A $m$-**vector** is a $m\times 1$ matrix:
+
+$$\boldsymbol{y} = \begin{bmatrix}y_1 \\ y_2\\ \vdots \\ y_m\end{bmatrix}$$
+
+- In this unit, a vector is _denoted with **bold italic lower case letter**_,<br> e.g. $\boldsymbol{y}$, $\boldsymbol{x}$, and  $\boldsymbol{\beta}$.
+
+
+## Transpose operator 
+
+
+* A transposed matrix or vector is denoted with $\top$
+
+$$\mathbf{X} = \begin{bmatrix}x_{11} &  x_{12} & x_{13}\\ x_{21} &  x_{22} &  x_{23}\end{bmatrix}\qquad \mathbf{X}^\top = \begin{bmatrix}x_{11} &  x_{21} \\ x_{12} &  x_{22} \\  x_{13} &  x_{23} \end{bmatrix}$$
+
+$$\boldsymbol{y} = \begin{bmatrix}y_1\\y_2 \\ \vdots\\ y_n\\\end{bmatrix}\qquad\boldsymbol{y}^\top = \begin{bmatrix}y_1 & y_2 & \cdots & y_n \end{bmatrix}$$
+
+
+
+## Resources for linear algebra 
+
+- See any first year linear algebra textbook. 
+- Or this [linear algebra cheat sheet](https://laurentlessard.com/teaching/ece532/cheat_sheet.pdf).
+
+
+# Model evaluation {background-color="#006DAE" .mcenter}
+
+
+## Goodness of fit
+
+::: incremental
+
+- [**Sum of squares of errors**]{.monash-blue}: $SSE = \sum_{i = 1}^n e_i^2 = \boldsymbol{e}^\top\boldsymbol{e}$
+- [**Residual sum of squares**]{.monash-blue}: $RSS = \sum_{i = 1}^n \hat{e}_i^2  = \sum_{i=1}^n (y_i - \hat{y}_i)^2$
+- [**Total sum of squares**]{.monash-blue}: $TSS = \sum_{i=1}^n (y_i - \bar{y})^2$
+- A **goodness of the fit** can be measured by 
+  - $R^2 = 1 - \dfrac{RSS}{TSS}$, the [**coefficient of determination**]{.monash-blue}, is the proportion of variation explained by the model, and
+  - $R^2_a = 1 - \dfrac{RSS/(n - p)}{TSS/ (n - 1)}$, [**adjusted $R^2$**]{.monash-blue}, is more appropriate as it, unlike $R^2$, does not necessary increase with the addition of more predictors.
+
+:::
+
+## Mean square error
+
+
+\begin{align*}
+ MSE = E\left[y-\hat{y}\right]^2 &= E\left[f(x_1, ..., x_p) + e - \hat{f}(x_1, ..., x_p)\right]^2\\
+&= \underbrace{E\left[f(x_1, ..., x_p) - \hat{f}(x_1, ..., x_p)\right]^2}_{\text{reducible}} + \underbrace{\text{var}(e)}_{\text{irreducible}} \\
+&=  \text{bias}[\hat{f}(x)]^2 + \text{var}[\hat{f}(x)] + \text{var}(e)
+\end{align*}
+
+
+## Model bias and variance
+
+
+
+- If a model has:
+  - a high [**bias**]{.monash-blue}, the average response is far from the true value -- referred to as [**_underfitting_**]{.monash-blue}
+  - a high [**variance**]{.monash-blue}, then the fitted model doesn't generalise well beyond the (training) data -- this is referred to as [**_overfitting_**]{.monash-blue}
+
+
+
+
+
+
+## Training, validation and testing data sets {.smaller}
+
+
+::: flex
+
+::: {.w-60}
+
+
+- In machine learning, three data sets are commonly used to build and select the model:
+  - [**training data**]{.monash-blue} is used to fit the initial model
+  - [**validation data**]{.monash-blue} is used to evaluate the model fit from the training data to help _tune the hyperparameters_
+  - [**testing data**]{.monash-blue} (or **holdout data**) is used to evaluate the tuned model 
+  
+::: fragment
+
+- We'll denote the set of index of training data, validation data and testing data as $Train$, $Valid$ and $Test$, respectively.
+
+:::
+
+
+
+:::
+
+::: w-40
+
+
+![](https://emitanaka.org/blog/2023-01-12-ML-workflow/ml-data-workflow.svg){width="80%"}
+
+
+[Image from [Emi's blog](https://emitanaka.org/blog)]{.f4}
+
+:::
+
+
+:::
+
+
+
+
+
+
+
+## Predictive accuracy {.smaller}
+
+* Predictive accuracy of trained and tuned models should be measured on the _testing data_. 
+
+. . . 
+
+* Some measures include (note: lower magnitude is better):
+
+
+  - [**Root mean squared error**]{.monash-blue}: $RMSE_{Test} = \sqrt{\frac{1}{|Test|} \sum_{i \in Test} \hat{e}_i^2}$ 
+  - [**Mean absolute error**]{.monash-blue}: $MAE_{Test} = \frac{1}{|Test|} \sum_{i \in Test} |\hat{e}_i|$ 
+  - [**Mean absolute percentage error**]{.monash-blue}: $MAPE_{Test} = \dfrac{100}{|Test|} \sum_{i \in Test} \left|\dfrac{\hat{e}_i}{y_i}\right|$
+  - [**Mean percentage error**]{.monash-blue}: $MPE_{Test} = \dfrac{100}{|Test|} \sum_{i \in Test} \dfrac{\hat{e}_i}{y_i}$ (note this can be a negative value)
+  
+. . . 
+
+* Most often $RMSE_{Test} \geq RMSE_{Train}$.
+
+
+
+# An application with maths and code {background-color="#006DAE" .mcenter}
+
+## <i class="fas fa-database"></i> Used Toyota car listing 
+
+
+* Let's have a look at the Toyota car listing.
+* Note this data contains other Toyota models and not just Yaris.
+
+
+```{r toyota-data}
+#| echo: true
+library(tidyverse)
+toyota <- read_csv("https://emitanaka.org/iml/data/toyota.csv") 
+glimpse(toyota)
+```
+
+
+## A linear regression 
+
+
+- A proposed model is $\log_{10}(\texttt{price}_i)  = \beta_0 + \beta_1 \texttt{year}_i + e_i$
+
+
+```{r plot-toyota}
+#| echo: true
+#| code-fold: true
+ggplot(toyota, aes(year, price)) +
+  geom_point() +
+  geom_point(data = ~filter(., model == "Yaris"),
+             aes(color = "Yaris")) +
+  scale_y_log10() +
+  labs(color = "")
+```
+
+## <i class="fab fa-r-project"></i> A linear regression with R 
+
+
+$$\log_{10}(\texttt{price}_i)  = \beta_0 + \beta_1 \texttt{year}_i + \epsilon_i$$
+
+* This model is fitted using `lm()` in R as
+
+```{r fit-lm}
+#| echo: true
+fit <- lm(log10(price) ~ year, data = toyota)
+```
+
+::: fragment 
+
+* And you can predict $y$ using `predict()`:
+
+```{r predict-fit}
+#| echo: true
+10^predict(fit, data.frame(year = 2004))
+```
+
+* `r round(10^predict(fit, data.frame(year = 2004)), 2)` is the predicted price for a Toyota car built in year 2004.
+
+:::
+
+
+
+## <i class="fab fa-r-project"></i> Extracting model parameters in R
+
+
+* You can use the `broom` package to get the estimate of model parameters for many models
+
+```{r broom-tidy}
+#| echo: true
+slopes <- broom::tidy(fit)
+slopes
+```
+
+## <i class="fab fa-r-project"></i> Extracting model summaries in R
+
+```{r broom-glance}
+#| echo: true
+broom::glance(fit)
+```
+
+## <i class="fab fa-r-project"></i> Extractng model values in R
+
+```{r broom-augment}
+#| echo: true
+#| eval: false
+broom::augment(fit)
+```
+
+```{r broom-augment-print}
+#| echo: false
+head(broom::augment(fit))
+```
+
+## <i class="fab fa-r-project"></i> Predicting from model fit with R
+
+* The `predict` is a generic (S3) function that works for many kind of model objects
+
+```{r predict-slr-fit}
+#| echo: true
+10^(slopes$estimate[1] + slopes$estimate[2] * 2004)
+10^predict(fit, data.frame(year = 2004))
+```
+
+## <i class="fab fa-r-project"></i> Splitting data into testing and training data 
+
+- Let's use `rsample` to split the data into the training and testing data:
+
+```{r rsample-split}
+#| echo: true
+library(rsample)
+set.seed(1) # to replicate the result
+toyota_split <- initial_split(toyota, prop = 0.75)
+toyota_split
+toyota_train <- training(toyota_split)
+toyota_test <- testing(toyota_split)
+```
+
+* This is randomly splitting 75% of data into training data and the remaining 25% into testing data.
+
+
+
+## <i class="fab fa-r-project"></i> Train the ML models
+
+- Now we train three models:
+  - `reg` - a simple linear regression model,
+  - `tree` - a regression tree, and 
+  - `knn` - a $k$-nearest neighbour 
+
+```{r ml-model-fits}
+#| echo: true
+library(rpart) # for regression tree
+library(kknn) # for k-nearest neighbour
+model_fits <- list(
+  "reg" = lm(log10(price) ~ year,
+             data = toyota_train),
+  "tree" = rpart(log10(price) ~ year,
+                 data = toyota_train,
+                 method = "anova"),
+  "knn" = train.kknn(log10(price) ~ year,
+                     data = toyota_train)
+)
+```
+
+## <i class="fab fa-r-project"></i> Predict response on testing data 
+
+- And predict the responses on the testing data:
+
+```{r result-tests}
+#| echo: true
+#| code-line-numbers: "|5|"
+results_test <- imap_dfr(model_fits, ~{
+    toyota_test %>% 
+      select(year, price) %>% 
+      mutate(.model = .y,
+             .pred = 10^predict(.x, .))
+  })
+
+head(results_test)
+```
+
+
+## <i class="fab fa-r-project"></i> Visualising the predictions
+
+::: flex
+
+::: w-50
+
+```{r plot-train}
+#| echo: true
+#| code-fold: true
+#| fig-width: 6
+results_pred <- imap_dfr(model_fits, ~{
+    tibble(year = seq(min(toyota$year), max(toyota$year))) %>% 
+      mutate(.pred = 10^predict(.x, .),
+             .model = .y)
+  })
+
+gres <- ggplot(toyota_train, aes(year, price)) +
+  geom_point(alpha = 0.5) + 
+  geom_line(data = results_pred, aes(y = .pred, color = .model)) + 
+  scale_color_manual(values = c("#C8008F", "#006DAE", "#008A25")) +
+  scale_y_log10(label = scales::dollar_format(prefix = "€", accuracy = 1)) +
+  theme(legend.position = "bottom") +
+  labs(title = "Training data", y = "", color = "")  +
+  guides(color = "none")
+    
+
+gres
+
+```
+
+
+:::
+
+::: w-50
+
+```{r plot-test}
+#| echo: true
+#| code-fold: true
+#| fig-width: 6
+gres %+% toyota_test +
+  labs(title = "Testing data")
+```
+
+
+:::
+
+
+:::
+
+
+
+
+
+## <i class="fab fa-r-project"></i> Predictive accuracies with R 
+
+```{r accuracies}
+#| echo: true
+#| eval: false
+library(yardstick)
+results_test %>% 
+  group_by(.model) %>% 
+  metric_set(rmse, mae, mape, mpe, rsq)(., price, .pred) %>% 
+  pivot_wider(.model, names_from = .metric, values_from = .estimate)
+```
+```{r accuracies-print}
+#| echo: false
+round_dp <- function(x, dp) sprintf(paste0("%.", dp, "f"), x)
+span_red_color <- function(x, dp) paste0("<span style='color: red'>", round_dp(x, dp), "</span>")
+results_test %>% 
+  group_by(.model) %>% 
+  metric_set(rmse, mae, mape, mpe, rsq)(., price, .pred) %>% 
+  pivot_wider(.model, names_from = .metric, values_from = .estimate) %>% 
+  mutate(across(rmse:mpe, ~
+                  case_when(abs(.x) == min(abs(.x)) ~ span_red_color(.x, 1),
+                            TRUE ~ round_dp(.x, 1))
+                  ),
+         rsq = case_when(rsq == max(rsq) ~ span_red_color(rsq, 3),
+                         TRUE ~ round_dp(rsq, 3))) %>% 
+  knitr::kable(align = "lrrrrr")
+```
+
+
+## Select a model 
+
+::: flex 
+
+
+::: w-60
+
+::: incremental
+
+- Based on the predictive accuracy, we may choose to select the regression tree for prediction (it has the best metric for all, except for $MPE$).
+- But for inference, simple linear regression model has an easier interpretability. 
+- <i class="fas fa-exclamation-triangle"></i> Selecting a model isn't just about selecting the model with the best metric - data and problem context matters.
+
+::::
+
+:::
+
+::: {.w-40 .pl3}
+
+<details>
+<summary>Prediction on plot</summary>
+```{r plot-test}
+#| fig-width: 6
+```
+</details>
+
+![](https://emitanaka.org/blog/2023-01-12-ML-workflow/ml-evaluation-workflow.svg){width="100%"}
+
+[Image from [Emi's blog](https://emitanaka.org/blog)]{.f4}
+
+:::
+
+:::
+
+
+
+
+# <i class="fas fa-exclamation-triangle"></i> Cautionary tales {background-color="#006DAE" .mcenter}
+
+## What is the aim?
+
+::: incremental
+
+- When you are considering to use ML methods, broadly there are two aims: **prediction** or **inference**.
+- In inference, we would like to understand how $y$ is related to $x_1, ..., x_p$. 
+  - Which predictors are associated with the response? 
+  - What is the relationship between the response and each predictor?
+- Some ML methods may have good predictive performance but poor interpretability, i.e. you don't understand how the ML method is making the prediction.
+
+::: 
+
+
+
+
+
+## It's not necessary _causation_ 
+
+
+::: incremental
+
+* A predictor that is highly correlated or associated with the response does not necessary mean it's the causation. 
+  - Homelessness and crime rate in suburbs might be highly correlated.
+* Just because a model with good predictive ability contains certain predictors, it doesn't mean those predictors are causal effects of the response.
+  - Predicting damage due to fire by the number of firemen sent.
+  - In early primary school, astrological sign predicts IQ well.
+
+:::
+
+::: aside
+
+Examples from [cross validated](https://stats.stackexchange.com/questions/36/examples-for-teaching-correlation-does-not-mean-causation)
+:::
+
+## Beware of missing or inappropriate data  
+
+::: incremental
+
+- ML methods generally assume that the data is complete, i.e. no missing entries, [in such cases you may need to impute or remove the data _with care_.]{.fragment}
+- Any fitted model is dependent on your training data. [You may be missing _important variables_ or not have a _representative sample_.]{.fragment}
+- Just because you can fit a ML model with good prediction, it doesn't mean you should.
+  - Consider the **ethical implications** of making wrongful interpretations or decisions based on the data you used, e.g. using the variable "race" to predict fraud is akin to building a racist model.
+
+::: 
+  
+## Preprocessing the data
+
+::: incremental
+
+- Before modelling, you should check the data for any quality issues:
+   - check marginal distribution or joint (usually pairwise) distribution, 
+   - check for outliers and missing entries, 
+   - impute or remove entries as appropriate, and
+   - transform variables (most often to **standardise** or make the distribution **symmetric**).
+- Some data issues become apparently after modelling:
+  - by checking **model diagnostics** or **model assessments**, and
+  - noticing you may need to _**feature engineer**_ (create a new variable from existing variables).
+  
+::: 
+  
+
+# <i class="fas fa-key"></i> Takeaways {background-color="#006DAE"}
+
+::: incremental 
+
+- There are diverse sets of problems where appropriate data with adequate machine learning is helpful in solving it. 
+- In order to compare predictive performance of machine learning models, we apply the trained models to the testing data. 
+- There are many methods to machine learning and various metrics to compare models -- what is appropriate depends on the data, context and aim.
+- To understand these methods and metrics, we will use some mathematics, go through variety of data and apply the models using R.
+
+:::
+
+

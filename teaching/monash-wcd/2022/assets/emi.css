@@ -1,0 +1,47 @@
+
+
+.cyellow {
+  color: rgb(231,177,100)!important;
+}
+
+.cgreen {
+  color: rgb(100,138,127)!important;
+}
+
+.cred {
+  color: rgb(205,113,97)!important;
+}
+
+
+.rotate {
+
+  transform: rotate(-90deg);
+
+
+  /* Legacy vendor prefixes that you probably don't need... */
+
+  /* Safari */
+  -webkit-transform: rotate(-90deg);
+
+  /* Firefox */
+  -moz-transform: rotate(-90deg);
+
+  /* IE */
+  -ms-transform: rotate(-90deg);
+
+  /* Opera */
+  -o-transform: rotate(-90deg);
+
+  /* Internet Explorer */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+}
+
+
+.bg-gray {
+  background-color: #e3e3e3!important;
+}
+
+.datatables {
+  overflow: scroll!important;
+}

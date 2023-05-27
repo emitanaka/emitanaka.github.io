@@ -1,0 +1,6 @@
+.inline-box {
+  width:20px; 
+  height:20px;
+  border: solid 3px black;
+  display: inline-block;
+}
