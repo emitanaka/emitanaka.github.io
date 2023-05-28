@@ -55,7 +55,7 @@ if(nrow(df)) {
 ```
 </ul>
 
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sabbatical approved 😊 It will be my first time in Canada so please say hi if you see me 👋 <a href="https://t.co/J3Ypadoij6">pic.twitter.com/J3Ypadoij6</a></p>&mdash; Emi Tanaka (田中愛美) 💉💉💉 (@statsgen) <a href="https://twitter.com/statsgen/status/1575010066545057794?ref_src=twsrc%5Etfw">September 28, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 ## <i class="fas fa-wrench"></i> Upcoming workshops
 
@@ -64,17 +64,6 @@ There are currently no workshops planned.
 *All proceeds go to supporting my research activities.*
 
 
-## <i class="fas fa-users"></i> Statistical Society of Australia
-
-
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Thanks to everyone who attended our AGM and March seminar event last week. We have the pleasure of introducing the SSA Vic Council of 2022 🎉 🎉 🎉 <a href="https://t.co/nrk3nR8Ir1">pic.twitter.com/nrk3nR8Ir1</a></p>&mdash; SSAVictoria (@SsaVictoria) <a href="https://twitter.com/SsaVictoria/status/1510851450645417994?ref_src=twsrc%5Etfw">April 4, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<i class="fas fa-info-circle"></i> For more information see [https://statsocaus.github.io/vic/](https://statsocaus.github.io/vic/)
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/IkLIcipBk5Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-<i class="fab fa-slack"></i> To join the SSA Community Slack, see [here](https://statsocaus.github.io/vic/slack.html).
 
 
 ## <i class="fab fa-r-project"></i> Hex stickers 
