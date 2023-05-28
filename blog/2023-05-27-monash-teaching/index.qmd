@@ -10,7 +10,7 @@ Since I started working at the Department of Econometrics and Business Statistic
 
 Teaching _Introduction to Machine Learning_ was the highlight of all the teaching for me. Not only did I enjoy teaching the content but it was also the first time I got to teach in-person at Monash after 3 years (gasp!). Shout out to the students who got up early each week for the Monday 9am lecture despite how cold it has become! 
 
-I ended my last lecture (shown below) at Monash with the wrap-up for the Introduction to Machine Learning unit featuring the varied datasets and toolkits that was demonstrated in the unit. This would be the final lecture of the year for me but also the final lecture for me at Monash. From July 2023, I will be joining the Biological Data Science Institute at Australian National University. As much as I enjoy teaching enthusiastic students and recognise the importance in training the next-generation, I hope I get more time to focus on research. 
+I ended my last lecture (shown below) at Monash with the wrap-up for the Introduction to Machine Learning unit featuring the varied datasets and toolkits that was demonstrated in the unit. This would be the final lecture of the year for me but also the final lecture for me at Monash. From July 2023, I will be joining the Biological Data Science Institute at the Australian National University. As much as I enjoy teaching enthusiastic students and recognise the importance in training the next-generation, I hope I get more time to focus on research. 
 
 
 <iframe width="600px" src="../../teaching/monash-iml/2023/lecture-12B.html" height="337.5px" style="border: 1px solid black;"></iframe>
@@ -49,7 +49,7 @@ So what did I develop? Below is the full list.
 - [Statistical model outputs](../../teaching/monash-cwd/2022/lecture-05A.html)     
 - [Data tables](../../teaching/monash-cwd/2022/lecture-05B.html)      
 - [Effective data visualisation](../../teaching/monash-cwd/2022/lecture-06.html)      
-- [Captivating statistical ](../../teaching/monash-cwd/2022/lecture-07.html)     
+- [Captivating statistical presentations](../../teaching/monash-cwd/2022/lecture-07.html)     
 - [Clearly communicating with code](../../teaching/monash-cwd/2022/lecture-08.html) 
 - [Stylishly communicating with code](../../teaching/monash-cwd/2022/lecture-09.html) 
 - [Narrative](../../teaching/monash-cwd/2022/lecture-10.html)      
