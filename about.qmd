@@ -64,7 +64,7 @@ Loading my github calendar data.
 GitHubCalendar(".calendar", "emitanaka", { responsive: true });
 </script>
 
-
+[![](https://user-badge.committers.top/australia/emitanaka.svg)](https://user-badge.committers.top/australia/emitanaka)
 
 ## Contact
 
