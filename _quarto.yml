@@ -44,13 +44,13 @@ website:
     left: |
       <b>Dr. Emi Tanaka</b> <br>
       Senior Lecturer in Statistics<br>
-      Monash University, Australia<br>
+      Australian National University<br>
       © Copyright 2021-2023 Emi Tanaka
     right: |
       <i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen">@statsgen</a> on Twitter <br>
       <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br>
-      <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@monash.edu">emi.tanaka@monash.edu</a><br>
-      <i class="fas fa-map-marker-alt"></i> Clayton, Victoria, Australia
+      <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@anu.edu.au">emi.tanaka@anu.edu.au</a><br>
+      <i class="fas fa-map-marker-alt"></i> Acton, ACT, Australia
     border: true
     background: primary
 format:

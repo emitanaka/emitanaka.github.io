@@ -18,9 +18,6 @@ about:
     - icon: google
       text: Scholar
       href: https://scholar.google.com.au/citations?user=v8FN0qoAAAAJ&hl=en
-    - icon: mortarboard-fill
-      text: Monash
-      href: https://research.monash.edu/en/persons/emi-tanaka
 engine: knitr
 format:
   html:
@@ -34,23 +31,22 @@ format:
 :::
 
 
-I'm a Senior Lecturer (in the [Australian system](https://emitanaka.org/posts/2022-06-30-academic-ranks/)) in Statistics at the [Department of Econometrics and Business Statistics, Monash University, Melbourne, Australia](https://www.monash.edu/business/ebs) and part of the [NUMBATs group](https://numbat.space/). 
+I'm a Senior Lecturer (in the [Australian system](https://emitanaka.org/posts/2022-06-30-academic-ranks/)) in Statistics at the [Biological Data Science Institute](https://bdsi.anu.edu.au/) with affiliation also at the [Research School of Finance, Actuarial Studies and Statistics](https://rsfas.anu.edu.au/) at the Australian National University. My primary interest is to develop impactful methods and tools that can be readily used by practitioners. I interface across multiple disciplines to bridge statistical concepts and findings to a broad range of individuals. To this end, I have developed numerous open-source tools, primarily as R-packages, and resources aimed at making statistical methods accessible to a diverse audience. I demonstrate a proactive approach to community development through my involvement in different positions within the branches of the Statistical Society of Australia (SSA) and other committees. 
 
-From July 2023, I will be part of the [Biological Data Science Institute](https://bdsi.anu.edu.au/) with affiliation also at the [Research School of Finance, Actuarial Studies and Statistics](https://rsfas.anu.edu.au/) at the Australian National University. Please contact me using my new work email address at [emi.tanaka@anu.edu.au](mailto:emi.tanaka@anu.edu.au).
 
 My **research interests** are:
 
-* [Experimental design]{.highlight-color}
-* [Mixed models]{.highlight-color} (also known as multi-level models, panel data models or hierarchical models)
-* [Data visualisation]{.highlight-color} and [visual inference]{.highlight-color}
-* Applications in [bioinformatics]{.highlight-color} and [selective breeding]{.highlight-color} (particularly plant breeding)
-* [Statistical software development]{.highlight-color}, particularly in R
-* [Statistical workflow]{.highlight-color} (encompassing reproducibility, design, infrastructure and communication)
+* [Experimental design]{.highlight-color},
+* [Mixed models]{.highlight-color} (also known as multi-level models, panel data models or hierarchical models),
+* [Data visualisation]{.highlight-color} and [visual inference]{.highlight-color},
+* Applications in [bioinformatics]{.highlight-color} and [selective breeding]{.highlight-color} (particularly plant breeding),
+* [Statistical software development]{.highlight-color}, particularly in R, and
+* [Statistical workflow]{.highlight-color} (encompassing reproducibility, design, infrastructure and communication).
 
-I speak **English**, **Japanese** (conversational) and **R** (base + tidyverse) fluently. I've lived in Australia almost all of my life (+-10 years standard deviation) and my university major was mathematics and statistics. My PhD, obtained at the School of Mathematics and Statistics, University of Sydney in 2015, is in statistical bioinformatics with most of my code written in **Python** and **Bash** (both of which I am rusty now). I also like to dabble on front-end web development (**HTML/CSS/JS**).
+I speak **English**, **Japanese** (conversational) and **R** (base + tidyverse) fluently. I've lived in Australia almost all of my life (+-10 years standard deviation) and my university major was mathematics and statistics. My PhD, obtained at the School of Mathematics and Statistics, University of Sydney in 2015, is in statistical bioinformatics with most of my code written in **Python** and **Bash** (both of which I am rusty now). I also like to dabble on front-end web development (**HTML/CSS/JS**). I've developed web apps before using **Shiny** and practice computational reproducibility using **Git**, **R Markdown** (now **Quarto**) and internal DSLs (e.g. targets and renv R-packages). I'm a very data-oriented person to the extent that I've collected my own data via webscrapping and API. I adapt quickly and am quite open to taking new challenges -- occasionally, I do text analysis and play in machine learning competitions.
 
 
-I am a big advocate of [open science](https://en.wikipedia.org/wiki/Open_science). My code are mostly available on my **GitHub** profile where I also host a number of R packages that I have developed. 
+I am a big advocate of [open science](https://en.wikipedia.org/wiki/Open_science) and an avid [research software engineer](https://ukrse.github.io/who.html). My code are mostly available on my **GitHub** profile where I also host a number of R packages that I have developed. 
 
 <script
   src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js">
@@ -69,6 +65,7 @@ GitHubCalendar(".calendar", "emitanaka", { responsive: true });
 </script>
 
 
+
 ## Contact
 
 ```{r, echo = FALSE}
@@ -80,8 +77,8 @@ df <- data.frame(what = c('<i class="fab fa-twitter"></i>',
                  where = c("[statsgen](https://twitter.com/statsgen)",
                            '<a rel="me" href="https://fosstodon.org/@emitanaka">emitanaka@fosstodon.org</a>',
                            "[emitanaka](https://github.com/emitanaka)",
-                           "[emi.tanaka@monash.edu](mailto:emi.tanaka@monash.edu) / [emi.tanaka@anu.edu.au](mailto:emi.tanaka@anu.edu.au)",
-                           "Monash University<br>29 Ancora Imparo Way<br>Education Building 6 Room 341<br>Clayton campus, VIC 3800<br>Australia"))
+                           "[emi.tanaka@anu.edu.au](mailto:emi.tanaka@anu.edu.au)",
+                           "Australian National University<br>46 Sullivan's Creek Road<br>R. N. Robertson Building Room S307<br>Acton, ACT 2601<br>Australia"))
 knitr::kable(df, col.names = c("", ""), escape = FALSE)
 ```
 
