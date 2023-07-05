@@ -18,6 +18,12 @@ about:
     - icon: google
       text: Scholar
       href: https://scholar.google.com.au/citations?user=v8FN0qoAAAAJ&hl=en
+    - icon: link
+      text: ANU
+      href: https://researchers.anu.edu.au/researchers/tanaka-e
+    - icon: link
+      text: BDSI
+      href: https://bdsi.anu.edu.au/people/emi-tanaka
 engine: knitr
 format:
   html:
