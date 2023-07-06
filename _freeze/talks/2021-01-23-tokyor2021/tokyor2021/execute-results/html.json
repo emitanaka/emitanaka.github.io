@@ -1,10 +1,8 @@
 {
-  "hash": "4871574409b15fb7150c478ff8e606f8",
+  "hash": "ca87ed3d227113efd7d2f40fab512a52",
   "result": {
-    "markdown": "---\ntitle: \"Grammar of Experimental Design: 実験計画法の「文法」\"\nHost: 89th Tokyo R Meeting. \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 01-23-2021\nimage: cover.png\nurl: https://emitanaka.org/slides/TokyoR2021\ncategories: [日本語, Experimental Design]\n---\n\n\n::: callout-warning\n\n## Errata\n\nThere was an error in my script (where duplicates were not removed) for the count for the number of R packages in CRAN Task View of Design of Experiments. The slides specify there are about 200 R-packages. After removing duplicates, there was about 100 R-packages. \n\n:::\n\nClick [here](https://emitanaka.org/slides/TokyoR2021) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/TokyoR2021#2\" width=\"100%\" height=\"450px\"></iframe>\n",
-    "supporting": [
-      "tokyor2021_files"
-    ],
+    "markdown": "---\ntitle: \"Grammar of Experimental Design: 実験計画法の「文法」\"\nHost: 89th Tokyo R Meeting. \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 01-23-2021\nimage: cover.png\nurl: https://emitanaka.org/slides/TokyoR2021\ncategories: [日本語, Experimental Design]\nengine: knitr\n---\n\n\n::: callout-warning\n\n## Errata\n\nThere was an error in my script (where duplicates were not removed) for the count for the number of R packages in CRAN Task View of Design of Experiments. The slides specify there are about 200 R-packages. After removing duplicates, there was about 100 R-packages. \n\n:::\n\nClick [here](https://emitanaka.org/slides/TokyoR2021) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/TokyoR2021#2\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

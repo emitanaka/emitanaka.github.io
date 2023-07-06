@@ -10,6 +10,7 @@ date: 01-23-2021
 image: cover.png
 url: https://emitanaka.org/slides/TokyoR2021
 categories: [日本語, Experimental Design]
+engine: knitr
 ---
 
 ::: callout-warning

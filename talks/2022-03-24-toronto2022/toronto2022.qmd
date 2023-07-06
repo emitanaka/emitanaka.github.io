@@ -10,6 +10,7 @@ date: 03-24-2022
 image: cover.png
 url: https://emitanaka.org/slides/toronto2022
 categories: [Experimental Design]
+engine: knitr
 ---
 
 

@@ -17,6 +17,7 @@ url: https://emitanaka.org/slides/rladiesSSA2020
 image: cover.png
 date: 06-30-2020
 categories: [Skill, Service]
+engine: knitr
 ---
 
 

@@ -9,6 +9,7 @@ author:
 image: cover.png
 url: https://emitanaka.org/slides/YSW2020
 date: 09-30-2020
+engine: knitr
 ---
 
 Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 

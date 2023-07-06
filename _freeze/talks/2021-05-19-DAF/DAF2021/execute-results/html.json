@@ -1,10 +1,8 @@
 {
-  "hash": "c96404b5ae595e188f7396a3b847843c",
+  "hash": "87b201e37fa16c3d6addda8ba0d9eb44",
   "result": {
-    "markdown": "---\ntitle: \"Constructing and visualising experimental designs with the edibble R-package\"\nHost: Queensland Department of Agriculture and Fisheries Biometry Workshop \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 05-20-2021\nimage: cover.png\nurl: https://emitanaka.org/slides/DAF2021/edibble\ncategories: [Experimental Design]\n---\n\n\nClick [here](https://emitanaka.org/slides/DAF2021/edibble) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/DAF2021/edibble#2\" width=\"100%\" height=\"450px\"></iframe>\n",
-    "supporting": [
-      "DAF2021_files"
-    ],
+    "markdown": "---\ntitle: \"Constructing and visualising experimental designs with the edibble R-package\"\nHost: Queensland Department of Agriculture and Fisheries Biometry Workshop \nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\ndate: 05-20-2021\nimage: cover.png\nurl: https://emitanaka.org/slides/DAF2021/edibble\ncategories: [Experimental Design]\nengine: knitr\n---\n\n\nClick [here](https://emitanaka.org/slides/DAF2021/edibble) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/DAF2021/edibble#2\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

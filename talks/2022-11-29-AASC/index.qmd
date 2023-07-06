@@ -13,6 +13,7 @@ date: 11-29-2022
 image: cover.png
 url: https://emitanaka.org/slides/AASC2022
 categories: [Experimental Design, Visualisation]
+engine: knitr
 ---
 
 

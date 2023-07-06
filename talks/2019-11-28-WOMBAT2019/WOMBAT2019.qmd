@@ -12,6 +12,7 @@ url: https://emitanaka.org/slides/WOMBAT2019
 image: cover.png
 date: 11-29-2019
 categories: [Latent Variable Model, Mixed Model]
+engine: knitr
 ---
 
 

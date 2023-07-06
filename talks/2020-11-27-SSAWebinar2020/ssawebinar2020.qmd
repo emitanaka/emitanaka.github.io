@@ -14,6 +14,7 @@ date: 11-27-2020
 url: https://emitanaka.org/slides/SSA2020
 image: cover.png
 categories: [Experimental Design]
+engine: knitr
 ---
 
 ::: callout-warning

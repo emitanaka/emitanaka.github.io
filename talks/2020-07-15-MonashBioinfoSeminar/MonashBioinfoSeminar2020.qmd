@@ -9,6 +9,7 @@ author:
 image: cover.png
 date: 07-15-2020
 url: https://emitanaka.org/slides/MonashBioinfo2020
+engine: knitr
 ---
 
 ::: callout-warning

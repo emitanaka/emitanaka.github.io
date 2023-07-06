@@ -11,5 +11,6 @@ title-block-banner: false
 format:
   html:
     css: talks.css
+engine: knitr
 execute:
   echo: false

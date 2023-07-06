@@ -1,10 +1,8 @@
 {
-  "hash": "5a855628705a2b49c923a2ddcc414c8b",
+  "hash": "414c95b9300ffb3c7dca5d92ea652914",
   "result": {
-    "markdown": "---\ntitle: \"What every young statistician should know: Developing your identity, networking and marketing\"\nHost: Young Statistician Workshop for the Statistical Society of Australia Western Australia Branch\nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\nimage: cover.png\nurl: https://emitanaka.org/slides/YSW2020\ndate: 09-30-2020\n---\n\n\nClick [here](https://emitanaka.org/slides/YSW2020) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/YSW2020#2\" width=\"100%\" height=\"450px\"></iframe>\n",
-    "supporting": [
-      "SSAWA-YSW2020_files"
-    ],
+    "markdown": "---\ntitle: \"What every young statistician should know: Developing your identity, networking and marketing\"\nHost: Young Statistician Workshop for the Statistical Society of Australia Western Australia Branch\nauthor:\n  - name: Emi Tanaka\n    url: https://emitanaka.org\n    affiliation: Monash University\n    affiliation_url: https://numbat.space/\nimage: cover.png\nurl: https://emitanaka.org/slides/YSW2020\ndate: 09-30-2020\nengine: knitr\n---\n\n\nClick [here](https://emitanaka.org/slides/YSW2020) for the link to the slide. \n\n<iframe src=\"https://emitanaka.org/slides/YSW2020#2\" width=\"100%\" height=\"450px\"></iframe>\n",
+    "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

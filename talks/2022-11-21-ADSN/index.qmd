@@ -13,6 +13,7 @@ date: 11-21-2022
 image: cover.png
 url: https://emitanaka.org/slides/ADSN2022
 categories: [Experimental Design]
+engine: knitr
 ---
 
 

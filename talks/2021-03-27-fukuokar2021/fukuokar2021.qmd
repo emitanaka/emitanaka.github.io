@@ -10,6 +10,7 @@ date: 03-27-2021
 image: cover.png
 url: https://emitanaka.org/slides/FukuokaR2021
 categories: [日本語, Visual Inference]
+engine: knitr
 ---
 
 

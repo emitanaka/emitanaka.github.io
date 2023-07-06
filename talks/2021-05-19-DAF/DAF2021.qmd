@@ -10,6 +10,7 @@ date: 05-20-2021
 image: cover.png
 url: https://emitanaka.org/slides/DAF2021/edibble
 categories: [Experimental Design]
+engine: knitr
 ---
 
 Click [here](`r rmarkdown::metadata$url`) for the link to the slide. 
