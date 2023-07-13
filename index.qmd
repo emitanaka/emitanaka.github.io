@@ -26,7 +26,7 @@ format:
 
 ::: {.callout-note icon=false}
 
-## <i class='fas fa-bell'></i> Travel
+## <i class='fas fa-plane-departure'></i> Travel
 
 I will be at the following places. 
 
