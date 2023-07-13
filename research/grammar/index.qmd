@@ -4,4 +4,4 @@ author: "Emi Tanaka"
 image: preview.jpeg
 ---
 
-The work-in-progress can be foun [here](https://emitanaka.org/edibble-book).
+The work-in-progress can be found [here](https://emitanaka.org/edibble-book).

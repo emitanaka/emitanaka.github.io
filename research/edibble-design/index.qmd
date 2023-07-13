@@ -1,0 +1,44 @@
+---
+title: "Towards a unified language in experimental designs propagated by a software framework"
+author: 
+  - name: Emi Tanaka
+    email: emi.tanaka@anu.edu.au
+    orcid: 0000-0002-1455-259X
+    # note separate affiliations didn't work 
+    affiliations:
+      - name: Australian National University
+        department: Biological Data Science Institute
+        city: Canberra
+        country: Australia
+keywords: [grammar of experimental designs, design of experiments, comparative experiments, interface design, grammarware]
+abstract: |
+ Experiments require human decisions in the design process, which in turn are reformulated and summarized as inputs into a system (computational or otherwise) to generate the experimental design. I leverage this system to promote a language of experimental designs by proposing a novel computational framework, called "the grammar of experimental designs", to specify experimental designs based on an object-oriented programming system that declaratively encapsulates the experimental structure. The framework aims to engage human cognition by building experimental designs with modular functions that modify a targeted singular element of the experimental design object. The syntax and semantics of the framework are built upon consideration from multiple perspectives. While the core framework is language-agnostic, the framework is implemented in the `edibble` R-package. A range of examples is shown to demonstrate the utility of the framework.
+date: last-modified
+image: preview.jpg
+bibliography: paper.bib
+format:
+  html:
+    toc: true
+---
+
+```{r, include = FALSE}
+paper <- "../../../../projects/paper-reframe-DoE/main.qmd"
+meta <- rmarkdown::yaml_front_matter(paper)
+fs::dir_copy("../../../../projects/paper-reframe-DoE/images", "images", overwrite = TRUE)
+fs::file_copy("../../../../projects/paper-reframe-DoE/paper.bib", ".", overwrite = TRUE)
+fs::file_copy("../../../../projects/paper-reframe-DoE/supp.pdf", ".", overwrite = TRUE)
+```
+
+---
+abstract: >
+  `r meta$abstract`
+---
+
+
+```{r child=paper}
+```
+
+
+<i class='fas fa-file-pdf'></i> The supplementary material can be found [here](supp.pdf).
+
+# References

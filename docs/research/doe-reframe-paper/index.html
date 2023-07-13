@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Emi Tanaka">
+<meta name="dcterms.date" content="2023-07-13">
+<meta name="keywords" content="grammar of experimental designs, design of experiments, comparative experiments, interface design, grammarware">
+
+<title>emi tanaka - Towards a unified language in experimental designs propagated by a software framework</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/avatar.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-07SZXPNSJZ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../assets/styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/avatar.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">emi tanaka</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv.html" rel="" target="">
+ <span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../research/index.html" rel="" target="">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching/index.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks/index.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/statsgen" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-intro" id="toc-sec-intro" class="nav-link active" data-scroll-target="#sec-intro">Introduction</a></li>
+  <li><a href="#sec-background" id="toc-sec-background" class="nav-link" data-scroll-target="#sec-background">Background</a>
+  <ul class="collapse">
+  <li><a href="#sec-grammar" id="toc-sec-grammar" class="nav-link" data-scroll-target="#sec-grammar">Grammarware</a></li>
+  <li><a href="#sec-comm" id="toc-sec-comm" class="nav-link" data-scroll-target="#sec-comm">Communication Strategies</a></li>
+  <li><a href="#sec-ed" id="toc-sec-ed" class="nav-link" data-scroll-target="#sec-ed">Terminologies in Experimental Design</a></li>
+  </ul></li>
+  <li><a href="#sec-framework" id="toc-sec-framework" class="nav-link" data-scroll-target="#sec-framework">The Grammar of Experimental Designs</a>
+  <ul class="collapse">
+  <li><a href="#components-of-the-grammar" id="toc-components-of-the-grammar" class="nav-link" data-scroll-target="#components-of-the-grammar">Components of the Grammar</a></li>
+  <li><a href="#differences-to-other-systems" id="toc-differences-to-other-systems" class="nav-link" data-scroll-target="#differences-to-other-systems">Differences to Other Systems</a></li>
+  </ul></li>
+  <li><a href="#sec-examples" id="toc-sec-examples" class="nav-link" data-scroll-target="#sec-examples">Applications</a>
+  <ul class="collapse">
+  <li><a href="#sec-classic" id="toc-sec-classic" class="nav-link" data-scroll-target="#sec-classic">Classic Split-Plot Design</a></li>
+  <li><a href="#sec-complex" id="toc-sec-complex" class="nav-link" data-scroll-target="#sec-complex">Complex Nested Design</a></li>
+  <li><a href="#sec-unbalanced" id="toc-sec-unbalanced" class="nav-link" data-scroll-target="#sec-unbalanced">Unbalanced Factorial Design</a></li>
+  </ul></li>
+  <li><a href="#sec-discuss" id="toc-sec-discuss" class="nav-link" data-scroll-target="#sec-discuss">Discussion</a></li>
+  <li><a href="#supplementary-material" id="toc-supplementary-material" class="nav-link" data-scroll-target="#supplementary-material">Supplementary Material</a></li>
+  <li><a href="#acknowledgement" id="toc-acknowledgement" class="nav-link" data-scroll-target="#acknowledgement">Acknowledgement</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Towards a unified language in experimental designs propagated by a software framework</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Emi Tanaka <a href="https://orcid.org/0000-0002-1455-259X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Australian National University
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 13, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="abstract-title">Abstract</div>
+    <p>Experiments require human decisions in the design process, which in turn are reformulated and summarized as inputs into a system (computational or otherwise) to generate the experimental design. I leverage this system to promote a language of experimental designs by proposing a novel computational framework, called “the grammar of experimental designs”, to specify experimental designs based on an object-oriented programming system that declaratively encapsulates the experimental structure. The framework aims to engage human cognition by building experimental designs with modular functions that modify a targeted singular element of the experimental design object. The syntax and semantics of the framework are built upon consideration from multiple perspectives. While the core framework is language-agnostic, the framework is implemented in the <code>edibble</code> R-package. A range of examples is shown to demonstrate the utility of the framework.</p>
+  </div>
+</div>
+
+</header>
+
+<section id="sec-intro" class="level1">
+<h1>Introduction</h1>
+<p>Experimental designs offer a rigorous data collection protocol that seeks to achieve pre-defined objectives by imposing purposeful choices and control over experimental variables. The process of deliberation on the final experimental design is just as important, if not more, to identify any potential issues that can be addressed prior to the execution of the experiment. The experimental design literature, however, is often <em>product-oriented</em> rather than <em>process-oriented</em>; in other words, the focus is on the end product (the validity or efficiency of the planned analysis for the final experimental design; or algorithmic aspects to generate the design) rather than the process to the final design. Similar sentiment dates back from decades ago <span class="citation" data-cites="steinbergExperimentalDesignReview1984">(as echoed in, for example, <a href="#ref-steinbergExperimentalDesignReview1984" role="doc-biblioref">David M. Steinberg and Hunter 1984b</a> and its discussions in response)</span> with recognition that deriving the experimental context (e.g.&nbsp;defining aims and selecting experimental factors) and communication are important for experimental planning in the real world.</p>
+<p>The experimental aim and variables may initially be ill-defined and require iterative refining. In constructing a valid and efficient experimental design, the experimental context is invaluable <span class="citation" data-cites="bishopAnotherLookStatistician1982 hahnExperimentalDesignComplex1984">(see for examples, <a href="#ref-bishopAnotherLookStatistician1982" role="doc-biblioref">Bishop, Petersen, and Trayser 1982</a>; <a href="#ref-hahnExperimentalDesignComplex1984" role="doc-biblioref">Hahn 1984</a>)</span>. However, this context can be either lost in dialogue or understood implicitly, and consequently, the full context is often not explicitly transcribed. The downstream effect of not explicitly transcribing the context can be large: misunderstanding of the context, loss of knowledge transfer, inappropriate experimental designs rendering the collected data meaningless for confirmatory analysis, or bad analysis that disregards some significant experimental context (e.g.&nbsp;prediction using a variable that was used to derive the response). If anything, investing in a carefully planned experiment will provide more value than an analysis that attempts to scavenge meaning from a botched up experiment. The experimental context, however, is often stripped away or of an afterthought in many experimental design software systems <span class="citation" data-cites="Tanaka2022-hc">(<a href="#ref-Tanaka2022-hc" role="doc-biblioref">Tanaka and Amaliah 2022</a>)</span> thereby providing less room for the users to dwell on possible broader concerns in the experimental design. Such software systems may be an artifact of viewing experimentation in terms of abstract mathematical models, which has the benefits of allowing recognition of common ground in distinct experiments <span class="citation" data-cites="steinbergExperimentalDesignReview1984">(<a href="#ref-steinbergExperimentalDesignReview1984" role="doc-biblioref">David M. Steinberg and Hunter 1984b</a>)</span>, but at the cost of losing the context.</p>
+<p>No experiment is conducted without a person initiating the experiment. Multiple people with different expertise are typically involved in planning and executing an experiment but human communication is a complex process, let alone interdisciplinary communication that compounds the challenge in achieving a shared understanding <span class="citation" data-cites="Winowiecki2011-zx">(<a href="#ref-Winowiecki2011-zx" role="doc-biblioref">Winowiecki et al. 2011</a>)</span>. <span class="citation" data-cites="steinbergExperimentalDesignReview1984a">David M. Steinberg and Hunter (<a href="#ref-steinbergExperimentalDesignReview1984a" role="doc-biblioref">1984a</a>)</span> specifically calls out the statisticians “by working to improve their interpersonal skills and by studying some of the literature by pschologists, anthropologists, and others concerning the interplay between technical and cultural change”. Communication strategies can be employed to form mutual understandings, however, these are not strict requirements for generating an experimental design and (for the better or for the worse) communications are largely left to the autonomy of each individual. This means that the process is subject to large variation that can ultimately affect the final experimental design and critically, the relevance and quality of the experimental data.</p>
+<p><span class="citation" data-cites="colemanSystematicApproachPlanning1993a">Coleman and Montgomery (<a href="#ref-colemanSystematicApproachPlanning1993a" role="doc-biblioref">1993</a>)</span> proposed a systematic approach for organizing written documentation of plans for industrial experiments. <span class="citation" data-cites="steinbergExperimentalDesignReview1984">David M. Steinberg and Hunter (<a href="#ref-steinbergExperimentalDesignReview1984" role="doc-biblioref">1984b</a>)</span> claimed that continually asking questions about the theory underlying an experiment is important. These practices, and in more general, writing documentation and seeking alternative views, should be a routine practice in experiments (or any data collection activity in fact). However, in the absence of extrinsic motivation, we rely on individual’s intrinsic motivation to adopt better practices. <span class="citation" data-cites="fishbachStructureIntrinsicMotivation2022">Fishbach and Woolley (<a href="#ref-fishbachStructureIntrinsicMotivation2022" role="doc-biblioref">2022</a>)</span> proposed that the causes of the intrinsic motivation are characterised by the direct association of the activity and goal. In experimental design, our ultimate goal is to collect experimental data that can be used as empirical evidence to satisfy the experimental aim. This goal can be achieved without any of the aforementioned practices. Consequently, better practices of experimental design require the consideration of factors to increase the motivation to adopt those practices.</p>
+<p>The main contribution of this article is a computational framework for constructing an experimental design based on a declarative system that encapsulates experimental structures in a human-centered interface design, with justification of the framework from multiple perspectives. The core framework exposes the intermediate processes that make up the final experimental design, using a cognitive approach that possibly addresses some communication challenges. <a href="#sec-background">Section&nbsp;2</a> provides some background and defines terminology to explain the proposed framework described in <a href="#sec-framework">Section&nbsp;3</a>. <a href="#sec-examples">Section&nbsp;4</a> demonstrates the utility of the framework using illustrative examples and <a href="#sec-discuss">Section&nbsp;5</a> concludes with a discussion.</p>
+</section>
+<section id="sec-background" class="level1">
+<h1>Background</h1>
+<p>In this section, I outline some concepts, many of which transcends the field of experimental design that are relevant to the proposed framework presented in <a href="#sec-framework">Section&nbsp;3</a>.</p>
+<section id="sec-grammar" class="level2">
+<h2 class="anchored" data-anchor-id="sec-grammar">Grammarware</h2>
+<p>A <em>grammar</em> combines a limited set of words under shared linguistic rules to compose an unlimited number of proper sentences. In information technology, computational objects governed by a set of processing rules constitute a <em>grammar</em>. <span class="citation" data-cites="Klint2005-iz">Klint, Lämmel, and Verhoef (<a href="#ref-Klint2005-iz" role="doc-biblioref">2005</a>)</span> coined the term “grammarware” to refer to grammar and grammar-dependent software from the perspective of engineering. Some examples of grammarware used prominently in statistics are described next.</p>
+<p><span class="citation" data-cites="Wilkinson2005-oz">Wilkinson (<a href="#ref-Wilkinson2005-oz" role="doc-biblioref">2005</a>)</span> proposed the concept of “the grammar of graphics” as an object-oriented graphics system that declaratively builds quantitative graphics by specifying relatively modular components (data, statistical transformation, scale, coordinate system, guide and graphical layers that include information about graphical primitives and mapping of data variables to aesthetic attributes), assembling a scene from specifications stored as an object in a tree structure, and then displaying it by translating the assembled object into a graphical device. The most popular interpretation of the grammar of graphics is the ggplot2 package <span class="citation" data-cites="ggplot2">(<a href="#ref-ggplot2" role="doc-biblioref">Wickham 2016</a>)</span> in the R language <span class="citation" data-cites="R-base">(<a href="#ref-R-base" role="doc-biblioref">R Core Team 2020</a>)</span>, but variations exist in other languages as well, such as Gadfly <span class="citation" data-cites="daniel_c_jones_2018_1284282">(<a href="#ref-daniel_c_jones_2018_1284282" role="doc-biblioref">Jones et al. 2018</a>)</span> in Julia <span class="citation" data-cites="bezanson2017julia">(<a href="#ref-bezanson2017julia" role="doc-biblioref">Bezanson et al. 2017</a>)</span> and plotnine <span class="citation" data-cites="hassan_kibirige_2022_7124918">(<a href="#ref-hassan_kibirige_2022_7124918" role="doc-biblioref">Kibirige et al. 2022</a>)</span> in Python <span class="citation" data-cites="python">(<a href="#ref-python" role="doc-biblioref">Van Rossum and Drake 2009</a>)</span>. The realization of the grammar of graphics aids users to flexibly build unlimited graphs from a limited set of “words” (functions).</p>
+<p>Another grammar is Structured Query Language (SQL), which is a declarative language used to query and manipulate data. SQL statements include special English keywords (e.g.&nbsp;select, inner join, left join, where, and group by) to specify the query in the identified database. SQL statements can include nested queries such that the result of the previous query is piped into the next query. A similar language was employed in the dplyr package <span class="citation" data-cites="dplyr">(<a href="#ref-dplyr" role="doc-biblioref">Wickham et al. 2022</a>)</span> in R, referred to as “the grammar of data manipulation” by the authors. The core functions in dplyr require both the first input and output to be objects of the class data.frame (i.e., data in a tabular format), which allows functions to be easily piped in a fashion similar to nested queries in SQL. Each function is designed to perform a single task. The function names correspond to English words, similar to the keywords in SQL.</p>
+<p>The widespread use of these declarative languages is perhaps a testament to the usefulness of these approaches. For more details and examples, readers are recommended to look at the vignettes and documentation of the packages.</p>
+</section>
+<section id="sec-comm" class="level2">
+<h2 class="anchored" data-anchor-id="sec-comm">Communication Strategies</h2>
+<p>An experiment is a human endeavour that generally involves more than one person. Successfully completing an experiment typically hinges on the communication between multiple people with their own expertise. Let us consider a scenario where four actors are involved in an experiment:</p>
+<ul>
+<li>the <strong><em>domain expert</em></strong> who drives the experimental objective and has the intricate knowledge of the subject area,</li>
+<li>the <strong><em>statistician</em></strong> who creates the experimental design layout after taking into account statistical and practical constraints,</li>
+<li>the <strong><em>technician</em></strong> who carries out the experiment and collects the data, and</li>
+<li>the <strong><em>analyst</em></strong> who analyses the experimental data and help interpret it.</li>
+</ul>
+<p>The actors are purely illustrative and in practice, multiple people can take on each role, one person can take on multiple roles, and a person is not necessarily a specialist in the role assigned (e.g.&nbsp;the role of the <em>statistician</em> can be carried out by a person whose primarily training is not in statistics). The <em>statistician</em> and <em>analyst</em> may be the same individual but the roles are explicitly differentiated to signal that this is not always the case. All roles can be performed by a single individual.</p>
+<p>The scenario can begin with the <em>domain expert</em> coming up with a hypothesis or question and recruiting a <em>statistician</em> to help design the experiment. Before a <em>statistician</em> can produce the design layout, they must converse with the <em>domain expert</em> to understand the experimental objective, resources, practical constraints and other possible nuances that might influence the outcome of the experiment. There may be several communications before reaching a shared understanding. The <em>statistician</em> produces the final experimental design along with an analysis plan. Once the design layout is produced, these may be passed to a <em>technician</em> to carry out the experiment as per intended and collect the data. The <em>analyst</em> then extracts information, perhaps using the analysis plan by the <em>statistician</em>, from the collected data with the help of the <em>domain expert</em> for the interpretation. Each actor plays a vital role in the experiment; if even one actor fails in their role, then the whole experiment could be in jeopardy, and in the worst case scenario, resources go to complete waste. Even in this simple scenario, we can see that there are many possible interactions between people with every chance of “human error” in the communication.</p>
+<p>How might we improve this interdisciplinary communication? <span class="citation" data-cites="Bracken2006-rk">Bracken and Oughton (<a href="#ref-Bracken2006-rk" role="doc-biblioref">2006</a>)</span> highlighted the importance of language in interdisciplinary research and insisted interdisciplinary projects must allocate time to develop shared vocabularies. <span class="citation" data-cites="Winowiecki2011-zx">Winowiecki et al. (<a href="#ref-Winowiecki2011-zx" role="doc-biblioref">2011</a>)</span> employed scenario building techniques as a tool for interdisciplinary communication to promote structured dialogue to brainstorm particular aspects of the problem. Ideally, we would like to employ a systematic approach that abstracts the problem (and the solution) into a shared understanding.</p>
+<p>Not all experiments involve more than one person. In the special case where only a single individual is involved, intra-personal communication to internalize their experimental understanding must still take place, and externalizing this understanding by transcribing or otherwise is still important for the future self and others that wish to validate the experimental data. Indeed, <span class="citation" data-cites="nickersonHowWeKnow1999">Nickerson (<a href="#ref-nickersonHowWeKnow1999" role="doc-biblioref">1999</a>)</span> conjectures reflection on one’s own knowledge and evaluation or justification of one’s views as some possible countermeasures to overimputing one’s knowledge to others, thus causing misunderstandings.</p>
+</section>
+<section id="sec-ed" class="level2">
+<h2 class="anchored" data-anchor-id="sec-ed">Terminologies in Experimental Design</h2>
+<p>The field of experimental design is large, and its domain application (e.g., biology, psychology, marketing, and finance) also large. Numerous terminologies are used to describe various aspects or components of the experiment. Some terms apply only to particular domains; therefore, their meaning is not commonly understood across domains; e.g., <em>stimuli</em> are often treatments in behavioural science; <em>cluster</em> and <em>block</em> can be used interchangeably – the former term is more likely used in clinical trials. Terms like <em>experimental unit</em> (smallest unit that independently receives the treatment), <em>observational unit</em> (smallest unit in which the measurement is recorded on) and <em>treatments</em> (a set of conditions allocated to experimental units) are perhaps more universally understood. In a comparative experiment, a <em>control</em> usually refers to the treatment level that may be the baseline for comparison with other treatment levels (<em>placebo</em> is a common control in pharmaceutical experiments). A <em>replication</em> (of a treatment level) typically refers to the number of times the treatment level is tested. For an overview, see <span class="citation" data-cites="Bailey2008-gw">Bailey (<a href="#ref-Bailey2008-gw" role="doc-biblioref">2008</a>)</span>, <span class="citation" data-cites="Lawson2015">Lawson (<a href="#ref-Lawson2015" role="doc-biblioref">2015</a>)</span>, or other books on experimental design.</p>
+<p>Some terms are used to describe a complete experimental design (e.g., <em>randomised complete block design</em>, <em>balanced incomplete block design</em>, and <em>split-plot design</em>) with limited parameters, such as the number of treatments and replications. These “named” designs are handy to succinctly describe the experimental structure, but it can create a barrier to understanding the experimental structure if you are unfamiliar with it <span class="citation" data-cites="martinBeehiveDesignsObserving1973">(e.g.&nbsp;do you know what a <em>beehive design</em> is? For those curious, see <a href="#ref-martinBeehiveDesignsObserving1973" role="doc-biblioref">F. B. Martin 1973</a>)</span>.</p>
+<p>The <em>experimental structure</em> can be divided into two main substructures: the <em>unit structure</em> and the <em>treatment structure</em>. The unit structure for a completely randomized design is unstructured. A randomized complete block design has a unit structure in which experimental units are nested within blocks. A <em>factorial design</em> is a design in which there is more than one set of treatment factors, where the combination of the treatment levels across those factors compose the whole set of treatments; in such a case, we say that the treatment has a factorial structure. A <em>fractional factorial experiment</em> is an experiment in which only a subset of treatment factor combinations is observed.</p>
+<p>In industrial experiments, experimental factors are largely classified into <em>control</em> (or <em>primary</em>) <em>factor</em>, <em>constant factor</em>, and <em>nuisance factor</em> <span class="citation" data-cites="colemanSystematicApproachPlanning1993a vilesPlanningExperimentsFirst2008">(<a href="#ref-colemanSystematicApproachPlanning1993a" role="doc-biblioref">Coleman and Montgomery 1993</a>; <a href="#ref-vilesPlanningExperimentsFirst2008" role="doc-biblioref">Viles et al. 2008</a>)</span>. The control factors here are equivalent to the treatment factors. The constant factors are those that are maintained at the same level throughout the experiment, and nuisance factors are those that cannot be controlled. A <em>run</em> typically refers to a complete replicate of an experiment.</p>
+</section>
+</section>
+<section id="sec-framework" class="level1">
+<h1>The Grammar of Experimental Designs</h1>
+<p>In an object-oriented programming (OOP) system, the objects are basic (and relatively modular) components of the system that contain data and code. The grammar of experimental designs, referred simply as “the grammar” henceforth, is a computational framework that employs the OOP system that considers experimental design as a working object that users progressively build by encapsulating the experimental structure declaratively by defining basic experimental components. This section describes the external abstraction of the framework and its contrast to other systems. The application of the grammar is shown in <a href="#sec-examples">Section&nbsp;4</a>.</p>
+<section id="components-of-the-grammar" class="level2">
+<h2 class="anchored" data-anchor-id="components-of-the-grammar">Components of the Grammar</h2>
+<p>As discussed in <a href="#sec-ed">Section&nbsp;2.3</a>, the terminology for experimental design is diverse. In forming the grammar, we must formulate objects and their methods such that they are relatively modular building blocks for the final experimental design (see <a href="#sec-grammar">Section&nbsp;2.1</a> for other grammarwares). The guiding principles for determining the components of the grammar are that the terms have to be:</p>
+<ol type="1">
+<li>meaningful to a diverse set of people,</li>
+<li>reflective of fundamental actions, thoughts or factors in experiments, and</li>
+<li>atomic (i.e., cannot be inferred from the composite of other terms).</li>
+</ol>
+<p>In the grammar, we describe terms fundamentally by considering every categorised entity (physical or otherwise) that may be (directly or indirectly) linked to the experimental unit to be a <em>factor</em>. Every factor in the system is assigned an <em>explicit role</em> that is stored as a class. The three primary roles of a factor, as defined in <a href="#tbl-explicit-role">Table&nbsp;1</a>, are <strong>treatment</strong>, <strong>unit</strong> and <strong>record</strong>. The treatment and unit are encoded as separate classes as these are always semantically distinguished in a comparative experiment. A nuisance (or uncontrollable) factor or any responses can be encoded as a record class. Under the abstraction in <a href="#tbl-explicit-role">Table&nbsp;1</a>, factors such as blocks, clusters, experimental units, observational units, and experimental run are all just units. Arguably, the small finite number of classes makes it easier to form a shared understanding and limits the introduction of jargon. The grammar uses the relational links between factors to infer other roles of the factor as described next.</p>
+<div id="tbl-explicit-role" class="anchored">
+<table class="table">
+<caption>Table&nbsp;1: Definition of explicit roles in the grammar with some examples. The three roles are to some degree characterised by the level of control by the experimenter.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 42%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Role/Class</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: left;">Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">Any categorised entity (physical or otherwise) that is under some control by the experimenter.</td>
+<td style="text-align: left;">Patient in clinical trials. Block in glasshouse experiments. Time in longitudinal experiments. Spatial index (e.g.&nbsp;row and column) in crop field trials.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">treatment</td>
+<td style="text-align: left;">A factor that is of primary interest and under complete control by the experimenter.</td>
+<td style="text-align: left;">Vaccine in vaccine trials. Drug in pharmaceutical experiments. Variety in plant improvement programs.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">record</td>
+<td style="text-align: left;">An observed or uncontrollable factor in the experiment.</td>
+<td style="text-align: left;">Responses from observational units. Traits like sex, gender, height, age, and so on of an individual (note some of these may be used as a blocking factor, therefore should be units in that instance).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The relationship between factors assigns an <em>implicit role</em>; e.g., if a treatment factor is allocated to a plot factor, then the plot is an experimental unit. The implicit roles are summarized in <a href="#tbl-implicit-role">Table&nbsp;2</a>. Users are not required to be explicit about the implicit roles, instead they are required to be explicit about the relationships of factors.</p>
+<div id="tbl-implicit-role" class="anchored">
+<table class="table">
+<caption>Table&nbsp;2: Implicit roles based on the relationship between factors.</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Explicit role of A</th>
+<th style="text-align: left;">Explicit role of B</th>
+<th style="text-align: left;">A <span class="math inline">\(\rightarrow\)</span> B relationship</th>
+<th style="text-align: left;">Implicit role for B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">B is nested in A</td>
+<td style="text-align: left;">Nested unit</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">treatment</td>
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">B is applied to A</td>
+<td style="text-align: left;">Experimental unit</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">record</td>
+<td style="text-align: left;">unit</td>
+<td style="text-align: left;">B is measured on A</td>
+<td style="text-align: left;">Observational unit</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In the grammar, experimental designs are considered objects with two forms: a network form or a tabular form. The <strong>network form</strong> represents an intermediate construct of an experimental design as a pair of directed acyclic graphs (DAGs) representing the high-level and the low-level relationships (referred to as a head and a base graph, respectively). More specifically, the <strong>head graph</strong> stores the factors as nodes and the high-level relationships as edges, while the <strong>base graph</strong> stores the levels as nodes and the low-level relationships as edges. The direction of the edges specifies the hierarchy between the nodes. An example of the network form is shown in <a href="#fig-logic">Figure&nbsp;1</a>.</p>
+<div id="fig-logic" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/example-factor-structure.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: A visualisation of the network form with three factors: Diet, Subject, and Day. The experiment consists of three types of diet (Atkins, Keto, and Vegan) and three different subjects per day (labelled S1, S2, S3, S4, S5, and S6) over a total of two days (labelled D1 and D2).</figcaption>
+</figure>
+</div>
+<p>The <strong>tabular form</strong> represents the final version of the experimental design in a rectangular array where rows are the smallest observational units and the columns are the variables or factors. This tabular form, referred to as the <strong>design table</strong>, is a typical output of an experimental design software.</p>
+<p>The grammar begins with the initialization of the experimental design object with an empty network form. The user then declaratively manipulates the object based on a small number of functions, as shown in <a href="#fig-lexicon">Figure&nbsp;2</a>. The main actions are to either set the scene (factors in the experiment), allot a factor to another factor, or assign the levels to other levels algorithmically. The actions are concurrently specified with the subject (primary roles); therefore, it is immediately clear from the syntax which element of the experimental design object is targetted. The actions, allot and assign, are made distinct as the former is usually made explicit in dialogue and the latter is almost always algorithmically derived. This concrete syntax may be altered based on the domain specific language (as demonstrated later with the R language in <a href="#sec-examples">Section&nbsp;4</a>). The object builds up information on the experiment as the users specify the factors and their relationships. When a user completes their specification, then they can signal the conversion of the network form to a tabular form. At this stage, if the specification is valid (nodes in the base graph can all be linked to one row), then it will render the design table.</p>
+<div id="fig-lexicon" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/concrete-syntax.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Visualisation of the lexicon of the concrete syntax in the grammar of experimental designs. The name of the function generally follows an action (verb) then the subject (noun). The functions manipulate the network form (e.g.&nbsp;function <code>set units</code> sets nodes with the unit class). The parameters <code>&lt;name1&gt;</code> and <code>&lt;name2&gt;</code> are user-defined factor names (more can be defined as necessary) with the associated arguments <code>&lt;value1&gt;</code> and <code>&lt;value2&gt;</code> corresponding to the structure of the factor (the number of levels, relationship with other factors, etc). The parameter <code>&lt;form1&gt;</code> is specified symbolically (e.g.&nbsp;<code>trt1:trt2</code> is the combination of the treatment factors <code>trt1</code> and <code>trt2</code>) alloted to the factor <code>&lt;name1&gt;</code>. The argument <code>&lt;order&gt;</code> algorithmically assigns the treatments or units under the <code>&lt;constrain&gt;</code>. The <code>&lt;value&gt;</code> for the <code>seed</code> ensures that the design is reproducible.</figcaption>
+</figure>
+</div>
+<p>It should be noted that not all experiments are comparative, i.e., some experiments can have no treatment factors. The grammar does not require specification of treatment factors although at the minimum requires units to be specified.</p>
+</section>
+<section id="differences-to-other-systems" class="level2">
+<h2 class="anchored" data-anchor-id="differences-to-other-systems">Differences to Other Systems</h2>
+<p>By treating an experimental design as a mutable object, the grammar allows a bi-directional interaction between the user and the object, allowing users to inspect and progressively build the experimental design. This bidirectional interaction is in contrast to many systems that consider only unidirectional interactions, as illustrated in <a href="#fig-mutable">Figure&nbsp;3</a>, where the major action of the user is to specify a complete experimental design with no recourse to think about individual components of the experiment.</p>
+<div id="fig-mutable" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/mutable-objects.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: The above figure depicts two pathways a user may interact with a computational system. The top pathway allows users to create mutable objects which maybe progressively modified. The user receives feedback from objects that users may use for the next step. In the bottom pathway, users create an immutable object which is destroyed if an alternate output is seeked. In the bottom pathway, user-object interaction is designed to be unidirectional and users are not given opportunities to consciously think of intermediate processes.</figcaption>
+</figure>
+</div>
+<p>A key difference between the grammar and conventional approaches for the computational generation of an experimental design, as illustrated in <a href="#fig-opt">Figure&nbsp;4</a>, is that the grammar explicitly defines the experimental structure and output. Under this grammar, a user can still focus on selecting a suitable algorithm; in other words, the grammar is complementary to many existing experimental design algorithms.</p>
+<div id="fig-opt" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/focus-points.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;4: Every experiment has an experimental structure; the experimental structure determines the algorithm for treatment allocation; and the resulting allocation is used for collection of experimental data. The conventional approach for the computational generation of an experimental design is to focus on selecting an algorithm with right inputs. The grammar shifts the focus to defining the experimental structure and the desired output format. The approaches are not mutually exclusive – under the grammar, you can still select the optimal algorithm.</figcaption>
+</figure>
+</div>
+<p>Another key difference is that the grammar allows for various inputs that are fundamental to experiments in a cognitive manner. In this sense, the grammar treats the specification of the experimental design as a structured dialogue. Consider a scenario where a <em>statistician</em> may write in their notes from the meeting and together with the <em>domain expert</em> decide on the structure of the experiment. Under the conventional approach, when the <em>statistician</em> enters the structure into the computational system, the system requirement may not allow for certain context to be translated, and consequently, the generated experimental design can be void of the context. By contrast, the grammar is a more natural translation for the <em>statistician</em> to map their notes into the computational system. Indeed, the pre-design master guide sheet by <span class="citation" data-cites="colemanSystematicApproachPlanning1993a">Coleman and Montgomery (<a href="#ref-colemanSystematicApproachPlanning1993a" role="doc-biblioref">1993</a>)</span> suggests a number of elements (e.g.&nbsp;response and treatment factors) that should be captured in these notes that can be directly mapped in the grammar.</p>
+<p>The example in <a href="#sec-classic">Section&nbsp;4.1</a> shows the difference in code between the systems to specify the experimental design. While the code is more verbose in the grammar, it should be clearer in communicating the context of the experiment.</p>
+</section>
+</section>
+<section id="sec-examples" class="level1">
+<h1>Applications</h1>
+<p>The grammar presented in <a href="#sec-grammar">Section&nbsp;2.1</a> necessitates some alterations when translated for a particular domain specific language. For brevity, the translation of the grammar to the <code>edibble</code> R-package <span class="citation" data-cites="R-edibble">(<a href="#ref-R-edibble" role="doc-biblioref">Tanaka 2023</a>)</span> in order to fit the particular nuances of the R language and the user community is not described in this paper. This section aims to demonstrate the utility of the grammar. Instructive guide for the usage of the <code>edibble</code> R-package is reserved for other avenues. The supplementary material shows the full design table outputs.</p>
+<p>In the following subsections, three examples of various flavours are shown to illustrate the grammar of experimental designs described in <a href="#sec-framework">Section&nbsp;3</a>. <a href="#sec-classic">Section&nbsp;4.1</a> demonstrates a comparison of different programming approaches to achieve the same end result. <a href="#sec-complex">Section&nbsp;4.2</a> deals with a complex nested design showing how this can be specified using the grammar. Finally, <a href="#sec-unbalanced">Section&nbsp;4.3</a> shows an example where the system can be modified to deal with unbalanced cases.</p>
+<section id="sec-classic" class="level2">
+<h2 class="anchored" data-anchor-id="sec-classic">Classic Split-Plot Design</h2>
+<p>Consider the classical split-plot experiment introduced by <span class="citation" data-cites="Fisher1950-hd">Fisher (<a href="#ref-Fisher1950-hd" role="doc-biblioref">1950</a>)</span> where a land was divided into 36 patches, on which 12 varieties were grown, and each variety planted in 3 randomly chosen patches. Each patch was divided into three plots, with the plots randomly receiving either the basal dressing only, sulphate or chloride of potash. In constructing this experiment, the <em>statistician</em> may have first randomized the allocation of varieties to the patches with 3 replicates each and then permuted the 3 fertilizer levels to the plots within each patch. A random instance of this design is shown in <a href="#fig-exp1">Figure&nbsp;5</a>. The original experiment measured the yield of each plot. Hypothetically, the <em>technician</em> may also record the biomass for each patch.</p>
+<div id="fig-exp1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/example-split-plot.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;5: A classic split-plot design with 36 patches with 3 plots (depicted as a square) for each patch. The treatments are 3 levels of fertilizer (basal, chloride, and sulphase) and 12 levels of variety. The color of the square indicate the fertilizer assigned to the plot and the color of the text indicate which variety was assigned to a patch.</figcaption>
+</figure>
+</div>
+<p>The construction of this design can follow in a procedural programming manner where the 12 varieties with 3 replicates are permuted, followed by replicating 36 times the permutation of 3 fertilizer levels. In the R language, this may be coded like below. There may be further wrangling to produce a design table.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>variety <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"V1"</span>, <span class="st">"V2"</span>, <span class="st">"V3"</span>, <span class="st">"V4"</span>, <span class="st">"V5"</span>, <span class="st">"V6"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">"V7"</span>, <span class="st">"V8"</span>, <span class="st">"V9"</span>, <span class="st">"V10"</span>, <span class="st">"V11"</span>, <span class="st">"V12"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fertilizer <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"basal"</span>, <span class="st">"sulphate"</span>, <span class="st">"chloride"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) <span class="co"># for reproducibility</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">rep</span>(variety, <span class="at">each =</span> <span class="dv">3</span>)) <span class="co"># variety allocation</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">replicate</span>(<span class="dv">36</span>, <span class="fu">sample</span>(fertilizer)) <span class="co"># fertilizer allocation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternatively, the structure of this design is well known as the “split-plot design”. The <em>statistician</em> may recognize the structure to this “named” design, and generate this design via a functional programming approach where the function name relates to the name of the design. Below, we used the function <code>design.split()</code> from the <code>agricolae</code> R-package <span class="citation" data-cites="agricolae">(<a href="#ref-agricolae" role="doc-biblioref">de Mendiburu 2021</a>)</span>. Only two sets of treatment factors are expected in a split-plot design, which is reflected in the input parameter names <code>trt1</code> and <code>trt2</code>. Notice that it is not immediately clear without further interrogation which treatment factor is applied to the patches or the plots; in fact, the units need not be defined.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>agricolae<span class="sc">::</span><span class="fu">design.split</span>(<span class="at">trt1 =</span> variety,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">trt2 =</span> fertilizer,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">r =</span> <span class="dv">3</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the grammar, the design is progressively defined using a series of composable operations as shown below.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="annotated-cell-3"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(edibble)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-2" class="code-annotation-target"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a>des1 <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">"Fisher's split-plot design"</span>) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-3" class="code-annotation-target"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_units</span>(<span class="at">patch =</span> <span class="dv">36</span>,</span>
+<span id="annotated-cell-3-4"><a href="#annotated-cell-3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot =</span> <span class="fu">nested_in</span>(patch, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-3-5" class="code-annotation-target"><a href="#annotated-cell-3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_trts</span>(<span class="at">variety =</span> <span class="dv">12</span>,</span>
+<span id="annotated-cell-3-6"><a href="#annotated-cell-3-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">fertilizer =</span> <span class="fu">c</span>(<span class="st">"basal"</span>, <span class="st">"sulphate"</span>, <span class="st">"chloride"</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-3-7" class="code-annotation-target"><a href="#annotated-cell-3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_rcrds</span>(<span class="at">yield =</span> plot,</span>
+<span id="annotated-cell-3-8"><a href="#annotated-cell-3-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">biomass =</span> patch) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="5" onclick="event.preventDefault();">5</a><span id="annotated-cell-3-9" class="code-annotation-target"><a href="#annotated-cell-3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">allot_trts</span>(variety <span class="sc">~</span> patch,</span>
+<span id="annotated-cell-3-10"><a href="#annotated-cell-3-10" aria-hidden="true" tabindex="-1"></a>             fertilizer <span class="sc">~</span> plot) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="6" onclick="event.preventDefault();">6</a><span id="annotated-cell-3-11" class="code-annotation-target"><a href="#annotated-cell-3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign_trts</span>(<span class="at">seed  =</span> <span class="dv">1</span>,</span>
+<span id="annotated-cell-3-12"><a href="#annotated-cell-3-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"random"</span>, <span class="st">"random"</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="7" onclick="event.preventDefault();">7</a><span id="annotated-cell-3-13" class="code-annotation-target"><a href="#annotated-cell-3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">serve_table</span>()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-cell="annotated-cell-3" data-code-lines="2">The design object is initialised with an optional title of the experiment.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-cell="annotated-cell-3" data-code-lines="3,4">The units <code>patch</code> and <code>plot</code> are defined. The <code>patch</code> has 36 levels while <code>plot</code> has 3 levels for each <code>patch</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-cell="annotated-cell-3" data-code-lines="5,6">The treatments are <code>variety</code> with 12 levels and <code>fertilizer</code> named as “basal”, “sulphate” and “chloride”.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-annotation="4" data-code-cell="annotated-cell-3" data-code-lines="7,8">The records in the data collection will be <code>yield</code> for each <code>plot</code> and the <code>biomass</code> for each <code>patch</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="5">5</dt>
+<dd>
+<span data-code-annotation="5" data-code-cell="annotated-cell-3" data-code-lines="9,10">The treatments are allot to units. Specifically, <code>variety</code> to <code>wholeplot</code> and <code>fertilizer</code> to <code>plot</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="6">6</dt>
+<dd>
+<span data-code-annotation="6" data-code-cell="annotated-cell-3" data-code-lines="11,12">The treatments are then randomly assigned to corresponding unit specified in the allotment. The <code>seed</code> is specified here so we can replicate the results. It recognises that the <code>plot</code> is nested in the <code>patch</code> and therefore uses this by default to constrain the order that the treatment is allocated. Specifically, the treatment order for both allotment are random.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="7">7</dt>
+<dd>
+<span data-code-annotation="7" data-code-cell="annotated-cell-3" data-code-lines="13">In the last step, we convert the intermediate design object into the final experimental design table.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>See Table 1 of the Supplementary Material for the full design table.</p>
+</section>
+<section id="sec-complex" class="level2">
+<h2 class="anchored" data-anchor-id="sec-complex">Complex Nested Design</h2>
+<p>Consider next the experiment in <span class="citation" data-cites="martinEffectsGrasshoppercontrolInsecticides1996">P. A. Martin, Johnson, and Forsyth (<a href="#ref-martinEffectsGrasshoppercontrolInsecticides1996" role="doc-biblioref">1996</a>)</span> aimed to investigate if insecticides used to control grasshoppers affected the weight of young chicks of ring-necked pheasants, either by affecting the grass around the chicks or by affecting the grasshoppers eaten by the chicks. A description and illustration of the experiment is in <a href="#fig-exp2">Figure&nbsp;6</a>.</p>
+<div id="fig-exp2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/experiment-nested.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;6: A split-split plot design with three strips that are divided into two swathes, which in nested two pens with 6 chicks each. The treatments were the three types of insecticide, the two dose levels of the insecticide and whether the grasshoppers (food for the chicks) were sprayed with insecticide or not. One insecticide was randomly assigned to one strip. The dose of the insecticide was randomly varied between the swath within a strip. The type of food (sprayed or not) was randomly assigned to one pen within a swath. This experiment was repeated each week for three weeks.</figcaption>
+</figure>
+</div>
+<p>Another random instance of the design in <a href="#fig-exp2">Figure&nbsp;6</a> is specified in the grammar as follows.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="annotated-cell-4"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-4-1"><a href="#annotated-cell-4-1"></a>des2 <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">"Complex nested factorial design"</span>) <span class="sc">%&gt;%</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-4-2" class="code-annotation-target"><a href="#annotated-cell-4-2"></a>  <span class="fu">set_trts</span>(<span class="at">insecticide =</span> <span class="dv">3</span>,</span>
+<span id="annotated-cell-4-3"><a href="#annotated-cell-4-3"></a>           <span class="at">dose_level  =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"high"</span>),</span>
+<span id="annotated-cell-4-4"><a href="#annotated-cell-4-4"></a>           <span class="at">food_type   =</span> <span class="fu">c</span>(<span class="st">"sprayed"</span>, <span class="st">"unsprayed"</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-4-5" class="code-annotation-target"><a href="#annotated-cell-4-5"></a>  <span class="fu">set_units</span>(<span class="at">week  =</span> <span class="dv">3</span>,</span>
+<span id="annotated-cell-4-6"><a href="#annotated-cell-4-6"></a>            <span class="at">strip =</span> <span class="fu">nested_in</span>(week, <span class="dv">3</span>),</span>
+<span id="annotated-cell-4-7"><a href="#annotated-cell-4-7"></a>            <span class="at">swath =</span> <span class="fu">nested_in</span>(strip, <span class="dv">2</span>),</span>
+<span id="annotated-cell-4-8"><a href="#annotated-cell-4-8"></a>            <span class="at">pen   =</span> <span class="fu">nested_in</span>(swath, <span class="dv">2</span>),</span>
+<span id="annotated-cell-4-9"><a href="#annotated-cell-4-9"></a>            <span class="at">chick =</span> <span class="fu">nested_in</span>(pen, <span class="dv">6</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-4" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-4-10" class="code-annotation-target"><a href="#annotated-cell-4-10"></a>  <span class="fu">allot_trts</span>(insecticide <span class="sc">~</span> strip,</span>
+<span id="annotated-cell-4-11"><a href="#annotated-cell-4-11"></a>              dose_level <span class="sc">~</span> swath,</span>
+<span id="annotated-cell-4-12"><a href="#annotated-cell-4-12"></a>               food_type <span class="sc">~</span> pen) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-4-13"><a href="#annotated-cell-4-13"></a>  <span class="fu">assign_trts</span>(<span class="at">seed =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="annotated-cell-4-14"><a href="#annotated-cell-4-14"></a>  <span class="fu">serve_table</span>()  </span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-4" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-cell="annotated-cell-4" data-code-lines="2,3,4">Here the treatment is defined first with 3 levels of insecticide, two dose levels (low and high) and two food types (sprayed or unsprayed).</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-cell="annotated-cell-4" data-code-lines="5,6,7,8,9">The units are defined next. The experiment is run over 3 weeks. For each week, there are 3 strips used. Each strip is split into two swathes. Each swath has two pens. Each pen contains 6 chicks.</span>
+</dd>
+<dt data-target-cell="annotated-cell-4" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-cell="annotated-cell-4" data-code-lines="10,11,12">Next we define the allotment of treatments to units. The insecticide is alloted to strip, the dose level to swath and the food type to pen.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>See Table 2 of the Supplementary Material for the full design table.</p>
+</section>
+<section id="sec-unbalanced" class="level2">
+<h2 class="anchored" data-anchor-id="sec-unbalanced">Unbalanced Factorial Design</h2>
+<p>Previous examples have conveniently used equal numbers of replicates for each treatment, however, this is often not the case in practice. The proposed system can cater for experiments with an unbalanced number of treatments.</p>
+<p>Suppose we consider the first four motion sickness experiments reported by <span class="citation" data-cites="burnsMotionSicknessIncidence1984">Burns (<a href="#ref-burnsMotionSicknessIncidence1984" role="doc-biblioref">1984</a>)</span>. The study, as shown in <a href="#fig-exp3">Figure&nbsp;7</a>, was a collection of separate experiments. In this sense, the treatment (acceleration and frequency) was pre-assigned and completely confounded with the experiment.</p>
+<div id="fig-exp3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/experiment-unbalanced.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;7: There were four motion sickness experiments. The first experiment consisted of 21 subjects with an acceleration (a) of 0.111rms and frequency (f) of 0.167Hz. The next three consisted of 20, 29 and 59 subjects with a = 0.222 and f = 0.167, a = 0.111 and f = 0.250, and a = 0.222 and f = 0.250, respectively.</figcaption>
+</figure>
+</div>
+<p>This unbalanced design in <a href="#fig-exp3">Figure&nbsp;7</a> is specified in the grammar as:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="annotated-cell-5"><pre class="sourceCode numberSource r code-annotation-code number-lines code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-5-1"><a href="#annotated-cell-5-1"></a>des3 <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">"Motion sickness incidence"</span>) <span class="sc">%&gt;%</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-2" class="code-annotation-target"><a href="#annotated-cell-5-2"></a>  <span class="fu">set_units</span>(<span class="at">experiment =</span> <span class="dv">4</span>,</span>
+<span id="annotated-cell-5-3"><a href="#annotated-cell-5-3"></a>            <span class="at">subject =</span> <span class="fu">nested_in</span>(experiment,</span>
+<span id="annotated-cell-5-4"><a href="#annotated-cell-5-4"></a>                                <span class="dv">1</span> <span class="sc">~</span> <span class="dv">21</span>,</span>
+<span id="annotated-cell-5-5"><a href="#annotated-cell-5-5"></a>                                <span class="dv">2</span> <span class="sc">~</span> <span class="dv">20</span>,</span>
+<span id="annotated-cell-5-6"><a href="#annotated-cell-5-6"></a>                                <span class="dv">3</span> <span class="sc">~</span> <span class="dv">29</span>,</span>
+<span id="annotated-cell-5-7"><a href="#annotated-cell-5-7"></a>                                <span class="dv">4</span> <span class="sc">~</span> <span class="dv">59</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-8" class="code-annotation-target"><a href="#annotated-cell-5-8"></a>  <span class="fu">set_trts</span>(<span class="at">frequency    =</span> <span class="fu">c</span>(<span class="fl">0.167</span>, <span class="fl">0.250</span>),</span>
+<span id="annotated-cell-5-9"><a href="#annotated-cell-5-9"></a>           <span class="at">acceleration =</span> <span class="fu">c</span>(<span class="fl">0.111</span>, <span class="fl">0.222</span>)) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-5-10" class="code-annotation-target"><a href="#annotated-cell-5-10"></a>  <span class="fu">allot_trts</span>(frequency<span class="sc">:</span>acceleration <span class="sc">~</span> experiment) <span class="sc">%&gt;%</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="4" onclick="event.preventDefault();">4</a><span id="annotated-cell-5-11" class="code-annotation-target"><a href="#annotated-cell-5-11"></a>  <span class="fu">assign_trts</span>(<span class="at">order =</span> <span class="st">"systematic"</span>) <span class="sc">%&gt;%</span></span>
+<span id="annotated-cell-5-12"><a href="#annotated-cell-5-12"></a>  <span class="fu">serve_table</span>()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-cell="annotated-cell-5" data-code-lines="2,3,4,5,6,7">We specify that there are 4 experiments. Experiments 1, 2, 3 and 4 had 21, 20, 29 and 59 subjects, respectively.</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-cell="annotated-cell-5" data-code-lines="8,9">There were two treatment factors: frequency with two levels (0.167 and 0.250) and acceleration with two levels (0.111 and 0.222).</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-cell="annotated-cell-5" data-code-lines="10">The combination of the treatment factors are assigned to each experiment.</span>
+</dd>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="4">4</dt>
+<dd>
+<span data-code-annotation="4" data-code-cell="annotated-cell-5" data-code-lines="11">The allocation of the treatment is systematic.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>See Table 3 of the Supplementary Material for the full design table.</p>
+</section>
+</section>
+<section id="sec-discuss" class="level1">
+<h1>Discussion</h1>
+<p>Multiple people with different expertise are typically involved in planning and executing an experiment but communication is rarely easy or seamless, especially across people from different domains. In designing experiments, we ought to consider the time <span class="citation" data-cites="Bracken2006-rk">(<a href="#ref-Bracken2006-rk" role="doc-biblioref">Bracken and Oughton 2006</a>)</span> and methods, such as structured dialogues <span class="citation" data-cites="Winowiecki2011-zx">(<a href="#ref-Winowiecki2011-zx" role="doc-biblioref">Winowiecki et al. 2011</a>)</span>, to form a shared understanding. Towards this end, we can build process-based tools to employ a systematic structure that aids in extracting the essence of the experiment. The design of the software interface can encourage users to encode more information of the experiment into the system.</p>
+<p>A new framework, called “the grammar of experimental designs”, was presented as a process-based tool. The primary novel aspect of this framework is that an experimental design is treated as a mutable object that is progressively altered based on the explicit specifications of fundamental experimental components. This approach exposes the intermediate process to constructing the final experimental design, thus providing a greater opportunity to notice any broader concerns in the experimental designs. This in turn can encourage the investigation or remedy of the experimental plan before its execution.</p>
+<p>A number of functionalities are not discussed or demonstrated in this paper in order to focus on the general framework rather than on specific features. These functionalities include the specification of intended observational records (including responses) of units; embedded data validation for data entry; simulation of observational records; diagnostics and visualization of designs. Abstract syntax and internal object representation are also only briefly discussed. These functionalities and internals warrant full discussion in separate papers. Furthermore, an extended explanation of the <code>edibble</code> package will be presented in other avenues. The framework does not address all possible experimental structures but extensions of the framework, such as situations with an undetermined number of levels or complex conditional structures, can be envisioned as future directions.</p>
+<p>This framework may be compelling for several reasons, some of which have been outlined previously. First, explicit specification raises the cognitive awareness of the experimental context for both the user and the reader. Second, it encodes information as a machine-readable data, thereby allowing for further interrogation, manipulation or even exportation to multiple formats. Third, it allows for the partial specification of the experimental structure and permits the reuse of the structure.</p>
+<p>A recipe approach is often used for existing software implementations to generate randomized designs. A recipe or a named design describes an end product and does not permit different processes to reach to a similar end product. The grammar approach requires users to describe a particular course of action, thereby intentionally directing users to be explicit. This way the software does not hinder the ability for users to encode more information.</p>
+<p>The proposed framework is purposefully designed such that it can be extended and improved by other developers. For example, the assignment of treatments (to units) can be substituted with alternative methods. Arguably this step is the most algorithmically difficult part of the process, and is the subject of many experimental design research. The default assignment is currently simplistic. There will be many cases in which the default system will not be suitable or is highly inefficient. The goal of the grammar, however, is not to generate the most efficient or optimal design for every experimental structure, which is an impossible feat without user guidance. The goal of the grammar is to standardize the specifications of the experimental structure so that we can more easily form a shared understanding. As any other language, the grammar of experimental designs has the potential to evolve.</p>
+<p>In principle, the framework promotes good practice by requiring an explicit specification of the elements of the experimental design. However, principle alone is not sufficient to encourage mass adoption. There are several possible extensions that make the framework attractive despite its verbose specifications. These include immediate benefits such as ease of adding data validation and automated visualization – both of which are the subject of future papers. <span class="citation" data-cites="fishbachStructureIntrinsicMotivation2022">Fishbach and Woolley (<a href="#ref-fishbachStructureIntrinsicMotivation2022" role="doc-biblioref">2022</a>)</span> suggested that immediate benefits can increase intrinsic motivation. My hope is that these downstream features will eventuate in the mass adoption of the framework, or even a similar framework, which aids in the transparency of the experimental design process. We all gain from better experimental practices. It is in this mass adoption, where we come to share a unified language in experimental designs, that I believe will aid in communication and result in the collective adoption of better experimental designs. The practice of experimental design requires holistic consideration of the total experimental process, including that of psychological processes.</p>
+</section>
+<section id="supplementary-material" class="level1">
+<h1>Supplementary Material</h1>
+<p>The supplementary material contains the full design table outputs from the examples in <a href="#sec-examples">Section&nbsp;4</a>.</p>
+</section>
+<section id="acknowledgement" class="level1 unnumbered">
+<h1 class="unnumbered">Acknowledgement</h1>
+<p>This paper uses <code>knitr</code> <span class="citation" data-cites="knitr">(<a href="#ref-knitr" role="doc-biblioref">Xie 2015</a>)</span>, <code>rmarkdown</code> <span class="citation" data-cites="rmarkdown">(<a href="#ref-rmarkdown" role="doc-biblioref">Xie, Allaire, and Grolemund 2018</a>)</span> and Quarto for creating reproducible documents. The code presented uses version 0.1.3 of the <code>edibble</code> package available on CRAN. The latest development of <code>edibble</code> can be found at <a href="https://github.com/emitanaka/edibble">https://github.com/emitanaka/edibble</a>.</p>
+<p><i class="fas fa-file-pdf"></i> The supplementary material can be found <a href="supp.pdf">here</a>.</p>
+</section>
+<section id="references" class="level1">
+
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Bailey2008-gw" class="csl-entry" role="listitem">
+Bailey, Rosemary A. 2008. <em>Design of <span>Comparative Experiments</span></em>. <span>Cambridge University Press</span>.
+</div>
+<div id="ref-bezanson2017julia" class="csl-entry" role="listitem">
+Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. <span>“Julia: A Fresh Approach to Numerical Computing.”</span> <em>SIAM Review</em> 59 (1): 65–98. <a href="https://doi.org/10.1137/141000671">https://doi.org/10.1137/141000671</a>.
+</div>
+<div id="ref-bishopAnotherLookStatistician1982" class="csl-entry" role="listitem">
+Bishop, Thomas, Bruce Petersen, and David Trayser. 1982. <span>“Another <span>Look</span> at the <span>Statistician</span>’s <span>Role</span> in <span>Experimental Planning</span> and <span>Design</span>.”</span> <em>The American Statistician</em> 36 (4): 387–89.
+</div>
+<div id="ref-Bracken2006-rk" class="csl-entry" role="listitem">
+Bracken, L J, and E A Oughton. 2006. <span>“’What Do You Mean?’ the Importance of Language in Developing Interdisciplinary Research.”</span> <em>Transactions</em> 31 (3): 371–82. <a href="https://doi.org/10.1111/j.1475-5661.2006.00218.x">https://doi.org/10.1111/j.1475-5661.2006.00218.x</a>.
+</div>
+<div id="ref-burnsMotionSicknessIncidence1984" class="csl-entry" role="listitem">
+Burns, K. C. 1984. <span>“<a href="https://www.ncbi.nlm.nih.gov/pubmed/6466248">Motion Sickness Incidence: Distribution of Time to First Emesis and Comparison of Some Complex Motion Conditions</a>.”</span> <em>Aviation, Space, and Environmental Medicine</em> 55 (6): 521–27.
+</div>
+<div id="ref-colemanSystematicApproachPlanning1993a" class="csl-entry" role="listitem">
+Coleman, David E, and Douglas C Montgomery. 1993. <span>“A <span>Systematic Approach</span> to <span>Planning</span> for a <span>Designed Industrial Experiment</span>.”</span> <em>Technometrics</em> 35 (1): 1–12.
+</div>
+<div id="ref-agricolae" class="csl-entry" role="listitem">
+de Mendiburu, Felipe. 2021. <em>Agricolae: Statistical Procedures for Agricultural Research</em>. <a href="https://CRAN.R-project.org/package=agricolae">https://CRAN.R-project.org/package=agricolae</a>.
+</div>
+<div id="ref-fishbachStructureIntrinsicMotivation2022" class="csl-entry" role="listitem">
+Fishbach, Ayelet, and Kaitlin Woolley. 2022. <span>“The <span>Structure</span> of <span>Intrinsic Motivation</span>.”</span> <em>Annual Review of Organizational Psychology and Organizational Behavior</em> 9 (1): 339–63. <a href="https://doi.org/10.1146/annurev-orgpsych-012420-091122">https://doi.org/10.1146/annurev-orgpsych-012420-091122</a>.
+</div>
+<div id="ref-Fisher1950-hd" class="csl-entry" role="listitem">
+Fisher, Ronald A. 1950. <em>Statistical Methods for Research Workers</em>. 11th ed. <span>Oliver and Boyd</span>.
+</div>
+<div id="ref-hahnExperimentalDesignComplex1984" class="csl-entry" role="listitem">
+Hahn, Gerald J. 1984. <span>“Experimental <span>Design</span> in the <span>Complex World</span>.”</span> <em>Technometrics</em> 26 (1): 19–31.
+</div>
+<div id="ref-daniel_c_jones_2018_1284282" class="csl-entry" role="listitem">
+Jones, Daniel C., Ben Arthur, Tamas Nagy, Shashi Gowda, Godisemo, Tim Holy, Andreas Noack, et al. 2018. <span>“GiovineItalia/Gadfly.jl: V0.7.0.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.1284282">https://doi.org/10.5281/zenodo.1284282</a>.
+</div>
+<div id="ref-hassan_kibirige_2022_7124918" class="csl-entry" role="listitem">
+Kibirige, Hassan, Greg Lamp, Jan Katins, gdowding, austin, Florian Finkernagel, matthias-k, et al. 2022. <span>“<span class="nocase">has2k1/plotnine: See the [changelog](https://plotn ine.readthedocs.io/en/stable/changelog.html#v0-9-0 ).</span>”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.7124918">https://doi.org/10.5281/zenodo.7124918</a>.
+</div>
+<div id="ref-Klint2005-iz" class="csl-entry" role="listitem">
+Klint, Paul, Ralf Lämmel, and Chris Verhoef. 2005. <span>“Toward an Engineering Discipline for Grammarware.”</span> <em>ACM Transactions on Software Engineering and Methodology</em> 14 (3): 331–80. <a href="https://doi.org/10.1145/1072997.1073000">https://doi.org/10.1145/1072997.1073000</a>.
+</div>
+<div id="ref-Lawson2015" class="csl-entry" role="listitem">
+Lawson, John. 2015. <em>Design and <span>Analysis</span> of <span>Experiments</span> with <span>R</span></em>. <span>CRC Press</span>.
+</div>
+<div id="ref-martinBeehiveDesignsObserving1973" class="csl-entry" role="listitem">
+Martin, Frank B. 1973. <span>“Beehive <span>Designs</span> for <span>Observing Variety Competition</span>.”</span> <em>Biometrics</em> 29 (2): 397–402. <a href="https://doi.org/10.2307/2529404">https://doi.org/10.2307/2529404</a>.
+</div>
+<div id="ref-martinEffectsGrasshoppercontrolInsecticides1996" class="csl-entry" role="listitem">
+Martin, Pamela A., Daniel L. Johnson, and Douglas J. Forsyth. 1996. <span>“Effects of Grasshopper-Control Insecticides on Survival and Brain Acetylcholinesterase of Pheasant ( <span><em>Phasianus</em></span><span> <em>Colchicus</em></span> ) Chicks.”</span> <em>Environmental Toxicology and Chemistry / SETAC</em> 15 (4): 518–24. <a href="https://doi.org/10.1897/1551-5028(1996)015<0518:EOGCIO>2.3.CO;2">https://doi.org/10.1897/1551-5028(1996)015&lt;0518:EOGCIO&gt;2.3.CO;2</a>.
+</div>
+<div id="ref-nickersonHowWeKnow1999" class="csl-entry" role="listitem">
+Nickerson, Raymond S. 1999. <span>“How <span>We Know</span>and <span>Sometimes Misjudge</span>: <span>Imputing One</span>’s <span>Own Knowledge</span> to <span>Others</span>.”</span> <em>Psychological Bulletin</em> 125 (6): 737–59.
+</div>
+<div id="ref-R-base" class="csl-entry" role="listitem">
+R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-steinbergExperimentalDesignReview1984a" class="csl-entry" role="listitem">
+Steinberg, David M., and William G. Hunter. 1984a. <span>“[<span>Experimental Design</span>: <span>Review</span> and <span>Comment</span>]: <span>Response</span>.”</span> <em>Technometrics</em> 26 (2): 128. <a href="https://doi.org/10.2307/1268106">https://doi.org/10.2307/1268106</a>.
+</div>
+<div id="ref-steinbergExperimentalDesignReview1984" class="csl-entry" role="listitem">
+Steinberg, David M, and William G Hunter. 1984b. <span>“Experimental <span>Design</span>: <span>Review</span> and <span>Comment</span>.”</span> <em>Technometrics</em> 26 (2): 71–97.
+</div>
+<div id="ref-R-edibble" class="csl-entry" role="listitem">
+Tanaka, Emi. 2023. <em><span class="nocase">edibble</span>: Designing Comparative Experiments</em>. <a href="https://CRAN.R-project.org/package=edibble">https://CRAN.R-project.org/package=edibble</a>.
+</div>
+<div id="ref-Tanaka2022-hc" class="csl-entry" role="listitem">
+Tanaka, Emi, and Dewi Amaliah. 2022. <span>“Current State and Prospects of <span>R</span>-Packages for the Design of Experiments.”</span> <a href="https://doi.org/10.18637/jss.v096.i01">https://doi.org/10.18637/jss.v096.i01</a>.
+</div>
+<div id="ref-python" class="csl-entry" role="listitem">
+Van Rossum, Guido, and Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Scotts Valley, CA: CreateSpace.
+</div>
+<div id="ref-vilesPlanningExperimentsFirst2008" class="csl-entry" role="listitem">
+Viles, E., M. Tanco, L. Ilzarbe, and M. J. Alvarez. 2008. <span>“Planning <span>Experiments</span>, the <span>First Real Task</span> in <span>Reaching</span> a <span>Goal</span>.”</span> <em>Quality Engineering</em> 21 (1): 44–51. <a href="https://doi.org/10.1080/08982110802425183">https://doi.org/10.1080/08982110802425183</a>.
+</div>
+<div id="ref-ggplot2" class="csl-entry" role="listitem">
+Wickham, Hadley. 2016. <em><span class="nocase">ggplot2</span>: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>.
+</div>
+<div id="ref-dplyr" class="csl-entry" role="listitem">
+Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2022. <em><span class="nocase">dplyr</span>: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.
+</div>
+<div id="ref-Wilkinson2005-oz" class="csl-entry" role="listitem">
+Wilkinson, Leland. 2005. <em>The Grammar of Graphics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-Winowiecki2011-zx" class="csl-entry" role="listitem">
+Winowiecki, Leigh, Sean Smukler, Kenneth Shirley, Roseline Remans, Gretchen Peltier, Erin Lothes, Elisabeth King, Liza Comita, Sandra Baptista, and Leontine Alkema. 2011. <span>“Tools for Enhancing Interdisciplinary Communication.”</span> <em>Sustainability: Science Practice and Policy</em> 7 (1): 74–80. <a href="https://doi.org/10.1080/15487733.2011.11908067">https://doi.org/10.1080/15487733.2011.11908067</a>.
+</div>
+<div id="ref-knitr" class="csl-entry" role="listitem">
+Xie, Yihui. 2015. <em>Dynamic Documents with <span>R</span> and Knitr</em>. 2nd ed. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>.
+</div>
+<div id="ref-rmarkdown" class="csl-entry" role="listitem">
+Xie, Yihui, J. J. Allaire, and Garrett Grolemund. 2018. <em>R Markdown: The Definitive Guide</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Australian National University<br> © Copyright 2021-2023 Emi Tanaka</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">(</span></a><a href="#ref-statsgen" role="doc-biblioref"><strong>statsgen?</strong></a>)</div>
+  </div>
+</footer>
+<link rel="stylesheet" href="../../assets/syntax-highlight.css">
+<link rel="stylesheet" href="../../assets/fontawesome-free-6.1.1-web/css/all.min.css">
+<script src="../../assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
+
+
+</body></html>
