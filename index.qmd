@@ -28,7 +28,6 @@ format:
 
 ## <i class='fas fa-plane-departure'></i> Travel
 
-- [ISI World Statistics Congress](https://www.isi2023.org/) <div style="font-size:0.8em;">at Ottawa, Canada 16th July - 20th July</div>
 - University of Toronto <div style="font-size:0.8em;">at Toronto, Canada, 24th July - 4th August</div>
 - [Joint Statistical Meeting](https://ww2.amstat.org/meetings/jsm/2023/) <div style="font-size:0.8em;">at Toronto, Canada, 5th August - 10th August</div>
 - McMaster University <div style="font-size:0.8em;">at Hamilton, Canada, 11th August - 25th August</div>
