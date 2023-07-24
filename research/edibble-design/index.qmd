@@ -34,6 +34,13 @@ abstract: >
   `r meta$abstract`
 ---
 
+::: callout-note
+
+<i class='fas fa-newspaper'></i> This paper can be found on [arXiv](https://arxiv.org/abs/2307.11593).
+
+:::
+
+
 
 ```{r child=paper}
 ```
