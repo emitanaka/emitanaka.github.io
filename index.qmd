@@ -38,6 +38,7 @@ format:
 
 ## <i class="fas fa-newspaper"></i> Recent Publications
 
+* Tanaka (2023) Towards a unified language in experimental designs propagated by a software framework [<i class="fa-solid fa-file-pdf"></i>](https://arxiv.org/abs/2307.11593)
 * Statistical Society of Australia Victorian Branch Annual Report 2022 [<i class="fa-solid fa-file-pdf"></i>](https://www.statsoc.org.au/resources/annual-report-2022.pdf)
 * Tanaka (2022) Getting the most out of your experimental data with design. *Biometric Bulletin* 39 (4) [<i class="fas fa-link"></i>](https://emitanaka.org/blog/2022-10-23-edibble-for-biometrics-bulletin/)
 * Tanaka & Amaliah (2022) Current state and prospects of R-packages for the design of experiments [<i class="fa-solid fa-file-pdf"></i>](https://arxiv.org/abs/2206.07532) [<i class="fa-solid fa-file-circle-plus"></i>](https://arxiv.org/src/2206.07532v1/anc/supp.pdf) [<i class="fa-brands fa-github"></i>](https://github.com/emitanaka/paper-DoE-review)
