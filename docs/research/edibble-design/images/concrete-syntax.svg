@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-1651 -3496 1604 1471" width="1604" height="1471">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="StickArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 6 6" markerWidth="6" markerHeight="6" color="black">
+      <g>
+        <path d="M 3.7333333 0 L 0 0 M 0 -1.4 L 3.7333333 0 L 0 1.4" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="DoubleArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 8 6" markerWidth="8" markerHeight="6" color="black">
+      <g>
+        <path d="M 2.88 -1.08 L 2.88 0 L 0 -1.08 L 0 1.08 L 2.88 0 L 2.88 1.08 L 5.76 0 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="concrete-syntax-simple" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none" stroke-dasharray="none">
+    <title>concrete-syntax-simple</title>
+    <g id="concrete-syntax-simple_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_93">
+        <path d="M -1644 -2398.826 L -739 -2398.826 C -736.2386 -2398.826 -734 -2396.5875 -734 -2393.826 L -734 -2031.826 C -734 -2029.0647 -736.2386 -2026.826 -739 -2026.826 L -1644 -2026.826 C -1646.7614 -2026.826 -1649 -2029.0647 -1649 -2031.826 L -1649 -2393.826 C -1649 -2396.5875 -1646.7614 -2398.826 -1644 -2398.826 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_67">
+        <path d="M -1644 -3259 L -739 -3259 C -736.2386 -3259 -734 -3256.7614 -734 -3254 L -734 -2816 C -734 -2813.2386 -736.2386 -2811 -739 -2811 L -1644 -2811 C -1646.7614 -2811 -1649 -2813.2386 -1649 -2816 L -1649 -3254 C -1649 -3256.7614 -1646.7614 -3259 -1644 -3259 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_94">
+        <path d="M -672.3478 -3259 L -54 -3259 C -51.238576 -3259 -49 -3256.7614 -49 -3254 L -49 -2816 C -49 -2813.2386 -51.238576 -2811 -54 -2811 L -672.3478 -2811 C -675.10925 -2811 -677.3478 -2813.2386 -677.3478 -2816 L -677.3478 -3254 C -677.3478 -3256.7614 -675.10925 -3259 -672.3478 -3259 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_84">
+        <path d="M -672.3478 -2398.826 L -54 -2398.826 C -51.238576 -2398.826 -49 -2396.5875 -49 -2393.826 L -49 -2031.826 C -49 -2029.0647 -51.238576 -2026.826 -54 -2026.826 L -672.3478 -2026.826 C -675.10925 -2026.826 -677.3478 -2029.0647 -677.3478 -2031.826 L -677.3478 -2393.826 C -677.3478 -2396.5875 -675.10925 -2398.826 -672.3478 -2398.826 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_92">
+        <path d="M -1644 -2791 L -739 -2791 C -736.2386 -2791 -734 -2788.7614 -734 -2786 L -734 -2424 C -734 -2421.2386 -736.2386 -2419 -739 -2419 L -1644 -2419 C -1646.7614 -2419 -1649 -2421.2386 -1649 -2424 L -1649 -2786 C -1649 -2788.7614 -1646.7614 -2791 -1644 -2791 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_2">
+        <path d="M -1574.6923 -3080.8986 L -1529.3077 -3080.8986 C -1518.262 -3080.8986 -1509.3077 -3071.9442 -1509.3077 -3060.8986 L -1509.3077 -3036.8986 C -1509.3077 -3025.853 -1518.262 -3016.8986 -1529.3077 -3016.8986 L -1574.6923 -3016.8986 C -1585.738 -3016.8986 -1594.6923 -3025.853 -1594.6923 -3036.8986 L -1594.6923 -3060.8986 C -1594.6923 -3071.9442 -1585.738 -3080.8986 -1574.6923 -3080.8986 Z" fill="#f26077"/>
+        <text transform="translate(-1579.6923 -3070.8986)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="8384404e-19" y="35">set</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <path d="M -968.5 -3204.14 L -888.5 -3204.14 C -877.4543 -3204.14 -868.5 -3195.1858 -868.5 -3184.14 L -868.5 -3164.14 C -868.5 -3153.0944 -877.4543 -3144.14 -888.5 -3144.14 L -968.5 -3144.14 C -979.5457 -3144.14 -988.5 -3153.0944 -988.5 -3164.14 L -988.5 -3184.14 C -988.5 -3195.1858 -979.5457 -3204.14 -968.5 -3204.14 Z" fill="#f26077"/>
+        <text transform="translate(-974.6538 -3194.14)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">units</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <path d="M -968.5 -3076.8986 L -798.5 -3076.8986 C -787.4543 -3076.8986 -778.5 -3067.9442 -778.5 -3056.8986 L -778.5 -3036.8986 C -778.5 -3025.853 -787.4543 -3016.8986 -798.5 -3016.8986 L -968.5 -3016.8986 C -979.5457 -3016.8986 -988.5 -3025.853 -988.5 -3036.8986 L -988.5 -3056.8986 C -988.5 -3067.9442 -979.5457 -3076.8986 -968.5 -3076.8986 Z" fill="#f26077"/>
+        <text transform="translate(-975.8077 -3066.8986)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">treatments</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <path d="M -968.5 -2949.657 L -852.5 -2949.657 C -841.4543 -2949.657 -832.5 -2940.7027 -832.5 -2929.657 L -832.5 -2909.657 C -832.5 -2898.6113 -841.4543 -2889.657 -852.5 -2889.657 L -968.5 -2889.657 C -979.5457 -2889.657 -988.5 -2898.6113 -988.5 -2909.657 L -988.5 -2929.657 C -988.5 -2940.7027 -979.5457 -2949.657 -968.5 -2949.657 Z" fill="#f26077"/>
+        <text transform="translate(-975.1154 -2939.657)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">records</tspan>
+        </text>
+      </g>
+      <g id="Graphic_9">
+        <path d="M -1583 -2656.6087 L -1503 -2656.6087 C -1491.9543 -2656.6087 -1483 -2647.6544 -1483 -2636.6087 L -1483 -2616.6087 C -1483 -2605.563 -1491.9543 -2596.6087 -1503 -2596.6087 L -1583 -2596.6087 C -1594.0457 -2596.6087 -1603 -2605.563 -1603 -2616.6087 L -1603 -2636.6087 C -1603 -2647.6544 -1594.0457 -2656.6087 -1583 -2656.6087 Z" fill="#f26077"/>
+        <text transform="translate(-1589.1538 -2646.6087)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">allot</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <path d="M -968.5 -2712.2174 L -888.5 -2712.2174 C -877.4543 -2712.2174 -868.5 -2703.263 -868.5 -2692.2174 L -868.5 -2672.2174 C -868.5 -2661.1717 -877.4543 -2652.2174 -888.5 -2652.2174 L -968.5 -2652.2174 C -979.5457 -2652.2174 -988.5 -2661.1717 -988.5 -2672.2174 L -988.5 -2692.2174 C -988.5 -2703.263 -979.5457 -2712.2174 -968.5 -2712.2174 Z" fill="#f26077"/>
+        <text transform="translate(-974.6538 -2702.2174)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">units</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <path d="M -968.5 -2570.826 L -798.5 -2570.826 C -787.4543 -2570.826 -778.5 -2561.8718 -778.5 -2550.826 L -778.5 -2530.826 C -778.5 -2519.7804 -787.4543 -2510.826 -798.5 -2510.826 L -968.5 -2510.826 C -979.5457 -2510.826 -988.5 -2519.7804 -988.5 -2530.826 L -988.5 -2550.826 C -988.5 -2561.8718 -979.5457 -2570.826 -968.5 -2570.826 Z" fill="#f26077"/>
+        <text transform="translate(-975.8077 -2560.826)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">treatments</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <path d="M -1421 -3128.6667 L -1112 -3128.6667 C -1106.4772 -3128.6667 -1102 -3124.1895 -1102 -3118.6667 L -1102 -2974.6667 C -1102 -2969.1438 -1106.4772 -2964.6667 -1112 -2964.6667 L -1421 -2964.6667 C -1426.5228 -2964.6667 -1431 -2969.1438 -1431 -2974.6667 L -1431 -3118.6667 C -1431 -3124.1895 -1426.5228 -3128.6667 -1421 -3128.6667 Z" fill="#ffc0c0"/>
+        <text transform="translate(-1416 -3118.6667)" fill="black">
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="28">Set nodes in the </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="64">factor graph.  May </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="100">also set nodes in the </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="136">level graph.</tspan>
+        </text>
+      </g>
+      <g id="Line_13">
+        <line x1="-1509.3077" y1="-3048.5648" x2="-1446.8995" y2="-3048.077" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_14">
+        <line x1="-1102" y1="-3108.7063" x2="-999.8758" y2="-3147.2214" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_15">
+        <line x1="-1102" y1="-3046.7663" x2="-1004.4" y2="-3046.8254" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_16">
+        <line x1="-1102" y1="-2987.9782" x2="-996.3666" y2="-2950.2915" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_20">
+        <text transform="translate(-1607.3846 -3325)" fill="#f26077">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="#f26077" x="0" y="35">Action</tspan>
+        </text>
+      </g>
+      <g id="Graphic_21">
+        <text transform="translate(-993.1154 -3325)" fill="#f26077">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="#f26077" x="1278977e-19" y="35">Subject</tspan>
+        </text>
+      </g>
+      <g id="Graphic_22">
+        <path d="M -1408 -2685.6087 L -1099 -2685.6087 C -1093.4772 -2685.6087 -1089 -2681.1315 -1089 -2675.6087 L -1089 -2567.6087 C -1089 -2562.086 -1093.4772 -2557.6087 -1099 -2557.6087 L -1408 -2557.6087 C -1413.5228 -2557.6087 -1418 -2562.086 -1418 -2567.6087 L -1418 -2675.6087 C -1418 -2681.1315 -1413.5228 -2685.6087 -1408 -2685.6087 Z" fill="#ffc0c0"/>
+        <text transform="translate(-1403 -2675.6087)" fill="black">
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="28">Add edge(s) between </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="64">nodes in the factor </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="100">graph.</tspan>
+        </text>
+      </g>
+      <g id="Graphic_23">
+        <path d="M -1601 -2250.6522 L -1503 -2250.6522 C -1491.9543 -2250.6522 -1483 -2241.698 -1483 -2230.6522 L -1483 -2210.6522 C -1483 -2199.6065 -1491.9543 -2190.6522 -1503 -2190.6522 L -1601 -2190.6522 C -1612.0457 -2190.6522 -1621 -2199.6065 -1621 -2210.6522 L -1621 -2230.6522 C -1621 -2241.698 -1612.0457 -2250.6522 -1601 -2250.6522 Z" fill="#f26077"/>
+        <text transform="translate(-1607.3846 -2240.6522)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">assign</tspan>
+        </text>
+      </g>
+      <g id="Graphic_24">
+        <path d="M -1404 -2302.6522 L -1095 -2302.6522 C -1089.4772 -2302.6522 -1085 -2298.175 -1085 -2292.6522 L -1085 -2148.6522 C -1085 -2143.1293 -1089.4772 -2138.6522 -1095 -2138.6522 L -1404 -2138.6522 C -1409.5228 -2138.6522 -1414 -2143.1293 -1414 -2148.6522 L -1414 -2292.6522 C -1414 -2298.175 -1409.5228 -2302.6522 -1404 -2302.6522 Z" fill="#ffc0c0"/>
+        <text transform="translate(-1399 -2292.6522)" fill="black">
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="28">Add edges (generally </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="64">algorithmically) </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="100">between nodes in the </tspan>
+          <tspan font-family="Fira Sans" font-size="30" fill="black" x="0" y="136">level graph.</tspan>
+        </text>
+      </g>
+      <g id="Graphic_25">
+        <path d="M -986.5 -2315.6522 L -906.5 -2315.6522 C -895.4543 -2315.6522 -886.5 -2306.698 -886.5 -2295.6522 L -886.5 -2275.6522 C -886.5 -2264.6065 -895.4543 -2255.6522 -906.5 -2255.6522 L -986.5 -2255.6522 C -997.5457 -2255.6522 -1006.5 -2264.6065 -1006.5 -2275.6522 L -1006.5 -2295.6522 C -1006.5 -2306.698 -997.5457 -2315.6522 -986.5 -2315.6522 Z" fill="#f26077"/>
+        <text transform="translate(-992.6538 -2305.6522)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">units</tspan>
+        </text>
+      </g>
+      <g id="Graphic_26">
+        <path d="M -996 -2166.6522 L -826 -2166.6522 C -814.9543 -2166.6522 -806 -2157.6979 -806 -2146.6522 L -806 -2126.6522 C -806 -2115.6065 -814.9543 -2106.6522 -826 -2106.6522 L -996 -2106.6522 C -1007.0457 -2106.6522 -1016 -2115.6065 -1016 -2126.6522 L -1016 -2146.6522 C -1016 -2157.6979 -1007.0457 -2166.6522 -996 -2166.6522 Z" fill="#f26077"/>
+        <text transform="translate(-1003.3077 -2156.6522)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">treatments</tspan>
+        </text>
+      </g>
+      <g id="Line_27">
+        <line x1="-1483" y1="-2625.5724" x2="-1433.8976" y2="-2624.7244" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_28">
+        <line x1="-1089" y1="-2652.286" x2="-1004.0961" y2="-2668.1196" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_29">
+        <line x1="-1089" y1="-2585.6932" x2="-1000.002" y2="-2566.262" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_30">
+        <line x1="-1483" y1="-2220.6522" x2="-1429.9" y2="-2220.6522" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_31">
+        <line x1="-1085" y1="-2255.941" x2="-1021.8478" y2="-2269.4885" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_32">
+        <line x1="-1085" y1="-2179.831" x2="-1025.1975" y2="-2164.9907" marker-end="url(#StickArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_35">
+        <text transform="translate(-1342.1538 -3486)" fill="#f26077">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="40" fill="#f26077" x="0" y="47">Functions</tspan>
+        </text>
+      </g>
+      <g id="Line_36">
+        <line x1="-1313.8882" y1="-3417" x2="-1491.2291" y2="-3332.095" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_37">
+        <line x1="-1152.4147" y1="-3417" x2="-988.3148" y2="-3334.9188" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_39">
+        <text transform="translate(-612.43465 -3340)" fill="#68bc36">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="#68bc36" x="0" y="35">Parameters</tspan>
+        </text>
+      </g>
+      <g id="Graphic_48">
+        <path d="M -569 -3138.7778 L -449.76923 -3138.7778 C -438.72354 -3138.7778 -429.76923 -3129.8235 -429.76923 -3118.7778 L -429.76923 -3094.7778 C -429.76923 -3083.732 -438.72354 -3074.7778 -449.76923 -3074.7778 L -569 -3074.7778 C -580.0457 -3074.7778 -589 -3083.732 -589 -3094.7778 L -589 -3118.7778 C -589 -3129.8235 -580.0457 -3138.7778 -569 -3138.7778 Z" fill="#68bc36"/>
+        <text transform="translate(-574 -3128.7778)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;name1&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_47">
+        <path d="M -303.66375 -3138.7778 L -165.97144 -3138.7778 C -154.92575 -3138.7778 -145.97144 -3129.8235 -145.97144 -3118.7778 L -145.97144 -3094.7778 C -145.97144 -3083.732 -154.92575 -3074.7778 -165.97144 -3074.7778 L -303.66375 -3074.7778 C -314.70944 -3074.7778 -323.66375 -3083.732 -323.66375 -3094.7778 L -323.66375 -3118.7778 C -323.66375 -3129.8235 -314.70944 -3138.7778 -303.66375 -3138.7778 Z" fill="#68bc36"/>
+        <text transform="translate(-308.66375 -3128.7778)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="4121148e-19" y="35">&lt;value1&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_54">
+        <path d="M -569 -3041.7778 L -449.76923 -3041.7778 C -438.72354 -3041.7778 -429.76923 -3032.8235 -429.76923 -3021.7778 L -429.76923 -2997.7778 C -429.76923 -2986.732 -438.72354 -2977.7778 -449.76923 -2977.7778 L -569 -2977.7778 C -580.0457 -2977.7778 -589 -2986.732 -589 -2997.7778 L -589 -3021.7778 C -589 -3032.8235 -580.0457 -3041.7778 -569 -3041.7778 Z" fill="#68bc36"/>
+        <text transform="translate(-574 -3031.7778)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;name2&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_53">
+        <path d="M -303.66375 -3045.7778 L -165.97144 -3045.7778 C -154.92575 -3045.7778 -145.97144 -3036.8235 -145.97144 -3025.7778 L -145.97144 -3001.7778 C -145.97144 -2990.732 -154.92575 -2981.7778 -165.97144 -2981.7778 L -303.66375 -2981.7778 C -314.70944 -2981.7778 -323.66375 -2990.732 -323.66375 -3001.7778 L -323.66375 -3025.7778 C -323.66375 -3036.8235 -314.70944 -3045.7778 -303.66375 -3045.7778 Z" fill="#68bc36"/>
+        <text transform="translate(-308.66375 -3035.7778)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="4121148e-19" y="35">&lt;value2&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_61">
+        <text transform="translate(-423.12905 -2960.2126)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="7247536e-19" y="57">. . .</tspan>
+        </text>
+      </g>
+      <g id="Line_62"/>
+      <g id="Line_63"/>
+      <g id="Graphic_64">
+        <text transform="translate(-398.46007 -3142.6178)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_65">
+        <text transform="translate(-399.42905 -3047.482)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_83">
+        <path d="M -672.3478 -2791 L -54 -2791 C -51.238576 -2791 -49 -2788.7614 -49 -2786 L -49 -2424 C -49 -2421.2386 -51.238576 -2419 -54 -2419 L -672.3478 -2419 C -675.10925 -2419 -677.3478 -2421.2386 -677.3478 -2424 L -677.3478 -2786 C -677.3478 -2788.7614 -675.10925 -2791 -672.3478 -2791 Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_78">
+        <path d="M -580 -2687.7665 L -460.76923 -2687.7665 C -449.72354 -2687.7665 -440.76923 -2678.8122 -440.76923 -2667.7665 L -440.76923 -2643.7665 C -440.76923 -2632.7208 -449.72354 -2623.7665 -460.76923 -2623.7665 L -580 -2623.7665 C -591.0457 -2623.7665 -600 -2632.7208 -600 -2643.7665 L -600 -2667.7665 C -600 -2678.8122 -591.0457 -2687.7665 -580 -2687.7665 Z" fill="#68bc36"/>
+        <text transform="translate(-585 -2677.7665)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;form1&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_77">
+        <path d="M -305.43298 -2687.7665 L -186.2022 -2687.7665 C -175.15652 -2687.7665 -166.20221 -2678.8122 -166.20221 -2667.7665 L -166.20221 -2643.7665 C -166.20221 -2632.7208 -175.15652 -2623.7665 -186.2022 -2623.7665 L -305.43298 -2623.7665 C -316.47867 -2623.7665 -325.43298 -2632.7208 -325.43298 -2643.7665 L -325.43298 -2667.7665 C -325.43298 -2678.8122 -316.47867 -2687.7665 -305.43298 -2687.7665 Z" fill="#68bc36"/>
+        <text transform="translate(-310.43298 -2677.7665)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;name1&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_72">
+        <text transform="translate(-428.87036 -2597.6865)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="7247536e-19" y="57">. . .</tspan>
+        </text>
+      </g>
+      <g id="Line_71"/>
+      <g id="Graphic_69">
+        <text transform="translate(-405.17036 -2691.6065)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">~</tspan>
+        </text>
+      </g>
+      <g id="Graphic_87">
+        <path d="M -589 -2332.7633 L -506.6923 -2332.7633 C -495.6466 -2332.7633 -486.6923 -2323.809 -486.6923 -2312.7633 L -486.6923 -2288.7633 C -486.6923 -2277.7176 -495.6466 -2268.7633 -506.6923 -2268.7633 L -589 -2268.7633 C -600.0457 -2268.7633 -609 -2277.7176 -609 -2288.7633 L -609 -2312.7633 C -609 -2323.809 -600.0457 -2332.7633 -589 -2332.7633 Z" fill="#68bc36"/>
+        <text transform="translate(-594 -2322.7633)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">order</tspan>
+        </text>
+      </g>
+      <g id="Graphic_88">
+        <path d="M -589 -2247.2633 L -525.15385 -2247.2633 C -514.10815 -2247.2633 -505.15385 -2238.309 -505.15385 -2227.2633 L -505.15385 -2203.2633 C -505.15385 -2192.2176 -514.10815 -2183.2633 -525.15385 -2183.2633 L -589 -2183.2633 C -600.0457 -2183.2633 -609 -2192.2176 -609 -2203.2633 L -609 -2227.2633 C -609 -2238.309 -600.0457 -2247.2633 -589 -2247.2633 Z" fill="#68bc36"/>
+        <text transform="translate(-594 -2237.2633)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">seed</tspan>
+        </text>
+      </g>
+      <g id="Graphic_89">
+        <path d="M -294.1027 -2247.2633 L -174.87194 -2247.2633 C -163.82625 -2247.2633 -154.87194 -2238.309 -154.87194 -2227.2633 L -154.87194 -2203.2633 C -154.87194 -2192.2176 -163.82625 -2183.2633 -174.87194 -2183.2633 L -294.1027 -2183.2633 C -305.1484 -2183.2633 -314.1027 -2192.2176 -314.1027 -2203.2633 L -314.1027 -2227.2633 C -314.1027 -2238.309 -305.1484 -2247.2633 -294.1027 -2247.2633 Z" fill="#68bc36"/>
+        <text transform="translate(-299.1027 -2237.2633)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;value&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_90">
+        <path d="M -295.2064 -2332.7633 L -175.97562 -2332.7633 C -164.92993 -2332.7633 -155.97562 -2323.809 -155.97562 -2312.7633 L -155.97562 -2288.7633 C -155.97562 -2277.7176 -164.92993 -2268.7633 -175.97562 -2268.7633 L -295.2064 -2268.7633 C -306.2521 -2268.7633 -315.2064 -2277.7176 -315.2064 -2288.7633 L -315.2064 -2312.7633 C -315.2064 -2323.809 -306.2521 -2332.7633 -295.2064 -2332.7633 Z" fill="#68bc36"/>
+        <text transform="translate(-300.2064 -2322.7633)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="1278977e-19" y="35">&lt;order&gt;</tspan>
+        </text>
+      </g>
+      <g id="Graphic_91">
+        <path d="M -589 -2161.7633 L -432.84615 -2161.7633 C -421.80046 -2161.7633 -412.84615 -2152.809 -412.84615 -2141.7633 L -412.84615 -2117.7633 C -412.84615 -2106.7176 -421.80046 -2097.7633 -432.84615 -2097.7633 L -589 -2097.7633 C -600.0457 -2097.7633 -609 -2106.7176 -609 -2117.7633 L -609 -2141.7633 C -609 -2152.809 -600.0457 -2161.7633 -589 -2161.7633 Z" fill="#68bc36"/>
+        <text transform="translate(-594 -2151.7633)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="6963319e-19" y="35">constrain</tspan>
+        </text>
+      </g>
+      <g id="Line_97"/>
+      <g id="Line_98"/>
+      <g id="Graphic_99">
+        <path d="M -295.17295 -2162.3188 L -102.09602 -2162.3188 C -91.05033 -2162.3188 -82.09602 -2153.3645 -82.09602 -2142.3188 L -82.09602 -2118.3188 C -82.09602 -2107.2731 -91.05033 -2098.3188 -102.09602 -2098.3188 L -295.17295 -2098.3188 C -306.21864 -2098.3188 -315.17295 -2107.2731 -315.17295 -2118.3188 L -315.17295 -2142.3188 C -315.17295 -2153.3645 -306.21864 -2162.3188 -295.17295 -2162.3188 Z" fill="#68bc36"/>
+        <text transform="translate(-300.17295 -2152.3188)" fill="black">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="black" x="0" y="35">&lt;constrain&gt;</tspan>
+        </text>
+      </g>
+      <g id="Line_100"/>
+      <g id="Graphic_101">
+        <text transform="translate(-379.36926 -2336.6033)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_102">
+        <text transform="translate(-378.42 -2251.1033)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_103">
+        <text transform="translate(-378.2437 -2165.8713)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="60" fill="black" x="0" y="57">=</tspan>
+        </text>
+      </g>
+      <g id="Graphic_105">
+        <text transform="translate(-308.53653 -3340)" fill="#68bc36">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="30" fill="#68bc36" x="6963319e-19" y="35">Arguments</tspan>
+        </text>
+      </g>
+      <g id="Graphic_106">
+        <text transform="translate(-455.2752 -3485.869)" fill="#68bc36">
+          <tspan font-family="Fira Code" font-weight="bold" font-size="40" fill="#68bc36" x="4121148e-19" y="47">Inputs</tspan>
+        </text>
+      </g>
+      <g id="Line_107">
+        <line x1="-421.0229" y1="-3416.869" x2="-488.0509" y2="-3350" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_108">
+        <line x1="-336.9047" y1="-3416.869" x2="-261.52996" y2="-3350" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_109">
+        <line x1="-732.5" y1="-3035" x2="-715.1478" y2="-3035" marker-end="url(#DoubleArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      </g>
+      <g id="Line_110">
+        <line x1="-732.5" y1="-2605" x2="-715.1478" y2="-2605" marker-end="url(#DoubleArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      </g>
+      <g id="Line_111">
+        <line x1="-732.5" y1="-2212.826" x2="-715.1478" y2="-2212.826" marker-end="url(#DoubleArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      </g>
+    </g>
+  </g>
+</svg>

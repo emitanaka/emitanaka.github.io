@@ -19,6 +19,7 @@ bibliography: paper.bib
 format:
   html:
     toc: true
+    default-image-extension: svg
 ---
 
 ```{r, include = FALSE}

@@ -1,0 +1,1577 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" viewBox="-1134 -3212 3638 2429" width="3638" height="2429">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -2 5 4" markerWidth="5" markerHeight="4" color="black">
+      <g>
+        <path d="M 2.5142857 0 L 0 -.9428571 L 0 .9428571 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -2 5 4" markerWidth="5" markerHeight="4" color="black">
+      <g>
+        <path d="M 2.0266667 0 L 0 -.76 L 0 .76 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="experiment-nested" fill-opacity="1" fill="none" stroke-opacity="1" stroke="none" stroke-dasharray="none">
+    <title>experiment-nested</title>
+    <g id="experiment-nested_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_871">
+        <rect x="1416" y="-1488" width="1083" height="699.7548" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Graphic_869">
+        <rect x="1416" y="-2168.6847" width="1083" height="631.6847" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Graphic_866">
+        <rect x="1411" y="-3205.7647" width="1088" height="987.4792" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Graphic_862">
+        <rect x="-1129" y="-3205" width="2484" height="2416.7548" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Group_825">
+        <g id="Graphic_827">
+          <rect x="-892.0099" y="-2642.5433" width="672.3667" height="1659.685" fill="#68bc36"/>
+          <rect x="-892.0099" y="-2642.5433" width="672.3667" height="1659.685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_826">
+          <line x1="-907" y1="-1812.7008" x2="-204.98062" y2="-1806.0866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_822">
+        <g id="Graphic_824">
+          <rect x="-165.1022" y="-2642.5433" width="672.3667" height="1659.685" fill="#68bc36"/>
+          <rect x="-165.1022" y="-2642.5433" width="672.3667" height="1659.685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_823">
+          <line x1="-180.09226" y1="-1812.7008" x2="521.9271" y2="-1806.0866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_819">
+        <g id="Graphic_821">
+          <rect x="560.3014" y="-2642.5433" width="672.3667" height="1659.685" fill="#68bc36"/>
+          <rect x="560.3014" y="-2642.5433" width="672.3667" height="1659.685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_820">
+          <line x1="545.31135" y1="-1812.7008" x2="1247.3307" y2="-1806.0866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_811">
+        <g id="Graphic_818">
+          <ellipse cx="-435.81947" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-435.81947" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_817">
+          <rect x="-511.3021" y="-2476.451" width="69.36286" height="69.36286" id="path"/>
+          <clipPath id="clip_path">
+            <use xl:href="#path"/>
+          </clipPath>
+          <g clip-path="url(#clip_path)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2476.451) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_816">
+          <rect x="-427.4116" y="-2479.0864" width="69.36286" height="69.36286" id="path_2"/>
+          <clipPath id="clip_path_2">
+            <use xl:href="#path_2"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_2)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-427.4116 -2479.0864) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_815">
+          <rect x="-511.3021" y="-2399.7345" width="69.36286" height="69.36286" id="path_3"/>
+          <clipPath id="clip_path_3">
+            <use xl:href="#path_3"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_3)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_814">
+          <rect x="-427.4116" y="-2399.7345" width="69.36286" height="69.36286" id="path_4"/>
+          <clipPath id="clip_path_4">
+            <use xl:href="#path_4"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_4)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-427.4116 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_813">
+          <rect x="-511.3021" y="-2320.027" width="69.36286" height="69.36286" id="path_5"/>
+          <clipPath id="clip_path_5">
+            <use xl:href="#path_5"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_5)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_812">
+          <rect x="-425.9057" y="-2320.027" width="69.36286" height="69.36286" id="path_6"/>
+          <clipPath id="clip_path_6">
+            <use xl:href="#path_6"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_6)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-425.9057 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_803">
+        <g id="Graphic_810">
+          <ellipse cx="-681.0163" cy="-2024.0276" rx="152.283131410352" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-681.0163" cy="-2024.0276" rx="152.283131410352" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_809">
+          <rect x="-756.4989" y="-2140.5456" width="69.36286" height="69.36286" id="path_7"/>
+          <clipPath id="clip_path_7">
+            <use xl:href="#path_7"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_7)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -2140.5456) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_808">
+          <rect x="-672.60845" y="-2143.181" width="69.36286" height="69.36286" id="path_8"/>
+          <clipPath id="clip_path_8">
+            <use xl:href="#path_8"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_8)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-672.60845 -2143.181) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_807">
+          <rect x="-756.4989" y="-2063.829" width="69.36286" height="69.36286" id="path_9"/>
+          <clipPath id="clip_path_9">
+            <use xl:href="#path_9"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_9)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_806">
+          <rect x="-672.60845" y="-2063.829" width="69.36286" height="69.36286" id="path_10"/>
+          <clipPath id="clip_path_10">
+            <use xl:href="#path_10"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_10)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-672.60845 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_805">
+          <rect x="-756.4989" y="-1984.1215" width="69.36286" height="69.36286" id="path_11"/>
+          <clipPath id="clip_path_11">
+            <use xl:href="#path_11"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_11)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_804">
+          <rect x="-671.1026" y="-1984.1215" width="69.36286" height="69.36286" id="path_12"/>
+          <clipPath id="clip_path_12">
+            <use xl:href="#path_12"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_12)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-671.1026 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Graphic_802">
+        <rect x="787.1079" y="-2859.3937" width="141.73228" height="141.73228" id="path_13"/>
+        <clipPath id="clip_path_13">
+          <use xl:href="#path_13"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_13)">
+          <image xl:href="image3.png" width="409.6" height="409.6" transform="translate(787.1079 -2859.3937) scale(.3460261)"/>
+        </g>
+      </g>
+      <g id="Graphic_801">
+        <rect x="-606" y="-2855" width="141.73228" height="141.73228" id="path_14"/>
+        <clipPath id="clip_path_14">
+          <use xl:href="#path_14"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_14)">
+          <image xl:href="image5.png" width="384" height="384" transform="translate(-606 -2855) scale(.3690945)"/>
+        </g>
+      </g>
+      <g id="Graphic_800">
+        <rect x="107.80316" y="-2866.4803" width="141.73228" height="141.73228" id="path_15"/>
+        <clipPath id="clip_path_15">
+          <use xl:href="#path_15"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_15)">
+          <image xl:href="image6.png" width="409.6" height="409.6" transform="translate(107.80316 -2866.4803) scale(.3460261)"/>
+        </g>
+      </g>
+      <g id="Graphic_799">
+        <text transform="translate(-858.5506 -2617.7008)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Low Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_798">
+        <text transform="translate(-118.27604 -1763.0551)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Low Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_797">
+        <text transform="translate(599.1787 -1763.0551)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Low Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_796">
+        <text transform="translate(-860.6488 -1763.0551)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">High Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_795">
+        <text transform="translate(-134.73409 -2617.7008)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">High Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_794">
+        <text transform="translate(591.18065 -2617.7008)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">High Dose</tspan>
+        </text>
+      </g>
+      <g id="Group_790">
+        <g id="Graphic_793">
+          <ellipse cx="-738.3483" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-738.3483" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_792">
+          <rect x="-822.1436" y="-2439.7475" width="167.59055" height="167.59055" id="path_16"/>
+          <clipPath id="clip_path_16">
+            <use xl:href="#path_16"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_16)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-822.1436 -2439.7475) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_791">
+          <rect x="-827.6494" y="-2372.0472" width="43.447786" height="43.362927" id="path_17"/>
+          <clipPath id="clip_path_17">
+            <use xl:href="#path_17"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_17)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-827.6494 -2372.0472) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_786">
+        <g id="Graphic_789">
+          <ellipse cx="-384.15677" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-384.15677" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_788">
+          <rect x="-467.95204" y="-2105.2594" width="167.59055" height="167.59055" id="path_18"/>
+          <clipPath id="clip_path_18">
+            <use xl:href="#path_18"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_18)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-467.95204 -2105.2594) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_787">
+          <rect x="-473.45784" y="-2037.559" width="43.447786" height="43.362927" id="path_19"/>
+          <clipPath id="clip_path_19">
+            <use xl:href="#path_19"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_19)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-473.45784 -2037.559) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_785">
+        <path d="M -429.4622 -1922.4642 C -445.1035 -1897.075 -463.03415 -1874.3174 -480.2665 -1866.75 C -509.654 -1853.8446 -528.1065 -1889.027 -537.51485 -1915.6859" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_784">
+        <path d="M -701.6831 -2445.7317 C -684.5539 -2473.0308 -660.413 -2495.712 -627.2362 -2497.053 C -607.8125 -2497.838 -587.3615 -2491.225 -567.3465 -2480.5264" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Graphic_783">
+        <rect x="-345.77222" y="-2044.3504" width="62.26771" height="62.26771" id="path_20"/>
+        <clipPath id="clip_path_20">
+          <use xl:href="#path_20"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_20)">
+          <image xl:href="image5.png" width="384" height="384" transform="translate(-345.77222 -2044.3504) scale(.1621555)"/>
+        </g>
+      </g>
+      <g id="Group_780">
+        <g id="Graphic_782">
+          <rect x="-892.0099" y="-2642.5433" width="672.3667" height="1659.685" fill="#68bc36"/>
+          <rect x="-892.0099" y="-2642.5433" width="672.3667" height="1659.685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_781">
+          <line x1="-907" y1="-1812.7008" x2="-204.98062" y2="-1806.0866" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_772">
+        <g id="Graphic_779">
+          <ellipse cx="-435.81947" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-435.81947" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_778">
+          <rect x="-511.3021" y="-2476.451" width="69.36286" height="69.36286" id="path_21"/>
+          <clipPath id="clip_path_21">
+            <use xl:href="#path_21"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_21)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2476.451) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_777">
+          <rect x="-427.4116" y="-2479.0864" width="69.36286" height="69.36286" id="path_22"/>
+          <clipPath id="clip_path_22">
+            <use xl:href="#path_22"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_22)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-427.4116 -2479.0864) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_776">
+          <rect x="-511.3021" y="-2399.7345" width="69.36286" height="69.36286" id="path_23"/>
+          <clipPath id="clip_path_23">
+            <use xl:href="#path_23"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_23)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_775">
+          <rect x="-427.4116" y="-2399.7345" width="69.36286" height="69.36286" id="path_24"/>
+          <clipPath id="clip_path_24">
+            <use xl:href="#path_24"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_24)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-427.4116 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_774">
+          <rect x="-511.3021" y="-2320.027" width="69.36286" height="69.36286" id="path_25"/>
+          <clipPath id="clip_path_25">
+            <use xl:href="#path_25"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_25)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-511.3021 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_773">
+          <rect x="-425.9057" y="-2320.027" width="69.36286" height="69.36286" id="path_26"/>
+          <clipPath id="clip_path_26">
+            <use xl:href="#path_26"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_26)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-425.9057 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_764">
+        <g id="Graphic_771">
+          <ellipse cx="-681.0163" cy="-2024.0276" rx="152.283131410352" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-681.0163" cy="-2024.0276" rx="152.283131410352" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_770">
+          <rect x="-756.4989" y="-2140.5456" width="69.36286" height="69.36286" id="path_27"/>
+          <clipPath id="clip_path_27">
+            <use xl:href="#path_27"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_27)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -2140.5456) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_769">
+          <rect x="-672.60845" y="-2143.181" width="69.36286" height="69.36286" id="path_28"/>
+          <clipPath id="clip_path_28">
+            <use xl:href="#path_28"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_28)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-672.60845 -2143.181) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_768">
+          <rect x="-756.4989" y="-2063.829" width="69.36286" height="69.36286" id="path_29"/>
+          <clipPath id="clip_path_29">
+            <use xl:href="#path_29"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_29)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_767">
+          <rect x="-672.60845" y="-2063.829" width="69.36286" height="69.36286" id="path_30"/>
+          <clipPath id="clip_path_30">
+            <use xl:href="#path_30"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_30)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-672.60845 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_766">
+          <rect x="-756.4989" y="-1984.1215" width="69.36286" height="69.36286" id="path_31"/>
+          <clipPath id="clip_path_31">
+            <use xl:href="#path_31"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_31)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-756.4989 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_765">
+          <rect x="-671.1026" y="-1984.1215" width="69.36286" height="69.36286" id="path_32"/>
+          <clipPath id="clip_path_32">
+            <use xl:href="#path_32"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_32)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-671.1026 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_760">
+        <g id="Graphic_763">
+          <ellipse cx="-738.3483" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-738.3483" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_762">
+          <rect x="-822.1436" y="-2439.7475" width="167.59055" height="167.59055" id="path_33"/>
+          <clipPath id="clip_path_33">
+            <use xl:href="#path_33"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_33)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-822.1436 -2439.7475) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_761">
+          <rect x="-827.6494" y="-2372.0472" width="43.447786" height="43.362927" id="path_34"/>
+          <clipPath id="clip_path_34">
+            <use xl:href="#path_34"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_34)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-827.6494 -2372.0472) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_756">
+        <g id="Graphic_759">
+          <ellipse cx="-384.15677" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-384.15677" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_758">
+          <rect x="-467.95204" y="-2105.2594" width="167.59055" height="167.59055" id="path_35"/>
+          <clipPath id="clip_path_35">
+            <use xl:href="#path_35"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_35)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-467.95204 -2105.2594) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_757">
+          <rect x="-473.45784" y="-2037.559" width="43.447786" height="43.362927" id="path_36"/>
+          <clipPath id="clip_path_36">
+            <use xl:href="#path_36"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_36)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-473.45784 -2037.559) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_755">
+        <path d="M -429.4622 -1922.4642 C -445.1035 -1897.075 -463.03415 -1874.3174 -480.2665 -1866.75 C -509.654 -1853.8446 -528.1065 -1889.027 -537.51485 -1915.6859" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_754">
+        <path d="M -701.6831 -2445.7317 C -684.5539 -2473.0308 -660.413 -2495.712 -627.2362 -2497.053 C -607.8125 -2497.838 -587.3615 -2491.225 -567.3465 -2480.5264" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Graphic_753">
+        <rect x="-345.77222" y="-2044.3504" width="108" height="108" id="path_37"/>
+        <clipPath id="clip_path_37">
+          <use xl:href="#path_37"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_37)">
+          <image xl:href="image5.png" width="384" height="384" transform="translate(-345.77222 -2044.3504) scale(.28125)"/>
+        </g>
+      </g>
+      <g id="Group_745">
+        <g id="Graphic_752">
+          <ellipse cx="-431.16044" cy="-1528.4913" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-431.16044" cy="-1528.4913" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_751">
+          <rect x="-506.64306" y="-1645.0094" width="69.36286" height="69.36286" id="path_38"/>
+          <clipPath id="clip_path_38">
+            <use xl:href="#path_38"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_38)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-506.64306 -1645.0094) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_750">
+          <rect x="-422.75257" y="-1647.6447" width="69.36286" height="69.36286" id="path_39"/>
+          <clipPath id="clip_path_39">
+            <use xl:href="#path_39"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_39)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-422.75257 -1647.6447) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_749">
+          <rect x="-506.64306" y="-1568.2927" width="69.36286" height="69.36286" id="path_40"/>
+          <clipPath id="clip_path_40">
+            <use xl:href="#path_40"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_40)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-506.64306 -1568.2927) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_748">
+          <rect x="-422.75257" y="-1568.2927" width="69.36286" height="69.36286" id="path_41"/>
+          <clipPath id="clip_path_41">
+            <use xl:href="#path_41"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_41)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-422.75257 -1568.2927) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_747">
+          <rect x="-506.64306" y="-1488.5853" width="69.36286" height="69.36286" id="path_42"/>
+          <clipPath id="clip_path_42">
+            <use xl:href="#path_42"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_42)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-506.64306 -1488.5853) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_746">
+          <rect x="-421.2467" y="-1488.5853" width="69.36286" height="69.36286" id="path_43"/>
+          <clipPath id="clip_path_43">
+            <use xl:href="#path_43"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_43)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-421.2467 -1488.5853) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_737">
+        <g id="Graphic_744">
+          <ellipse cx="-676.3573" cy="-1192.5858" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="-676.3573" cy="-1192.5858" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_743">
+          <rect x="-751.8399" y="-1309.1038" width="69.36286" height="69.36286" id="path_44"/>
+          <clipPath id="clip_path_44">
+            <use xl:href="#path_44"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_44)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-751.8399 -1309.1038) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_742">
+          <rect x="-667.9494" y="-1311.7391" width="69.36286" height="69.36286" id="path_45"/>
+          <clipPath id="clip_path_45">
+            <use xl:href="#path_45"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_45)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-667.9494 -1311.7391) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_741">
+          <rect x="-751.8399" y="-1232.3872" width="69.36286" height="69.36286" id="path_46"/>
+          <clipPath id="clip_path_46">
+            <use xl:href="#path_46"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_46)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-751.8399 -1232.3872) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_740">
+          <rect x="-667.9494" y="-1232.3872" width="69.36286" height="69.36286" id="path_47"/>
+          <clipPath id="clip_path_47">
+            <use xl:href="#path_47"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_47)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-667.9494 -1232.3872) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_739">
+          <rect x="-751.8399" y="-1152.6798" width="69.36286" height="69.36286" id="path_48"/>
+          <clipPath id="clip_path_48">
+            <use xl:href="#path_48"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_48)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-751.8399 -1152.6798) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_738">
+          <rect x="-666.4435" y="-1152.6798" width="69.36286" height="69.36286" id="path_49"/>
+          <clipPath id="clip_path_49">
+            <use xl:href="#path_49"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_49)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-666.4435 -1152.6798) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_733">
+        <g id="Graphic_736">
+          <ellipse cx="-733.6893" cy="-1516.263" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-733.6893" cy="-1516.263" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_735">
+          <rect x="-817.4846" y="-1608.3058" width="167.59055" height="167.59055" id="path_50"/>
+          <clipPath id="clip_path_50">
+            <use xl:href="#path_50"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_50)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-817.4846 -1608.3058) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_734">
+          <rect x="-822.9904" y="-1540.6055" width="43.447786" height="43.362927" id="path_51"/>
+          <clipPath id="clip_path_51">
+            <use xl:href="#path_51"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_51)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-822.9904 -1540.6055) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_729">
+        <g id="Graphic_732">
+          <ellipse cx="-379.49774" cy="-1181.7748" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-379.49774" cy="-1181.7748" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_731">
+          <rect x="-463.293" y="-1273.8176" width="167.59055" height="167.59055" id="path_52"/>
+          <clipPath id="clip_path_52">
+            <use xl:href="#path_52"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_52)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-463.293 -1273.8176) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_730">
+          <rect x="-468.7988" y="-1206.1173" width="43.447786" height="43.362927" id="path_53"/>
+          <clipPath id="clip_path_53">
+            <use xl:href="#path_53"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_53)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-468.7988 -1206.1173) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_728">
+        <path d="M -424.80317 -1091.0224 C -440.44447 -1065.6333 -458.3751 -1042.8756 -475.60746 -1035.3082 C -504.99497 -1022.4028 -523.44747 -1057.5853 -532.8558 -1084.2441" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_727">
+        <path d="M -697.0241 -1614.29 C -679.8948 -1641.589 -655.7539 -1664.2702 -622.57716 -1665.6112 C -603.1534 -1666.3963 -582.7025 -1659.7831 -562.6875 -1649.0846" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Group_719">
+        <g id="Graphic_726">
+          <ellipse cx="284.61262" cy="-1514.9252" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="284.61262" cy="-1514.9252" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_725">
+          <rect x="209.13" y="-1631.4432" width="69.36286" height="69.36286" id="path_54"/>
+          <clipPath id="clip_path_54">
+            <use xl:href="#path_54"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_54)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -1631.4432) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_724">
+          <rect x="293.0205" y="-1634.0785" width="69.36286" height="69.36286" id="path_55"/>
+          <clipPath id="clip_path_55">
+            <use xl:href="#path_55"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_55)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(293.0205 -1634.0785) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_723">
+          <rect x="209.13" y="-1554.7266" width="69.36286" height="69.36286" id="path_56"/>
+          <clipPath id="clip_path_56">
+            <use xl:href="#path_56"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_56)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -1554.7266) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_722">
+          <rect x="293.0205" y="-1554.7266" width="69.36286" height="69.36286" id="path_57"/>
+          <clipPath id="clip_path_57">
+            <use xl:href="#path_57"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_57)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(293.0205 -1554.7266) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_721">
+          <rect x="209.13" y="-1475.0192" width="69.36286" height="69.36286" id="path_58"/>
+          <clipPath id="clip_path_58">
+            <use xl:href="#path_58"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_58)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -1475.0192) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_720">
+          <rect x="294.52638" y="-1475.0192" width="69.36286" height="69.36286" id="path_59"/>
+          <clipPath id="clip_path_59">
+            <use xl:href="#path_59"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_59)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(294.52638 -1475.0192) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_711">
+        <g id="Graphic_718">
+          <ellipse cx="39.41577" cy="-1179.0197" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="39.41577" cy="-1179.0197" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_717">
+          <rect x="-36.06685" y="-1295.5377" width="69.36286" height="69.36286" id="path_60"/>
+          <clipPath id="clip_path_60">
+            <use xl:href="#path_60"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_60)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -1295.5377) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_716">
+          <rect x="47.82364" y="-1298.173" width="69.36286" height="69.36286" id="path_61"/>
+          <clipPath id="clip_path_61">
+            <use xl:href="#path_61"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_61)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(47.82364 -1298.173) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_715">
+          <rect x="-36.06685" y="-1218.8211" width="69.36286" height="69.36286" id="path_62"/>
+          <clipPath id="clip_path_62">
+            <use xl:href="#path_62"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_62)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -1218.8211) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_714">
+          <rect x="47.82364" y="-1218.8211" width="69.36286" height="69.36286" id="path_63"/>
+          <clipPath id="clip_path_63">
+            <use xl:href="#path_63"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_63)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(47.82364 -1218.8211) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_713">
+          <rect x="-36.06685" y="-1139.1136" width="69.36286" height="69.36286" id="path_64"/>
+          <clipPath id="clip_path_64">
+            <use xl:href="#path_64"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_64)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -1139.1136) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_712">
+          <rect x="49.32953" y="-1139.1136" width="69.36286" height="69.36286" id="path_65"/>
+          <clipPath id="clip_path_65">
+            <use xl:href="#path_65"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_65)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(49.32953 -1139.1136) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_707">
+        <g id="Graphic_710">
+          <ellipse cx="-17.916226" cy="-1502.6968" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-17.916226" cy="-1502.6968" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_709">
+          <rect x="-101.7115" y="-1594.7397" width="167.59055" height="167.59055" id="path_66"/>
+          <clipPath id="clip_path_66">
+            <use xl:href="#path_66"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_66)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-101.7115 -1594.7397) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_708">
+          <rect x="-107.2173" y="-1527.0394" width="43.447786" height="43.362927" id="path_67"/>
+          <clipPath id="clip_path_67">
+            <use xl:href="#path_67"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_67)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-107.2173 -1527.0394) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_703">
+        <g id="Graphic_706">
+          <ellipse cx="336.27532" cy="-1168.2086" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="336.27532" cy="-1168.2086" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_705">
+          <rect x="252.48005" y="-1260.2515" width="167.59055" height="167.59055" id="path_68"/>
+          <clipPath id="clip_path_68">
+            <use xl:href="#path_68"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_68)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(252.48005 -1260.2515) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_704">
+          <rect x="246.97425" y="-1192.5512" width="43.447786" height="43.362927" id="path_69"/>
+          <clipPath id="clip_path_69">
+            <use xl:href="#path_69"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_69)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(246.97425 -1192.5512) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_702">
+        <path d="M 290.9699 -1077.4563 C 275.3286 -1052.0672 257.39794 -1029.3095 240.1656 -1021.742 C 210.7781 -1008.8367 192.3256 -1044.0192 182.91724 -1070.678" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_701">
+        <path d="M 18.74899 -1600.7238 C 35.87823 -1628.023 60.019125 -1650.704 93.1959 -1652.045 C 112.61963 -1652.8302 133.07059 -1646.217 153.0856 -1635.5185" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Group_693">
+        <g id="Graphic_700">
+          <ellipse cx="1021.7541" cy="-1509.5394" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="1021.7541" cy="-1509.5394" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_699">
+          <rect x="946.2715" y="-1626.0574" width="69.36286" height="69.36286" id="path_70"/>
+          <clipPath id="clip_path_70">
+            <use xl:href="#path_70"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_70)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -1626.0574) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_698">
+          <rect x="1030.162" y="-1628.6927" width="69.36286" height="69.36286" id="path_71"/>
+          <clipPath id="clip_path_71">
+            <use xl:href="#path_71"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_71)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1030.162 -1628.6927) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_697">
+          <rect x="946.2715" y="-1549.3408" width="69.36286" height="69.36286" id="path_72"/>
+          <clipPath id="clip_path_72">
+            <use xl:href="#path_72"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_72)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -1549.3408) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_696">
+          <rect x="1030.162" y="-1549.3408" width="69.36286" height="69.36286" id="path_73"/>
+          <clipPath id="clip_path_73">
+            <use xl:href="#path_73"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_73)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1030.162 -1549.3408) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_695">
+          <rect x="946.2715" y="-1469.6333" width="69.36286" height="69.36286" id="path_74"/>
+          <clipPath id="clip_path_74">
+            <use xl:href="#path_74"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_74)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -1469.6333) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_694">
+          <rect x="1031.6679" y="-1469.6333" width="69.36286" height="69.36286" id="path_75"/>
+          <clipPath id="clip_path_75">
+            <use xl:href="#path_75"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_75)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1031.6679 -1469.6333) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_685">
+        <g id="Graphic_692">
+          <ellipse cx="776.5573" cy="-1173.6338" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="776.5573" cy="-1173.6338" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_691">
+          <rect x="701.0746" y="-1290.1519" width="69.36286" height="69.36286" id="path_76"/>
+          <clipPath id="clip_path_76">
+            <use xl:href="#path_76"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_76)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -1290.1519) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_690">
+          <rect x="784.9651" y="-1292.7872" width="69.36286" height="69.36286" id="path_77"/>
+          <clipPath id="clip_path_77">
+            <use xl:href="#path_77"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_77)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(784.9651 -1292.7872) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_689">
+          <rect x="701.0746" y="-1213.4353" width="69.36286" height="69.36286" id="path_78"/>
+          <clipPath id="clip_path_78">
+            <use xl:href="#path_78"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_78)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -1213.4353) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_688">
+          <rect x="784.9651" y="-1213.4353" width="69.36286" height="69.36286" id="path_79"/>
+          <clipPath id="clip_path_79">
+            <use xl:href="#path_79"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_79)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(784.9651 -1213.4353) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_687">
+          <rect x="701.0746" y="-1133.7278" width="69.36286" height="69.36286" id="path_80"/>
+          <clipPath id="clip_path_80">
+            <use xl:href="#path_80"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_80)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -1133.7278) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_686">
+          <rect x="786.471" y="-1133.7278" width="69.36286" height="69.36286" id="path_81"/>
+          <clipPath id="clip_path_81">
+            <use xl:href="#path_81"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_81)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(786.471 -1133.7278) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_681">
+        <g id="Graphic_684">
+          <ellipse cx="719.2253" cy="-1497.311" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="719.2253" cy="-1497.311" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_683">
+          <rect x="635.43" y="-1589.3538" width="167.59055" height="167.59055" id="path_82"/>
+          <clipPath id="clip_path_82">
+            <use xl:href="#path_82"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_82)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(635.43 -1589.3538) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_682">
+          <rect x="629.9242" y="-1521.6535" width="43.447786" height="43.362927" id="path_83"/>
+          <clipPath id="clip_path_83">
+            <use xl:href="#path_83"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_83)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(629.9242 -1521.6535) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_677">
+        <g id="Graphic_680">
+          <ellipse cx="1073.4168" cy="-1162.8228" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="1073.4168" cy="-1162.8228" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_679">
+          <rect x="989.6215" y="-1254.8656" width="167.59055" height="167.59055" id="path_84"/>
+          <clipPath id="clip_path_84">
+            <use xl:href="#path_84"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_84)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(989.6215 -1254.8656) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_678">
+          <rect x="984.1157" y="-1187.1653" width="43.447786" height="43.362927" id="path_85"/>
+          <clipPath id="clip_path_85">
+            <use xl:href="#path_85"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_85)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(984.1157 -1187.1653) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_676">
+        <path d="M 1028.1114 -1072.0705 C 1012.4701 -1046.6814 994.5394 -1023.9237 977.3071 -1016.3562 C 947.9196 -1003.4509 929.4671 -1038.6334 920.0587 -1065.2922" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_675">
+        <path d="M 755.8905 -1595.338 C 773.0197 -1622.6371 797.1606 -1645.3182 830.3374 -1646.6592 C 849.7611 -1647.4444 870.2121 -1640.8312 890.2271 -1630.1327" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Group_667">
+        <g id="Graphic_674">
+          <ellipse cx="1021.7541" cy="-2351.6507" rx="152.283131410352" ry="145.130153667963" fill="white"/>
+          <ellipse cx="1021.7541" cy="-2351.6507" rx="152.283131410352" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_673">
+          <rect x="946.2715" y="-2468.1688" width="69.36286" height="69.36286" id="path_86"/>
+          <clipPath id="clip_path_86">
+            <use xl:href="#path_86"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_86)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -2468.1688) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_672">
+          <rect x="1030.162" y="-2470.804" width="69.36286" height="69.36286" id="path_87"/>
+          <clipPath id="clip_path_87">
+            <use xl:href="#path_87"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_87)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1030.162 -2470.804) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_671">
+          <rect x="946.2715" y="-2391.452" width="69.36286" height="69.36286" id="path_88"/>
+          <clipPath id="clip_path_88">
+            <use xl:href="#path_88"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_88)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -2391.452) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_670">
+          <rect x="1030.162" y="-2391.452" width="69.36286" height="69.36286" id="path_89"/>
+          <clipPath id="clip_path_89">
+            <use xl:href="#path_89"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_89)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1030.162 -2391.452) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_669">
+          <rect x="946.2715" y="-2311.7447" width="69.36286" height="69.36286" id="path_90"/>
+          <clipPath id="clip_path_90">
+            <use xl:href="#path_90"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_90)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(946.2715 -2311.7447) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_668">
+          <rect x="1031.6679" y="-2311.7447" width="69.36286" height="69.36286" id="path_91"/>
+          <clipPath id="clip_path_91">
+            <use xl:href="#path_91"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_91)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(1031.6679 -2311.7447) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_659">
+        <g id="Graphic_666">
+          <ellipse cx="776.5573" cy="-2015.7452" rx="152.283131410352" ry="145.130153667963" fill="white"/>
+          <ellipse cx="776.5573" cy="-2015.7452" rx="152.283131410352" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_665">
+          <rect x="701.0746" y="-2132.2632" width="69.36286" height="69.36286" id="path_92"/>
+          <clipPath id="clip_path_92">
+            <use xl:href="#path_92"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_92)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -2132.2632) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_664">
+          <rect x="784.9651" y="-2134.8985" width="69.36286" height="69.36286" id="path_93"/>
+          <clipPath id="clip_path_93">
+            <use xl:href="#path_93"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_93)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(784.9651 -2134.8985) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_663">
+          <rect x="701.0746" y="-2055.5466" width="69.36286" height="69.36286" id="path_94"/>
+          <clipPath id="clip_path_94">
+            <use xl:href="#path_94"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_94)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -2055.5466) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_662">
+          <rect x="784.9651" y="-2055.5466" width="69.36286" height="69.36286" id="path_95"/>
+          <clipPath id="clip_path_95">
+            <use xl:href="#path_95"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_95)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(784.9651 -2055.5466) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_661">
+          <rect x="701.0746" y="-1975.8392" width="69.36286" height="69.36286" id="path_96"/>
+          <clipPath id="clip_path_96">
+            <use xl:href="#path_96"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_96)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(701.0746 -1975.8392) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_660">
+          <rect x="786.471" y="-1975.8392" width="69.36286" height="69.36286" id="path_97"/>
+          <clipPath id="clip_path_97">
+            <use xl:href="#path_97"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_97)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(786.471 -1975.8392) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_655">
+        <g id="Graphic_658">
+          <ellipse cx="719.2253" cy="-2339.4223" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="719.2253" cy="-2339.4223" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_657">
+          <rect x="635.43" y="-2431.4652" width="167.59055" height="167.59055" id="path_98"/>
+          <clipPath id="clip_path_98">
+            <use xl:href="#path_98"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_98)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(635.43 -2431.4652) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_656">
+          <rect x="629.9242" y="-2363.765" width="43.447786" height="43.362927" id="path_99"/>
+          <clipPath id="clip_path_99">
+            <use xl:href="#path_99"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_99)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(629.9242 -2363.765) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_651">
+        <g id="Graphic_654">
+          <ellipse cx="1073.4168" cy="-2004.9342" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="1073.4168" cy="-2004.9342" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_653">
+          <rect x="989.6215" y="-2096.977" width="167.59055" height="167.59055" id="path_100"/>
+          <clipPath id="clip_path_100">
+            <use xl:href="#path_100"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_100)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(989.6215 -2096.977) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_652">
+          <rect x="984.1157" y="-2029.2767" width="43.447786" height="43.362927" id="path_101"/>
+          <clipPath id="clip_path_101">
+            <use xl:href="#path_101"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_101)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(984.1157 -2029.2767) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_650">
+        <path d="M 1028.1114 -1914.1818 C 1012.4701 -1888.7927 994.5394 -1866.035 977.3071 -1858.4675 C 947.9196 -1845.5622 929.4671 -1880.7447 920.0587 -1907.4035" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_649">
+        <path d="M 755.8905 -2437.4493 C 773.0197 -2464.7485 797.1606 -2487.4296 830.3374 -2488.7706 C 849.7611 -2489.5557 870.2121 -2482.9425 890.2271 -2472.244" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Group_641">
+        <g id="Graphic_648">
+          <ellipse cx="284.61262" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="284.61262" cy="-2359.933" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_647">
+          <rect x="209.13" y="-2476.451" width="69.36286" height="69.36286" id="path_102"/>
+          <clipPath id="clip_path_102">
+            <use xl:href="#path_102"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_102)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -2476.451) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_646">
+          <rect x="293.0205" y="-2479.0864" width="69.36286" height="69.36286" id="path_103"/>
+          <clipPath id="clip_path_103">
+            <use xl:href="#path_103"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_103)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(293.0205 -2479.0864) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_645">
+          <rect x="209.13" y="-2399.7345" width="69.36286" height="69.36286" id="path_104"/>
+          <clipPath id="clip_path_104">
+            <use xl:href="#path_104"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_104)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_644">
+          <rect x="293.0205" y="-2399.7345" width="69.36286" height="69.36286" id="path_105"/>
+          <clipPath id="clip_path_105">
+            <use xl:href="#path_105"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_105)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(293.0205 -2399.7345) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_643">
+          <rect x="209.13" y="-2320.027" width="69.36286" height="69.36286" id="path_106"/>
+          <clipPath id="clip_path_106">
+            <use xl:href="#path_106"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_106)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(209.13 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_642">
+          <rect x="294.52638" y="-2320.027" width="69.36286" height="69.36286" id="path_107"/>
+          <clipPath id="clip_path_107">
+            <use xl:href="#path_107"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_107)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(294.52638 -2320.027) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_633">
+        <g id="Graphic_640">
+          <ellipse cx="39.41577" cy="-2024.0276" rx="152.283131410353" ry="145.130153667963" fill="white"/>
+          <ellipse cx="39.41577" cy="-2024.0276" rx="152.283131410353" ry="145.130153667963" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+        </g>
+        <g id="Graphic_639">
+          <rect x="-36.06685" y="-2140.5456" width="69.36286" height="69.36286" id="path_108"/>
+          <clipPath id="clip_path_108">
+            <use xl:href="#path_108"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_108)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -2140.5456) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_638">
+          <rect x="47.82364" y="-2143.181" width="69.36286" height="69.36286" id="path_109"/>
+          <clipPath id="clip_path_109">
+            <use xl:href="#path_109"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_109)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(47.82364 -2143.181) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_637">
+          <rect x="-36.06685" y="-2063.829" width="69.36286" height="69.36286" id="path_110"/>
+          <clipPath id="clip_path_110">
+            <use xl:href="#path_110"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_110)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_636">
+          <rect x="47.82364" y="-2063.829" width="69.36286" height="69.36286" id="path_111"/>
+          <clipPath id="clip_path_111">
+            <use xl:href="#path_111"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_111)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(47.82364 -2063.829) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_635">
+          <rect x="-36.06685" y="-1984.1215" width="69.36286" height="69.36286" id="path_112"/>
+          <clipPath id="clip_path_112">
+            <use xl:href="#path_112"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_112)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(-36.06685 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+        <g id="Graphic_634">
+          <rect x="49.32953" y="-1984.1215" width="69.36286" height="69.36286" id="path_113"/>
+          <clipPath id="clip_path_113">
+            <use xl:href="#path_113"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_113)">
+            <image xl:href="image4.png" width="512" height="512" transform="translate(49.32953 -1984.1215) scale(.13547433)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_629">
+        <g id="Graphic_632">
+          <ellipse cx="-17.916226" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="-17.916226" cy="-2347.7047" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_631">
+          <rect x="-101.7115" y="-2439.7475" width="167.59055" height="167.59055" id="path_114"/>
+          <clipPath id="clip_path_114">
+            <use xl:href="#path_114"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_114)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(-101.7115 -2439.7475) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_630">
+          <rect x="-107.2173" y="-2372.0472" width="43.447786" height="43.362927" id="path_115"/>
+          <clipPath id="clip_path_115">
+            <use xl:href="#path_115"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_115)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(-107.2173 -2372.0472) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_625">
+        <g id="Graphic_628">
+          <ellipse cx="336.27532" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="336.27532" cy="-2013.2165" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_627">
+          <rect x="252.48005" y="-2105.2594" width="167.59055" height="167.59055" id="path_116"/>
+          <clipPath id="clip_path_116">
+            <use xl:href="#path_116"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_116)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(252.48005 -2105.2594) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_626">
+          <rect x="246.97425" y="-2037.559" width="43.447786" height="43.362927" id="path_117"/>
+          <clipPath id="clip_path_117">
+            <use xl:href="#path_117"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_117)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(246.97425 -2037.559) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Line_624">
+        <path d="M 290.9699 -1922.4642 C 275.3286 -1897.075 257.39794 -1874.3174 240.1656 -1866.75 C 210.7781 -1853.8446 192.3256 -1889.027 182.91724 -1915.6859" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Line_623">
+        <path d="M 18.74899 -2445.7317 C 35.87823 -2473.0308 60.019125 -2495.712 93.1959 -2497.053 C 112.61963 -2497.838 133.07059 -2491.225 153.0856 -2480.5264" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"/>
+      </g>
+      <g id="Graphic_622">
+        <text transform="translate(-854.371 -1776.6212)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">High Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_621">
+        <text transform="translate(-864.366 -2617.7008)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Low Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_620">
+        <rect x="-687.6547" y="-1549.2126" width="108" height="108" id="path_118"/>
+        <clipPath id="clip_path_118">
+          <use xl:href="#path_118"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_118)">
+          <image xl:href="image5.png" width="384" height="384" transform="translate(-687.6547 -1549.2126) scale(.28125)"/>
+        </g>
+      </g>
+      <g id="Graphic_619">
+        <rect x="379.64006" y="-2052.374" width="108" height="108" id="path_119"/>
+        <clipPath id="clip_path_119">
+          <use xl:href="#path_119"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_119)">
+          <image xl:href="image6.png" width="409.6" height="409.6" transform="translate(379.64006 -2052.374) scale(.26367188)"/>
+        </g>
+      </g>
+      <g id="Graphic_618">
+        <rect x="14.933132" y="-1549.2126" width="108" height="108" id="path_120"/>
+        <clipPath id="clip_path_120">
+          <use xl:href="#path_120"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_120)">
+          <image xl:href="image6.png" width="409.6" height="409.6" transform="translate(14.933132 -1549.2126) scale(.26367188)"/>
+        </g>
+      </g>
+      <g id="Graphic_617">
+        <rect x="751.6591" y="-2376.0512" width="108" height="108" id="path_121"/>
+        <clipPath id="clip_path_121">
+          <use xl:href="#path_121"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_121)">
+          <image xl:href="image3.png" width="409.6" height="409.6" transform="translate(751.6591 -2376.0512) scale(.26367188)"/>
+        </g>
+      </g>
+      <g id="Graphic_616">
+        <rect x="1110" y="-1200" width="108" height="108" id="path_122"/>
+        <clipPath id="clip_path_122">
+          <use xl:href="#path_122"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_122)">
+          <image xl:href="image3.png" width="409.6" height="409.6" transform="translate(1110 -1200) scale(.26367188)"/>
+        </g>
+      </g>
+      <g id="Group_829">
+        <g id="Graphic_831">
+          <rect x="2226.146" y="-2474.8824" width="67.23663" height="165.9685" fill="#68bc36"/>
+          <rect x="2226.146" y="-2474.8824" width="67.23663" height="165.9685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_830">
+          <line x1="2224.647" y1="-2391.898" x2="2294.849" y2="-2391.2367" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_832">
+        <g id="Graphic_834">
+          <rect x="2226.146" y="-2720.8824" width="67.23663" height="165.9685" fill="#68bc36"/>
+          <rect x="2226.146" y="-2720.8824" width="67.23663" height="165.9685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_833">
+          <line x1="2224.647" y1="-2637.898" x2="2294.849" y2="-2637.2367" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Group_835">
+        <g id="Graphic_837">
+          <rect x="2226.146" y="-2966.8824" width="67.23663" height="165.9685" fill="#68bc36"/>
+          <rect x="2226.146" y="-2966.8824" width="67.23663" height="165.9685" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        </g>
+        <g id="Line_836">
+          <line x1="2224.647" y1="-2883.898" x2="2294.849" y2="-2883.2367" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="24.0,15.0" stroke-width="3"/>
+        </g>
+      </g>
+      <g id="Graphic_838">
+        <rect x="1682.647" y="-2966.8824" width="141.73228" height="141.73228" id="path_123"/>
+        <clipPath id="clip_path_123">
+          <use xl:href="#path_123"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_123)">
+          <image xl:href="image3.png" width="409.6" height="409.6" transform="translate(1682.647 -2966.8824) scale(.3460261)"/>
+        </g>
+      </g>
+      <g id="Graphic_839">
+        <rect x="1682.647" y="-2720.8824" width="141.73228" height="141.73228" id="path_124"/>
+        <clipPath id="clip_path_124">
+          <use xl:href="#path_124"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_124)">
+          <image xl:href="image6.png" width="409.6" height="409.6" transform="translate(1682.647 -2720.8824) scale(.3460261)"/>
+        </g>
+      </g>
+      <g id="Graphic_840">
+        <rect x="1682.647" y="-2462.7642" width="141.73228" height="141.73228" id="path_125"/>
+        <clipPath id="clip_path_125">
+          <use xl:href="#path_125"/>
+        </clipPath>
+        <g clip-path="url(#clip_path_125)">
+          <image xl:href="image5.png" width="384" height="384" transform="translate(1682.647 -2462.7642) scale(.3690945)"/>
+        </g>
+      </g>
+      <g id="Graphic_841">
+        <text transform="translate(-1097.5455 -3202)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="200" fill="black" x="0" y="195">A</tspan>
+        </text>
+      </g>
+      <g id="Line_842">
+        <line x1="1914" y1="-2622.7008" x2="2121.134" y2="-2622.478" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
+      </g>
+      <g id="Graphic_843">
+        <text transform="translate(1546.3672 -1932)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Low Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_844">
+        <text transform="translate(1537.9092 -1766)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">High Dose</tspan>
+        </text>
+      </g>
+      <g id="Graphic_850">
+        <rect x="2227.6123" y="-1922" width="67.23663" height="78" fill="#68bc36"/>
+        <rect x="2227.6123" y="-1922" width="67.23663" height="78" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Graphic_851">
+        <rect x="2227.6123" y="-1748" width="67.23663" height="78" fill="#68bc36"/>
+        <rect x="2227.6123" y="-1748" width="67.23663" height="78" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      </g>
+      <g id="Graphic_852">
+        <text transform="translate(1641 -1205.8228)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">Spray</tspan>
+        </text>
+      </g>
+      <g id="Group_853">
+        <g id="Graphic_856">
+          <ellipse cx="2322.267" cy="-1210.5" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="2322.267" cy="-1210.5" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_855">
+          <rect x="2238.4718" y="-1302.5428" width="167.59055" height="167.59055" id="path_126"/>
+          <clipPath id="clip_path_126">
+            <use xl:href="#path_126"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_126)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(2238.4718 -1302.5428) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_854">
+          <rect x="2232.966" y="-1234.8425" width="43.447786" height="43.362927" id="path_127"/>
+          <clipPath id="clip_path_127">
+            <use xl:href="#path_127"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_127)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(2232.966 -1234.8425) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Group_857">
+        <g id="Graphic_860">
+          <ellipse cx="2322.267" cy="-925.3582" rx="100.620346765368" ry="103.500165382846" fill="white"/>
+          <ellipse cx="2322.267" cy="-925.3582" rx="100.620346765368" ry="103.500165382846" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <g id="Graphic_859">
+          <rect x="2238.4718" y="-1017.4011" width="167.59055" height="167.59055" id="path_128"/>
+          <clipPath id="clip_path_128">
+            <use xl:href="#path_128"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_128)">
+            <image xl:href="image2.png" width="512" height="512" transform="translate(2238.4718 -1017.4011) scale(.3273253)"/>
+          </g>
+        </g>
+        <g id="Graphic_858">
+          <rect x="2232.966" y="-949.7008" width="43.447786" height="43.362927" id="path_129"/>
+          <clipPath id="clip_path_129">
+            <use xl:href="#path_129"/>
+          </clipPath>
+          <g clip-path="url(#clip_path_129)">
+            <image xl:href="image1.png" width="409.6" height="408.8" transform="translate(2232.966 -949.7008) scale(.1060737)"/>
+          </g>
+        </g>
+      </g>
+      <g id="Graphic_861">
+        <text transform="translate(1587 -1008)" fill="#797979">
+          <tspan font-family="Helvetica" font-weight="bold" font-size="72" fill="#797979" x="0" y="69">No spray</tspan>
+        </text>
+      </g>
+      <g id="Graphic_863">
+        <text transform="translate(1446.0091 -3206.818)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="200" fill="black" x="0" y="195">B</tspan>
+        </text>
+      </g>
+      <g id="Graphic_864">
+        <text transform="translate(1442.3091 -2172.74)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="200" fill="black" x="35527137e-20" y="195">C</tspan>
+        </text>
+      </g>
+      <g id="Graphic_865">
+        <text transform="translate(1448.9091 -1500.516)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="200" fill="black" x="35527137e-20" y="195">D</tspan>
+        </text>
+      </g>
+      <g id="Line_868">
+        <line x1="1931" y1="-1806" x2="2138.134" y2="-1805.7773" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
+      </g>
+      <g id="Line_870">
+        <line x1="1931" y1="-1065.7086" x2="2138.134" y2="-1065.4859" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
+      </g>
+    </g>
+  </g>
+</svg>
