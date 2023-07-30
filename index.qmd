@@ -16,13 +16,6 @@ format:
 ::: {.g-col-12 .g-col-md-6}
 
 
-::: {.callout-important icon=false}
-
-## <i class='fas fa-bell'></i> Job alert
-
- Applications for a [Lecturer (Assistant Professor) in Statistics (continuing/tenure track) at the Australian National University](https://jobs.anu.edu.au/jobs/lecturer-in-statistics-canberra-act-act-australia) is now open. Come join us! <div style="font-size:0.8em;">Closing date: 30th July 2023 (Canberra date)</div>
-
-:::
 
 ::: {.callout-note icon=false}
 
