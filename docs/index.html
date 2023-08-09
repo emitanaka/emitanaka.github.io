@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.361">
+<meta name="generator" content="quarto-1.4.287">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,6 +47,11 @@ ul.task-list li input[type="checkbox"] {
   "panel-placement": "end",
   "type": "overlay",
   "limit": 20,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -81,7 +86,7 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="./images/avatar.png" alt="" class="navbar-logo">
     </a>
@@ -136,9 +141,9 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -182,10 +187,6 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>University of Toronto
-<div style="font-size:0.8em;">
-at Toronto, Canada, 24th July - 4th August
-</div></li>
 <li><a href="https://ww2.amstat.org/meetings/jsm/2023/">Joint Statistical Meeting</a>
 <div style="font-size:0.8em;">
 at Toronto, Canada, 5th August - 10th August
@@ -228,15 +229,7 @@ at Wollongong, Australia, 10th December - 15th December
 <section id="upcoming-talks" class="level2">
 <h2 class="anchored" data-anchor-id="upcoming-talks"><i class="fas fa-comment"></i> Upcoming talks</h2>
 <ul>
-<li>
-Automated visualisation of experimental designs
-<div style="font-size:0.8em;">
-<a href="(NA)"><i>Joint Statistical Meeting</i></a>
-</div>
-<div style="font-size:0.8em;">
-2023-08-08
-</div>
-</li>
+<p>I have no advertised upcoming talks. Please feel free to <a href="mailto:emi.tanaka@monash.edu">invite me</a> for a talk if I do something of your interest. You can find some of my past talks <a href="https://emitanaka.org/talks/">here</a>.</p>
 </ul>
 </section>
 <section id="upcoming-workshops" class="level2">
@@ -348,10 +341,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -361,8 +353,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -375,6 +376,81 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        return container.innerHTML
+      } else {
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -418,6 +494,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -505,16 +582,21 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Australian National University<br> © Copyright 2021-2023 Emi Tanaka</div>   
+    <div class="nav-footer-left">
+<p><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Australian National University<br> © Copyright 2021-2023 Emi Tanaka</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@anu.edu.au">emi.tanaka@anu.edu.au</a><br> <i class="fas fa-map-marker-alt"></i> Acton, ACT, Australia</div>
+    <div class="nav-footer-right">
+<p><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@anu.edu.au">emi.tanaka@anu.edu.au</a><br> <i class="fas fa-map-marker-alt"></i> Acton, ACT, Australia</p>
+</div>
   </div>
 </footer>
 <link rel="stylesheet" href="./assets/syntax-highlight.css">
 <link rel="stylesheet" href="./assets/fontawesome-free-6.1.1-web/css/all.min.css">
 <script src="./assets/fontawesome-free-6.1.1-web/js/all.min.js"></script>
+
 
 
 
