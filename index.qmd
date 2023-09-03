@@ -60,7 +60,7 @@ df <- readxl::read_xlsx("../cv/data/work-records.xlsx", "talks") %>%
          advertised=="yes") %>% 
   select(date, title, host, rego_url) 
 if(nrow(df)) {
-  glue_data(df, '<li>{title}<div style="font-size:0.8em;">[<i>{host}</i>](({rego_url}))</div><div style="font-size:0.8em;">{date}</div></li>')
+  glue_data(df, '<li>{title}<div style="font-size:0.8em;">[<i>{host}</i>]({rego_url})</div><div style="font-size:0.8em;">{date}</div></li>')
 } else {
   cat("I have no advertised upcoming talks. Please feel free to [invite me](mailto:emi.tanaka@monash.edu) for a talk if I do something of your interest. You can find some of my past talks [here](https://emitanaka.org/talks/).")
 }
