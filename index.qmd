@@ -21,6 +21,7 @@ format:
 
 ## <i class='fas fa-plane-departure'></i> Travel
 
+- Melbourne <div style="font-size:0.8em;">17th November - 25th November</div>
 - [Biometrics in the Bays of Islands](http://biometricsboi.nz/) <div style="font-size:0.8em;">at Bay of Islands, New Zealand, 27th November - 1st December</div>
 - [Australian Statistical Conference and Australian Conference on Teaching Statistics](https://www.asc2023.org/) <div style="font-size:0.8em;">at Wollongong, Australia, 10th December - 15th December</div>
 
