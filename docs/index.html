@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.376">
+<meta name="generator" content="quarto-1.4.418">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
@@ -175,6 +175,7 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 
 
 
+
 <div class="grid">
 <div class="g-col-12 g-col-md-6">
 <div class="callout callout-style-default callout-note no-icon callout-titled">
@@ -188,10 +189,6 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Melbourne
-<div style="font-size:0.8em;">
-17th November - 25th November
-</div></li>
 <li><a href="http://biometricsboi.nz/">Biometrics in the Bays of Islands</a>
 <div style="font-size:0.8em;">
 at Bay of Islands, New Zealand, 27th November - 1st December
@@ -206,6 +203,7 @@ at Wollongong, Australia, 10th December - 15th December
 <section id="recent-publications" class="level2">
 <h2 class="anchored" data-anchor-id="recent-publications"><i class="fas fa-newspaper"></i> Recent Publications</h2>
 <ul>
+<li>Tanaka (2023) edibble: An R package to encapsulate elements of experimental designs for better planning, management and workflow <a href="https://emitanaka.org/paper-edibble/"><i class="fas fa-link"></i></a></li>
 <li>Tanaka (2023) Towards a unified language in experimental designs propagated by a software framework <a href="https://arxiv.org/abs/2307.11593"><i class="fa-solid fa-file-pdf"></i></a></li>
 <li>Statistical Society of Australia Victorian Branch Annual Report 2022 <a href="https://www.statsoc.org.au/resources/annual-report-2022.pdf"><i class="fa-solid fa-file-pdf"></i></a></li>
 <li>Tanaka (2022) Getting the most out of your experimental data with design. <em>Biometric Bulletin</em> 39 (4) <a href="https://emitanaka.org/blog/2022-10-23-edibble-for-biometrics-bulletin/"><i class="fas fa-link"></i></a></li>
@@ -227,21 +225,12 @@ at Wollongong, Australia, 10th December - 15th December
 <h2 class="anchored" data-anchor-id="upcoming-talks"><i class="fas fa-comment"></i> Upcoming talks</h2>
 <ul>
 <li>
-(Re)marrying statistical thinking and visualisations
+A tool to easily simulate valid experimental data
 <div style="font-size:0.8em;">
-<a href="http://www.visualdatascience.org/2023/program/"><i>VDS @ IEEE VIS 2023</i></a>
+<a href="https://biometricsboi.nz/sched.php"><i>Biometrics in the Bay of Islands</i></a>
 </div>
 <div style="font-size:0.8em;">
-2023-10-23
-</div>
-</li>
-<li>
-An academic journey in pursuing the art of statistics
-<div style="font-size:0.8em;">
-<a href="https://www.statsoc.org.au/event-5402944"><i>Statistical Society of Australia ECSSN Webinar</i></a>
-</div>
-<div style="font-size:0.8em;">
-2023-10-26
+2023-11-30
 </div>
 </li>
 <li>
@@ -413,15 +402,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -430,6 +442,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -472,6 +485,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -547,7 +583,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     window.addEventListener(
       "resize",
       throttle(() => {
-        console.log("RESIZE");
         elRect = undefined;
         if (selectedAnnoteEl) {
           selectCodeLines(selectedAnnoteEl);
