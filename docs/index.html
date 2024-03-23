@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.418">
+<meta name="generator" content="quarto-1.4.545">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -84,8 +85,8 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 <body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
@@ -178,28 +179,6 @@ gtag('config', 'G-07SZXPNSJZ', { 'anonymize_ip': true});
 
 <div class="grid">
 <div class="g-col-12 g-col-md-6">
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<i class="fas fa-plane-departure"></i> Travel
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li><a href="http://biometricsboi.nz/">Biometrics in the Bays of Islands</a>
-<div style="font-size:0.8em;">
-at Bay of Islands, New Zealand, 27th November - 1st December
-</div></li>
-<li><a href="https://www.asc2023.org/">Australian Statistical Conference and Australian Conference on Teaching Statistics</a>
-<div style="font-size:0.8em;">
-at Wollongong, Australia, 10th December - 15th December
-</div></li>
-</ul>
-</div>
-</div>
 <section id="recent-publications" class="level2">
 <h2 class="anchored" data-anchor-id="recent-publications"><i class="fas fa-newspaper"></i> Recent Publications</h2>
 <ul>
@@ -224,24 +203,7 @@ at Wollongong, Australia, 10th December - 15th December
 <section id="upcoming-talks" class="level2">
 <h2 class="anchored" data-anchor-id="upcoming-talks"><i class="fas fa-comment"></i> Upcoming talks</h2>
 <ul>
-<li>
-A tool to easily simulate valid experimental data
-<div style="font-size:0.8em;">
-<a href="https://biometricsboi.nz/sched.php"><i>Biometrics in the Bay of Islands</i></a>
-</div>
-<div style="font-size:0.8em;">
-2023-11-30
-</div>
-</li>
-<li>
-A quick and flexible visualisation system for the designs of experiments
-<div style="font-size:0.8em;">
-<a href="https://virtual.oxfordabstracts.com/#/event/public/4133/program?session=85848&amp;s=3660"><i>Australian Statistical Conference</i></a>
-</div>
-<div style="font-size:0.8em;">
-2023-12-14
-</div>
-</li>
+<p>I have no advertised upcoming talks. Please feel free to <a href="mailto:emi.tanaka@monash.edu">invite me</a> for a talk if I do something of your interest. You can find some of my past talks <a href="https://emitanaka.org/talks/">here</a>.</p>
 </ul>
 </section>
 <section id="upcoming-workshops" class="level2">
@@ -402,38 +364,28 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -442,8 +394,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
-      return note.innerHTML;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
     }
   }
   for (var i=0; i<xrefs.length; i++) {

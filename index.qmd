@@ -17,14 +17,6 @@ format:
 
 
 
-::: {.callout-note icon=false}
-
-## <i class='fas fa-plane-departure'></i> Travel
-
-- [Biometrics in the Bays of Islands](http://biometricsboi.nz/) <div style="font-size:0.8em;">at Bay of Islands, New Zealand, 27th November - 1st December</div>
-- [Australian Statistical Conference and Australian Conference on Teaching Statistics](https://www.asc2023.org/) <div style="font-size:0.8em;">at Wollongong, Australia, 10th December - 15th December</div>
-
-:::
 
 ## <i class="fas fa-newspaper"></i> Recent Publications
 
