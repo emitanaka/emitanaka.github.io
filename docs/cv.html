@@ -32,7 +32,13 @@
           "collapse-after": 3,
           "panel-placement": "end",
           "type": "overlay",
-          "limit": 20,
+          "limit": 50,
+          "keyboard-shortcut": [
+            "f",
+            "/",
+            "s"
+          ],
+          "show-item-context": false,
           "language": {
             "search-no-results-text": "No results",
             "search-matching-documents-text": "matching documents",
@@ -41,6 +47,7 @@
             "search-more-match-text": "more match in this document",
             "search-more-matches-text": "more matches in this document",
             "search-clear-button-title": "Clear",
+            "search-text-placeholder": "",
             "search-detached-cancel-button-title": "Cancel",
             "search-submit-button-title": "Submit",
             "search-label": "Search"
@@ -63,10 +70,10 @@
   </head>
   <body class="nav-fixed fullcontent">
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="./images/avatar.png" alt="" class="navbar-logo">
     </a>
@@ -81,49 +88,49 @@
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./cv.html" rel="" target="" aria-current="page">
- <span class="menu-text">CV</span></a>
+    <a class="nav-link active" href="./cv.html" aria-current="page"> 
+<span class="menu-text">CV</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./research/index.html" rel="" target="">
- <span class="menu-text">Research</span></a>
+    <a class="nav-link" href="./research/index.html"> 
+<span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./teaching/index.html" rel="" target="">
- <span class="menu-text">Teaching</span></a>
+    <a class="nav-link" href="./teaching/index.html"> 
+<span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./talks/index.html" rel="" target="">
- <span class="menu-text">Talks</span></a>
+    <a class="nav-link" href="./talks/index.html"> 
+<span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog/index.html" rel="" target="">
- <span class="menu-text">Blog</span></a>
+    <a class="nav-link" href="./blog/index.html"> 
+<span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/statsgen" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/statsgen"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./blog.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="./blog.xml"> <i class="bi bi-rss" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -162,7 +169,7 @@
 </ul>
 <div id="disclaimer">
 <p>This resume was made with the R package <a href="https://github.com/rstudio/pagedown"><strong>pagedown</strong></a>.</p>
-<p>Last updated on 2023-07-01.</p>
+<p>Last updated on 2024-03-24.</p>
 </div>
 </section>
 </div>
@@ -173,6 +180,26 @@
 <h2 class="anchored" data-anchor-id="experience"><i class="fas fa-briefcase"></i> Work Experience</h2>
 </section>
 <div class="timeline">
+<div class="timeline-card" data-aos="fade-in" data-aos-delay="300">
+<div class="timeline-head">
+Deputy Director
+</div>
+<div class="timeline-body">
+<div style="font-size:0.75rem;line-height:0.9rem;">
+Australian National University,<br>Biological Data Science Institute
+</div>
+<div class="timeline-date">
+<div style="font-size:0.75rem;line-height:0.9rem;">
+2024/03 - current
+</div>
+</div>
+<div>
+<div style="font-size:0.75rem;line-height:0.9rem;">
+
+</div>
+</div>
+</div>
+</div>
 <div class="timeline-card" data-aos="fade-in" data-aos-delay="300">
 <div class="timeline-head">
 Senior Lecturer
@@ -283,7 +310,7 @@ Major in Mathematics and Statistics<br>
 <span style="font-weight:400;">Tanaka, E</span> (2022) Getting the most out of your experimental data with design. <i>Biometric Bulletin</i>, 39 (4), 9-13.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-<span style="font-weight:400;">Tanaka, E</span> &amp; Amaliah, D (2022) Current state and prospects of r-packages for the design of experiments. <i></i> <a href="https://doi.org/10.48550/ARXIV.2206.07532" class="doi">10.48550/arxiv.2206.07532</a>
+<span style="font-weight:400;">Tanaka, E</span> &amp; Amaliah, D (2022) Current state and prospects of r-packages for the design of experiments. <i></i> <a href="https://doi.org/10.48550/ARXIV.2206.07532" class="doi">10.48550/arxiv.2206.07532</a> <i>Citations: <span style="font-weight:400;">1</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 Amaliah, D, Cook, D, <span style="font-weight:400;">Tanaka, E</span>, Hyde, K, &amp; Tierney, N (2022) A journey from wild to textbook data to reproducibly refresh the wages data from the national longitudinal survey of youth database. <i>Journal of Statistics and Data Science Education</i>, 0 (ja), 1-27. <a href="https://doi.org/10.1080/26939169.2022.2094300" class="doi">10.1080/26939169.2022.2094300</a>
@@ -292,22 +319,22 @@ Amaliah, D, Cook, D, <span style="font-weight:400;">Tanaka, E</span>, Hyde, K, &
 <span style="font-weight:400;">Tanaka, E</span>, Leung, J, &amp; Cook, D (2022) Commentary on “visualization in operations management research”: Incorporating statistical thinking into visualization practices for decision making in operational management. <i>INFORMS Journal on Data Science</i> <a href="https://doi.org/10.1287/ijds.2021.0008" class="doi">10.1287/ijds.2021.0008</a>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-Cook, D, Reid, N, &amp; <span style="font-weight:400;">Tanaka, E</span> (2021) The foundation is available for thinking about data visualization inferentially. <i>Harvard Data Science Review</i> <a href="https://doi.org/10.1162/99608f92.8453435d" class="doi">10.1162/99608f92.8453435d</a> <i>Citations: <span style="font-weight:400;">6</span></i>.
+Cook, D, Reid, N, &amp; <span style="font-weight:400;">Tanaka, E</span> (2021) The foundation is available for thinking about data visualization inferentially. <i>Harvard Data Science Review</i> <a href="https://doi.org/10.1162/99608f92.8453435d" class="doi">10.1162/99608f92.8453435d</a> <i>Citations: <span style="font-weight:400;">7</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-Morota, G, Cheng, H, Cook, D, &amp; <span style="font-weight:400;">Tanaka, E</span> (2021) ASAS-NANP SYMPOSIUM: Prospects for interactive and dynamic graphics in the era of data-rich animal science. <i>Journal of animal science</i>, 99 (2) <a href="https://doi.org/10.1093/jas/skaa402" class="doi">10.1093/jas/skaa402</a> <i>Citations: <span style="font-weight:400;">5</span></i>.
+Morota, G, Cheng, H, Cook, D, &amp; <span style="font-weight:400;">Tanaka, E</span> (2021) ASAS-NANP SYMPOSIUM: Prospects for interactive and dynamic graphics in the era of data-rich animal science. <i>Journal of animal science</i>, 99 (2) <a href="https://doi.org/10.1093/jas/skaa402" class="doi">10.1093/jas/skaa402</a> <i>Citations: <span style="font-weight:400;">9</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-<span style="font-weight:400;">Tanaka, E</span> (2020) Simple outlier detection for a multi-environmental field trial. <i>Biometrics</i>, 76 (4), 1374-1382. <a href="https://doi.org/10.1111/biom.13216" class="doi">10.1111/biom.13216</a> <i>Citations: <span style="font-weight:400;">9</span></i>.
+<span style="font-weight:400;">Tanaka, E</span> (2020) Simple outlier detection for a multi-environmental field trial. <i>Biometrics</i>, 76 (4), 1374-1382. <a href="https://doi.org/10.1111/biom.13216" class="doi">10.1111/biom.13216</a> <i>Citations: <span style="font-weight:400;">13</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span style="font-weight:400;">Tanaka, E</span> &amp; Hui, F (2019) Symbolic formulae for linear mixed models. <i>Statistics and data science</i>, 3-21. <a href="https://doi.org/10.1007/978-981-15-1960-4_1" class="doi">10.1007/978-981-15-1960-4_1</a> <i>Citations: <span style="font-weight:400;">3</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-Hui, F, <span style="font-weight:400;">Tanaka, E</span>, &amp; Warton, D (2018) Order selection and sparsity in latent variable models via the ordered factor LASSO. <i>Biometrics</i>, 74 (4), 1311-1319. <a href="https://doi.org/10.1111/biom.12888" class="doi">10.1111/biom.12888</a> <i>Citations: <span style="font-weight:400;">24</span></i>.
+Hui, F, <span style="font-weight:400;">Tanaka, E</span>, &amp; Warton, D (2018) Order selection and sparsity in latent variable models via the ordered factor LASSO. <i>Biometrics</i>, 74 (4), 1311-1319. <a href="https://doi.org/10.1111/biom.12888" class="doi">10.1111/biom.12888</a> <i>Citations: <span style="font-weight:400;">27</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-Norman, A, Taylor, J, <span style="font-weight:400;">Tanaka, E</span>, Telfer, P, Edwards, J, Martinant, J, &amp; Kuchel, H (2017) Increased genomic prediction accuracy in wheat breeding using a large australian panel. <i>Theoretical and applied genetics</i>, 130 (12), 2543-2555. <a href="https://doi.org/10.1007/s00122-017-2975-4" class="doi">10.1007/s00122-017-2975-4</a> <i>Citations: <span style="font-weight:400;">32</span></i>.
+Norman, A, Taylor, J, <span style="font-weight:400;">Tanaka, E</span>, Telfer, P, Edwards, J, Martinant, J, &amp; Kuchel, H (2017) Increased genomic prediction accuracy in wheat breeding using a large australian panel. <i>Theoretical and applied genetics</i>, 130 (12), 2543-2555. <a href="https://doi.org/10.1007/s00122-017-2975-4" class="doi">10.1007/s00122-017-2975-4</a> <i>Citations: <span style="font-weight:400;">37</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span style="font-weight:400;">Tanaka, E</span>, Ral, J, Li, S, Gaire, R, Cavanagh, C, Cullis, B, &amp; Whan, A (2017) Increased accuracy of starch granule type quantification using mixture distributions. <i>Plant methods</i>, 13, 107. <a href="https://doi.org/10.1186/s13007-017-0259-2" class="doi">10.1186/s13007-017-0259-2</a> <i>Citations: <span style="font-weight:400;">8</span></i>.
@@ -322,11 +349,11 @@ Norman, A, Taylor, J, <span style="font-weight:400;">Tanaka, E</span>, Telfer, P
 Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Yang, L, Seher, A, Hallas, L, Cha, E, Kang, G, Pace, H, Barrow, J, Inada, M, Tye, B, &amp; Keich, U (2011) Novel features of ARS selection in budding yeast lachancea kluyveri. <i>BMC genomics</i>, 12, 633. <a href="https://doi.org/10.1186/1471-2164-12-633" class="doi">10.1186/1471-2164-12-633</a> <i>Citations: <span style="font-weight:400;">27</span></i>.
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
-<span style="font-weight:400;">Tanaka, E</span>, Bailey, T, Grant, C, Noble, W, &amp; Keich, U (2011) Improved similarity scores for comparing motifs. <i>Bioinformatics</i>, 27 (12), 1603-1609. <a href="https://doi.org/10.1093/bioinformatics/btr257" class="doi">10.1093/bioinformatics/btr257</a> <i>Citations: <span style="font-weight:400;">60</span></i>.
+<span style="font-weight:400;">Tanaka, E</span>, Bailey, T, Grant, C, Noble, W, &amp; Keich, U (2011) Improved similarity scores for comparing motifs. <i>Bioinformatics</i>, 27 (12), 1603-1609. <a href="https://doi.org/10.1093/bioinformatics/btr257" class="doi">10.1093/bioinformatics/btr257</a> <i>Citations: <span style="font-weight:400;">62</span></i>.
 </li>
 </ol>
 <div data-aos="fade-in">
-<p><span style="font-size:0.7rem">Citation counts are sourced from Google Scholar at 2023-07-01.</span></p>
+<p><span style="font-size:0.7rem">Citation counts are sourced from Google Scholar at 2024-03-24.</span></p>
 </div>
 <p><br></p>
 <section id="software" class="level2" data-aos="zoom-out-right">
@@ -339,19 +366,19 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> edibble
 <div class="software-body">
-<p>An R-package that implements the grammar of experimental design. <br> <i>Creator and maintainer. GitHub stars:<span style="font-weight:400;"> 182 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/edibble <br> <i class="fas fa-link"></i> Documentation: https://edibble.emitanaka.org</p>
+<p>An R-package that implements the grammar of experimental design. <br> <i>Creator and maintainer. GitHub stars:<span style="font-weight:400;"> 206 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/edibble <br> <i class="fas fa-link"></i> Documentation: https://edibble.emitanaka.org</p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> flipbookr
 <div class="software-body">
-<p>An R-package that parses code, creates partial code builds, delivers code movie <br> <i>Author. GitHub stars:<span style="font-weight:400;"> 189 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/EvaMaeRey/flipbookr <br> <i class="fas fa-link"></i> Documentation: https://evamaerey.github.io/flipbookr/</p>
+<p>An R-package that parses code, creates partial code builds, delivers code movie <br> <i>Author. GitHub stars:<span style="font-weight:400;"> 195 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/EvaMaeRey/flipbookr <br> <i class="fas fa-link"></i> Documentation: https://evamaerey.github.io/flipbookr/</p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> anicon
 <div class="software-body">
-<p>An R-package to insert animated icons for R markdown and Shiny apps. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 123 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/anicon <br></p>
+<p>An R-package to insert animated icons for R markdown and Shiny apps. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 121 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/anicon <br></p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
@@ -369,7 +396,7 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> monash
 <div class="software-body">
-<p>A utility R-package with consolidated tools and templates for staffs at Monash University. <br> <i>Creator and maintainer. GitHub stars:<span style="font-weight:400;"> 16 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/numbats/monash <br></p>
+<p>A utility R-package with consolidated tools and templates for staffs at Monash University. <br> <i>Creator and maintainer. GitHub stars:<span style="font-weight:400;"> 20 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/numbats/monash <br></p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
@@ -381,7 +408,7 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> xaringan
 <div class="software-body">
-<p>An R package for creating slideshows with remark.js through R Markdown. <br> <i>Contributor. My contribution is the adaptation of the ninja-theme shown in the Documentation. GitHub stars:<span style="font-weight:400;"> 1446 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/yihui/xaringan <br> <i class="fas fa-link"></i> Documentation: https://github.com/emitanaka/ninja-theme</p>
+<p>An R package for creating slideshows with remark.js through R Markdown. <br> <i>Contributor. My contribution is the adaptation of the ninja-theme shown in the Documentation. GitHub stars:<span style="font-weight:400;"> 1474 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/yihui/xaringan <br> <i class="fas fa-link"></i> Documentation: https://github.com/emitanaka/ninja-theme</p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
@@ -399,19 +426,19 @@ Liachko, I, <span style="font-weight:400;">Tanaka, E</span>, Cox, K, Chung, S, Y
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> gghdr
 <div class="software-body">
-<p>Plots of highest density regions (HDR) for ggplot2. <br> <i>Listed as author but my contribution is small. GitHub stars:<span style="font-weight:400;"> 43 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/ropenscilabs/gghdr <br> <i class="fas fa-link"></i> Documentation: https://ropenscilabs.github.io/gghdr</p>
+<p>Plots of highest density regions (HDR) for ggplot2. <br> <i>Listed as author but my contribution is small. GitHub stars:<span style="font-weight:400;"> 46 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/ropenscilabs/gghdr <br> <i class="fas fa-link"></i> Documentation: https://ropenscilabs.github.io/gghdr</p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> shinycustomloader
 <div class="software-body">
-<p>Add a custom loader for R shiny. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 111 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/shinycustomloader <br></p>
+<p>Add a custom loader for R shiny. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 118 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/shinycustomloader <br></p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
 <span class="fa-li"><i class="fab fa-r-project"></i></span> datalegreyar
 <div class="software-body">
-<p>Datalegreya, the typeface that melts text and data visualisation, for R markdown. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 42 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/datalegreyar <br></p>
+<p>Datalegreya, the typeface that melts text and data visualisation, for R markdown. <br> <i>Creator. GitHub stars:<span style="font-weight:400;"> 43 </span></i><br> <i class="fas fa-link"></i> Source: https://github.com/emitanaka/datalegreyar <br></p>
 </div>
 </li>
 <li data-aos="fade-in" data-aos-delay="300">
@@ -615,7 +642,6 @@ Statistical Society of Australia Western Australian Branch
 <h2 class="anchored" data-anchor-id="workshops"><i class="fas fa-toolbox"></i> Workshops</h2>
 </section>
 <div style="width:150%;" data-aos="fade-in">
-<div class="cell-output-display">
 <table class="table">
 <thead>
 <tr class="header">
@@ -712,7 +738,6 @@ Statistical Society of Australia Western Australian Branch
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <p><br><br><br></p>
 <section id="teaching" class="level2" data-aos="zoom-out-right">
@@ -1204,10 +1229,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1217,8 +1241,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1231,6 +1264,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1274,6 +1426,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1299,6 +1452,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1361,11 +1540,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left"><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Australian National University<br> © Copyright 2021-2023 Emi Tanaka</div>   
+    <div class="nav-footer-left">
+<p><b>Dr.&nbsp;Emi Tanaka</b> <br> Senior Lecturer in Statistics<br> Australian National University<br> © Copyright 2021-2023 Emi Tanaka</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right"><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@anu.edu.au">emi.tanaka@anu.edu.au</a><br> <i class="fas fa-map-marker-alt"></i> Acton, ACT, Australia</div>
+    <div class="nav-footer-right">
+<p><i class="fab fa-twitter"></i> <a href="https://twitter.com/statsgen"><span class="citation" data-cites="statsgen">@statsgen</span></a> on Twitter <br> <i class="fab fa-github"></i> <a href="https://github.com/emitanaka">emitanaka</a> on GitHub <br> <i class="fas fa-envelope"></i> <a href="mailto:emi.tanaka@anu.edu.au">emi.tanaka@anu.edu.au</a><br> <i class="fas fa-map-marker-alt"></i> Acton, ACT, Australia</p>
+</div>
   </div>
 </footer>
 <script src="./assets/cv/js/aos.js"></script>
